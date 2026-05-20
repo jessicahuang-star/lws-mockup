@@ -1723,6 +1723,14 @@
   .drag-list tbody tr:last-child td{border-bottom:none;}
   .drag-list tbody tr{cursor:grab;transition:background 0.1s;}
   .drag-list tbody tr:hover{background:var(--bg);}
+  .op-btn.delete.count-lock {
+    opacity: 0.38;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+  .op-btn.delete.count-lock::after {
+    /* tooltip handled via title attr */
+  }
   .drag-list tbody tr.dragging-row{opacity:0.4;}
   .drag-list tbody tr.drag-over-row{outline:2px solid var(--primary);outline-offset:-1px;}
   .drag-handle-cell{width:28px;color:var(--text-muted);font-size:14px;cursor:grab;user-select:none;}
@@ -2374,9 +2382,12 @@
     <section id="page-3.2" class="page-wrap hidden">
       <div class="page-head">
         <div><h1 class="page-title">職位和職等</h1><p class="page-desc">管理組織內可指派給成員的職稱與職級定義。</p></div>
-        <button class="icon-btn" title="同步 Admin 後端資料" onclick="showSyncToast()" style="border:1px solid var(--border);border-radius:var(--radius-sm);padding:7px;background:var(--surface);">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+        <!-- ===== [修改開始] 3.2 同步按鈕加文字 ===== -->
+        <button class="btn" title="同步 Admin 後端資料" onclick="showSyncToast()" style="display:inline-flex;align-items:center;gap:6px;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+          同步主機
         </button>
+        <!-- ===== [修改結束] ===== -->
       </div>
       <div class="def-grid-2">
         <!-- 職位 card -->
@@ -2387,10 +2398,12 @@
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14"/><path d="M5 12h14"/></svg>新增項目
             </button>
           </div>
+          <!-- ===== [修改] 職位表格：人數>0 鎖定刪除 ===== -->
           <table class="drag-list"><thead><tr><th style="width:28px;"></th><th>職位名稱</th><th>使用人數</th><th></th></tr></thead>
           <tbody id="pos-tbody">
-            <tr draggable="true"><td class="drag-handle-cell">⋮⋮</td><td><div class="name-col">部長</div><div class="lang-col">Director / 部長</div></td><td class="count-col">4 人</td><td class="actions-col"><div style="display:flex;gap:4px;justify-content:flex-end;"><button class="op-btn" onclick="openModal('modal-add-pos')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>編輯</button><button class="op-btn delete"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg></button></div></td></tr>
-            <tr draggable="true"><td class="drag-handle-cell">⋮⋮</td><td><div class="name-col">專員</div><div class="lang-col">Specialist / 専門員</div></td><td class="count-col">18 人</td><td class="actions-col"><div style="display:flex;gap:4px;justify-content:flex-end;"><button class="op-btn" onclick="openModal('modal-add-pos')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>編輯</button><button class="op-btn delete"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg></button></div></td></tr>
+            <tr draggable="true" data-count="4"><td class="drag-handle-cell">⋮⋮</td><td><div class="name-col">部長</div><div class="lang-col">Director / 部長</div></td><td class="count-col">4 人</td><td class="actions-col"><div style="display:flex;gap:4px;justify-content:flex-end;"><button class="op-btn" onclick="openModal('modal-add-pos')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>編輯</button><button class="op-btn delete count-lock" disabled title="尚有使用中的成員，請先移除所有成員才可刪除"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg></button></div></td></tr>
+            <tr draggable="true" data-count="18"><td class="drag-handle-cell">⋮⋮</td><td><div class="name-col">專員</div><div class="lang-col">Specialist / 専門員</div></td><td class="count-col">18 人</td><td class="actions-col"><div style="display:flex;gap:4px;justify-content:flex-end;"><button class="op-btn" onclick="openModal('modal-add-pos')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>編輯</button><button class="op-btn delete count-lock" disabled title="尚有使用中的成員，請先移除所有成員才可刪除"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg></button></div></td></tr>
+            <tr draggable="true" data-count="0"><td class="drag-handle-cell">⋮⋮</td><td><div class="name-col">顧問</div><div class="lang-col">Consultant / コンサルタント</div></td><td class="count-col" style="color:var(--text-muted);">0 人</td><td class="actions-col"><div style="display:flex;gap:4px;justify-content:flex-end;"><button class="op-btn" onclick="openModal('modal-add-pos')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>編輯</button><button class="op-btn delete" title="刪除"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg></button></div></td></tr>
           </tbody></table>
         </div>
         <!-- 職等 card -->
@@ -2401,11 +2414,13 @@
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14"/><path d="M5 12h14"/></svg>新增項目
             </button>
           </div>
+          <!-- ===== [修改] 職等表格：人數>0 鎖定刪除 ===== -->
           <table class="drag-list"><thead><tr><th style="width:28px;"></th><th>職等名稱</th><th>使用人數</th><th></th></tr></thead>
           <tbody id="lv-tbody">
-            <tr draggable="true"><td class="drag-handle-cell">⋮⋮</td><td><div class="name-col">L1 · 初階</div><div class="lang-col">Junior / ジュニア</div></td><td class="count-col">32 人</td><td class="actions-col"><div style="display:flex;gap:4px;justify-content:flex-end;"><button class="op-btn" onclick="openModal('modal-add-lv')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>編輯</button><button class="op-btn delete"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg></button></div></td></tr>
-            <tr draggable="true"><td class="drag-handle-cell">⋮⋮</td><td><div class="name-col">L2 · 中階</div><div class="lang-col">Intermediate / ミドル</div></td><td class="count-col">48 人</td><td class="actions-col"><div style="display:flex;gap:4px;justify-content:flex-end;"><button class="op-btn" onclick="openModal('modal-add-lv')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>編輯</button><button class="op-btn delete"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg></button></div></td></tr>
-            <tr draggable="true"><td class="drag-handle-cell">⋮⋮</td><td><div class="name-col">L3 · 資深</div><div class="lang-col">Senior / シニア</div></td><td class="count-col">22 人</td><td class="actions-col"><div style="display:flex;gap:4px;justify-content:flex-end;"><button class="op-btn" onclick="openModal('modal-add-lv')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>編輯</button><button class="op-btn delete"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg></button></div></td></tr>
+            <tr draggable="true" data-count="32"><td class="drag-handle-cell">⋮⋮</td><td><div class="name-col">L1 · 初階</div><div class="lang-col">Junior / ジュニア</div></td><td class="count-col">32 人</td><td class="actions-col"><div style="display:flex;gap:4px;justify-content:flex-end;"><button class="op-btn" onclick="openModal('modal-add-lv')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>編輯</button><button class="op-btn delete count-lock" disabled title="尚有使用中的成員，請先移除所有成員才可刪除"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg></button></div></td></tr>
+            <tr draggable="true" data-count="48"><td class="drag-handle-cell">⋮⋮</td><td><div class="name-col">L2 · 中階</div><div class="lang-col">Intermediate / ミドル</div></td><td class="count-col">48 人</td><td class="actions-col"><div style="display:flex;gap:4px;justify-content:flex-end;"><button class="op-btn" onclick="openModal('modal-add-lv')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>編輯</button><button class="op-btn delete count-lock" disabled title="尚有使用中的成員，請先移除所有成員才可刪除"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg></button></div></td></tr>
+            <tr draggable="true" data-count="22"><td class="drag-handle-cell">⋮⋮</td><td><div class="name-col">L3 · 資深</div><div class="lang-col">Senior / シニア</div></td><td class="count-col">22 人</td><td class="actions-col"><div style="display:flex;gap:4px;justify-content:flex-end;"><button class="op-btn" onclick="openModal('modal-add-lv')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>編輯</button><button class="op-btn delete count-lock" disabled title="尚有使用中的成員，請先移除所有成員才可刪除"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg></button></div></td></tr>
+            <tr draggable="true" data-count="0"><td class="drag-handle-cell">⋮⋮</td><td><div class="name-col">D1 · 董事</div><div class="lang-col">Director / ディレクター</div></td><td class="count-col" style="color:var(--text-muted);">0 人</td><td class="actions-col"><div style="display:flex;gap:4px;justify-content:flex-end;"><button class="op-btn" onclick="openModal('modal-add-lv')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>編輯</button><button class="op-btn delete" title="刪除"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg></button></div></td></tr>
           </tbody></table>
         </div>
       </div>
@@ -2415,9 +2430,12 @@
     <section id="page-3.3" class="page-wrap hidden">
       <div class="page-head">
         <div><h1 class="page-title">雇用類別</h1><p class="page-desc">標記成員的雇用類別，名稱可自訂。系統預設提供常用選項。</p></div>
-        <button class="icon-btn" title="同步 Admin 後端資料" onclick="showSyncToast()" style="border:1px solid var(--border);border-radius:var(--radius-sm);padding:7px;background:var(--surface);">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+        <!-- ===== [修改開始] 3.3 同步按鈕加文字 ===== -->
+        <button class="btn" title="同步 Admin 後端資料" onclick="showSyncToast()" style="display:inline-flex;align-items:center;gap:6px;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+          同步主機
         </button>
+        <!-- ===== [修改結束] ===== -->
       </div>
       <div class="card">
         <div class="def-card-head" style="border-radius:var(--radius) var(--radius) 0 0;justify-content:space-between;">
@@ -2428,7 +2446,9 @@
         </div>
         <table class="drag-list"><thead><tr><th style="width:28px;"></th><th>類別名稱</th><th>使用人數</th><th></th></tr></thead>
         <tbody id="emp-tbody">
-          <tr draggable="true"><td class="drag-handle-cell">⋮⋮</td><td><div class="name-col">正職</div><div class="lang-col">Full-time / 正社員</div></td><td class="count-col">96 人</td><td class="actions-col"><div style="display:flex;gap:4px;justify-content:flex-end;"><button class="op-btn" onclick="openModal('modal-add-emp')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>編輯</button><button class="op-btn delete"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg></button></div></td></tr>
+          <tr draggable="true" data-count="96"><td class="drag-handle-cell">⋮⋮</td><td><div class="name-col">正職</div><div class="lang-col">Full-time / 正社員</div></td><td class="count-col">96 人</td><td class="actions-col"><div style="display:flex;gap:4px;justify-content:flex-end;"><button class="op-btn" onclick="openModal('modal-add-emp')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>編輯</button><button class="op-btn delete count-lock" disabled title="尚有使用中的成員，請先移除所有成員才可刪除"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg></button></div></td></tr>
+          <tr draggable="true" data-count="14"><td class="drag-handle-cell">⋮⋮</td><td><div class="name-col">兼職</div><div class="lang-col">Part-time / パートタイム</div></td><td class="count-col">14 人</td><td class="actions-col"><div style="display:flex;gap:4px;justify-content:flex-end;"><button class="op-btn" onclick="openModal('modal-add-emp')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>編輯</button><button class="op-btn delete count-lock" disabled title="尚有使用中的成員，請先移除所有成員才可刪除"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg></button></div></td></tr>
+          <tr draggable="true" data-count="0"><td class="drag-handle-cell">⋮⋮</td><td><div class="name-col">顧問合約</div><div class="lang-col">Consultant / 顧問契約</div></td><td class="count-col" style="color:var(--text-muted);">0 人</td><td class="actions-col"><div style="display:flex;gap:4px;justify-content:flex-end;"><button class="op-btn" onclick="openModal('modal-add-emp')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>編輯</button><button class="op-btn delete" title="刪除"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg></button></div></td></tr>
         </tbody></table>
       </div>
     </section>
@@ -2461,11 +2481,12 @@
           <p class="page-desc">管理組織內所有成員，可透過 CSV 批量匯入、批次調整狀態。</p>
         </div>
         <div class="btn-group">
-          <button class="btn">
+          <!-- ===== [修改開始] 4.1 按鈕文案 & 交互 ===== -->
+          <button class="btn" onclick="openModal('modal-bulk-import')">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-            CSV 匯入
+            批次新增成員
           </button>
-          <button class="btn">
+          <button class="btn" onclick="openModal('modal-export-member')">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
             匯出
           </button>
@@ -2473,6 +2494,7 @@
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
             新增成員
           </button>
+          <!-- ===== [修改結束] ===== -->
         </div>
       </div>
 
@@ -2915,15 +2937,22 @@
             </div>
           </div>
 
+          <!-- ===== [修改] 封鎖使用 APP → 單一總開關 ===== -->
           <div style="font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:10px;">封鎖使用 APP</div>
           <div class="card" style="overflow:hidden;">
-            <div style="display:grid;grid-template-columns:1fr auto;padding:10px 16px;background:#fafbfc;border-bottom:1px solid var(--border);"><span style="font-size:11px;font-weight:600;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.04em;">應用程式</span><span style="font-size:11px;font-weight:600;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.04em;">允許使用</span></div>
-            <div class="app-block-row"><div style="display:flex;align-items:center;gap:10px;"><div style="width:28px;height:28px;border-radius:7px;background:#06b6d4;display:flex;align-items:center;justify-content:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><div><div style="font-size:13px;font-weight:600;">訊息</div><div style="font-size:11px;color:var(--text-muted);">即時通訊</div></div></div><label class="switch"><input type="checkbox" checked /><span class="slider"></span></label></div>
-            <div class="app-block-row"><div style="display:flex;align-items:center;gap:10px;"><div style="width:28px;height:28px;border-radius:7px;background:#4285f4;display:flex;align-items:center;justify-content:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="22,4 12,14 2,4"/></svg></div><div><div style="font-size:13px;font-weight:600;">郵件</div><div style="font-size:11px;color:var(--text-muted);">電子郵件</div></div></div><label class="switch"><input type="checkbox" checked /><span class="slider"></span></label></div>
-            <div class="app-block-row"><div style="display:flex;align-items:center;gap:10px;"><div style="width:28px;height:28px;border-radius:7px;background:#34a853;display:flex;align-items:center;justify-content:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg></div><div><div style="font-size:13px;font-weight:600;">Drive</div><div style="font-size:11px;color:var(--text-muted);">檔案儲存</div></div></div><label class="switch"><input type="checkbox" checked /><span class="slider"></span></label></div>
-            <div class="app-block-row"><div style="display:flex;align-items:center;gap:10px;"><div style="width:28px;height:28px;border-radius:7px;background:#f59e0b;display:flex;align-items:center;justify-content:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div><div><div style="font-size:13px;font-weight:600;">行事曆</div><div style="font-size:11px;color:var(--text-muted);">事件排程</div></div></div><label class="switch"><input type="checkbox" checked /><span class="slider"></span></label></div>
-            <div class="app-block-row"><div style="display:flex;align-items:center;gap:10px;"><div style="width:28px;height:28px;border-radius:7px;background:#8b5cf6;display:flex;align-items:center;justify-content:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div><div><div style="font-size:13px;font-weight:600;">Note</div><div style="font-size:11px;color:var(--text-muted);">筆記</div></div></div><label class="switch"><input type="checkbox" checked /><span class="slider"></span></label></div>
-            <div class="app-block-row" style="border-bottom:none;"><div style="display:flex;align-items:center;gap:10px;"><div style="width:28px;height:28px;border-radius:7px;background:#ef4444;display:flex;align-items:center;justify-content:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div><div><div style="font-size:13px;font-weight:600;">任務</div><div style="font-size:11px;color:var(--text-muted);">工作管理</div></div></div><label class="switch"><input type="checkbox" /><span class="slider"></span></label></div>
+            <div class="app-block-row" style="border-bottom:none;align-items:flex-start;gap:14px;padding:14px 16px;">
+              <div style="display:flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#4f46e5,#7c3aed);flex-shrink:0;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+              </div>
+              <div style="flex:1;">
+                <div style="font-size:13px;font-weight:600;margin-bottom:2px;">封鎖透過行動 APP 操作</div>
+                <div style="font-size:12px;color:var(--text-muted);line-height:1.55;">開啟後，此成員將無法透過 LINE WORKS 行動應用程式進行任何操作，僅限使用網頁版。</div>
+              </div>
+              <label class="switch" style="flex-shrink:0;margin-top:4px;">
+                <input type="checkbox"/>
+                <span class="slider"></span>
+              </label>
+            </div>
           </div>
         </div>
 
@@ -2940,7 +2969,7 @@
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
           暫停成員
         </button>
-        <button class="btn danger" onclick="openModal('modal-member-delete')">
+        <button class="btn danger" onclick="resetAndOpenDeleteModal('modal-member-delete')">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M9 6V4h6v2"/></svg>
           刪除成員
         </button>
@@ -3686,7 +3715,7 @@
               <td><span class="badge neutral">HR 管理員</span></td>
               <td class="text-sec" style="font-size:13px;">2026-05-05 10:23</td>
               <td class="text-sec" style="font-size:13px;">2025-03-15</td>
-              <td><div class="row-flex" style="gap:6px;justify-content:center;"><button class="op-btn" onclick="openModal('modal-add-user')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>編輯</button><button class="op-btn delete" onclick="openDeleteConfirm('陳怡君')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg></button></div></td>
+              <td><div class="row-flex" style="gap:6px;justify-content:center;"><button class="op-btn" onclick="openModal('modal-add-user')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>編輯</button><button class="op-btn delete" onclick="openDeleteMemberConfirm('陳怡君')" style="gap:4px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>刪除</button></div></td>
             </tr>
 
             <tr data-uname="張雅雯" data-urole="部門主管" data-ustatus="啟用">
@@ -3696,7 +3725,7 @@
               <td><span class="badge neutral">部門主管</span></td>
               <td class="text-sec" style="font-size:13px;">2026-05-03 14:32</td>
               <td class="text-sec" style="font-size:13px;">2024-08-10</td>
-              <td><div class="row-flex" style="gap:6px;justify-content:center;"><button class="op-btn" onclick="openModal('modal-add-user')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>編輯</button><button class="op-btn delete" onclick="openDeleteConfirm('張雅雯')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg></button></div></td>
+              <td><div class="row-flex" style="gap:6px;justify-content:center;"><button class="op-btn" onclick="openModal('modal-add-user')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>編輯</button><button class="op-btn delete" onclick="openDeleteMemberConfirm('張雅雯')" style="gap:4px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>刪除</button></div></td>
             </tr>
 
             <tr data-uname="林家豪" data-urole="一般員工" data-ustatus="停用">
@@ -3706,7 +3735,7 @@
               <td><span class="badge neutral">一般員工</span></td>
               <td class="text-sec" style="font-size:13px;">2026-04-28 16:45</td>
               <td class="text-sec" style="font-size:13px;">2024-11-05</td>
-              <td><div class="row-flex" style="gap:6px;justify-content:center;"><button class="op-btn" onclick="openModal('modal-add-user')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>編輯</button><button class="op-btn delete" onclick="openDeleteConfirm('林家豪')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg></button></div></td>
+              <td><div class="row-flex" style="gap:6px;justify-content:center;"><button class="op-btn" onclick="openModal('modal-add-user')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>編輯</button><button class="op-btn delete" onclick="openDeleteMemberConfirm('林家豪')" style="gap:4px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>刪除</button></div></td>
             </tr>
 
             <tr data-uname="黃詩涵" data-urole="一般員工" data-ustatus="帳號失效">
@@ -3716,7 +3745,7 @@
               <td><span class="badge neutral">一般員工</span></td>
               <td class="text-sec" style="font-size:13px;">—</td>
               <td class="text-sec" style="font-size:13px;">2025-01-20</td>
-              <td><div class="row-flex" style="gap:6px;justify-content:center;"><button class="op-btn" onclick="openModal('modal-add-user')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>編輯</button><button class="op-btn delete" onclick="openDeleteConfirm('黃詩涵')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg></button></div></td>
+              <td><div class="row-flex" style="gap:6px;justify-content:center;"><button class="op-btn" onclick="openModal('modal-add-user')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>編輯</button><button class="op-btn delete" onclick="openDeleteMemberConfirm('黃詩涵')" style="gap:4px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>刪除</button></div></td>
             </tr>
 
             <tr data-uname="吳承翰" data-urole="一般員工" data-ustatus="啟用">
@@ -3726,7 +3755,7 @@
               <td><span class="badge neutral">一般員工</span></td>
               <td class="text-sec" style="font-size:13px;">2026-05-12 08:30</td>
               <td class="text-sec" style="font-size:13px;">2025-02-14</td>
-              <td><div class="row-flex" style="gap:6px;justify-content:center;"><button class="op-btn" onclick="openModal('modal-add-user')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>編輯</button><button class="op-btn delete" onclick="openDeleteConfirm('吳承翰')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg></button></div></td>
+              <td><div class="row-flex" style="gap:6px;justify-content:center;"><button class="op-btn" onclick="openModal('modal-add-user')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>編輯</button><button class="op-btn delete" onclick="openDeleteMemberConfirm('吳承翰')" style="gap:4px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>刪除</button></div></td>
             </tr>
 
             <tr data-uname="蔡欣怡" data-urole="一般員工" data-ustatus="啟用">
@@ -3736,7 +3765,7 @@
               <td><span class="badge neutral">一般員工</span></td>
               <td class="text-sec" style="font-size:13px;">—</td>
               <td class="text-sec" style="font-size:13px;">2026-04-28</td>
-              <td><div class="row-flex" style="gap:6px;justify-content:center;"><button class="op-btn" onclick="openModal('modal-add-user')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>編輯</button><button class="op-btn delete" onclick="openDeleteConfirm('蔡欣怡')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg></button></div></td>
+              <td><div class="row-flex" style="gap:6px;justify-content:center;"><button class="op-btn" onclick="openModal('modal-add-user')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>編輯</button><button class="op-btn delete" onclick="openDeleteMemberConfirm('蔡欣怡')" style="gap:4px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>刪除</button></div></td>
             </tr>
 
             <tr data-uname="鄭子翔" data-urole="一般員工" data-ustatus="停用">
@@ -3746,7 +3775,7 @@
               <td><span class="badge neutral">一般員工</span></td>
               <td class="text-sec" style="font-size:13px;">2026-04-15 11:20</td>
               <td class="text-sec" style="font-size:13px;">2025-09-01</td>
-              <td><div class="row-flex" style="gap:6px;justify-content:center;"><button class="op-btn" onclick="openModal('modal-add-user')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>編輯</button><button class="op-btn delete" onclick="openDeleteConfirm('鄭子翔')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg></button></div></td>
+              <td><div class="row-flex" style="gap:6px;justify-content:center;"><button class="op-btn" onclick="openModal('modal-add-user')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>編輯</button><button class="op-btn delete" onclick="openDeleteMemberConfirm('鄭子翔')" style="gap:4px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>刪除</button></div></td>
             </tr>
 
           </tbody>
@@ -5045,15 +5074,22 @@
         </div>
       </div>
 
-      <!-- 封鎖使用 APP -->
+      <!-- ===== [修改] 封鎖使用 APP → 單一總開關 ===== -->
       <div style="font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:8px;">封鎖使用 APP</div>
       <div class="card" style="overflow:hidden;">
-        <div class="app-block-row"><div style="display:flex;align-items:center;gap:8px;"><div style="width:24px;height:24px;border-radius:6px;background:#06b6d4;display:flex;align-items:center;justify-content:center;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><span style="font-size:13px;font-weight:500;">訊息</span></div><label class="switch"><input type="checkbox" checked /><span class="slider"></span></label></div>
-        <div class="app-block-row"><div style="display:flex;align-items:center;gap:8px;"><div style="width:24px;height:24px;border-radius:6px;background:#4285f4;display:flex;align-items:center;justify-content:center;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="22,4 12,14 2,4"/></svg></div><span style="font-size:13px;font-weight:500;">郵件</span></div><label class="switch"><input type="checkbox" checked /><span class="slider"></span></label></div>
-        <div class="app-block-row"><div style="display:flex;align-items:center;gap:8px;"><div style="width:24px;height:24px;border-radius:6px;background:#34a853;display:flex;align-items:center;justify-content:center;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg></div><span style="font-size:13px;font-weight:500;">Drive</span></div><label class="switch"><input type="checkbox" checked /><span class="slider"></span></label></div>
-        <div class="app-block-row"><div style="display:flex;align-items:center;gap:8px;"><div style="width:24px;height:24px;border-radius:6px;background:#f59e0b;display:flex;align-items:center;justify-content:center;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div><span style="font-size:13px;font-weight:500;">行事曆</span></div><label class="switch"><input type="checkbox" checked /><span class="slider"></span></label></div>
-        <div class="app-block-row"><div style="display:flex;align-items:center;gap:8px;"><div style="width:24px;height:24px;border-radius:6px;background:#8b5cf6;display:flex;align-items:center;justify-content:center;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div><span style="font-size:13px;font-weight:500;">Note</span></div><label class="switch"><input type="checkbox" checked /><span class="slider"></span></label></div>
-        <div class="app-block-row" style="border-bottom:none;"><div style="display:flex;align-items:center;gap:8px;"><div style="width:24px;height:24px;border-radius:6px;background:#ef4444;display:flex;align-items:center;justify-content:center;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div><span style="font-size:13px;font-weight:500;">任務</span></div><label class="switch"><input type="checkbox" /><span class="slider"></span></label></div>
+        <div class="app-block-row" style="border-bottom:none;align-items:flex-start;gap:12px;padding:14px 16px;">
+          <div style="display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#4f46e5,#7c3aed);flex-shrink:0;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+          </div>
+          <div style="flex:1;">
+            <div style="font-size:13px;font-weight:600;margin-bottom:2px;">封鎖透過行動 APP 操作</div>
+            <div style="font-size:12px;color:var(--text-muted);line-height:1.55;">開啟後，此成員將無法透過 LINE WORKS 行動應用程式進行任何操作，僅限使用網頁版。</div>
+          </div>
+          <label class="switch" style="flex-shrink:0;margin-top:2px;">
+            <input type="checkbox"/>
+            <span class="slider"></span>
+          </label>
+        </div>
       </div>
     </div>
 
@@ -5067,7 +5103,7 @@
     </button>
     <div style="flex:1;"></div>
     <button class="btn" onclick="openModal('modal-member-suspend')">暫停</button>
-    <button class="btn danger" onclick="openModal('modal-member-delete')">刪除</button>
+    <button class="btn danger" onclick="resetAndOpenDeleteModal('modal-member-delete')">刪除</button>
     <button class="btn primary" onclick="closeMemberDetail()">
       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
       儲存變更
@@ -5208,26 +5244,58 @@
   </div>
 </div>
 
-<!-- ============= Modal：刪除成員 ============= -->
+<!-- ============= Modal：刪除成員（detail page） ============= -->
 <div class="modal-overlay" id="modal-member-delete" onclick="closeModalIfBackdrop(event,'modal-member-delete')">
-  <div class="modal" style="width:400px;">
+  <div class="modal" style="width:480px;">
     <div class="modal-head">
-      <h3 class="modal-title" style="color:var(--danger);">刪除成員</h3>
+      <div>
+        <h3 class="modal-title" style="margin-bottom:2px;">刪除成員</h3>
+        <div style="font-size:12px;color:var(--text-muted);font-weight:400;">確定要刪除該名成員</div>
+      </div>
       <button class="icon-btn" onclick="closeModal('modal-member-delete')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
     </div>
-    <div class="modal-body">
-      <div style="display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--danger-soft);border-radius:var(--radius);margin-bottom:16px;">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--danger)" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-        <div style="font-size:13px;color:#b91c1c;">此操作<strong>無法復原</strong>。刪除後，成員的所有帳號資料將被永久移除。</div>
-      </div>
-      <div class="form-row" style="margin-bottom:0;">
-        <label>請輸入成員姓名 <code style="background:var(--bg);padding:2px 6px;border-radius:4px;font-size:12px;">王明德</code> 以確認刪除</label>
-        <input class="input full" placeholder="輸入姓名確認…" />
-      </div>
+    <div class="modal-body" style="padding:20px 24px;">
+        <!-- Gray subtitle -->
+        <div style="font-size:13px;color:var(--text-secondary);margin-bottom:14px;">確定要刪除該名成員？刪除前請確認並勾選以下所有項目。</div>
+
+        <!-- 4 confirmation checkboxes -->
+        <div style="display:flex;flex-direction:column;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;">
+
+          <label id="del-cb-row-1" class="del-cb-row" style="display:flex;align-items:flex-start;gap:12px;padding:13px 16px;cursor:pointer;border-bottom:1px solid var(--border);transition:background 0.12s;">
+            <input type="checkbox" id="del-cb-1" class="del-confirm-cb" style="accent-color:var(--danger);width:15px;height:15px;flex-shrink:0;margin-top:2px;" onchange="delCbChange()"/>
+            <span style="font-size:13px;line-height:1.55;color:var(--text);">刪除帳戶時，請檢查一起刪除的資料類型，並在必要時進行備份。</span>
+          </label>
+
+          <label id="del-cb-row-2" class="del-cb-row" style="display:flex;align-items:flex-start;gap:12px;padding:13px 16px;cursor:pointer;border-bottom:1px solid var(--border);transition:background 0.12s;">
+            <input type="checkbox" id="del-cb-2" class="del-confirm-cb" style="accent-color:var(--danger);width:15px;height:15px;flex-shrink:0;margin-top:2px;" onchange="delCbChange()"/>
+            <span style="font-size:13px;line-height:1.55;color:var(--text);">被刪除的成員將無法再使用 LINE WORKS。</span>
+          </label>
+
+          <label id="del-cb-row-3" class="del-cb-row" style="display:flex;align-items:flex-start;gap:12px;padding:13px 16px;cursor:pointer;border-bottom:1px solid var(--border);transition:background 0.12s;">
+            <input type="checkbox" id="del-cb-3" class="del-confirm-cb" style="accent-color:var(--danger);width:15px;height:15px;flex-shrink:0;margin-top:2px;" onchange="delCbChange()"/>
+            <span style="font-size:13px;line-height:1.55;color:var(--text);">若 7 天內未取消刪除，成員資料將永久刪除。</span>
+          </label>
+
+          <label id="del-cb-row-4" class="del-cb-row" style="display:flex;align-items:flex-start;gap:12px;padding:13px 16px;cursor:pointer;transition:background 0.12s;">
+            <input type="checkbox" id="del-cb-4" class="del-confirm-cb" style="accent-color:var(--danger);width:15px;height:15px;flex-shrink:0;margin-top:2px;" onchange="delCbChange()"/>
+            <span style="font-size:13px;line-height:1.55;color:var(--text);">留職資訊和基本行事曆的共享成員資訊將立即被刪除，無法復原。</span>
+          </label>
+
+        </div>
+
+        <!-- Progress hint -->
+        <div id="del-hint" style="margin-top:10px;font-size:12px;color:var(--text-muted);display:flex;align-items:center;gap:5px;">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          請逐項勾選以上四項確認後，才可執行刪除。
+        </div>
     </div>
-    <div class="modal-foot">
-      <button class="btn" onclick="closeModal('modal-member-delete')">取消</button>
-      <button class="btn danger" style="background:var(--danger);color:#fff;border-color:var(--danger);" onclick="closeModal('modal-member-delete')">確認刪除</button>
+    <div class="modal-foot" style="justify-content:flex-end;gap:10px;">
+      <button class="btn" style="min-width:80px;" onclick="closeModal('modal-member-delete')">取消</button>
+      <button class="btn danger" id="del-confirm-btn-detail"
+              style="min-width:100px;background:#d1d5db;color:#9ca3af;border-color:#d1d5db;cursor:not-allowed;"
+              disabled onclick="closeModal('modal-member-delete');confirmDeleteMember()">
+        刪除
+      </button>
     </div>
   </div>
 </div>
@@ -5426,15 +5494,10 @@
               由管理員登錄
             </label>
             <div class="admin-opt-sub" id="pw-sub-admin" style="display:none;">
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
-                <div>
-                  <div style="font-size:11px;font-weight:600;color:var(--text-secondary);margin-bottom:4px;">密碼 <span style="color:var(--danger);">*</span></div>
-                  <input class="input full" type="password" placeholder="請輸入密碼" id="pw-manual-input" oninput="checkPwStrength(this.value)" />
-                </div>
-                <div>
-                  <div style="font-size:11px;font-weight:600;color:var(--text-secondary);margin-bottom:4px;">確認密碼 <span style="color:var(--danger);">*</span></div>
-                  <input class="input full" type="password" placeholder="再次輸入" />
-                </div>
+              <!-- ===== [修改] 移除確認密碼欄位 ===== -->
+              <div style="margin-bottom:8px;">
+                <div style="font-size:11px;font-weight:600;color:var(--text-secondary);margin-bottom:4px;">密碼 <span style="color:var(--danger);">*</span></div>
+                <input class="input" style="width:100%;max-width:320px;" type="password" placeholder="請輸入密碼" id="pw-manual-input" oninput="checkPwStrength(this.value)" />
               </div>
               <!-- 強度列 -->
               <div id="pw-strength-wrap" style="display:none;margin-bottom:6px;">
@@ -5466,40 +5529,6 @@
             <div class="admin-opt-sub" id="pw-sub-member" style="display:none;">
               <div style="font-size:13px;color:var(--text-secondary);margin-bottom:7px;">・向成員傳送邀請郵件，由成員自行設定初始密碼。邀請連結有效期限 7 天。</div>
               <input class="input" type="email" style="width:100%;max-width:280px;" placeholder="輸入電子郵件地址" />
-            </div>
-          </div>
-
-          <!-- 分隔線 + 建立密碼發送通知 -->
-          <div style="height:1px;background:var(--border);"></div>
-          <div class="admin-opt-item">
-            <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;color:var(--text-secondary);">
-              <input type="checkbox" id="pw-notify-check" style="accent-color:var(--primary);width:14px;height:14px;" onchange="togglePwNotify(this)" />
-              建立密碼發送通知
-            </label>
-            <!-- 展開：通知方式 + 通知信箱 -->
-            <div id="pw-notify-wrap" style="display:none;margin-top:10px;padding-left:22px;display:none;flex-direction:column;gap:10px;">
-              <!-- 通知方式 -->
-              <div>
-                <div style="font-size:11px;font-weight:600;color:var(--text-secondary);margin-bottom:6px;">通知方式</div>
-                <div style="display:flex;flex-direction:column;gap:6px;">
-                  <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;color:var(--text-secondary);">
-                    <input type="radio" name="pw-notify-timing" value="immediate" checked style="accent-color:var(--primary);" onchange="toggleNotifyTiming(this)" />
-                    立即
-                  </label>
-                  <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;color:var(--text-secondary);">
-                    <input type="radio" name="pw-notify-timing" value="schedule" style="accent-color:var(--primary);" onchange="toggleNotifyTiming(this)" />
-                    預約
-                  </label>
-                  <div id="pw-notify-dt-wrap" style="display:none;padding-left:22px;">
-                    <input class="input" type="datetime-local" id="pw-notify-dt" style="width:210px;font-size:12px;" />
-                  </div>
-                </div>
-              </div>
-              <!-- 通知信箱 -->
-              <div>
-                <div style="font-size:11px;font-weight:600;color:var(--text-secondary);margin-bottom:5px;">通知信箱</div>
-                <input class="input" type="email" style="width:100%;max-width:280px;" placeholder="輸入電子郵件地址" />
-              </div>
             </div>
           </div>
 
@@ -5632,6 +5661,67 @@
         </div>
       </div>
 
+
+      <!-- ===== [修改開始] 通知設定區塊 ===== -->
+      <div style="border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:4px;">
+        <!-- Header row -->
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--bg);border-bottom:1px solid var(--border);">
+          <div>
+            <div style="font-weight:600;font-size:13px;">通知設定</div>
+            <div style="font-size:12px;color:var(--text-muted);margin-top:1px;">新增成員後發送帳號通知信</div>
+          </div>
+          <label class="switch" style="flex-shrink:0;">
+            <input type="checkbox" id="am-notif-toggle" checked onchange="amToggleNotif(this)"/>
+            <span class="slider"></span>
+          </label>
+        </div>
+        <!-- Body: collapses when toggle is off -->
+        <div id="am-notif-body" style="padding:14px 16px;display:flex;flex-direction:column;gap:12px;">
+
+          <!-- 發送時機 -->
+          <div>
+            <div style="font-size:11px;font-weight:600;color:var(--text-secondary);margin-bottom:7px;">發送時機</div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;">
+                <input type="radio" name="am-notif-timing" value="immediate" checked style="accent-color:var(--primary);" onchange="amNotifTiming(this)"/>
+                <div>
+                  <span style="font-weight:500;">立即發送</span>
+                  <span style="font-size:12px;color:var(--text-muted);margin-left:6px;">成員建立後立即寄出通知信</span>
+                </div>
+              </label>
+              <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;">
+                <input type="radio" name="am-notif-timing" value="schedule" style="accent-color:var(--primary);" onchange="amNotifTiming(this)"/>
+                <span style="font-weight:500;">排程發送</span>
+              </label>
+              <!-- 排程日期時間 picker -->
+              <div id="am-notif-dt-wrap" style="display:none;padding-left:22px;">
+                <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                  <input class="input" type="date" id="am-notif-date" style="width:148px;font-size:13px;" placeholder="yyyy/mm/dd"/>
+                  <input class="input" type="time" id="am-notif-time" style="width:106px;font-size:13px;" value="09:00"/>
+                  <span style="font-size:12px;color:var(--text-muted);">（以管理員所在時區為準）</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 發送至 / 公司信箱 -->
+          <div>
+            <div style="font-size:11px;font-weight:600;color:var(--text-secondary);margin-bottom:7px;">發送至（公司信箱）</div>
+            <div style="position:relative;max-width:340px;">
+              <input class="input" type="email" id="am-notif-email" style="width:100%;padding-right:88px;"
+                     placeholder="尚未填寫公司信箱"
+                     value=""/>
+              <button type="button" onclick="amFillCompanyEmail()"
+                      style="position:absolute;right:6px;top:50%;transform:translateY(-50%);font-size:11px;color:var(--primary);background:var(--primary-soft);border:1px solid #a5b4fc;border-radius:4px;padding:2px 8px;cursor:pointer;white-space:nowrap;">
+                自動帶入
+              </button>
+            </div>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">將自動帶入上方填寫的公司電子郵件信箱</div>
+          </div>
+
+        </div>
+      </div>
+      <!-- ===== [修改結束] ===== -->
 
     </div>
     <div class="modal-foot">
@@ -6100,6 +6190,709 @@
       <button class="btn" style="min-width:90px;" onclick="closeModal('modal-delete-confirm')">取消</button>
       <button class="btn danger" style="min-width:90px; background:var(--danger); color:#fff; border-color:var(--danger);" onclick="confirmDeleteRole()">確定刪除</button>
     </div>
+  </div>
+</div>
+
+<!-- ===== [修改開始] 新增三個 Modal ===== -->
+
+<!-- ============= Modal：刪除成員帳戶 ============= -->
+<div class="modal-overlay" id="modal-delete-member" onclick="closeModalIfBackdrop(event, 'modal-delete-member')">
+  <div class="modal" style="width:480px;">
+    <div class="modal-head">
+      <div>
+        <h3 class="modal-title" style="margin-bottom:2px;">刪除成員</h3>
+        <div id="delete-member-name-label" style="font-size:12px;color:var(--text-muted);font-weight:400;"></div>
+      </div>
+      <button class="icon-btn" onclick="closeModal('modal-delete-member')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </button>
+    </div>
+    <div class="modal-body" style="padding:20px 24px;">
+        <!-- Gray subtitle -->
+        <div style="font-size:13px;color:var(--text-secondary);margin-bottom:14px;">確定要刪除該名成員？刪除前請確認並勾選以下所有項目。</div>
+
+        <!-- 4 confirmation checkboxes -->
+        <div style="display:flex;flex-direction:column;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;">
+
+          <label id="del-cb-row-1" class="del-cb-row" style="display:flex;align-items:flex-start;gap:12px;padding:13px 16px;cursor:pointer;border-bottom:1px solid var(--border);transition:background 0.12s;">
+            <input type="checkbox" id="del-cb-1" class="del-confirm-cb" style="accent-color:var(--danger);width:15px;height:15px;flex-shrink:0;margin-top:2px;" onchange="delCbChange()"/>
+            <span style="font-size:13px;line-height:1.55;color:var(--text);">刪除帳戶時，請檢查一起刪除的資料類型，並在必要時進行備份。</span>
+          </label>
+
+          <label id="del-cb-row-2" class="del-cb-row" style="display:flex;align-items:flex-start;gap:12px;padding:13px 16px;cursor:pointer;border-bottom:1px solid var(--border);transition:background 0.12s;">
+            <input type="checkbox" id="del-cb-2" class="del-confirm-cb" style="accent-color:var(--danger);width:15px;height:15px;flex-shrink:0;margin-top:2px;" onchange="delCbChange()"/>
+            <span style="font-size:13px;line-height:1.55;color:var(--text);">被刪除的成員將無法再使用 LINE WORKS。</span>
+          </label>
+
+          <label id="del-cb-row-3" class="del-cb-row" style="display:flex;align-items:flex-start;gap:12px;padding:13px 16px;cursor:pointer;border-bottom:1px solid var(--border);transition:background 0.12s;">
+            <input type="checkbox" id="del-cb-3" class="del-confirm-cb" style="accent-color:var(--danger);width:15px;height:15px;flex-shrink:0;margin-top:2px;" onchange="delCbChange()"/>
+            <span style="font-size:13px;line-height:1.55;color:var(--text);">若 7 天內未取消刪除，成員資料將永久刪除。</span>
+          </label>
+
+          <label id="del-cb-row-4" class="del-cb-row" style="display:flex;align-items:flex-start;gap:12px;padding:13px 16px;cursor:pointer;transition:background 0.12s;">
+            <input type="checkbox" id="del-cb-4" class="del-confirm-cb" style="accent-color:var(--danger);width:15px;height:15px;flex-shrink:0;margin-top:2px;" onchange="delCbChange()"/>
+            <span style="font-size:13px;line-height:1.55;color:var(--text);">留職資訊和基本行事曆的共享成員資訊將立即被刪除，無法復原。</span>
+          </label>
+
+        </div>
+
+        <!-- Progress hint -->
+        <div id="del-hint" style="margin-top:10px;font-size:12px;color:var(--text-muted);display:flex;align-items:center;gap:5px;">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          請逐項勾選以上四項確認後，才可執行刪除。
+        </div>
+    </div>
+    <div class="modal-foot" style="justify-content:flex-end;gap:10px;">
+      <button class="btn" style="min-width:80px;" onclick="closeModal('modal-delete-member')">取消</button>
+      <button class="btn danger" id="del-confirm-btn"
+              style="min-width:100px;background:#d1d5db;color:#9ca3af;border-color:#d1d5db;cursor:not-allowed;"
+              disabled onclick="confirmDeleteMember()">
+        刪除
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ============= Modal：匯出成員資料 ============= -->
+<div class="modal-overlay" id="modal-export-member" onclick="closeModalIfBackdrop(event, 'modal-export-member')">
+  <div class="modal" style="width:540px;max-height:90vh;display:flex;flex-direction:column;">
+    <div class="modal-head" style="flex-shrink:0;">
+      <h3 class="modal-title">匯出成員資料</h3>
+      <button class="icon-btn" onclick="closeModal('modal-export-member')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </button>
+    </div>
+    <div class="modal-body" style="overflow-y:auto;padding:20px 24px;display:flex;flex-direction:column;gap:20px;">
+
+      <!-- 匯出格式 -->
+      <div>
+        <div style="font-size:12px;font-weight:600;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:10px;">匯出格式</div>
+        <div style="display:flex;gap:10px;">
+          <label style="flex:1;border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;cursor:pointer;display:flex;align-items:center;gap:10px;transition:border-color 0.15s;" id="exp-fmt-csv-label">
+            <input type="radio" name="exp-format" value="csv" checked onchange="expFmtChange(this)" style="accent-color:var(--primary);"/>
+            <div>
+              <div style="font-weight:600;font-size:13px;">CSV (.csv)</div>
+              <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">輕量格式，適合其他系統匯入</div>
+            </div>
+          </label>
+          <label style="flex:1;border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;cursor:pointer;display:flex;align-items:center;gap:10px;transition:border-color 0.15s;" id="exp-fmt-xlsx-label">
+            <input type="radio" name="exp-format" value="xlsx" onchange="expFmtChange(this)" style="accent-color:var(--primary);"/>
+            <div>
+              <div style="font-weight:600;font-size:13px;">Excel (.xlsx)</div>
+              <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">包含格式，適合人工閱讀與分析</div>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <!-- 成員資訊欄位 -->
+      <div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+          <div style="font-size:12px;font-weight:600;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.04em;">成員資訊欄位</div>
+          <div style="display:flex;gap:8px;">
+            <button class="btn ghost sm" onclick="expSelectAll(true)" style="font-size:12px;">全選</button>
+            <button class="btn ghost sm" onclick="expSelectAll(false)" style="font-size:12px;">清除</button>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+          <label style="display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;font-size:13px;">
+            <input type="checkbox" checked class="exp-field-cb" style="accent-color:var(--primary);"/>姓名
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;font-size:13px;">
+            <input type="checkbox" checked class="exp-field-cb" style="accent-color:var(--primary);"/>員工編號
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;font-size:13px;">
+            <input type="checkbox" checked class="exp-field-cb" style="accent-color:var(--primary);"/>電子郵件
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;font-size:13px;">
+            <input type="checkbox" checked class="exp-field-cb" style="accent-color:var(--primary);"/>部門
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;font-size:13px;">
+            <input type="checkbox" checked class="exp-field-cb" style="accent-color:var(--primary);"/>職位
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;font-size:13px;">
+            <input type="checkbox" checked class="exp-field-cb" style="accent-color:var(--primary);"/>職等
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;font-size:13px;">
+            <input type="checkbox" checked class="exp-field-cb" style="accent-color:var(--primary);"/>雇用類別
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;font-size:13px;">
+            <input type="checkbox" checked class="exp-field-cb" style="accent-color:var(--primary);"/>到職日
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;font-size:13px;">
+            <input type="checkbox" checked class="exp-field-cb" style="accent-color:var(--primary);"/>帳戶狀態
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;font-size:13px;">
+            <input type="checkbox" class="exp-field-cb" style="accent-color:var(--primary);"/>角色
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;font-size:13px;">
+            <input type="checkbox" class="exp-field-cb" style="accent-color:var(--primary);"/>手機號碼
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;font-size:13px;">
+            <input type="checkbox" class="exp-field-cb" style="accent-color:var(--primary);"/>直屬主管
+          </label>
+        </div>
+      </div>
+
+      <!-- 選擇組織 -->
+      <div>
+        <div style="font-size:12px;font-weight:600;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:10px;">選擇組織</div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:13px;">
+            <input type="radio" name="exp-org" value="all" checked onchange="expOrgChange(this)" style="accent-color:var(--primary);"/>
+            <div>
+              <div style="font-weight:500;">所有部門</div>
+              <div style="font-size:11px;color:var(--text-muted);">匯出整個組織的所有成員資料</div>
+            </div>
+          </label>
+          <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:13px;">
+            <input type="radio" name="exp-org" value="specific" onchange="expOrgChange(this)" style="accent-color:var(--primary);"/>
+            <div>
+              <div style="font-weight:500;">指定部門</div>
+              <div style="font-size:11px;color:var(--text-muted);">僅匯出選擇部門的成員資料</div>
+            </div>
+          </label>
+          <div id="exp-dept-selector" style="display:none;margin-top:4px;padding:12px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);">
+            <div style="font-size:12px;color:var(--text-muted);margin-bottom:8px;">選擇要匯出的部門（可複選）</div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <label style="display:flex;align-items:center;gap:8px;font-size:13px;"><input type="checkbox" style="accent-color:var(--primary);"/>產品研發中心</label>
+              <label style="display:flex;align-items:center;gap:8px;font-size:13px;"><input type="checkbox" style="accent-color:var(--primary);"/>研發部 / 後端組</label>
+              <label style="display:flex;align-items:center;gap:8px;font-size:13px;"><input type="checkbox" style="accent-color:var(--primary);"/>研發部 / 前端組</label>
+              <label style="display:flex;align-items:center;gap:8px;font-size:13px;"><input type="checkbox" style="accent-color:var(--primary);"/>產品部</label>
+              <label style="display:flex;align-items:center;gap:8px;font-size:13px;"><input type="checkbox" style="accent-color:var(--primary);"/>業務部</label>
+              <label style="display:flex;align-items:center;gap:8px;font-size:13px;"><input type="checkbox" style="accent-color:var(--primary);"/>設計部</label>
+              <label style="display:flex;align-items:center;gap:8px;font-size:13px;"><input type="checkbox" style="accent-color:var(--primary);"/>行銷部</label>
+              <label style="display:flex;align-items:center;gap:8px;font-size:13px;"><input type="checkbox" style="accent-color:var(--primary);"/>人資部</label>
+              <label style="display:flex;align-items:center;gap:8px;font-size:13px;"><input type="checkbox" style="accent-color:var(--primary);"/>財會部</label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="modal-foot" style="flex-shrink:0;justify-content:flex-end;gap:10px;">
+      <button class="btn" onclick="closeModal('modal-export-member')">取消</button>
+      <button class="btn primary" onclick="doExportMember()" style="display:inline-flex;align-items:center;gap:6px;">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        確認匯出
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ============= Modal：批次新增成員 ============= -->
+<style>
+  /* ===== Bulk Import Modal Styles ===== */
+  .bulk-step-bar { display:flex; align-items:center; gap:0; margin-bottom:24px; }
+  .bulk-step { display:flex; align-items:center; gap:8px; }
+  .bulk-step-num { width:26px; height:26px; border-radius:50%; border:2px solid var(--border); background:var(--surface); display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; color:var(--text-muted); flex-shrink:0; transition:all 0.2s; }
+  .bulk-step.active .bulk-step-num { border-color:var(--primary); background:var(--primary); color:#fff; }
+  .bulk-step.done .bulk-step-num { border-color:var(--success); background:var(--success); color:#fff; }
+  .bulk-step-label { font-size:12px; font-weight:500; color:var(--text-muted); white-space:nowrap; }
+  .bulk-step.active .bulk-step-label { color:var(--primary); font-weight:600; }
+  .bulk-step.done .bulk-step-label { color:var(--success); }
+  .bulk-step-line { flex:1; height:1px; background:var(--border); min-width:20px; }
+  .bulk-step-line.done { background:var(--success); }
+
+  /* Upload zone */
+  .bulk-upload-zone { border:2px dashed var(--border); border-radius:var(--radius-lg); padding:30px 24px; text-align:center; cursor:pointer; transition:all 0.15s; }
+  .bulk-upload-zone:hover, .bulk-upload-zone.drag-over { border-color:var(--primary); background:var(--primary-soft); }
+  .bulk-upload-zone input[type=file] { display:none; }
+
+  /* Preview table - LWS Admin style */
+  .bulk-preview-wrap { border:1px solid var(--border); border-radius:var(--radius); overflow:auto; max-height:300px; }
+  .bulk-preview-table { width:100%; border-collapse:collapse; font-size:13px; white-space:nowrap; }
+  .bulk-preview-table th {
+    position:sticky; top:0; z-index:2;
+    background:#f8fafc; border-bottom:1px solid var(--border-strong);
+    padding:8px 10px; text-align:left; font-weight:600; font-size:12px; color:var(--text-secondary);
+  }
+  .bulk-preview-table th.col-req { color:var(--primary); }
+  .bulk-preview-table td { padding:7px 10px; border-bottom:1px solid var(--border); vertical-align:middle; }
+  .bulk-preview-table tr.selected-row td { background:#eff6ff; }
+  .bulk-preview-table tr:hover td { background:var(--hover); }
+  .bulk-preview-table tr.selected-row:hover td { background:#dbeafe; }
+  .bulk-preview-table tr.row-error td { background:#fff5f5; }
+
+  /* "未輸入" badge (required missing = blue border) */
+  .cell-missing {
+    display:inline-flex; align-items:center; justify-content:center;
+    border:1.5px solid var(--primary); color:var(--primary);
+    border-radius:4px; padding:2px 8px; font-size:12px; font-weight:500;
+    background:var(--primary-soft); cursor:pointer; white-space:nowrap;
+  }
+  /* error badge (red border) */
+  .cell-error {
+    display:inline-flex; align-items:center; justify-content:center;
+    border:1.5px solid var(--danger); color:var(--danger);
+    border-radius:4px; padding:2px 8px; font-size:12px; font-weight:500;
+    background:var(--danger-soft); cursor:pointer; white-space:nowrap;
+  }
+  .cell-warn-icon {
+    display:inline-flex; align-items:center; justify-content:center;
+    width:18px; height:18px; border-radius:50%; border:1.5px solid var(--danger);
+    color:var(--danger); font-size:11px; font-weight:700; cursor:pointer; flex-shrink:0;
+  }
+  /* Inline dropdown cell for editable fields */
+  .bulk-cell-select {
+    border:1px solid transparent; border-radius:4px; background:transparent;
+    font-size:13px; color:var(--text); padding:2px 4px; cursor:pointer;
+    width:100%; outline:none; font-family:inherit;
+  }
+  .bulk-cell-select:hover { border-color:var(--primary); background:var(--primary-soft); }
+  .bulk-cell-select:focus { border-color:var(--primary); background:#fff; }
+
+  /* Batch toolbar (shown when rows selected) */
+  .bulk-batch-bar {
+    display:none; align-items:center; gap:10px; padding:8px 12px;
+    background:var(--primary-soft); border:1px solid #c7d2fe;
+    border-radius:var(--radius); margin-bottom:10px; flex-wrap:wrap;
+  }
+  .bulk-batch-bar.visible { display:flex; }
+  .bulk-batch-select {
+    border:1px solid #a5b4fc; border-radius:var(--radius-sm);
+    background:#fff; font-size:12px; color:var(--text); padding:4px 8px;
+    cursor:pointer; outline:none; font-family:inherit;
+  }
+  .bulk-batch-apply { font-size:12px; color:var(--primary); font-weight:600; cursor:pointer; background:none; border:none; padding:0; }
+
+  /* Result items */
+  .bulk-result-item { display:flex; align-items:center; gap:10px; padding:10px 14px; border-radius:var(--radius); margin-bottom:8px; }
+  .bulk-result-item.success { background:var(--success-soft); }
+  .bulk-result-item.error { background:var(--danger-soft); }
+
+  /* Password option box (reuse admin-opt styles inline) */
+  .bk-pw-box { border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; margin-top:6px; }
+  .bk-pw-opt { padding:10px 14px; border-bottom:1px solid var(--border); }
+  .bk-pw-opt:last-child { border-bottom:none; }
+  .bk-pw-lbl { display:flex; align-items:center; gap:8px; cursor:pointer; font-size:13px; font-weight:500; color:var(--text); }
+  .bk-pw-sub { padding:10px 14px 4px 30px; display:none; }
+
+  /* Notification toggle */
+  .notif-card {
+    border:2px solid var(--border); border-radius:var(--radius); padding:14px 16px;
+    cursor:pointer; transition:border-color 0.15s, background 0.15s;
+    display:flex; align-items:flex-start; gap:12px; flex:1;
+  }
+  .notif-card.selected { border-color:var(--primary); background:var(--primary-soft); }
+</style>
+
+<div class="modal-overlay" id="modal-bulk-import" onclick="closeModalIfBackdrop(event, 'modal-bulk-import')">
+  <div class="modal" style="width:780px;max-height:92vh;display:flex;flex-direction:column;">
+    <div class="modal-head" style="flex-shrink:0;">
+      <h3 class="modal-title">批次新增成員</h3>
+      <button class="icon-btn" onclick="closeBulkImport()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </button>
+    </div>
+
+    <div class="modal-body" style="overflow-y:auto;padding:24px 28px;flex:1;min-height:0;">
+
+      <!-- ── Step bar ── -->
+      <div class="bulk-step-bar" id="bulk-step-bar">
+        <div class="bulk-step active" id="bulk-s1"><div class="bulk-step-num">1</div><div class="bulk-step-label">上傳檔案</div></div>
+        <div class="bulk-step-line" id="bulk-line1"></div>
+        <div class="bulk-step" id="bulk-s2"><div class="bulk-step-num">2</div><div class="bulk-step-label">預覽確認</div></div>
+        <div class="bulk-step-line" id="bulk-line2"></div>
+        <div class="bulk-step" id="bulk-s3"><div class="bulk-step-num">3</div><div class="bulk-step-label">設定通知</div></div>
+      </div>
+
+      <!-- ══════════════════════════════════════════
+           STEP 1：上傳檔案 ＋ 密碼設定
+      ══════════════════════════════════════════ -->
+      <div id="bulk-panel-1">
+
+        <!-- 1-A: 範本下載 -->
+        <div style="font-weight:600;font-size:13px;margin-bottom:8px;">① 下載範本並填寫成員資料</div>
+        <div style="font-size:12px;color:var(--text-secondary);margin-bottom:10px;">
+          請先下載 CSV 或 Excel 範本，依欄位格式填寫後再上傳。
+          <span style="color:var(--primary);font-weight:600;">必填：</span>姓名、電子郵件
+          &emsp;<span style="color:var(--text-secondary);">選填：</span>員工編號、部門、職位、職等、雇用類別、到職日
+        </div>
+        <div style="display:flex;gap:10px;margin-bottom:20px;">
+          <button class="btn" style="display:inline-flex;align-items:center;gap:6px;font-size:13px;" onclick="bulkDownloadTpl('csv')">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            下載 CSV 範本
+          </button>
+          <button class="btn" style="display:inline-flex;align-items:center;gap:6px;font-size:13px;" onclick="bulkDownloadTpl('xlsx')">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            下載 Excel 範本
+          </button>
+        </div>
+
+        <!-- 1-B: 密碼設定 -->
+        <div style="font-weight:600;font-size:13px;margin-bottom:8px;">② 設定密碼方式</div>
+        <div class="bk-pw-box" id="bk-pw-box">
+
+          <!-- 選項 A：自動建立 -->
+          <div class="bk-pw-opt">
+            <label class="bk-pw-lbl" onclick="bkSelectPw('auto')">
+              <input type="radio" name="bk-pw" value="auto" checked style="accent-color:var(--primary);flex-shrink:0;"/>
+              <div>
+                <div>自動建立</div>
+                <div style="font-size:11px;font-weight:400;color:var(--text-muted);margin-top:1px;">系統自動為每位成員產生隨機密碼</div>
+              </div>
+            </label>
+            <div class="bk-pw-sub" id="bk-pw-sub-auto" style="display:flex;">
+              <label style="display:flex;align-items:center;gap:7px;cursor:pointer;font-size:13px;color:var(--text-secondary);">
+                <input type="checkbox" checked style="accent-color:var(--primary);width:14px;height:14px;"/>
+                要求成員在首次登入時變更密碼
+              </label>
+            </div>
+          </div>
+
+          <!-- 選項 B：由管理員登錄 -->
+          <div class="bk-pw-opt">
+            <label class="bk-pw-lbl" onclick="bkSelectPw('admin')">
+              <input type="radio" name="bk-pw" value="admin" style="accent-color:var(--primary);flex-shrink:0;"/>
+              <div>
+                <div>由管理員登錄</div>
+                <div style="font-size:11px;font-weight:400;color:var(--text-muted);margin-top:1px;">為所有批次成員統一設定相同初始密碼</div>
+              </div>
+            </label>
+            <div class="bk-pw-sub" id="bk-pw-sub-admin" style="display:none;flex-direction:column;gap:8px;">
+              <!-- ===== [修改] 移除確認密碼欄位 ===== -->
+              <div style="margin-bottom:8px;">
+                <div style="font-size:11px;font-weight:600;color:var(--text-secondary);margin-bottom:4px;">密碼 <span style="color:var(--danger);">*</span></div>
+                <input class="input" style="width:100%;max-width:320px;" type="password" placeholder="請輸入密碼" oninput="bkCheckPwStr(this.value)" />
+              </div>
+              <div id="bk-pw-str-wrap" style="display:none;">
+                <div style="display:flex;gap:3px;margin-bottom:3px;">
+                  <div id="bk-ps1" style="height:3px;flex:1;border-radius:2px;background:var(--border);transition:background 0.2s;"></div>
+                  <div id="bk-ps2" style="height:3px;flex:1;border-radius:2px;background:var(--border);transition:background 0.2s;"></div>
+                  <div id="bk-ps3" style="height:3px;flex:1;border-radius:2px;background:var(--border);transition:background 0.2s;"></div>
+                  <div id="bk-ps4" style="height:3px;flex:1;border-radius:2px;background:var(--border);transition:background 0.2s;"></div>
+                </div>
+                <div id="bk-ps-label" style="font-size:11px;color:var(--text-muted);"></div>
+              </div>
+              <div style="font-size:11px;color:var(--text-muted);">・長度 8〜20 字元　・須含大寫 / 小寫 / 數字 / 符號其中 2 種以上</div>
+              <label style="display:flex;align-items:center;gap:7px;cursor:pointer;font-size:13px;color:var(--text-secondary);">
+                <input type="checkbox" style="accent-color:var(--primary);width:14px;height:14px;"/>
+                要求成員在首次登入時變更密碼
+              </label>
+            </div>
+          </div>
+
+          <!-- 選項 C：由成員登錄 -->
+          <div class="bk-pw-opt">
+            <label class="bk-pw-lbl" onclick="bkSelectPw('member')">
+              <input type="radio" name="bk-pw" value="member" style="accent-color:var(--primary);flex-shrink:0;"/>
+              <div>
+                <div>由成員登錄</div>
+                <div style="font-size:11px;font-weight:400;color:var(--text-muted);margin-top:1px;">向成員寄送邀請郵件，由成員自行設定初始密碼（連結有效 7 天）</div>
+              </div>
+            </label>
+          </div>
+
+        </div>
+
+        <!-- 1-C: 上傳區 -->
+        <div style="font-weight:600;font-size:13px;margin:20px 0 8px;">③ 上傳填寫完成的檔案</div>
+        <div class="bulk-upload-zone" id="bulk-upload-zone" onclick="document.getElementById('bulk-file-input').click()"
+             ondragover="event.preventDefault();this.classList.add('drag-over')"
+             ondragleave="this.classList.remove('drag-over')"
+             ondrop="bulkHandleDrop(event)">
+          <input type="file" id="bulk-file-input" accept=".csv,.xlsx,.xls" onchange="bulkFileSelected(this)"/>
+          <div id="bulk-upload-placeholder">
+            <div style="font-size:36px;margin-bottom:10px;opacity:0.3;">📂</div>
+            <div style="font-weight:600;font-size:14px;color:var(--text-secondary);margin-bottom:4px;">點擊或拖曳檔案至此上傳</div>
+            <div style="font-size:12px;color:var(--text-muted);">支援 .csv、.xlsx、.xls 格式，上限 10 MB</div>
+          </div>
+          <div id="bulk-upload-selected" style="display:none;">
+            <div style="font-size:32px;margin-bottom:6px;">📄</div>
+            <div id="bulk-selected-name" style="font-weight:600;font-size:14px;color:var(--primary);"></div>
+            <div id="bulk-selected-size" style="font-size:12px;color:var(--text-muted);margin-top:4px;"></div>
+            <button class="btn ghost sm" style="margin-top:8px;" onclick="event.stopPropagation();bulkClearFile()">重新選擇</button>
+          </div>
+        </div>
+
+        <!-- 1-D: 注意事項 -->
+        <div style="margin-top:14px;padding:12px 14px;background:var(--bg);border-radius:var(--radius);border:1px solid var(--border);font-size:12px;color:var(--text-secondary);line-height:1.9;">
+          <div style="font-weight:600;color:var(--text);margin-bottom:4px;">⚠️ 注意事項</div>
+          • 單次最多可匯入 <strong>500 位</strong>成員<br/>
+          • 電子郵件欄位須為有效的公司 Email 格式<br/>
+          • 重複的 Email 地址將自動略過，不會建立重複帳號<br/>
+          • 帳戶啟動日期以執行作業的管理員所在時區為準；若無輸入時間，將設為 08:00<br/>
+          • 若職位 / 職等 / 用戶類型設定為「不使用」，將不在預覽顯示
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════════
+           STEP 2：預覽確認 — 可編輯表格 ＋ 批次操作
+      ══════════════════════════════════════════ -->
+      <div id="bulk-panel-2" style="display:none;">
+
+        <!-- 摘要行 -->
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+          <div>
+            <span style="font-weight:600;font-size:14px;">預覽匯入資料</span>
+            <span style="font-size:13px;color:var(--text-secondary);margin-left:8px;">共 <strong id="bulk-preview-count">6</strong> 筆&nbsp;·&nbsp;</span>
+            <span style="font-size:13px;"><span style="color:var(--danger);font-weight:600;" id="bulk-err-count">2</span> 筆有錯誤</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <label style="font-size:12px;color:var(--text-muted);display:flex;align-items:center;gap:5px;cursor:pointer;">
+              <input type="checkbox" id="bulk-show-err-only" style="accent-color:var(--primary);" onchange="bulkToggleErrOnly(this)"/>
+              只顯示錯誤
+            </label>
+          </div>
+        </div>
+
+        <!-- 批次操作工具列（選取後出現） -->
+        <div class="bulk-batch-bar" id="bulk-batch-bar">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          <span style="font-size:12px;font-weight:600;color:var(--primary);">已選 <span id="bulk-sel-count">0</span> 筆 — 批次設定：</span>
+          <select class="bulk-batch-select" id="bk-batch-dept" onchange="bkBatchApply('dept', this.value)">
+            <option value="">部門…</option>
+            <option>產品研發中心</option><option>研發部</option><option>產品部</option>
+            <option>業務部</option><option>設計部</option><option>行銷部</option>
+            <option>人資部</option><option>財會部</option>
+          </select>
+          <select class="bulk-batch-select" id="bk-batch-type" onchange="bkBatchApply('type', this.value)">
+            <option value="">用戶類型…</option>
+            <option>一般成員</option><option>管理員</option><option>外部成員</option>
+          </select>
+          <select class="bulk-batch-select" id="bk-batch-title" onchange="bkBatchApply('title', this.value)">
+            <option value="">職稱…</option>
+            <option>執行長</option><option>部長</option><option>工程師</option>
+            <option>專員</option><option>業務專員</option><option>HR 專員</option>
+          </select>
+          <select class="bulk-batch-select" id="bk-batch-lv" onchange="bkBatchApply('lv', this.value)">
+            <option value="">職等…</option>
+            <option>D1</option><option>L1 · 初階</option><option>L2 · 中階</option><option>L3 · 資深</option>
+          </select>
+          <button class="btn ghost sm" style="font-size:12px;" onclick="bkClearSel()">取消選取</button>
+        </div>
+
+        <!-- 預覽表格 -->
+        <div class="bulk-preview-wrap">
+          <table class="bulk-preview-table" id="bulk-preview-table">
+            <thead>
+              <tr>
+                <th style="width:36px;"><input type="checkbox" id="bulk-chk-all" style="accent-color:var(--primary);" onchange="bkToggleAllRows(this)"/></th>
+                <th class="col-req">姓氏</th>
+                <th class="col-req">名字</th>
+                <th class="col-req" style="min-width:90px;">ID</th>
+                <th class="col-req">電子郵件</th>
+                <th>備用電子郵件</th>
+                <th style="min-width:90px;">部門</th>
+                <th style="min-width:90px;">用戶類型</th>
+                <th style="min-width:80px;">職稱</th>
+                <th style="min-width:80px;">職等</th>
+                <th style="width:90px;">狀態</th>
+              </tr>
+            </thead>
+            <tbody id="bulk-preview-tbody">
+
+              <!-- Row 1: valid -->
+              <tr data-row="1" data-ok="true">
+                <td><input type="checkbox" class="bk-row-cb" style="accent-color:var(--primary);" onchange="bkRowCbChange()"/></td>
+                <td>林</td>
+                <td>雨晴</td>
+                <td style="color:var(--text-muted);font-size:12px;">yc.lin</td>
+                <td style="font-size:12px;">yc.lin@company.com</td>
+                <td style="color:var(--text-muted);">—</td>
+                <td><select class="bulk-cell-select" onchange="bkMarkDirty(this)"><option>研發部</option><option>產品部</option><option>業務部</option><option>設計部</option><option>行銷部</option><option>人資部</option><option>財會部</option></select></td>
+                <td><select class="bulk-cell-select" onchange="bkMarkDirty(this)"><option>一般成員</option><option>管理員</option><option>外部成員</option></select></td>
+                <td><select class="bulk-cell-select" onchange="bkMarkDirty(this)"><option>工程師</option><option>部長</option><option>專員</option><option>業務專員</option></select></td>
+                <td><select class="bulk-cell-select" onchange="bkMarkDirty(this)"><option>L2 · 中階</option><option>L1 · 初階</option><option>L3 · 資深</option><option>D1</option></select></td>
+                <td><span class="badge success dot" style="font-size:11px;">可新增</span></td>
+              </tr>
+
+              <!-- Row 2: valid -->
+              <tr data-row="2" data-ok="true">
+                <td><input type="checkbox" class="bk-row-cb" style="accent-color:var(--primary);" onchange="bkRowCbChange()"/></td>
+                <td>方</td>
+                <td>志豪</td>
+                <td style="color:var(--text-muted);font-size:12px;">zh.fang</td>
+                <td style="font-size:12px;">zh.fang@company.com</td>
+                <td style="color:var(--text-muted);">—</td>
+                <td><select class="bulk-cell-select" onchange="bkMarkDirty(this)"><option>業務部</option><option>研發部</option><option>產品部</option><option>設計部</option><option>行銷部</option><option>人資部</option><option>財會部</option></select></td>
+                <td><select class="bulk-cell-select" onchange="bkMarkDirty(this)"><option>一般成員</option><option>管理員</option><option>外部成員</option></select></td>
+                <td><select class="bulk-cell-select" onchange="bkMarkDirty(this)"><option>業務專員</option><option>部長</option><option>工程師</option><option>專員</option></select></td>
+                <td><select class="bulk-cell-select" onchange="bkMarkDirty(this)"><option>L2 · 中階</option><option>L1 · 初階</option><option>L3 · 資深</option><option>D1</option></select></td>
+                <td><span class="badge success dot" style="font-size:11px;">可新增</span></td>
+              </tr>
+
+              <!-- Row 3: missing 姓氏 -->
+              <tr data-row="3" data-ok="false" class="row-error">
+                <td><input type="checkbox" class="bk-row-cb" style="accent-color:var(--primary);" onchange="bkRowCbChange()"/></td>
+                <td><span class="cell-missing">未輸入</span> <span class="cell-warn-icon" title="姓氏為必填">!</span></td>
+                <td>佩蓉</td>
+                <td style="color:var(--text-muted);font-size:12px;">pr.hsieh</td>
+                <td style="color:var(--danger);font-size:12px;text-decoration:line-through;">yq.lee@company.com</td>
+                <td style="color:var(--text-muted);">—</td>
+                <td><select class="bulk-cell-select" onchange="bkMarkDirty(this)"><option>人資部</option><option>研發部</option><option>業務部</option><option>設計部</option></select></td>
+                <td><select class="bulk-cell-select" onchange="bkMarkDirty(this)"><option>一般成員</option><option>管理員</option><option>外部成員</option></select></td>
+                <td><select class="bulk-cell-select" onchange="bkMarkDirty(this)"><option>HR 專員</option><option>部長</option><option>工程師</option><option>專員</option></select></td>
+                <td><select class="bulk-cell-select" onchange="bkMarkDirty(this)"><option>L1 · 初階</option><option>L2 · 中階</option><option>L3 · 資深</option></select></td>
+                <td><span class="badge danger dot" style="font-size:11px;">Email 重複</span></td>
+              </tr>
+
+              <!-- Row 4: missing ID -->
+              <tr data-row="4" data-ok="false" class="row-error">
+                <td><input type="checkbox" class="bk-row-cb" style="accent-color:var(--primary);" onchange="bkRowCbChange()"/></td>
+                <td>陳</td>
+                <td>怡如</td>
+                <td><span class="cell-missing">未輸入</span> <span class="cell-warn-icon" title="ID 為必填">!</span></td>
+                <td style="font-size:12px;">yi.chen@company.com</td>
+                <td style="color:var(--text-muted);">—</td>
+                <td><select class="bulk-cell-select" onchange="bkMarkDirty(this)"><option>設計部</option><option>研發部</option><option>業務部</option><option>人資部</option></select></td>
+                <td><select class="bulk-cell-select" onchange="bkMarkDirty(this)"><option>一般成員</option><option>管理員</option></select></td>
+                <td><select class="bulk-cell-select" onchange="bkMarkDirty(this)"><option>專員</option><option>部長</option><option>工程師</option></select></td>
+                <td><select class="bulk-cell-select" onchange="bkMarkDirty(this)"><option>L1 · 初階</option><option>L2 · 中階</option><option>L3 · 資深</option></select></td>
+                <td><span class="badge warning dot" style="font-size:11px;">缺少 ID</span></td>
+              </tr>
+
+              <!-- Row 5: valid -->
+              <tr data-row="5" data-ok="true">
+                <td><input type="checkbox" class="bk-row-cb" style="accent-color:var(--primary);" onchange="bkRowCbChange()"/></td>
+                <td>吳</td>
+                <td>承翰</td>
+                <td style="color:var(--text-muted);font-size:12px;">ch.wu</td>
+                <td style="font-size:12px;">ch.wu@company.com</td>
+                <td style="color:var(--text-muted);">—</td>
+                <td><select class="bulk-cell-select" onchange="bkMarkDirty(this)"><option>行銷部</option><option>研發部</option><option>業務部</option><option>設計部</option></select></td>
+                <td><select class="bulk-cell-select" onchange="bkMarkDirty(this)"><option>一般成員</option><option>管理員</option><option>外部成員</option></select></td>
+                <td><select class="bulk-cell-select" onchange="bkMarkDirty(this)"><option>專員</option><option>部長</option><option>工程師</option><option>業務專員</option></select></td>
+                <td><select class="bulk-cell-select" onchange="bkMarkDirty(this)"><option>L2 · 中階</option><option>L1 · 初階</option><option>L3 · 資深</option><option>D1</option></select></td>
+                <td><span class="badge success dot" style="font-size:11px;">可新增</span></td>
+              </tr>
+
+              <!-- Row 6: valid -->
+              <tr data-row="6" data-ok="true">
+                <td><input type="checkbox" class="bk-row-cb" style="accent-color:var(--primary);" onchange="bkRowCbChange()"/></td>
+                <td>黃</td>
+                <td>詩涵</td>
+                <td style="color:var(--text-muted);font-size:12px;">sh.huang</td>
+                <td style="font-size:12px;">sh.huang@company.com</td>
+                <td style="color:var(--text-muted);">—</td>
+                <td><select class="bulk-cell-select" onchange="bkMarkDirty(this)"><option>財會部</option><option>研發部</option><option>業務部</option><option>設計部</option></select></td>
+                <td><select class="bulk-cell-select" onchange="bkMarkDirty(this)"><option>一般成員</option><option>管理員</option><option>外部成員</option></select></td>
+                <td><select class="bulk-cell-select" onchange="bkMarkDirty(this)"><option>會計專員</option><option>部長</option><option>工程師</option><option>專員</option></select></td>
+                <td><select class="bulk-cell-select" onchange="bkMarkDirty(this)"><option>L1 · 初階</option><option>L2 · 中階</option><option>L3 · 資深</option></select></td>
+                <td><span class="badge success dot" style="font-size:11px;">可新增</span></td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+
+        <!-- 圖例說明 -->
+        <div style="margin-top:10px;font-size:12px;color:var(--text-muted);line-height:1.9;border-top:1px solid var(--border);padding-top:8px;">
+          ・<span style="color:var(--primary);font-weight:600;">藍色邊框</span>「未輸入」表示必填值缺漏，點擊可直接輸入&emsp;
+          ・<span style="color:var(--danger);font-weight:600;">紅色邊框</span>「未輸入」或刪除線表示資料格式錯誤<br/>
+          ・若職位 / 職等 / 用戶類型設為「不使用」，將不在預覽中顯示&emsp;
+          ・帳戶啟動日期以管理員所在時區為準，未輸入時間將設定為 08:00
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════════
+           STEP 3：設定通知
+      ══════════════════════════════════════════ -->
+      <div id="bulk-panel-3" style="display:none;">
+
+        <div style="font-weight:600;font-size:14px;margin-bottom:4px;">設定帳號通知訊息</div>
+        <div style="font-size:13px;color:var(--text-secondary);margin-bottom:20px;">選擇通知時機，系統將寄送帳號啟用信至成員的公司信箱。</div>
+
+        <!-- 通知時機 -->
+        <div style="font-size:12px;font-weight:600;color:var(--text-secondary);letter-spacing:0.04em;margin-bottom:10px;">通知時機</div>
+        <div style="display:flex;gap:12px;margin-bottom:20px;">
+          <div class="notif-card selected" id="notif-card-now" onclick="bkSelectNotif('now')">
+            <input type="radio" name="bk-notif" value="now" checked style="accent-color:var(--primary);flex-shrink:0;margin-top:2px;"/>
+            <div>
+              <div style="font-weight:600;font-size:13px;margin-bottom:3px;">即時通知</div>
+              <div style="font-size:12px;color:var(--text-muted);line-height:1.6;">完成匯入後，系統立即寄送帳號啟用通知信至各成員信箱。</div>
+            </div>
+          </div>
+          <div class="notif-card" id="notif-card-sched" onclick="bkSelectNotif('sched')">
+            <input type="radio" name="bk-notif" value="sched" style="accent-color:var(--primary);flex-shrink:0;margin-top:2px;"/>
+            <div>
+              <div style="font-weight:600;font-size:13px;margin-bottom:3px;">排程通知</div>
+              <div style="font-size:12px;color:var(--text-muted);line-height:1.6;">指定日期時間後才發送通知，適合提前設定但不立即生效的帳號。</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 排程日期時間（隱藏，選 sched 後顯示） -->
+        <div id="bk-sched-input" style="display:none;margin-bottom:20px;padding:14px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);">
+          <div style="font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:8px;">排程發送時間</div>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <input class="input" type="date" style="width:160px;" />
+            <input class="input" type="time" style="width:110px;" value="09:00" />
+            <span style="font-size:12px;color:var(--text-muted);">（以管理員所在時區為準）</span>
+          </div>
+        </div>
+
+        <!-- 通知信箱 -->
+        <div style="font-size:12px;font-weight:600;color:var(--text-secondary);letter-spacing:0.04em;margin-bottom:10px;">通知信箱</div>
+        <div style="padding:14px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:16px;">
+          <div style="font-size:13px;color:var(--text-secondary);margin-bottom:10px;">
+            通知信將自動寄送至各成員的公司電子郵件地址。以下為本次匯入成員清單：
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px;max-height:160px;overflow-y:auto;">
+            <div style="display:flex;align-items:center;gap:10px;padding:6px 10px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);">
+              <div class="user-avatar c1" style="width:26px;height:26px;font-size:11px;flex-shrink:0;">林</div>
+              <div style="font-size:13px;font-weight:500;">林雨晴</div>
+              <div style="font-size:12px;color:var(--text-muted);margin-left:auto;">yc.lin@company.com</div>
+              <span class="badge success dot" style="font-size:11px;">待發送</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:6px 10px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);">
+              <div class="user-avatar c2" style="width:26px;height:26px;font-size:11px;flex-shrink:0;">方</div>
+              <div style="font-size:13px;font-weight:500;">方志豪</div>
+              <div style="font-size:12px;color:var(--text-muted);margin-left:auto;">zh.fang@company.com</div>
+              <span class="badge success dot" style="font-size:11px;">待發送</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:6px 10px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);">
+              <div class="user-avatar c3" style="width:26px;height:26px;font-size:11px;flex-shrink:0;">吳</div>
+              <div style="font-size:13px;font-weight:500;">吳承翰</div>
+              <div style="font-size:12px;color:var(--text-muted);margin-left:auto;">ch.wu@company.com</div>
+              <span class="badge success dot" style="font-size:11px;">待發送</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:6px 10px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);">
+              <div class="user-avatar c4" style="width:26px;height:26px;font-size:11px;flex-shrink:0;">黃</div>
+              <div style="font-size:13px;font-weight:500;">黃詩涵</div>
+              <div style="font-size:12px;color:var(--text-muted);margin-left:auto;">sh.huang@company.com</div>
+              <span class="badge success dot" style="font-size:11px;">待發送</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:6px 10px;background:#fafafa;border:1px solid #f3f4f6;border-radius:var(--radius-sm);opacity:0.7;">
+              <div class="user-avatar" style="width:26px;height:26px;font-size:11px;flex-shrink:0;background:#e5e7eb;color:var(--text-muted);">謝</div>
+              <div style="font-size:13px;font-weight:500;color:var(--text-muted);">謝佩蓉</div>
+              <div style="font-size:12px;color:var(--text-muted);margin-left:auto;text-decoration:line-through;">yq.lee@company.com</div>
+              <span class="badge neutral dot" style="font-size:11px;">已略過</span>
+            </div>
+          </div>
+          <div style="margin-top:10px;font-size:12px;color:var(--text-muted);">
+            ✅ 4 位成員將收到通知　 ⚠️ 2 筆錯誤已略過
+          </div>
+        </div>
+
+        <!-- 確認摘要 -->
+        <div style="background:var(--primary-soft);border:1px solid #c7d2fe;border-radius:var(--radius);padding:12px 16px;font-size:13px;color:var(--primary);">
+          <strong>即將匯入：</strong>4 位成員　 <strong>密碼方式：</strong>自動建立　 <strong>通知：</strong>即時發送
+        </div>
+
+      </div>
+
+    </div><!-- /.modal-body -->
+
+    <!-- ── Footer ── -->
+    <div class="modal-foot" style="flex-shrink:0;justify-content:space-between;gap:10px;">
+      <div>
+        <button class="btn" id="bulk-btn-back" style="display:none;" onclick="bulkGoStep(bulkCurrentStep - 1)">← 上一步</button>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn" onclick="closeBulkImport()">取消</button>
+        <button class="btn primary" id="bulk-btn-next" onclick="bulkNextStep()" disabled
+                style="display:inline-flex;align-items:center;gap:6px;">
+          下一步 →
+        </button>
+        <button class="btn primary" id="bulk-btn-confirm" style="display:none;display:inline-flex;align-items:center;gap:6px;" onclick="bulkDoImport()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          確認匯入
+        </button>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -7502,7 +8295,13 @@ function openMemberList(roleName, total) {
           '</div>' +
           node.name +
         '</div>' +
-        '<div class="org-detail-acts">' + (node.id !== 'root' ? '<button class="btn danger sm">🗑️ 刪除</button>' : '') + '</div>' +
+        '<div class="org-detail-acts">' +
+          (node.id !== 'root'
+            ? (node.count > 0
+                ? '<button class="btn danger sm" disabled style="opacity:0.38;cursor:not-allowed;" title="部門內尚有 ' + node.count + ' 位成員，請先移除所有成員才可刪除">🗑️ 刪除</button>'
+                : '<button class="btn danger sm">🗑️ 刪除</button>')
+            : '') +
+        '</div>' +
       '</div>' +
       '<div class="org-detail-tabs">' +
         '<button class="org-detail-tab active" data-panel="org-dp-info">基本設定</button>' +
@@ -7824,6 +8623,348 @@ function openMemberList(roleName, total) {
   }
 
   /* org-3.1 init is triggered by goPage('3.1') */
+
+  /* ===== [修改開始] 新增 JS：刪除成員 / 匯出成員 / 批次匯入 ===== */
+
+  // ── 新增成員：通知設定 ─────────────────────────────
+  function amToggleNotif(cb) {
+    var body = document.getElementById('am-notif-body');
+    if (body) body.style.display = cb.checked ? 'flex' : 'none';
+  }
+  function amNotifTiming(radio) {
+    var wrap = document.getElementById('am-notif-dt-wrap');
+    if (wrap) wrap.style.display = radio.value === 'schedule' ? 'block' : 'none';
+  }
+  function amFillCompanyEmail() {
+    // Try to pull from the email field in the modal
+    var emailField = document.querySelector('#modal-add-member input[type="email"]');
+    var target = document.getElementById('am-notif-email');
+    if (target) {
+      var val = emailField ? emailField.value.trim() : '';
+      target.value = val || 'member@company.com'; // fallback demo
+      target.style.borderColor = 'var(--primary)';
+      setTimeout(function(){ target.style.borderColor = ''; }, 800);
+    }
+  }
+
+  // ── 刪除成員：checkbox gating ─────────────────────
+  function resetAndOpenDeleteModal(modalId) {
+    // Reset all checkboxes and buttons before opening
+    [1,2,3,4].forEach(function(n){
+      var cb  = document.getElementById('del-cb-' + n);
+      var row = document.querySelector('#del-cb-row-' + n);
+      if (cb)  cb.checked = false;
+      if (row) row.style.background = '';
+    });
+    ['del-confirm-btn','del-confirm-btn-detail'].forEach(function(id){
+      var btn = document.getElementById(id);
+      if (!btn) return;
+      btn.disabled=true;
+      btn.style.background='#d1d5db'; btn.style.color='#9ca3af';
+      btn.style.borderColor='#d1d5db'; btn.style.cursor='not-allowed';
+    });
+    var hint = document.getElementById('del-hint');
+    if (hint) {
+      hint.style.display='flex';
+      hint.innerHTML='<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>&nbsp;請逐項勾選以上四項確認後，才可執行刪除。';
+    }
+    openModal(modalId);
+  }
+
+  function delCbChange() {
+    var cbs = document.querySelectorAll('.del-confirm-cb');
+    var allChecked = Array.from(cbs).every(function(cb){ return cb.checked; });
+    var checkedCount = Array.from(cbs).filter(function(cb){ return cb.checked; }).length;
+    // Update both possible confirm buttons (list row modal + detail modal)
+    ['del-confirm-btn', 'del-confirm-btn-detail'].forEach(function(id){
+      var btn = document.getElementById(id);
+      if (!btn) return;
+      btn.disabled = !allChecked;
+      btn.style.background   = allChecked ? 'var(--danger)' : '#d1d5db';
+      btn.style.color        = allChecked ? '#fff'          : '#9ca3af';
+      btn.style.borderColor  = allChecked ? 'var(--danger)' : '#d1d5db';
+      btn.style.cursor       = allChecked ? 'pointer'       : 'not-allowed';
+    });
+    var hint = document.getElementById('del-hint');
+    if (hint) {
+      hint.style.display = allChecked ? 'none' : 'flex';
+      hint.innerHTML = allChecked ? '' :
+        '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>&nbsp;已勾選 ' + checkedCount + ' / 4 項，請全部勾選後才可執行刪除。';
+    }
+    [1,2,3,4].forEach(function(n){
+      var row = document.querySelector('#del-cb-row-' + n);
+      var cb  = document.getElementById('del-cb-' + n);
+      if (row && cb) {
+        row.style.background = cb.checked ? '#fff5f5' : '';
+      }
+    });
+  }
+
+  // Reset checkboxes when modal opens
+  function openDeleteMemberConfirm(memberName) {
+    _deleteMemberName = memberName;
+    var label = document.getElementById('delete-member-name-label');
+    if (label) label.textContent = '確定要刪除　' + memberName + '　的帳號？';
+    // Reset all checkboxes
+    [1,2,3,4].forEach(function(n){
+      var cb  = document.getElementById('del-cb-' + n);
+      var row = document.getElementById('del-cb-row-' + n);
+      if (cb)  cb.checked = false;
+      if (row) { row.style.background=''; row.style.color=''; }
+    });
+    ['del-confirm-btn','del-confirm-btn-detail'].forEach(function(id){
+      var btn = document.getElementById(id);
+      if (!btn) return;
+      btn.disabled = true;
+      btn.style.background='#d1d5db'; btn.style.color='#9ca3af';
+      btn.style.borderColor='#d1d5db'; btn.style.cursor='not-allowed';
+    });
+    var hint = document.getElementById('del-hint');
+    if (hint) {
+      hint.style.display = 'flex';
+      hint.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> 請逐項勾選以上四項確認後，才可執行刪除。';
+    }
+    openModal('modal-delete-member');
+  }
+
+
+
+  // ── 刪除成員 ──────────────────────────────────────
+  let _deleteMemberName = null;
+  function confirmDeleteMember() {
+    closeModal('modal-delete-member');
+    const t = document.getElementById('sync-toast');
+    if (t) {
+      const msgEl = t.querySelector('span') || t;
+      msgEl.textContent = '已刪除成員「' + (_deleteMemberName || '') + '」，7 天內可取消';
+      t.style.opacity='1'; t.style.transform='translateX(-50%) translateY(0)';
+      setTimeout(function(){ t.style.opacity='0'; t.style.transform='translateX(-50%) translateY(20px)'; msgEl.textContent='已成功同步 Admin 後端資料庫'; }, 3500);
+    }
+    _deleteMemberName = null;
+  }
+
+  // ── 匯出成員 ──────────────────────────────────────
+  function expFmtChange(radio) {
+    document.getElementById('exp-fmt-csv-label').style.borderColor = 'var(--border)';
+    document.getElementById('exp-fmt-xlsx-label').style.borderColor = 'var(--border)';
+    if (radio.value==='csv') document.getElementById('exp-fmt-csv-label').style.borderColor='var(--primary)';
+    else document.getElementById('exp-fmt-xlsx-label').style.borderColor='var(--primary)';
+  }
+  function expSelectAll(checked) {
+    document.querySelectorAll('.exp-field-cb').forEach(function(cb){ cb.checked=checked; });
+  }
+  function expOrgChange(radio) {
+    const sel=document.getElementById('exp-dept-selector');
+    if (sel) sel.style.display = radio.value==='specific' ? 'block' : 'none';
+  }
+  function doExportMember() {
+    closeModal('modal-export-member');
+    showSyncToast();
+  }
+
+  // ── 批次匯入 Step navigation ───────────────────────
+  var bulkCurrentStep = 1;
+  var bulkHasFile = false;
+
+  function bulkGoStep(step) {
+    [1,2,3].forEach(function(s){
+      var p=document.getElementById('bulk-panel-'+s);
+      var el=document.getElementById('bulk-s'+s);
+      if(p) p.style.display='none';
+      if(el){ el.classList.remove('active','done'); }
+    });
+    [1,2].forEach(function(s){
+      var l=document.getElementById('bulk-line'+s);
+      if(l) l.classList.remove('done');
+    });
+    for(var i=1;i<step;i++){
+      var de=document.getElementById('bulk-s'+i);
+      var dl=document.getElementById('bulk-line'+i);
+      if(de) de.classList.add('done');
+      if(dl) dl.classList.add('done');
+    }
+    var ae=document.getElementById('bulk-s'+step);
+    var ap=document.getElementById('bulk-panel-'+step);
+    if(ae) ae.classList.add('active');
+    if(ap) ap.style.display='block';
+    bulkCurrentStep = step;
+
+    var btnBack    = document.getElementById('bulk-btn-back');
+    var btnNext    = document.getElementById('bulk-btn-next');
+    var btnConfirm = document.getElementById('bulk-btn-confirm');
+
+    if(btnBack)    btnBack.style.display    = step > 1 ? 'inline-flex' : 'none';
+    if(btnNext)  { btnNext.style.display    = step < 3 ? 'inline-flex' : 'none'; btnNext.disabled = !bulkHasFile; }
+    if(btnConfirm) btnConfirm.style.display = step === 3 ? 'inline-flex' : 'none';
+  }
+
+  function bulkNextStep() { if(bulkCurrentStep < 3) bulkGoStep(bulkCurrentStep + 1); }
+
+  function bulkDoImport() {
+    closeBulkImport();
+    // Show success toast
+    var t = document.getElementById('sync-toast');
+    if(t){
+      var msgEl = t.querySelector('span') || t;
+      var orig = msgEl.textContent;
+      msgEl.textContent = '✅ 批次匯入完成：4 位成員已建立，啟用信已發送';
+      t.style.opacity='1'; t.style.transform='translateX(-50%) translateY(0)';
+      setTimeout(function(){ t.style.opacity='0'; t.style.transform='translateX(-50%) translateY(20px)'; msgEl.textContent=orig; }, 4000);
+    }
+  }
+
+  function closeBulkImport() {
+    closeModal('modal-bulk-import');
+    setTimeout(function(){ bulkClearFile(); bulkGoStep(1); }, 300);
+  }
+
+  function bulkFileSelected(input) {
+    if(!input.files || !input.files[0]) return;
+    var file = input.files[0];
+    bulkHasFile = true;
+    document.getElementById('bulk-upload-placeholder').style.display='none';
+    document.getElementById('bulk-upload-selected').style.display='block';
+    document.getElementById('bulk-selected-name').textContent=file.name;
+    document.getElementById('bulk-selected-size').textContent=(file.size/1024).toFixed(1)+' KB';
+    var btn = document.getElementById('bulk-btn-next');
+    if(btn) btn.disabled=false;
+  }
+
+  function bulkClearFile() {
+    bulkHasFile=false;
+    var fi=document.getElementById('bulk-file-input');
+    if(fi) fi.value='';
+    var ph=document.getElementById('bulk-upload-placeholder');
+    var sl=document.getElementById('bulk-upload-selected');
+    if(ph) ph.style.display='block';
+    if(sl) sl.style.display='none';
+    var btn=document.getElementById('bulk-btn-next');
+    if(btn) btn.disabled=true;
+  }
+
+  function bulkHandleDrop(e) {
+    e.preventDefault();
+    var zone=document.getElementById('bulk-upload-zone');
+    if(zone) zone.classList.remove('drag-over');
+    var dt=e.dataTransfer;
+    if(dt && dt.files && dt.files[0]){
+      bulkHasFile=true;
+      document.getElementById('bulk-upload-placeholder').style.display='none';
+      document.getElementById('bulk-upload-selected').style.display='block';
+      document.getElementById('bulk-selected-name').textContent=dt.files[0].name;
+      document.getElementById('bulk-selected-size').textContent=(dt.files[0].size/1024).toFixed(1)+' KB';
+      var btn=document.getElementById('bulk-btn-next');
+      if(btn) btn.disabled=false;
+    }
+  }
+
+  function bulkDownloadTpl(fmt) { showSyncToast(); }
+
+  // ── Step 1 密碼選項 ───────────────────────────────
+  function bkSelectPw(val) {
+    ['auto','admin','member'].forEach(function(v){
+      var sub=document.getElementById('bk-pw-sub-'+v);
+      if(sub) sub.style.display = v===val ? 'flex' : 'none';
+    });
+  }
+
+  function bkCheckPwStr(val) {
+    var wrap=document.getElementById('bk-pw-str-wrap');
+    if(!wrap) return;
+    wrap.style.display = val.length ? 'block' : 'none';
+    var score=0;
+    if(val.length>=8) score++;
+    if(/[A-Z]/.test(val)) score++;
+    if(/[0-9]/.test(val)) score++;
+    if(/[^A-Za-z0-9]/.test(val)) score++;
+    var cols=['#ef4444','#f59e0b','#10b981','#10b981'];
+    var labels=['弱','普通','強','非常強'];
+    for(var i=1;i<=4;i++){
+      var el=document.getElementById('bk-ps'+i);
+      if(el) el.style.background = i<=score ? cols[score-1] : 'var(--border)';
+    }
+    var lbl=document.getElementById('bk-ps-label');
+    if(lbl) lbl.textContent = score ? '密碼強度：'+labels[score-1] : '';
+  }
+
+  // ── Step 2 表格互動 ───────────────────────────────
+  function bkToggleAllRows(masterCb) {
+    document.querySelectorAll('.bk-row-cb').forEach(function(cb){ cb.checked=masterCb.checked; });
+    bkRowCbChange();
+  }
+
+  function bkRowCbChange() {
+    var checked = Array.from(document.querySelectorAll('.bk-row-cb')).filter(function(cb){ return cb.checked; });
+    var bar = document.getElementById('bulk-batch-bar');
+    var sel = document.getElementById('bulk-sel-count');
+    if(bar) bar.classList.toggle('visible', checked.length > 0);
+    if(sel) sel.textContent = checked.length;
+    // sync master checkbox
+    var all = document.querySelectorAll('.bk-row-cb');
+    var master = document.getElementById('bulk-chk-all');
+    if(master) {
+      master.checked = checked.length === all.length;
+      master.indeterminate = checked.length > 0 && checked.length < all.length;
+    }
+  }
+
+  function bkBatchApply(field, val) {
+    if(!val) return;
+    var colMap = { dept:6, type:7, title:8, lv:9 }; // 1-based td index
+    var colIdx = colMap[field];
+    document.querySelectorAll('.bk-row-cb:checked').forEach(function(cb){
+      var row = cb.closest('tr');
+      if(!row) return;
+      var td = row.querySelectorAll('td')[colIdx];
+      if(!td) return;
+      var sel = td.querySelector('select');
+      if(sel){
+        for(var i=0;i<sel.options.length;i++){
+          if(sel.options[i].text === val){ sel.selectedIndex=i; break; }
+        }
+        // If option not found, add it
+        var found=false;
+        for(var i=0;i<sel.options.length;i++){ if(sel.options[i].text===val){ found=true; break; } }
+        if(!found){ var opt=document.createElement('option'); opt.text=val; sel.add(opt); sel.value=val; }
+      }
+    });
+    // Reset batch selects
+    var bkSel = document.getElementById('bk-batch-'+field);
+    if(bkSel) bkSel.value='';
+  }
+
+  function bkClearSel() {
+    document.querySelectorAll('.bk-row-cb').forEach(function(cb){ cb.checked=false; });
+    var master=document.getElementById('bulk-chk-all');
+    if(master){ master.checked=false; master.indeterminate=false; }
+    bkRowCbChange();
+  }
+
+  function bkMarkDirty(sel) {
+    // Visual feedback when cell edited
+    sel.style.borderColor='var(--primary)';
+    setTimeout(function(){ sel.style.borderColor=''; }, 800);
+  }
+
+  function bulkToggleErrOnly(cb) {
+    var rows = document.querySelectorAll('#bulk-preview-tbody tr');
+    rows.forEach(function(r){
+      var ok = r.getAttribute('data-ok') === 'true';
+      r.style.display = cb.checked && ok ? 'none' : '';
+    });
+  }
+
+  // ── Step 3 通知設定 ───────────────────────────────
+  function bkSelectNotif(type) {
+    var cardNow   = document.getElementById('notif-card-now');
+    var cardSched = document.getElementById('notif-card-sched');
+    var schedInput= document.getElementById('bk-sched-input');
+    if(cardNow)   cardNow.classList.toggle('selected', type==='now');
+    if(cardSched) cardSched.classList.toggle('selected', type==='sched');
+    if(schedInput) schedInput.style.display = type==='sched' ? 'block' : 'none';
+  }
+
+  /* ===== [修改結束] ===== */
 
 </script>
 
