@@ -2448,39 +2448,122 @@
         <!-- ===== [修改結束] ===== -->
       </div>
       <div class="def-grid-2">
+        <!-- ===== [修改開始] 3.2 職位 card：改為編輯項目模式，移除列表編輯/刪除按鈕 ===== -->
         <!-- 職位 card -->
         <div class="def-card">
           <div class="def-card-head">
             <div class="def-card-title">職位</div>
-            <button class="btn primary sm" onclick="openModal('modal-add-pos')">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14"/><path d="M5 12h14"/></svg>新增項目
-            </button>
+            <div style="display:flex;gap:6px;align-items:center;" id="pos-btn-group">
+              <button class="btn primary sm" id="pos-edit-btn" onclick="togglePosEdit()">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>編輯項目
+              </button>
+              <button class="btn sm" id="pos-cancel-btn" onclick="cancelPosEdit()" style="display:none;">取消</button>
+              <button class="btn primary sm" id="pos-save-btn" onclick="savePosEdit()" style="display:none;">儲存</button>
+            </div>
           </div>
-          <!-- ===== [修改] 職位表格：人數>0 鎖定刪除 ===== -->
-          <table class="drag-list"><thead><tr><th style="width:28px;"></th><th>職位名稱</th><th>使用人數</th><th></th></tr></thead>
+          <table class="drag-list" id="pos-table"><thead><tr><th style="width:28px;"></th><th>職位名稱</th><th>使用人數</th></tr></thead>
           <tbody id="pos-tbody">
-            <tr draggable="true" data-count="4"><td class="drag-handle-cell">⋮⋮</td><td><div class="name-col">部長</div><div class="lang-col" title="部長 / 部长 / Director / 部長 / 부장">部長 / 部长 / Director / 部長 / 부장</div></td><td class="count-col">4 人</td><td class="actions-col"><div style="display:flex;gap:4px;justify-content:flex-end;"><button class="op-btn" onclick="openModal('modal-add-pos')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>編輯</button><button class="op-btn delete count-lock" disabled title="尚有使用中的成員，請先移除所有成員才可刪除"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg></button></div></td></tr>
-            <tr draggable="true" data-count="18"><td class="drag-handle-cell">⋮⋮</td><td><div class="name-col">專員</div><div class="lang-col" title="專員 / 专员 / Specialist / 専門員 / 전문원">專員 / 专员 / Specialist / 専門員 / 전문원</div></td><td class="count-col">18 人</td><td class="actions-col"><div style="display:flex;gap:4px;justify-content:flex-end;"><button class="op-btn" onclick="openModal('modal-add-pos')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>編輯</button><button class="op-btn delete count-lock" disabled title="尚有使用中的成員，請先移除所有成員才可刪除"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg></button></div></td></tr>
-            <tr draggable="true" data-count="0"><td class="drag-handle-cell">⋮⋮</td><td><div class="name-col">顧問</div><div class="lang-col" title="顧問 / 顾问 / Consultant / コンサルタント / 컨설턴트">顧問 / 顾问 / Consultant / コンサルタント / 컨설턴트</div></td><td class="count-col" style="color:var(--text-muted);">0 人</td><td class="actions-col"><div style="display:flex;gap:4px;justify-content:flex-end;"><button class="op-btn" onclick="openModal('modal-add-pos')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>編輯</button><button class="op-btn delete" title="刪除"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg></button></div></td></tr>
+            <tr draggable="true" data-count="4" data-name="部長" data-lang="部長 / 部长 / Director / 部長 / 부장">
+              <td class="drag-handle-cell">⋮⋮</td>
+              <td>
+                <div class="pos-view-name"><div class="name-col">部長</div><div class="lang-col" title="部長 / 部长 / Director / 部長 / 부장">部長 / 部长 / Director / 部長 / 부장</div></div>
+                <div class="pos-edit-name" style="display:none;"><input type="text" class="input" value="部長" style="width:100%;font-size:13px;padding:5px 8px;"/></div>
+              </td>
+              <td class="count-col">4 人</td>
+            </tr>
+            <tr draggable="true" data-count="18" data-name="專員" data-lang="專員 / 专员 / Specialist / 専門員 / 전문원">
+              <td class="drag-handle-cell">⋮⋮</td>
+              <td>
+                <div class="pos-view-name"><div class="name-col">專員</div><div class="lang-col" title="專員 / 专员 / Specialist / 専門員 / 전문원">專員 / 专员 / Specialist / 専門員 / 전문원</div></div>
+                <div class="pos-edit-name" style="display:none;"><input type="text" class="input" value="專員" style="width:100%;font-size:13px;padding:5px 8px;"/></div>
+              </td>
+              <td class="count-col">18 人</td>
+            </tr>
+            <tr draggable="true" data-count="0" data-name="顧問" data-lang="顧問 / 顾问 / Consultant / コンサルタント / 컨설턴트">
+              <td class="drag-handle-cell">⋮⋮</td>
+              <td>
+                <div class="pos-view-name"><div class="name-col">顧問</div><div class="lang-col" title="顧問 / 顾问 / Consultant / コンサルタント / 컨설턴트">顧問 / 顾问 / Consultant / コンサルタント / 컨설턴트</div></div>
+                <div class="pos-edit-name" style="display:none;"><input type="text" class="input" value="顧問" style="width:100%;font-size:13px;padding:5px 8px;"/></div>
+              </td>
+              <td class="count-col" style="color:var(--text-muted);">0 人</td>
+            </tr>
           </tbody></table>
         </div>
+        <!-- ===== [修改結束] ===== -->
+        <!-- ===== [修改開始] 3.2 職等 card：改為編輯項目模式，移除列表編輯/刪除按鈕 ===== -->
         <!-- 職等 card -->
         <div class="def-card">
           <div class="def-card-head">
             <div class="def-card-title">職等</div>
-            <button class="btn primary sm" onclick="openModal('modal-add-lv')">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14"/><path d="M5 12h14"/></svg>新增項目
-            </button>
+            <div style="display:flex;gap:6px;align-items:center;" id="lv-btn-group">
+              <button class="btn primary sm" id="lv-edit-btn" onclick="toggleLvEdit()">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>編輯項目
+              </button>
+              <button class="btn sm" id="lv-cancel-btn" onclick="cancelLvEdit()" style="display:none;">取消</button>
+              <button class="btn primary sm" id="lv-save-btn" onclick="saveLvEdit()" style="display:none;">儲存</button>
+            </div>
           </div>
-          <!-- ===== [修改] 職等表格：人數>0 鎖定刪除 ===== -->
-          <table class="drag-list"><thead><tr><th style="width:28px;"></th><th>職等名稱</th><th style="width:80px;text-align:center;">主管職位</th><th>使用人數</th><th></th></tr></thead>
+          <table class="drag-list" id="lv-table"><thead><tr><th style="width:28px;"></th><th>職等名稱</th><th style="width:90px;text-align:center;">主管職位</th><th>使用人數</th></tr></thead>
           <tbody id="lv-tbody">
-            <tr draggable="true" data-count="32"><td class="drag-handle-cell">⋮⋮</td><td><div class="name-col">L1 · 初階</div><div class="lang-col" title="L1 初階 / L1 初级 / Junior / ジュニア / 주니어">L1 初階 / L1 初级 / Junior / ジュニア / 주니어</div></td><td style="text-align:center;"><label style="display:inline-flex;align-items:center;justify-content:center;cursor:pointer;"><input type="checkbox" style="width:15px;height:15px;accent-color:var(--primary);cursor:pointer;" onchange="lvToggleManager(this)"/></label></td><td class="count-col">32 人</td><td class="actions-col"><div style="display:flex;gap:4px;justify-content:flex-end;"><button class="op-btn" onclick="openModal('modal-add-lv')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>編輯</button><button class="op-btn delete count-lock" disabled title="尚有使用中的成員，請先移除所有成員才可刪除"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg></button></div></td></tr>
-            <tr draggable="true" data-count="48"><td class="drag-handle-cell">⋮⋮</td><td><div class="name-col">L2 · 中階</div><div class="lang-col" title="L2 中階 / L2 中级 / Intermediate / ミドル / 중級">L2 中階 / L2 中级 / Intermediate / ミドル / 중급</div></td><td style="text-align:center;"><label style="display:inline-flex;align-items:center;justify-content:center;cursor:pointer;"><input type="checkbox" style="width:15px;height:15px;accent-color:var(--primary);cursor:pointer;" onchange="lvToggleManager(this)"/></label></td><td class="count-col">48 人</td><td class="actions-col"><div style="display:flex;gap:4px;justify-content:flex-end;"><button class="op-btn" onclick="openModal('modal-add-lv')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>編輯</button><button class="op-btn delete count-lock" disabled title="尚有使用中的成員，請先移除所有成員才可刪除"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg></button></div></td></tr>
-            <tr draggable="true" data-count="22"><td class="drag-handle-cell">⋮⋮</td><td><div class="name-col">L3 · 資深</div><div class="lang-col" title="L3 資深 / L3 资深 / Senior / シニア / 시니어">L3 資深 / L3 资深 / Senior / シニア / 시니어</div></td><td style="text-align:center;"><label style="display:inline-flex;align-items:center;justify-content:center;cursor:pointer;"><input type="checkbox" checked style="width:15px;height:15px;accent-color:var(--primary);cursor:pointer;" onchange="lvToggleManager(this)"/></label></td><td class="count-col">22 人</td><td class="actions-col"><div style="display:flex;gap:4px;justify-content:flex-end;"><button class="op-btn" onclick="openModal('modal-add-lv')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>編輯</button><button class="op-btn delete count-lock" disabled title="尚有使用中的成員，請先移除所有成員才可刪除"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg></button></div></td></tr>
-            <tr draggable="true" data-count="0"><td class="drag-handle-cell">⋮⋮</td><td><div class="name-col">D1 · 董事</div><div class="lang-col" title="D1 董事 / D1 董事 / Director / ディレクター / 디렉터">D1 董事 / D1 董事 / Director / ディレクター / 디렉터</div></td><td style="text-align:center;"><label style="display:inline-flex;align-items:center;justify-content:center;cursor:pointer;"><input type="checkbox" checked style="width:15px;height:15px;accent-color:var(--primary);cursor:pointer;" onchange="lvToggleManager(this)"/></label></td><td class="count-col" style="color:var(--text-muted);">0 人</td><td class="actions-col"><div style="display:flex;gap:4px;justify-content:flex-end;"><button class="op-btn" onclick="openModal('modal-add-lv')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>編輯</button><button class="op-btn delete" title="刪除"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg></button></div></td></tr>
+            <tr draggable="true" data-count="32" data-name="L1 · 初階" data-manager="false">
+              <td class="drag-handle-cell">⋮⋮</td>
+              <td>
+                <div class="lv-view-name"><div class="name-col">L1 · 初階</div><div class="lang-col" title="L1 初階 / L1 初级 / Junior / ジュニア / 주니어">L1 初階 / L1 初级 / Junior / ジュニア / 주니어</div></div>
+                <div class="lv-edit-name" style="display:none;"><input type="text" class="input" value="L1 · 初階" style="width:100%;font-size:13px;padding:5px 8px;"/></div>
+              </td>
+              <td style="text-align:center;">
+                <label class="lv-manager-label" style="display:none;align-items:center;justify-content:center;cursor:pointer;">
+                  <input type="checkbox" class="lv-manager-cb" style="width:15px;height:15px;accent-color:var(--primary);cursor:pointer;" onchange="lvToggleManager(this)"/>
+                </label>
+                <span class="lv-manager-view" style="font-size:12px;color:var(--text-muted);">—</span>
+              </td>
+              <td class="count-col">32 人</td>
+            </tr>
+            <tr draggable="true" data-count="48" data-name="L2 · 中階" data-manager="false">
+              <td class="drag-handle-cell">⋮⋮</td>
+              <td>
+                <div class="lv-view-name"><div class="name-col">L2 · 中階</div><div class="lang-col" title="L2 中階 / L2 中级 / Intermediate / ミドル / 중級">L2 中階 / L2 中级 / Intermediate / ミドル / 중급</div></div>
+                <div class="lv-edit-name" style="display:none;"><input type="text" class="input" value="L2 · 中階" style="width:100%;font-size:13px;padding:5px 8px;"/></div>
+              </td>
+              <td style="text-align:center;">
+                <label class="lv-manager-label" style="display:none;align-items:center;justify-content:center;cursor:pointer;">
+                  <input type="checkbox" class="lv-manager-cb" style="width:15px;height:15px;accent-color:var(--primary);cursor:pointer;" onchange="lvToggleManager(this)"/>
+                </label>
+                <span class="lv-manager-view" style="font-size:12px;color:var(--text-muted);">—</span>
+              </td>
+              <td class="count-col">48 人</td>
+            </tr>
+            <tr draggable="true" data-count="22" data-name="L3 · 資深" data-manager="true">
+              <td class="drag-handle-cell">⋮⋮</td>
+              <td>
+                <div class="lv-view-name"><div class="name-col">L3 · 資深</div><div class="lang-col" title="L3 資深 / L3 资深 / Senior / シニア / 시니어">L3 資深 / L3 资深 / Senior / シニア / 시니어</div></div>
+                <div class="lv-edit-name" style="display:none;"><input type="text" class="input" value="L3 · 資深" style="width:100%;font-size:13px;padding:5px 8px;"/></div>
+              </td>
+              <td style="text-align:center;">
+                <label class="lv-manager-label" style="display:none;align-items:center;justify-content:center;cursor:pointer;">
+                  <input type="checkbox" class="lv-manager-cb" checked style="width:15px;height:15px;accent-color:var(--primary);cursor:pointer;" onchange="lvToggleManager(this)"/>
+                </label>
+                <span class="lv-manager-view" style="font-size:12px;color:var(--primary);font-weight:600;">✓ 主管</span>
+              </td>
+              <td class="count-col">22 人</td>
+            </tr>
+            <tr draggable="true" data-count="0" data-name="D1 · 董事" data-manager="true">
+              <td class="drag-handle-cell">⋮⋮</td>
+              <td>
+                <div class="lv-view-name"><div class="name-col">D1 · 董事</div><div class="lang-col" title="D1 董事 / D1 董事 / Director / ディレクター / 디렉터">D1 董事 / D1 董事 / Director / ディレクター / 디렉터</div></div>
+                <div class="lv-edit-name" style="display:none;"><input type="text" class="input" value="D1 · 董事" style="width:100%;font-size:13px;padding:5px 8px;"/></div>
+              </td>
+              <td style="text-align:center;">
+                <label class="lv-manager-label" style="display:none;align-items:center;justify-content:center;cursor:pointer;">
+                  <input type="checkbox" class="lv-manager-cb" checked style="width:15px;height:15px;accent-color:var(--primary);cursor:pointer;" onchange="lvToggleManager(this)"/>
+                </label>
+                <span class="lv-manager-view" style="font-size:12px;color:var(--primary);font-weight:600;">✓ 主管</span>
+              </td>
+              <td class="count-col" style="color:var(--text-muted);">0 人</td>
+            </tr>
           </tbody></table>
         </div>
+        <!-- ===== [修改結束] ===== -->
       </div>
     </section>
 
@@ -2496,18 +2579,66 @@
         <!-- ===== [修改結束] ===== -->
       </div>
       <div class="card">
+        <!-- ===== [修改開始] 3.3 雇用類別：改為編輯類別/儲存設定模式 ===== -->
         <div class="def-card-head" style="border-radius:var(--radius) var(--radius) 0 0;justify-content:space-between;">
           <div class="def-card-title">雇用類別</div>
-          <button class="btn primary sm" onclick="openModal('modal-add-emp')">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14"/><path d="M5 12h14"/></svg>新增類別
+          <div style="display:flex;gap:6px;align-items:center;">
+            <button class="btn primary sm" id="emp-edit-btn" onclick="toggleEmpEdit()">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>編輯類別
+            </button>
+            <button class="btn sm" id="emp-cancel-btn" onclick="cancelEmpEdit()" style="display:none;">取消</button>
+            <button class="btn primary sm" id="emp-save-btn" onclick="saveEmpEdit()" style="display:none;">儲存設定</button>
+          </div>
+        </div>
+        <!-- 編輯模式下新增列按鈕 -->
+        <div id="emp-add-row-bar" style="display:none;padding:8px 12px;border-bottom:1px solid var(--border);background:var(--primary-soft);">
+          <button class="btn sm" onclick="empAddRow()" style="display:inline-flex;align-items:center;gap:6px;font-size:12px;">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14"/><path d="M5 12h14"/></svg>新增類別
           </button>
         </div>
-        <table class="drag-list"><thead><tr><th style="width:28px;"></th><th>類別名稱</th><th>使用人數</th><th></th></tr></thead>
+        <table class="drag-list" id="emp-table"><thead><tr><th style="width:28px;"></th><th>類別名稱</th><th>使用人數</th><th id="emp-del-col" style="display:none;width:36px;"></th></tr></thead>
         <tbody id="emp-tbody">
-          <tr draggable="true" data-count="96"><td class="drag-handle-cell">⋮⋮</td><td><div class="name-col">正職</div><div class="lang-col" title="正職 / 正式 / Full-time / 正社員 / 정규직">正職 / 正式 / Full-time / 正社員 / 정규직</div></td><td class="count-col">96 人</td><td class="actions-col"><div style="display:flex;gap:4px;justify-content:flex-end;"><button class="op-btn" onclick="openModal('modal-add-emp')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>編輯</button><button class="op-btn delete count-lock" disabled title="尚有使用中的成員，請先移除所有成員才可刪除"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg></button></div></td></tr>
-          <tr draggable="true" data-count="14"><td class="drag-handle-cell">⋮⋮</td><td><div class="name-col">兼職</div><div class="lang-col" title="兼職 / 兼职 / Part-time / パートタイム / 파트타임">兼職 / 兼职 / Part-time / パートタイム / 파트타임</div></td><td class="count-col">14 人</td><td class="actions-col"><div style="display:flex;gap:4px;justify-content:flex-end;"><button class="op-btn" onclick="openModal('modal-add-emp')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>編輯</button><button class="op-btn delete count-lock" disabled title="尚有使用中的成員，請先移除所有成員才可刪除"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg></button></div></td></tr>
-          <tr draggable="true" data-count="0"><td class="drag-handle-cell">⋮⋮</td><td><div class="name-col">顧問合約</div><div class="lang-col" title="顧問合約 / 顾问合同 / Consultant / 顧問契約 / 컨설턴트 계약">顧問合約 / 顾问合同 / Consultant / 顧問契約 / 컨설턴트 계약</div></td><td class="count-col" style="color:var(--text-muted);">0 人</td><td class="actions-col"><div style="display:flex;gap:4px;justify-content:flex-end;"><button class="op-btn" onclick="openModal('modal-add-emp')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>編輯</button><button class="op-btn delete" title="刪除"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg></button></div></td></tr>
+          <tr draggable="true" data-count="96" data-name="正職">
+            <td class="drag-handle-cell">⋮⋮</td>
+            <td>
+              <div class="emp-view-name"><div class="name-col">正職</div><div class="lang-col" title="正職 / 正式 / Full-time / 正社員 / 정규직">正職 / 正式 / Full-time / 正社員 / 정규직</div></div>
+              <div class="emp-edit-name" style="display:none;"><input type="text" class="input" value="正職" style="width:100%;font-size:13px;padding:5px 8px;"/></div>
+            </td>
+            <td class="count-col">96 人</td>
+            <td class="emp-del-cell" style="display:none;text-align:center;">
+              <button class="op-btn delete count-lock" disabled title="尚有使用中的成員，無法刪除" style="padding:4px 6px;">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+              </button>
+            </td>
+          </tr>
+          <tr draggable="true" data-count="14" data-name="兼職">
+            <td class="drag-handle-cell">⋮⋮</td>
+            <td>
+              <div class="emp-view-name"><div class="name-col">兼職</div><div class="lang-col" title="兼職 / 兼职 / Part-time / パートタイム / 파트타임">兼職 / 兼职 / Part-time / パートタイム / 파트타임</div></div>
+              <div class="emp-edit-name" style="display:none;"><input type="text" class="input" value="兼職" style="width:100%;font-size:13px;padding:5px 8px;"/></div>
+            </td>
+            <td class="count-col">14 人</td>
+            <td class="emp-del-cell" style="display:none;text-align:center;">
+              <button class="op-btn delete count-lock" disabled title="尚有使用中的成員，無法刪除" style="padding:4px 6px;">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+              </button>
+            </td>
+          </tr>
+          <tr draggable="true" data-count="0" data-name="顧問合約">
+            <td class="drag-handle-cell">⋮⋮</td>
+            <td>
+              <div class="emp-view-name"><div class="name-col">顧問合約</div><div class="lang-col" title="顧問合約 / 顾问合同 / Consultant / 顧問契約 / 컨설턴트 계약">顧問合約 / 顾问合同 / Consultant / 顧問契約 / 컨설턴트 계약</div></div>
+              <div class="emp-edit-name" style="display:none;"><input type="text" class="input" value="顧問合約" style="width:100%;font-size:13px;padding:5px 8px;"/></div>
+            </td>
+            <td class="count-col" style="color:var(--text-muted);">0 人</td>
+            <td class="emp-del-cell" style="display:none;text-align:center;">
+              <button class="op-btn delete" onclick="empDeleteRow(this)" title="刪除此類別" style="padding:4px 6px;">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+              </button>
+            </td>
+          </tr>
         </tbody></table>
+        <!-- ===== [修改結束] ===== -->
       </div>
     </section>
 
@@ -8571,6 +8702,183 @@ function lvManagerReset() {
 function lvToggleManager(checkbox) {
   // 可在此加入 API 呼叫或狀態更新邏輯
   // 目前為 prototype：勾選狀態即時反映，無需儲存按鈕
+}
+/* ===== [修改結束] ===== */
+
+/* ===== [修改開始] 3.2 職位 inline 編輯模式 ===== */
+function togglePosEdit() {
+  var rows = document.querySelectorAll('#pos-tbody tr');
+  rows.forEach(function(tr) {
+    tr.querySelector('.pos-view-name').style.display = 'none';
+    tr.querySelector('.pos-edit-name').style.display = '';
+  });
+  document.getElementById('pos-edit-btn').style.display = 'none';
+  document.getElementById('pos-cancel-btn').style.display = '';
+  document.getElementById('pos-save-btn').style.display = '';
+}
+function cancelPosEdit() {
+  var rows = document.querySelectorAll('#pos-tbody tr');
+  rows.forEach(function(tr) {
+    var orig = tr.getAttribute('data-name') || '';
+    tr.querySelector('.pos-edit-name input').value = orig;
+    tr.querySelector('.pos-view-name').style.display = '';
+    tr.querySelector('.pos-edit-name').style.display = 'none';
+  });
+  document.getElementById('pos-edit-btn').style.display = '';
+  document.getElementById('pos-cancel-btn').style.display = 'none';
+  document.getElementById('pos-save-btn').style.display = 'none';
+}
+function savePosEdit() {
+  var rows = document.querySelectorAll('#pos-tbody tr');
+  rows.forEach(function(tr) {
+    var newName = tr.querySelector('.pos-edit-name input').value.trim() || tr.getAttribute('data-name');
+    tr.setAttribute('data-name', newName);
+    tr.querySelector('.pos-view-name .name-col').textContent = newName;
+    tr.querySelector('.pos-view-name').style.display = '';
+    tr.querySelector('.pos-edit-name').style.display = 'none';
+  });
+  document.getElementById('pos-edit-btn').style.display = '';
+  document.getElementById('pos-cancel-btn').style.display = 'none';
+  document.getElementById('pos-save-btn').style.display = 'none';
+  showSyncToast();
+}
+/* ===== [修改結束] ===== */
+
+/* ===== [修改開始] 3.2 職等 inline 編輯模式 ===== */
+function toggleLvEdit() {
+  var rows = document.querySelectorAll('#lv-tbody tr');
+  rows.forEach(function(tr) {
+    tr.querySelector('.lv-view-name').style.display = 'none';
+    tr.querySelector('.lv-edit-name').style.display = '';
+    tr.querySelector('.lv-manager-label').style.display = 'inline-flex';
+    tr.querySelector('.lv-manager-view').style.display = 'none';
+  });
+  document.getElementById('lv-edit-btn').style.display = 'none';
+  document.getElementById('lv-cancel-btn').style.display = '';
+  document.getElementById('lv-save-btn').style.display = '';
+}
+function cancelLvEdit() {
+  var rows = document.querySelectorAll('#lv-tbody tr');
+  rows.forEach(function(tr) {
+    var orig = tr.getAttribute('data-name') || '';
+    var isManager = tr.getAttribute('data-manager') === 'true';
+    tr.querySelector('.lv-edit-name input').value = orig;
+    tr.querySelector('.lv-manager-cb').checked = isManager;
+    tr.querySelector('.lv-view-name').style.display = '';
+    tr.querySelector('.lv-edit-name').style.display = 'none';
+    tr.querySelector('.lv-manager-label').style.display = 'none';
+    tr.querySelector('.lv-manager-view').style.display = '';
+  });
+  document.getElementById('lv-edit-btn').style.display = '';
+  document.getElementById('lv-cancel-btn').style.display = 'none';
+  document.getElementById('lv-save-btn').style.display = 'none';
+}
+function saveLvEdit() {
+  var rows = document.querySelectorAll('#lv-tbody tr');
+  rows.forEach(function(tr) {
+    var newName = tr.querySelector('.lv-edit-name input').value.trim() || tr.getAttribute('data-name');
+    var isManager = tr.querySelector('.lv-manager-cb').checked;
+    tr.setAttribute('data-name', newName);
+    tr.setAttribute('data-manager', isManager ? 'true' : 'false');
+    tr.querySelector('.lv-view-name .name-col').textContent = newName;
+    var viewSpan = tr.querySelector('.lv-manager-view');
+    if (isManager) {
+      viewSpan.style.color = 'var(--primary)';
+      viewSpan.style.fontWeight = '600';
+      viewSpan.textContent = '✓ 主管';
+    } else {
+      viewSpan.style.color = 'var(--text-muted)';
+      viewSpan.style.fontWeight = 'normal';
+      viewSpan.textContent = '—';
+    }
+    tr.querySelector('.lv-view-name').style.display = '';
+    tr.querySelector('.lv-edit-name').style.display = 'none';
+    tr.querySelector('.lv-manager-label').style.display = 'none';
+    tr.querySelector('.lv-manager-view').style.display = '';
+  });
+  document.getElementById('lv-edit-btn').style.display = '';
+  document.getElementById('lv-cancel-btn').style.display = 'none';
+  document.getElementById('lv-save-btn').style.display = 'none';
+  showSyncToast();
+}
+/* ===== [修改結束] ===== */
+
+/* ===== [修改開始] 3.3 雇用類別 inline 編輯模式 ===== */
+function toggleEmpEdit() {
+  var rows = document.querySelectorAll('#emp-tbody tr');
+  rows.forEach(function(tr) {
+    tr.querySelector('.emp-view-name').style.display = 'none';
+    tr.querySelector('.emp-edit-name').style.display = '';
+    tr.querySelector('.emp-del-cell').style.display = 'table-cell';
+  });
+  document.getElementById('emp-del-col').style.display = 'table-cell';
+  document.getElementById('emp-add-row-bar').style.display = '';
+  document.getElementById('emp-edit-btn').style.display = 'none';
+  document.getElementById('emp-cancel-btn').style.display = '';
+  document.getElementById('emp-save-btn').style.display = '';
+}
+function cancelEmpEdit() {
+  var rows = document.querySelectorAll('#emp-tbody tr');
+  // 移除編輯期間新增的空列
+  rows.forEach(function(tr) {
+    if (tr.getAttribute('data-new') === 'true') {
+      tr.remove();
+    }
+  });
+  document.querySelectorAll('#emp-tbody tr').forEach(function(tr) {
+    var orig = tr.getAttribute('data-name') || '';
+    tr.querySelector('.emp-edit-name input').value = orig;
+    tr.querySelector('.emp-view-name').style.display = '';
+    tr.querySelector('.emp-edit-name').style.display = 'none';
+    tr.querySelector('.emp-del-cell').style.display = 'none';
+  });
+  document.getElementById('emp-del-col').style.display = 'none';
+  document.getElementById('emp-add-row-bar').style.display = 'none';
+  document.getElementById('emp-edit-btn').style.display = '';
+  document.getElementById('emp-cancel-btn').style.display = 'none';
+  document.getElementById('emp-save-btn').style.display = 'none';
+}
+function saveEmpEdit() {
+  document.querySelectorAll('#emp-tbody tr').forEach(function(tr) {
+    var newName = tr.querySelector('.emp-edit-name input').value.trim() || tr.getAttribute('data-name') || '未命名';
+    tr.setAttribute('data-name', newName);
+    tr.removeAttribute('data-new');
+    tr.querySelector('.emp-view-name .name-col').textContent = newName;
+    tr.querySelector('.emp-view-name').style.display = '';
+    tr.querySelector('.emp-edit-name').style.display = 'none';
+    tr.querySelector('.emp-del-cell').style.display = 'none';
+  });
+  document.getElementById('emp-del-col').style.display = 'none';
+  document.getElementById('emp-add-row-bar').style.display = 'none';
+  document.getElementById('emp-edit-btn').style.display = '';
+  document.getElementById('emp-cancel-btn').style.display = 'none';
+  document.getElementById('emp-save-btn').style.display = 'none';
+  showSyncToast();
+}
+function empDeleteRow(btn) {
+  var tr = btn.closest('tr');
+  tr.remove();
+}
+function empAddRow() {
+  var tbody = document.getElementById('emp-tbody');
+  var tr = document.createElement('tr');
+  tr.setAttribute('draggable', 'true');
+  tr.setAttribute('data-count', '0');
+  tr.setAttribute('data-name', '');
+  tr.setAttribute('data-new', 'true');
+  tr.innerHTML = '<td class="drag-handle-cell">⋮⋮</td>' +
+    '<td>' +
+      '<div class="emp-view-name" style="display:none;"><div class="name-col"></div><div class="lang-col"></div></div>' +
+      '<div class="emp-edit-name"><input type="text" class="input" value="" placeholder="輸入類別名稱" style="width:100%;font-size:13px;padding:5px 8px;" autofocus/></div>' +
+    '</td>' +
+    '<td class="count-col" style="color:var(--text-muted);">0 人</td>' +
+    '<td class="emp-del-cell" style="text-align:center;">' +
+      '<button class="op-btn delete" onclick="empDeleteRow(this)" title="刪除此類別" style="padding:4px 6px;">' +
+        '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>' +
+      '</button>' +
+    '</td>';
+  tbody.appendChild(tr);
+  tr.querySelector('input').focus();
 }
 /* ===== [修改結束] ===== */
 /* 手風琴切換（Modal 用） */
