@@ -418,6 +418,7 @@
     z-index: 51;
   }
   .drawer.open { transform: translateX(0); }
+  .drawer.drawer-lg { width: 52vw; min-width: 560px; max-width: 780px; }
   .drawer-head {
     padding: 16px 20px;
     border-bottom: 1px solid var(--border);
@@ -879,6 +880,78 @@
 
   /* ===== [修改開始] Inline edit styles ===== */
   .mdetail-section.is-editing .mdetail-section-head { background: var(--primary-soft); border-radius: var(--radius-sm); padding: 6px 10px; margin: -6px -10px 10px; }
+
+  /* ===== 4.1 Member List Split Layout ===== */
+  .member-list-layout {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+  .member-tree-panel {
+    width: 220px;
+    min-width: 220px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    flex-direction: column;
+    max-height: calc(100vh - 260px);
+    position: sticky;
+    top: 20px;
+    overflow: hidden;
+  }
+  .member-tree-header {
+    padding: 10px 14px 8px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+  }
+  .member-tree-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .member-tree-scroll {
+    overflow-y: auto;
+    flex: 1;
+    padding: 6px 8px;
+  }
+  .member-org-node { margin: 1px 0; }
+  .member-org-row {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 7px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--text);
+    transition: background 0.1s;
+  }
+  .member-org-row:hover { background: var(--hover); }
+  .member-org-row.selected { background: var(--primary-soft); color: var(--primary); font-weight: 600; }
+  .member-org-toggle {
+    width: 14px; height: 14px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-muted); font-size: 9px; flex-shrink: 0;
+  }
+  .member-org-ico { font-size: 12px; flex-shrink: 0; }
+  .member-org-label { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .member-org-count {
+    font-size: 10px; color: var(--text-muted);
+    background: var(--bg); border-radius: 10px;
+    padding: 1px 5px; flex-shrink: 0;
+  }
+  .member-org-row.selected .member-org-count {
+    background: var(--primary-soft); color: var(--primary);
+  }
+  .member-org-children { margin-left: 14px; border-left: 1px dashed var(--border); padding-left: 4px; }
+  .member-list-right { flex: 1; min-width: 0; }
   .dw-section.is-editing .dw-section-head { background: var(--primary-soft); border-radius: var(--radius-sm); padding: 4px 8px; margin-bottom: 8px; }
   .inline-edit-input {
     border: 1px solid var(--border-strong); border-radius: var(--radius-sm);
@@ -2284,7 +2357,7 @@
       <div class="nav-children">
         <div class="nav-item" data-page="5.1" onclick="goPage('5.1')">5.1 Bot 列表</div>
         <div class="nav-item" data-page="5.2" onclick="goPage('5.2')">5.2 推播排程</div>
-        <div class="nav-item" data-page="5.3" onclick="goPage('5.3')">5.3 Bot 選單設定</div>
+        <div class="nav-item" data-page="5.3" onclick="goPage('5.3')">5.3 選單設定</div>
         <div class="nav-item" data-page="5.4" onclick="goPage('5.4')">5.4 關鍵字設定</div>
         <div class="nav-item" data-page="5.5" onclick="goPage('5.5')">5.5 預設訊息</div>
       </div>
@@ -2787,13 +2860,28 @@
       </div>
 
       <div class="dept-stat-row" style="margin-bottom: 20px;">
-        <div class="stat-card"><div class="stat-label">總成員數</div><div class="stat-value">128</div></div>
-        <div class="stat-card"><div class="stat-label">裝置使用中</div><div class="stat-value" style="color: var(--success)">112</div></div>
+        <div class="stat-card"><div class="stat-label">總成員數</div><div class="stat-value">30</div></div>
+        <div class="stat-card"><div class="stat-label">裝置使用中</div><div class="stat-value" style="color: var(--success)">21</div></div>
         <div class="stat-card"><div class="stat-label">離職程序中</div><div class="stat-value" style="color: var(--warning)">5</div></div>
-        <div class="stat-card"><div class="stat-label">暫停 / 等候中</div><div class="stat-value" style="color: var(--text-secondary)">11</div></div>
+        <div class="stat-card"><div class="stat-label">新增成員排程</div><div class="stat-value">4</div></div>
       </div>
 
-      <div class="card">
+      <div class="member-list-layout">
+
+        <!-- ===== LEFT: Org Tree Panel ===== -->
+        <div class="member-tree-panel">
+          <div class="member-tree-header">
+            <span class="member-tree-title">組織圖</span>
+            <button class="btn ghost sm" id="member-tree-reset-btn" onclick="memberTreeSelectAll()" title="顯示全部" style="font-size:11px;padding:2px 7px;">全部</button>
+          </div>
+          <div class="member-tree-scroll">
+            <div id="member-org-tree"></div>
+          </div>
+        </div>
+
+        <!-- ===== RIGHT: Member List ===== -->
+        <div class="member-list-right">
+        <div class="card">
         <!-- 篩選工具列 -->
         <div class="toolbar" style="padding: 16px 20px 12px; margin-bottom: 0; flex-wrap: wrap; gap: 8px;">
           <input class="input search-input" id="fl-search" placeholder="搜尋成員姓名、信箱、員工編號…" oninput="applyMemberFilter()" />
@@ -3051,7 +3139,9 @@
             <button class="page-num">›</button>
           </div>
         </div>
-      </div>
+      </div><!-- /card -->
+      </div><!-- /member-list-right -->
+      </div><!-- /member-list-layout -->
     </section>
 
     <!-- ============= 4.1.D 成員詳情頁面 ============= -->
@@ -3141,81 +3231,7 @@
 
         </div><!-- /info-grid -->
 
-        <!-- ④ 裝置使用情況 -->
-        <div class="mdetail-section" style="margin-top:16px;">
-          <div class="mdetail-section-head">
-            <div class="mdetail-section-title">裝置使用情況</div>
-            <span style="font-size:12px;color:var(--text-muted);">共 3 台</span>
-          </div>
-          <table class="data-table" style="margin-top:0;">
-            <thead><tr><th>裝置名稱</th><th>作業系統</th><th>上次登入</th><th>登入位置</th><th>狀態</th><th></th></tr></thead>
-            <tbody>
-              <tr>
-                <td><div style="font-weight:600;font-size:13px;">iPhone 15 Pro</div><div style="font-size:11px;color:var(--text-muted);">iOS App</div></td>
-                <td>iOS 17.4</td><td>5 分鐘前</td><td>台灣 · 台北市</td>
-                <td><span class="badge success dot">裝置使用中</span></td>
-                <td><button class="btn ghost sm danger">強制登出</button></td>
-              </tr>
-              <tr>
-                <td><div style="font-weight:600;font-size:13px;">MacBook Pro 16"</div><div style="font-size:11px;color:var(--text-muted);">Web 瀏覽器</div></td>
-                <td>macOS 14.4</td><td>2 小時前</td><td>台灣 · 台北市</td>
-                <td><span class="badge neutral dot">閒置</span></td>
-                <td><button class="btn ghost sm danger">強制登出</button></td>
-              </tr>
-              <tr>
-                <td><div style="font-weight:600;font-size:13px;">iPad Air</div><div style="font-size:11px;color:var(--text-muted);">iOS App</div></td>
-                <td>iOS 17.2</td><td>3 天前</td><td>台灣 · 新北市</td>
-                <td><span class="badge neutral dot">閒置</span></td>
-                <td><button class="btn ghost sm danger">強制登出</button></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <!-- ⑤ 安全設定 -->
-        <div class="mdetail-section" style="margin-top:16px;">
-          <div class="mdetail-section-head"><div class="mdetail-section-title">安全設定</div></div>
-          <div style="display:flex;flex-direction:column;gap:12px;">
-
-            <div class="admin-field-row" style="margin-bottom:0;">
-              <div class="admin-field-label">密碼</div>
-              <div class="admin-option-box">
-                <div class="admin-opt-item" style="display:flex;align-items:center;justify-content:space-between;">
-                  <div><div style="font-size:13px;font-weight:600;">上次變更</div><div style="font-size:12px;color:var(--text-muted);margin-top:2px;">2025-11-20（距今約 6 個月）</div></div>
-                  <button class="btn sm" onclick="openModal('modal-reset-pw')">重設密碼</button>
-                </div>
-              </div>
-            </div>
-
-            <div class="admin-field-row" style="margin-bottom:0;">
-              <div class="admin-field-label">快速登入</div>
-              <div class="admin-option-box">
-                <div class="admin-opt-item" style="display:flex;align-items:center;justify-content:space-between;">
-                  <div><div style="font-size:13px;font-weight:600;">PIN 碼 / 生物辨識</div><div style="font-size:12px;color:var(--text-muted);margin-top:2px;">允許成員在裝置上使用快速登入功能。</div></div>
-                  <label class="switch"><input type="checkbox" checked /><span class="slider"></span></label>
-                </div>
-              </div>
-            </div>
-
-            <div class="admin-field-row" style="margin-bottom:0;">
-              <div class="admin-field-label">兩步驟驗證</div>
-              <div class="admin-option-box">
-                <div class="admin-opt-item" style="display:flex;align-items:center;justify-content:space-between;">
-                  <div><div style="display:flex;align-items:center;gap:8px;"><span style="font-size:13px;font-weight:600;">驗證方式</span><span class="badge success">已啟用 · 驗證器 App</span></div><div style="font-size:12px;color:var(--text-muted);margin-top:2px;">成員已自行設定兩步驟驗證。</div></div>
-                  <label class="switch"><input type="checkbox" checked /><span class="slider"></span></label>
-                </div>
-                <div style="height:1px;background:var(--border);"></div>
-                <div class="admin-opt-item" style="display:flex;align-items:center;justify-content:space-between;">
-                  <div style="font-size:12px;color:var(--text-secondary);">強制要求所有裝置重新驗證</div>
-                  <button class="btn sm danger">強制重設</button>
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </div>
-
-        <!-- ⑥ 職位狀態 -->
+        <!-- ④ 職位狀態 -->
         <div class="mdetail-section" style="margin-top:16px;">
           <div class="mdetail-section-head"><div class="mdetail-section-title">職位狀態</div></div>
           <div class="admin-option-box">
@@ -3245,49 +3261,6 @@
                 <div style="font-size:12px;color:var(--text-secondary);margin-bottom:8px;">・帳戶將於離職日後停用。</div>
                 <div><div style="font-size:11px;font-weight:600;color:var(--text-secondary);margin-bottom:4px;">離職日期</div><input class="input" type="date" style="width:180px;" /></div>
               </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- ⑦ APP 使用管理 -->
-        <div class="mdetail-section" style="margin-top:16px;">
-          <div class="mdetail-section-head"><div class="mdetail-section-title">APP 使用管理</div></div>
-
-          <div style="font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:10px;">使用量報告</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;">
-            <div class="card" style="padding:16px 18px;">
-              <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;"><div style="width:30px;height:30px;border-radius:8px;background:#4285f4;display:flex;align-items:center;justify-content:center;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="22,4 12,14 2,4"/></svg></div><div style="font-weight:600;font-size:13px;">郵件</div></div>
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-                <div style="background:var(--bg);border-radius:var(--radius-sm);padding:10px 12px;"><div style="font-size:20px;font-weight:700;color:var(--primary);">1,284</div><div style="font-size:11px;color:var(--text-muted);">本月已寄送</div></div>
-                <div style="background:var(--bg);border-radius:var(--radius-sm);padding:10px 12px;"><div style="font-size:20px;font-weight:700;">3,021</div><div style="font-size:11px;color:var(--text-muted);">本月已接收</div></div>
-                <div style="background:var(--bg);border-radius:var(--radius-sm);padding:10px 12px;grid-column:1/-1;"><div style="font-size:13px;font-weight:600;">2.4 GB <span style="font-weight:400;color:var(--text-muted);font-size:11px;">/ 15 GB</span></div><div style="height:4px;background:var(--border);border-radius:2px;margin-top:5px;overflow:hidden;"><div style="width:16%;height:100%;background:var(--primary);border-radius:2px;"></div></div><div style="font-size:11px;color:var(--text-muted);margin-top:3px;">儲存空間使用量</div></div>
-              </div>
-            </div>
-            <div class="card" style="padding:16px 18px;">
-              <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;"><div style="width:30px;height:30px;border-radius:8px;background:#34a853;display:flex;align-items:center;justify-content:center;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg></div><div style="font-weight:600;font-size:13px;">Drive</div></div>
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-                <div style="background:var(--bg);border-radius:var(--radius-sm);padding:10px 12px;"><div style="font-size:20px;font-weight:700;color:var(--success);">428</div><div style="font-size:11px;color:var(--text-muted);">總檔案數</div></div>
-                <div style="background:var(--bg);border-radius:var(--radius-sm);padding:10px 12px;"><div style="font-size:20px;font-weight:700;">37</div><div style="font-size:11px;color:var(--text-muted);">共享資料夾</div></div>
-                <div style="background:var(--bg);border-radius:var(--radius-sm);padding:10px 12px;grid-column:1/-1;"><div style="font-size:13px;font-weight:600;">8.7 GB <span style="font-weight:400;color:var(--text-muted);font-size:11px;">/ 30 GB</span></div><div style="height:4px;background:var(--border);border-radius:2px;margin-top:5px;overflow:hidden;"><div style="width:29%;height:100%;background:var(--success);border-radius:2px;"></div></div><div style="font-size:11px;color:var(--text-muted);margin-top:3px;">儲存空間使用量</div></div>
-              </div>
-            </div>
-          </div>
-
-          <!-- ===== [修改] 封鎖使用 APP → 單一總開關 ===== -->
-          <div style="font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:10px;">封鎖使用 APP</div>
-          <div class="card" style="overflow:hidden;">
-            <div class="app-block-row" style="border-bottom:none;align-items:flex-start;gap:14px;padding:14px 16px;">
-              <div style="display:flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#4f46e5,#7c3aed);flex-shrink:0;">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
-              </div>
-              <div style="flex:1;">
-                <div style="font-size:13px;font-weight:600;margin-bottom:2px;">封鎖透過行動 APP 操作</div>
-                <div style="font-size:12px;color:var(--text-muted);line-height:1.55;">開啟後，此成員將無法透過 LINE WORKS 行動應用程式進行任何操作，僅限使用網頁版。</div>
-              </div>
-              <label class="switch" style="flex-shrink:0;margin-top:4px;">
-                <input type="checkbox"/>
-                <span class="slider"></span>
-              </label>
             </div>
           </div>
         </div>
@@ -3325,10 +3298,15 @@
           <h1 class="page-title">成員資料顯示</h1>
           <p class="page-desc">設定成員個人檔案中顯示的資料欄位，可於同群組內拖曳調整顯示順序。</p>
         </div>
+        <div class="btn-group">
+          <button class="btn" onclick="showSyncToast()" style="display:inline-flex;align-items:center;gap:6px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+            同步主機
+          </button>
+        </div>
       </div>
 
-      <!-- ===== [修改開始] 4.2：disable switch、工作地點&到職日移至公司資訊 ===== -->
-      <!-- ── 個人資訊 Group ── -->
+      <!-- ── 個人資訊 Group（唯讀顯示） ── -->
       <div class="card attr-group-card">
         <div class="attr-group-header">
           <div class="attr-ghdr-left">
@@ -3336,174 +3314,115 @@
             <span class="attr-group-count">5 個欄位</span>
           </div>
           <div class="attr-ghdr-cols">
-            <div class="attr-col-hdr col-required">欄位項目<div class="tt-wrap"><span class="tt-icon" onclick="attrTT(this,event)">i</span><div class="tt-bubble">新增或修改成員資訊時，可以將該項目設定為必填輸入。</div></div></div>
-            <div class="attr-col-hdr col-visible">服務中顯示<div class="tt-wrap"><span class="tt-icon" onclick="attrTT(this,event)">i</span><div class="tt-bubble">可以設定該項目顯示於成員的個人檔案中。若不顯示，則僅能由管理員進行查看。</div></div></div>
-            <div class="attr-col-hdr col-edit-perm">編輯權限<div class="tt-wrap"><span class="tt-icon" onclick="attrTT(this,event)">i</span><div class="tt-bubble tt-right">可以設定成員在自己的個人檔案中修改該項目。</div></div></div>
+            <div class="attr-col-hdr col-required">必填設定</div>
+            <div class="attr-col-hdr col-visible">服務中顯示</div>
+            <div class="attr-col-hdr col-edit-perm">編輯權限</div>
           </div>
         </div>
         <div class="attr-group-body" id="group-personal" data-group="personal">
-
-          <!-- 個人檔案圖片：選填 locked -->
-          <div class="attr-card" draggable="true" data-group="personal">
-            <span class="grip">⠿</span>
+          <div class="attr-card">
             <div class="attr-card-info"><div><div class="attr-name">個人檔案圖片</div><div class="attr-meta">圖片</div></div></div>
-            <div class="attr-col-wrap col-required">
-              <div class="toggle-pill" style="pointer-events:none;opacity:0.55;" title="此欄位固定為選填"><span class="tpo req">必填</span><span class="tpo neutral active">選填</span></div>
-            </div>
-            <div class="attr-col-wrap col-visible"><div class="toggle-pill"><span class="tpo vis active" onclick="attrPill(this)">顯示</span><span class="tpo neutral" onclick="attrPill(this)">隱藏</span></div></div>
-            <div class="attr-col-wrap col-edit-perm"><div class="toggle-pill"><span class="tpo edit active" onclick="attrPill(this)">開啟</span><span class="tpo" onclick="attrPill(this)">僅管理員</span></div></div>
+            <div class="attr-col-wrap col-required"><span class="badge neutral">選填</span></div>
+            <div class="attr-col-wrap col-visible"><span class="badge success">顯示</span></div>
+            <div class="attr-col-wrap col-edit-perm"><span class="badge info">開啟</span></div>
           </div>
-
-          <!-- 手機號碼：正常 -->
-          <div class="attr-card" draggable="true" data-group="personal">
-            <span class="grip">⠿</span>
+          <div class="attr-card">
             <div class="attr-card-info"><div><div class="attr-name">手機號碼</div><div class="attr-meta">文字</div></div></div>
-            <div class="attr-col-wrap col-required"><div class="toggle-pill"><span class="tpo req" onclick="attrPill(this)">必填</span><span class="tpo neutral active" onclick="attrPill(this)">選填</span></div></div>
-            <div class="attr-col-wrap col-visible"><div class="toggle-pill"><span class="tpo vis active" onclick="attrPill(this)">顯示</span><span class="tpo neutral" onclick="attrPill(this)">隱藏</span></div></div>
-            <div class="attr-col-wrap col-edit-perm"><div class="toggle-pill"><span class="tpo edit active" onclick="attrPill(this)">開啟</span><span class="tpo" onclick="attrPill(this)">僅管理員</span></div></div>
+            <div class="attr-col-wrap col-required"><span class="badge neutral">選填</span></div>
+            <div class="attr-col-wrap col-visible"><span class="badge success">顯示</span></div>
+            <div class="attr-col-wrap col-edit-perm"><span class="badge info">開啟</span></div>
           </div>
-
-          <!-- 生日：選填 locked -->
-          <div class="attr-card" draggable="true" data-group="personal">
-            <span class="grip">⠿</span>
+          <div class="attr-card">
             <div class="attr-card-info"><div><div class="attr-name">生日</div><div class="attr-meta">日期</div></div></div>
-            <div class="attr-col-wrap col-required">
-              <div class="toggle-pill" style="pointer-events:none;opacity:0.55;" title="此欄位固定為選填"><span class="tpo req">必填</span><span class="tpo neutral active">選填</span></div>
-            </div>
-            <div class="attr-col-wrap col-visible"><div class="toggle-pill"><span class="tpo vis active" onclick="attrPill(this)">顯示</span><span class="tpo neutral" onclick="attrPill(this)">隱藏</span></div></div>
-            <div class="attr-col-wrap col-edit-perm"><div class="toggle-pill"><span class="tpo edit active" onclick="attrPill(this)">開啟</span><span class="tpo" onclick="attrPill(this)">僅管理員</span></div></div>
+            <div class="attr-col-wrap col-required"><span class="badge neutral">選填</span></div>
+            <div class="attr-col-wrap col-visible"><span class="badge success">顯示</span></div>
+            <div class="attr-col-wrap col-edit-perm"><span class="badge info">開啟</span></div>
           </div>
-
-          <!-- 社群媒體：選填 locked -->
-          <div class="attr-card" draggable="true" data-group="personal">
-            <span class="grip">⠿</span>
+          <div class="attr-card">
             <div class="attr-card-info"><div><div class="attr-name">社群媒體</div><div class="attr-meta">連結</div></div></div>
-            <div class="attr-col-wrap col-required">
-              <div class="toggle-pill" style="pointer-events:none;opacity:0.55;" title="此欄位固定為選填"><span class="tpo req">必填</span><span class="tpo neutral active">選填</span></div>
-            </div>
-            <div class="attr-col-wrap col-visible"><div class="toggle-pill"><span class="tpo vis active" onclick="attrPill(this)">顯示</span><span class="tpo neutral" onclick="attrPill(this)">隱藏</span></div></div>
-            <div class="attr-col-wrap col-edit-perm"><div class="toggle-pill"><span class="tpo edit active" onclick="attrPill(this)">開啟</span><span class="tpo" onclick="attrPill(this)">僅管理員</span></div></div>
+            <div class="attr-col-wrap col-required"><span class="badge neutral">選填</span></div>
+            <div class="attr-col-wrap col-visible"><span class="badge success">顯示</span></div>
+            <div class="attr-col-wrap col-edit-perm"><span class="badge info">開啟</span></div>
           </div>
-
-          <!-- 負責業務：選填 locked -->
-          <div class="attr-card" draggable="true" data-group="personal">
-            <span class="grip">⠿</span>
+          <div class="attr-card">
             <div class="attr-card-info"><div><div class="attr-name">負責業務</div><div class="attr-meta">文字</div></div></div>
-            <div class="attr-col-wrap col-required">
-              <div class="toggle-pill" style="pointer-events:none;opacity:0.55;" title="此欄位固定為選填"><span class="tpo req">必填</span><span class="tpo neutral active">選填</span></div>
-            </div>
-            <div class="attr-col-wrap col-visible"><div class="toggle-pill"><span class="tpo vis active" onclick="attrPill(this)">顯示</span><span class="tpo neutral" onclick="attrPill(this)">隱藏</span></div></div>
-            <div class="attr-col-wrap col-edit-perm"><div class="toggle-pill"><span class="tpo edit active" onclick="attrPill(this)">開啟</span><span class="tpo" onclick="attrPill(this)">僅管理員</span></div></div>
+            <div class="attr-col-wrap col-required"><span class="badge neutral">選填</span></div>
+            <div class="attr-col-wrap col-visible"><span class="badge success">顯示</span></div>
+            <div class="attr-col-wrap col-edit-perm"><span class="badge info">開啟</span></div>
           </div>
-
         </div>
       </div>
 
-      <!-- ── 公司資訊 Group（加入工作地點、到職日） ── -->
+      <!-- ── 公司資訊 Group（唯讀顯示） ── -->
       <div class="card attr-group-card">
         <div class="attr-group-header">
           <div class="attr-ghdr-left">
             <span style="font-size:14px;font-weight:700;">公司資訊</span>
-            <span class="attr-group-count">10 個欄位</span>
+            <span class="attr-group-count">9 個欄位</span>
           </div>
           <div class="attr-ghdr-cols">
-            <div class="attr-col-hdr col-required">欄位項目<div class="tt-wrap"><span class="tt-icon" onclick="attrTT(this,event)">i</span><div class="tt-bubble">新增或修改成員資訊時，可以將該項目設定為必填輸入。</div></div></div>
-            <div class="attr-col-hdr col-visible">服務中顯示<div class="tt-wrap"><span class="tt-icon" onclick="attrTT(this,event)">i</span><div class="tt-bubble">可以設定該項目顯示於成員的個人檔案中。若不顯示，則僅能由管理員進行查看。</div></div></div>
-            <div class="attr-col-hdr col-edit-perm">編輯權限<div class="tt-wrap"><span class="tt-icon" onclick="attrTT(this,event)">i</span><div class="tt-bubble tt-right">可以設定成員在自己的個人檔案中修改該項目。</div></div></div>
+            <div class="attr-col-hdr col-required">必填設定</div>
+            <div class="attr-col-hdr col-visible">服務中顯示</div>
+            <div class="attr-col-hdr col-edit-perm">編輯權限</div>
           </div>
         </div>
         <div class="attr-group-body" id="group-company" data-group="company">
-
-          <!-- 個人電子郵件 -->
-          <div class="attr-card" draggable="true" data-group="company">
-            <span class="grip">⠿</span>
+          <div class="attr-card">
             <div class="attr-card-info"><div><div class="attr-name">個人電子郵件</div><div class="attr-meta">文字</div></div></div>
-            <div class="attr-col-wrap col-required"><div class="toggle-pill"><span class="tpo req active" onclick="attrPill(this)">必填</span><span class="tpo neutral" onclick="attrPill(this)">選填</span></div></div>
-            <div class="attr-col-wrap col-visible"><div class="toggle-pill"><span class="tpo vis active" onclick="attrPill(this)">顯示</span><span class="tpo neutral" onclick="attrPill(this)">隱藏</span></div></div>
-            <div class="attr-col-wrap col-edit-perm"><div class="toggle-pill"><span class="tpo" onclick="attrPill(this)">開啟</span><span class="tpo neutral active" onclick="attrPill(this)">僅管理員</span></div></div>
+            <div class="attr-col-wrap col-required"><span class="badge warning">必填</span></div>
+            <div class="attr-col-wrap col-visible"><span class="badge success">顯示</span></div>
+            <div class="attr-col-wrap col-edit-perm"><span class="badge neutral">僅管理員</span></div>
           </div>
-
-          <!-- 員工編號：僅管理員 locked -->
-          <div class="attr-card" draggable="true" data-group="company">
-            <span class="grip">⠿</span>
+          <div class="attr-card">
             <div class="attr-card-info"><div><div class="attr-name">員工編號</div><div class="attr-meta">文字</div></div></div>
-            <div class="attr-col-wrap col-required"><div class="toggle-pill"><span class="tpo req active" onclick="attrPill(this)">必填</span><span class="tpo neutral" onclick="attrPill(this)">選填</span></div></div>
-            <div class="attr-col-wrap col-visible"><div class="toggle-pill"><span class="tpo vis active" onclick="attrPill(this)">顯示</span><span class="tpo neutral" onclick="attrPill(this)">隱藏</span></div></div>
-            <div class="attr-col-wrap col-edit-perm">
-              <div class="toggle-pill" style="pointer-events:none;opacity:0.55;" title="此欄位固定為僅管理員"><span class="tpo">開啟</span><span class="tpo neutral active">僅管理員</span></div>
-            </div>
+            <div class="attr-col-wrap col-required"><span class="badge warning">必填</span></div>
+            <div class="attr-col-wrap col-visible"><span class="badge success">顯示</span></div>
+            <div class="attr-col-wrap col-edit-perm"><span class="badge neutral">僅管理員</span></div>
           </div>
-
-          <!-- 職位 -->
-          <div class="attr-card" draggable="true" data-group="company">
-            <span class="grip">⠿</span>
+          <div class="attr-card">
             <div class="attr-card-info"><div><div class="attr-name">職位</div><div class="attr-meta">文字</div></div></div>
-            <div class="attr-col-wrap col-required"><div class="toggle-pill"><span class="tpo req" onclick="attrPill(this)">必填</span><span class="tpo neutral active" onclick="attrPill(this)">選填</span></div></div>
-            <div class="attr-col-wrap col-visible"><div class="toggle-pill"><span class="tpo vis active" onclick="attrPill(this)">顯示</span><span class="tpo neutral" onclick="attrPill(this)">隱藏</span></div></div>
-            <div class="attr-col-wrap col-edit-perm"><div class="toggle-pill"><span class="tpo" onclick="attrPill(this)">開啟</span><span class="tpo neutral active" onclick="attrPill(this)">僅管理員</span></div></div>
+            <div class="attr-col-wrap col-required"><span class="badge neutral">選填</span></div>
+            <div class="attr-col-wrap col-visible"><span class="badge success">顯示</span></div>
+            <div class="attr-col-wrap col-edit-perm"><span class="badge neutral">僅管理員</span></div>
           </div>
-
-          <!-- 職等：僅管理員 locked -->
-          <div class="attr-card" draggable="true" data-group="company">
-            <span class="grip">⠿</span>
+          <div class="attr-card">
             <div class="attr-card-info"><div><div class="attr-name">職等</div><div class="attr-meta">文字</div></div></div>
-            <div class="attr-col-wrap col-required"><div class="toggle-pill"><span class="tpo req" onclick="attrPill(this)">必填</span><span class="tpo neutral active" onclick="attrPill(this)">選填</span></div></div>
-            <div class="attr-col-wrap col-visible"><div class="toggle-pill"><span class="tpo vis active" onclick="attrPill(this)">顯示</span><span class="tpo neutral" onclick="attrPill(this)">隱藏</span></div></div>
-            <div class="attr-col-wrap col-edit-perm">
-              <div class="toggle-pill" style="pointer-events:none;opacity:0.55;" title="此欄位固定為僅管理員"><span class="tpo">開啟</span><span class="tpo neutral active">僅管理員</span></div>
-            </div>
+            <div class="attr-col-wrap col-required"><span class="badge neutral">選填</span></div>
+            <div class="attr-col-wrap col-visible"><span class="badge success">顯示</span></div>
+            <div class="attr-col-wrap col-edit-perm"><span class="badge neutral">僅管理員</span></div>
           </div>
-
-          <!-- 部門 -->
-          <div class="attr-card" draggable="true" data-group="company">
-            <span class="grip">⠿</span>
+          <div class="attr-card">
             <div class="attr-card-info"><div><div class="attr-name">部門</div><div class="attr-meta">文字</div></div></div>
-            <div class="attr-col-wrap col-required"><div class="toggle-pill"><span class="tpo req" onclick="attrPill(this)">必填</span><span class="tpo neutral active" onclick="attrPill(this)">選填</span></div></div>
-            <div class="attr-col-wrap col-visible"><div class="toggle-pill"><span class="tpo vis active" onclick="attrPill(this)">顯示</span><span class="tpo neutral" onclick="attrPill(this)">隱藏</span></div></div>
-            <div class="attr-col-wrap col-edit-perm"><div class="toggle-pill"><span class="tpo" onclick="attrPill(this)">開啟</span><span class="tpo neutral active" onclick="attrPill(this)">僅管理員</span></div></div>
+            <div class="attr-col-wrap col-required"><span class="badge neutral">選填</span></div>
+            <div class="attr-col-wrap col-visible"><span class="badge success">顯示</span></div>
+            <div class="attr-col-wrap col-edit-perm"><span class="badge neutral">僅管理員</span></div>
           </div>
-
-          <!-- 內線號碼 -->
-          <div class="attr-card" draggable="true" data-group="company">
-            <span class="grip">⠿</span>
+          <div class="attr-card">
             <div class="attr-card-info"><div><div class="attr-name">內線號碼</div><div class="attr-meta">文字</div></div></div>
-            <div class="attr-col-wrap col-required"><div class="toggle-pill"><span class="tpo req" onclick="attrPill(this)">必填</span><span class="tpo neutral active" onclick="attrPill(this)">選填</span></div></div>
-            <div class="attr-col-wrap col-visible"><div class="toggle-pill"><span class="tpo vis active" onclick="attrPill(this)">顯示</span><span class="tpo neutral" onclick="attrPill(this)">隱藏</span></div></div>
-            <div class="attr-col-wrap col-edit-perm"><div class="toggle-pill"><span class="tpo edit active" onclick="attrPill(this)">開啟</span><span class="tpo" onclick="attrPill(this)">僅管理員</span></div></div>
+            <div class="attr-col-wrap col-required"><span class="badge neutral">選填</span></div>
+            <div class="attr-col-wrap col-visible"><span class="badge success">顯示</span></div>
+            <div class="attr-col-wrap col-edit-perm"><span class="badge info">開啟</span></div>
           </div>
-
-          <!-- 緊急聯絡人 -->
-          <div class="attr-card" draggable="true" data-group="company">
-            <span class="grip">⠿</span>
+          <div class="attr-card">
             <div class="attr-card-info"><div><div class="attr-name">緊急聯絡人</div><div class="attr-meta">文字</div></div></div>
-            <div class="attr-col-wrap col-required"><div class="toggle-pill"><span class="tpo req" onclick="attrPill(this)">必填</span><span class="tpo neutral active" onclick="attrPill(this)">選填</span></div></div>
-            <div class="attr-col-wrap col-visible"><div class="toggle-pill"><span class="tpo vis active" onclick="attrPill(this)">顯示</span><span class="tpo neutral" onclick="attrPill(this)">隱藏</span></div></div>
-            <div class="attr-col-wrap col-edit-perm"><div class="toggle-pill"><span class="tpo edit active" onclick="attrPill(this)">開啟</span><span class="tpo" onclick="attrPill(this)">僅管理員</span></div></div>
+            <div class="attr-col-wrap col-required"><span class="badge neutral">選填</span></div>
+            <div class="attr-col-wrap col-visible"><span class="badge success">顯示</span></div>
+            <div class="attr-col-wrap col-edit-perm"><span class="badge info">開啟</span></div>
           </div>
-
-          <!-- 工作地點（從個人資訊移入） -->
-          <div class="attr-card" draggable="true" data-group="company">
-            <span class="grip">⠿</span>
+          <div class="attr-card">
             <div class="attr-card-info"><div><div class="attr-name">工作地點</div><div class="attr-meta">文字</div></div></div>
-            <div class="attr-col-wrap col-required"><div class="toggle-pill"><span class="tpo req" onclick="attrPill(this)">必填</span><span class="tpo neutral active" onclick="attrPill(this)">選填</span></div></div>
-            <div class="attr-col-wrap col-visible"><div class="toggle-pill"><span class="tpo vis active" onclick="attrPill(this)">顯示</span><span class="tpo neutral" onclick="attrPill(this)">隱藏</span></div></div>
-            <div class="attr-col-wrap col-edit-perm"><div class="toggle-pill"><span class="tpo edit active" onclick="attrPill(this)">開啟</span><span class="tpo" onclick="attrPill(this)">僅管理員</span></div></div>
+            <div class="attr-col-wrap col-required"><span class="badge neutral">選填</span></div>
+            <div class="attr-col-wrap col-visible"><span class="badge success">顯示</span></div>
+            <div class="attr-col-wrap col-edit-perm"><span class="badge info">開啟</span></div>
           </div>
-
-          <!-- 到職日（從自定義欄位移入）：僅管理員 locked -->
-          <div class="attr-card" draggable="true" data-group="company">
-            <span class="grip">⠿</span>
+          <div class="attr-card">
             <div class="attr-card-info"><div><div class="attr-name">到職日</div><div class="attr-meta">日期</div></div></div>
-            <div class="attr-col-wrap col-required"><div class="toggle-pill"><span class="tpo req active" onclick="attrPill(this)">必填</span><span class="tpo neutral" onclick="attrPill(this)">選填</span></div></div>
-            <div class="attr-col-wrap col-visible"><div class="toggle-pill"><span class="tpo vis active" onclick="attrPill(this)">顯示</span><span class="tpo neutral" onclick="attrPill(this)">隱藏</span></div></div>
-            <div class="attr-col-wrap col-edit-perm">
-              <div class="toggle-pill" style="pointer-events:none;opacity:0.55;" title="此欄位固定為僅管理員"><span class="tpo">開啟</span><span class="tpo neutral active">僅管理員</span></div>
-            </div>
+            <div class="attr-col-wrap col-required"><span class="badge warning">必填</span></div>
+            <div class="attr-col-wrap col-visible"><span class="badge success">顯示</span></div>
+            <div class="attr-col-wrap col-edit-perm"><span class="badge neutral">僅管理員</span></div>
           </div>
-
         </div>
       </div>
-      <!-- ===== [修改結束] ===== -->
 
       <!-- ── 自定義欄位 Group ── -->
       <div class="card attr-group-card">
@@ -4057,7 +3976,7 @@
               <td><span class="badge info">IT管理員</span></td>
               <td class="text-sec" style="font-size:13px;">2026-05-10 08:00</td>
               <td class="text-sec" style="font-size:13px;">2024-01-15</td>
-              <td><div class="row-flex" style="gap:6px;justify-content:center;"><button class="op-btn" onclick="openModal('modal-add-user')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>編輯</button><button class="op-btn delete" onclick="openDeleteConfirm('系統IT管理員')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg></button></div></td>
+              <td><div class="row-flex" style="gap:6px;justify-content:center;"><button class="op-btn" onclick="openEditDrawerFromRow('user',this)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>編輯</button><button class="op-btn delete" onclick="openDeleteConfirm('系統IT管理員')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg></button></div></td>
             </tr>
 
             <!-- HR管理員 -->
@@ -4069,7 +3988,7 @@
               <td><span class="badge info">HR管理員</span></td>
               <td class="text-sec" style="font-size:13px;">2026-05-10 08:00</td>
               <td class="text-sec" style="font-size:13px;">2024-01-15</td>
-              <td><div class="row-flex" style="gap:6px;justify-content:center;"><button class="op-btn" onclick="openModal('modal-add-user')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>編輯</button><button class="op-btn delete" onclick="openDeleteConfirm('系統HR管理員')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg></button></div></td>
+              <td><div class="row-flex" style="gap:6px;justify-content:center;"><button class="op-btn" onclick="openEditDrawerFromRow('user',this)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>編輯</button><button class="op-btn delete" onclick="openDeleteConfirm('系統HR管理員')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg></button></div></td>
             </tr>
 
             <tr data-uname="陳怡君" data-urole="HR 管理員" data-ustatus="啟用">
@@ -4080,7 +3999,7 @@
               <td><span class="badge neutral">HR 管理員</span></td>
               <td class="text-sec" style="font-size:13px;">2026-05-05 10:23</td>
               <td class="text-sec" style="font-size:13px;">2025-03-15</td>
-              <td><div class="row-flex" style="gap:6px;justify-content:center;"><button class="op-btn" onclick="openModal('modal-add-user')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>編輯</button><button class="op-btn delete" onclick="openDeleteMemberConfirm('陳怡君')" style="gap:4px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>刪除</button></div></td>
+              <td><div class="row-flex" style="gap:6px;justify-content:center;"><button class="op-btn" onclick="openEditDrawerFromRow('user',this)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>編輯</button><button class="op-btn delete" onclick="openDeleteMemberConfirm('陳怡君')" style="gap:4px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>刪除</button></div></td>
             </tr>
 
             <tr data-uname="張雅雯" data-urole="部門主管" data-ustatus="啟用">
@@ -4091,7 +4010,7 @@
               <td><span class="badge neutral">部門主管</span></td>
               <td class="text-sec" style="font-size:13px;">2026-05-03 14:32</td>
               <td class="text-sec" style="font-size:13px;">2024-08-10</td>
-              <td><div class="row-flex" style="gap:6px;justify-content:center;"><button class="op-btn" onclick="openModal('modal-add-user')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>編輯</button><button class="op-btn delete" onclick="openDeleteMemberConfirm('張雅雯')" style="gap:4px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>刪除</button></div></td>
+              <td><div class="row-flex" style="gap:6px;justify-content:center;"><button class="op-btn" onclick="openEditDrawerFromRow('user',this)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>編輯</button><button class="op-btn delete" onclick="openDeleteMemberConfirm('張雅雯')" style="gap:4px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>刪除</button></div></td>
             </tr>
 
             <tr data-uname="林家豪" data-urole="一般員工" data-ustatus="停用">
@@ -4102,7 +4021,7 @@
               <td><span class="badge neutral">一般員工</span></td>
               <td class="text-sec" style="font-size:13px;">2026-04-28 16:45</td>
               <td class="text-sec" style="font-size:13px;">2024-11-05</td>
-              <td><div class="row-flex" style="gap:6px;justify-content:center;"><button class="op-btn" onclick="openModal('modal-add-user')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>編輯</button><button class="op-btn delete" onclick="openDeleteMemberConfirm('林家豪')" style="gap:4px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>刪除</button></div></td>
+              <td><div class="row-flex" style="gap:6px;justify-content:center;"><button class="op-btn" onclick="openEditDrawerFromRow('user',this)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>編輯</button><button class="op-btn delete" onclick="openDeleteMemberConfirm('林家豪')" style="gap:4px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>刪除</button></div></td>
             </tr>
 
             <tr data-uname="黃詩涵" data-urole="一般員工" data-ustatus="帳號失效">
@@ -4113,7 +4032,7 @@
               <td><span class="badge neutral">一般員工</span></td>
               <td class="text-sec" style="font-size:13px;">—</td>
               <td class="text-sec" style="font-size:13px;">2025-01-20</td>
-              <td><div class="row-flex" style="gap:6px;justify-content:center;"><button class="op-btn" onclick="openModal('modal-add-user')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>編輯</button><button class="op-btn delete" onclick="openDeleteMemberConfirm('黃詩涵')" style="gap:4px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>刪除</button></div></td>
+              <td><div class="row-flex" style="gap:6px;justify-content:center;"><button class="op-btn" onclick="openEditDrawerFromRow('user',this)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>編輯</button><button class="op-btn delete" onclick="openDeleteMemberConfirm('黃詩涵')" style="gap:4px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>刪除</button></div></td>
             </tr>
 
             <tr data-uname="吳承翰" data-urole="一般員工" data-ustatus="啟用">
@@ -4124,7 +4043,7 @@
               <td><span class="badge neutral">一般員工</span></td>
               <td class="text-sec" style="font-size:13px;">2026-05-12 08:30</td>
               <td class="text-sec" style="font-size:13px;">2025-02-14</td>
-              <td><div class="row-flex" style="gap:6px;justify-content:center;"><button class="op-btn" onclick="openModal('modal-add-user')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>編輯</button><button class="op-btn delete" onclick="openDeleteMemberConfirm('吳承翰')" style="gap:4px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>刪除</button></div></td>
+              <td><div class="row-flex" style="gap:6px;justify-content:center;"><button class="op-btn" onclick="openEditDrawerFromRow('user',this)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>編輯</button><button class="op-btn delete" onclick="openDeleteMemberConfirm('吳承翰')" style="gap:4px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>刪除</button></div></td>
             </tr>
 
             <tr data-uname="蔡欣怡" data-urole="一般員工" data-ustatus="啟用">
@@ -4135,7 +4054,7 @@
               <td><span class="badge neutral">一般員工</span></td>
               <td class="text-sec" style="font-size:13px;">—</td>
               <td class="text-sec" style="font-size:13px;">2026-04-28</td>
-              <td><div class="row-flex" style="gap:6px;justify-content:center;"><button class="op-btn" onclick="openModal('modal-add-user')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>編輯</button><button class="op-btn delete" onclick="openDeleteMemberConfirm('蔡欣怡')" style="gap:4px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>刪除</button></div></td>
+              <td><div class="row-flex" style="gap:6px;justify-content:center;"><button class="op-btn" onclick="openEditDrawerFromRow('user',this)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>編輯</button><button class="op-btn delete" onclick="openDeleteMemberConfirm('蔡欣怡')" style="gap:4px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>刪除</button></div></td>
             </tr>
 
             <tr data-uname="鄭子翔" data-urole="一般員工" data-ustatus="停用">
@@ -4146,7 +4065,7 @@
               <td><span class="badge neutral">一般員工</span></td>
               <td class="text-sec" style="font-size:13px;">2026-04-15 11:20</td>
               <td class="text-sec" style="font-size:13px;">2025-09-01</td>
-              <td><div class="row-flex" style="gap:6px;justify-content:center;"><button class="op-btn" onclick="openModal('modal-add-user')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>編輯</button><button class="op-btn delete" onclick="openDeleteMemberConfirm('鄭子翔')" style="gap:4px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>刪除</button></div></td>
+              <td><div class="row-flex" style="gap:6px;justify-content:center;"><button class="op-btn" onclick="openEditDrawerFromRow('user',this)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>編輯</button><button class="op-btn delete" onclick="openDeleteMemberConfirm('鄭子翔')" style="gap:4px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>刪除</button></div></td>
             </tr>
 
           </tbody>
@@ -4246,7 +4165,7 @@
               <td style="font-size:13px;"><div style="font-weight:500;">系統管理員</div><div class="text-sec" style="font-size:11px;">最高權限</div></td>
               <td>
                 <div class="row-flex" style="gap:6px;justify-content:center;">
-                  <button class="op-btn" onclick="openEditRoleModal('IT管理員')">
+                  <button class="op-btn" onclick="openEditDrawer('role',null,'IT管理員')">
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                     編輯
                   </button>
@@ -4274,7 +4193,7 @@
               <td style="font-size:13px;"><div style="font-weight:500;">陳怡君</div><div class="text-sec" style="font-size:11px;">HR 副理</div></td>
               <td>
                 <div class="row-flex" style="gap:6px;justify-content:center;">
-                  <button class="op-btn" onclick="openEditRoleModal('HR 管理員')">
+                  <button class="op-btn" onclick="openEditDrawer('role',null,'HR 管理員')">
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                     編輯
                   </button>
@@ -4303,7 +4222,7 @@
               <td style="font-size:13px;"><div style="font-weight:500;">王明德</div><div class="text-sec" style="font-size:11px;">研發主管</div></td>
               <td>
                 <div class="row-flex" style="gap:6px;justify-content:center;">
-                  <button class="op-btn" onclick="openEditRoleModal('部門主管')">
+                  <button class="op-btn" onclick="openEditDrawer('role',null,'部門主管')">
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                     編輯
                   </button>
@@ -4331,7 +4250,7 @@
               <td style="font-size:13px;"><div style="font-weight:500;">系統管理員</div><div class="text-sec" style="font-size:11px;">最高權限</div></td>
               <td>
                 <div class="row-flex" style="gap:6px;justify-content:center;">
-                  <button class="op-btn" onclick="openEditRoleModal('一般員工')">
+                  <button class="op-btn" onclick="openEditDrawer('role',null,'一般員工')">
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                     編輯
                   </button>
@@ -4359,7 +4278,7 @@
               <td style="font-size:13px;"><div style="font-weight:500;">陳怡君</div><div class="text-sec" style="font-size:11px;">HR 副理</div></td>
               <td>
                 <div class="row-flex" style="gap:6px;justify-content:center;">
-                  <button class="op-btn" onclick="openEditRoleModal('測試角色')">
+                  <button class="op-btn" onclick="openEditDrawer('role',null,'測試角色')">
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                     編輯
                   </button>
@@ -4381,112 +4300,251 @@
       <div class="page-head">
         <div>
           <h1 class="page-title">Bot 列表</h1>
-          <p class="page-desc">管理所有 Bot，可從範本快速建立。</p>
-        </div>
-        <div class="btn-group">
-          <button class="btn">從範本建立</button>
-          <button class="btn primary" onclick="openModal('modal-add-bot')">+ 新增 Bot</button>
+          <p class="page-desc">管理所有 Bot，可從範本快速建立，或自行新增自訂 Bot。</p>
         </div>
       </div>
 
+      <!-- ===== Bot 範本區塊（置頂） ===== -->
       <div class="card" style="padding: 16px 20px; margin-bottom: 16px;">
-        <div style="font-weight:600; margin-bottom:10px;">⭐ Bot 範本（置頂）</div>
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:14px;">
+          <span style="font-weight:700; font-size:14px;">Bot 範本</span>
+          <span class="text-sec" style="font-size:12px;">此區範本為預設建立的範本，可決定是否啟用</span>
+        </div>
         <div class="bot-grid">
+
+          <!-- 客服回覆範本 -->
           <div class="bot-card" style="border-style:dashed;">
-            <div class="bot-head">
-              <div class="bot-icon line">客</div>
-              <div><div class="bot-name">客服回覆範本</div><div class="bot-platform">LINE · 含關鍵字 12 組</div></div>
+            <div class="bot-head" style="align-items:flex-start;">
+              <div class="bot-icon line" style="font-size:11px; background:#4f46e5; flex-shrink:0;">客服</div>
+              <div style="flex:1; min-width:0;">
+                <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                  <span class="bot-name">客服回覆範本</span>
+                  <span class="badge info" style="font-size:10px; padding:1px 6px;">預設</span>
+                </div>
+                <div class="bot-platform">含關鍵字 12 組 · 快速選單</div>
+              </div>
+              <label class="switch" style="flex-shrink:0; margin-left:4px;">
+                <input type="checkbox" checked />
+                <span class="slider"></span>
+              </label>
             </div>
-            <div class="text-sec" style="font-size:12px;">自動回覆常見問題與引導對應窗口。</div>
+            <div class="text-sec" style="font-size:12px; margin-top:6px;">自動回覆常見問題與引導對應窗口。</div>
+            <div style="margin-top:10px; text-align:right;">
+              <button class="btn ghost sm" onclick="openBotTemplateEdit('客服回覆範本', false)">編輯</button>
+            </div>
           </div>
+
+          <!-- 內部公告範本 -->
           <div class="bot-card" style="border-style:dashed;">
-            <div class="bot-head">
-              <div class="bot-icon slack">公</div>
-              <div><div class="bot-name">內部公告範本</div><div class="bot-platform">Slack · 排程推播</div></div>
+            <div class="bot-head" style="align-items:flex-start;">
+              <div class="bot-icon slack" style="font-size:11px; flex-shrink:0;">公告</div>
+              <div style="flex:1; min-width:0;">
+                <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                  <span class="bot-name">內部公告範本</span>
+                  <span class="badge info" style="font-size:10px; padding:1px 6px;">預設</span>
+                </div>
+                <div class="bot-platform">排程推播 · Rich Menu</div>
+              </div>
+              <label class="switch" style="flex-shrink:0; margin-left:4px;">
+                <input type="checkbox" checked />
+                <span class="slider"></span>
+              </label>
             </div>
-            <div class="text-sec" style="font-size:12px;">每日同步公司公告至指定頻道。</div>
+            <div class="text-sec" style="font-size:12px; margin-top:6px;">每日同步公司公告，可設排程自動推播。</div>
+            <div style="margin-top:10px; text-align:right;">
+              <button class="btn ghost sm" onclick="openBotTemplateEdit('內部公告範本', false)">編輯</button>
+            </div>
           </div>
+
+          <!-- 值班通知範本 -->
           <div class="bot-card" style="border-style:dashed;">
-            <div class="bot-head">
-              <div class="bot-icon tg">值</div>
-              <div><div class="bot-name">值班通知範本</div><div class="bot-platform">Telegram · 排程</div></div>
+            <div class="bot-head" style="align-items:flex-start;">
+              <div class="bot-icon tg" style="font-size:11px; flex-shrink:0;">值班</div>
+              <div style="flex:1; min-width:0;">
+                <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                  <span class="bot-name">值班通知範本</span>
+                  <span class="badge info" style="font-size:10px; padding:1px 6px;">預設</span>
+                </div>
+                <div class="bot-platform">輪班 · Oncall 通知</div>
+              </div>
+              <label class="switch" style="flex-shrink:0; margin-left:4px;">
+                <input type="checkbox" />
+                <span class="slider"></span>
+              </label>
             </div>
-            <div class="text-sec" style="font-size:12px;">輪班、Oncall 通知模板。</div>
+            <div class="text-sec" style="font-size:12px; margin-top:6px;">輪班、Oncall 通知，含排程設定模板。</div>
+            <div style="margin-top:10px; text-align:right;">
+              <button class="btn ghost sm" onclick="openBotTemplateEdit('值班通知範本', false)">編輯</button>
+            </div>
           </div>
+
+          <!-- 打卡 Bot 範本（有專屬設定） -->
+          <div class="bot-card" style="border-style:dashed;">
+            <div class="bot-head" style="align-items:flex-start;">
+              <div class="bot-icon line" style="font-size:11px; background:#059669; flex-shrink:0;">打卡</div>
+              <div style="flex:1; min-width:0;">
+                <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                  <span class="bot-name">打卡 Bot 範本</span>
+                  <span class="badge info" style="font-size:10px; padding:1px 6px;">預設</span>
+                </div>
+                <div class="bot-platform">上下班打卡 · 位置回傳</div>
+              </div>
+              <label class="switch" style="flex-shrink:0; margin-left:4px;">
+                <input type="checkbox" checked />
+                <span class="slider"></span>
+              </label>
+            </div>
+            <div class="text-sec" style="font-size:12px; margin-top:6px;">整合打卡功能，自動記錄成員上下班時間。</div>
+            <div style="margin-top:10px; text-align:right;">
+              <button class="btn ghost sm" onclick="openBotTemplateEdit('打卡 Bot 範本', true)">編輯</button>
+            </div>
+          </div>
+
         </div>
       </div>
 
-      <div class="toolbar">
-        <input class="input search-input" placeholder="搜尋 Bot 名稱…" />
-        <select class="input"><option>所有平台</option><option>LINE</option><option>Slack</option><option>Telegram</option></select>
-        <select class="input"><option>所有狀態</option><option>啟用中</option><option>已停用</option></select>
-      </div>
-
-      <div class="bot-grid">
-        <div class="bot-card">
-          <div class="bot-head">
-            <div class="bot-icon line">客</div>
-            <div style="flex:1;"><div class="bot-name">客服助手</div><div class="bot-platform">LINE · LWS 官方帳號</div></div>
-            <span class="badge success dot">啟用</span>
-          </div>
-          <div class="bot-stats">
-            <div class="bot-stat"><strong>1,248</strong>本月推播</div>
-            <div class="bot-stat"><strong>432</strong>互動次數</div>
-            <div class="bot-stat"><strong>12</strong>關鍵字</div>
-          </div>
+      <!-- ===== 已建立 Bot 列表 ===== -->
+      <div class="card">
+        <div class="toolbar" style="padding: 14px 20px 0;">
+          <input class="input search-input" placeholder="搜尋 Bot 名稱…" />
+          <select class="input" style="width:140px;"><option>所有狀態</option><option>啟用中</option><option>已停用</option></select>
+          <span class="text-sec" style="font-size:13px; margin-left:4px;">共 <strong>5</strong> 支</span>
+          <button class="btn primary sm" style="margin-left:auto;" onclick="openModal('modal-add-bot')">+ 新增 Bot</button>
         </div>
-        <div class="bot-card">
-          <div class="bot-head">
-            <div class="bot-icon slack">公</div>
-            <div style="flex:1;"><div class="bot-name">內部公告 Bot</div><div class="bot-platform">Slack · #announcements</div></div>
-            <span class="badge success dot">啟用</span>
-          </div>
-          <div class="bot-stats">
-            <div class="bot-stat"><strong>892</strong>本月推播</div>
-            <div class="bot-stat"><strong>0</strong>互動次數</div>
-            <div class="bot-stat"><strong>3</strong>排程</div>
-          </div>
-        </div>
-        <div class="bot-card">
-          <div class="bot-head">
-            <div class="bot-icon tg">值</div>
-            <div style="flex:1;"><div class="bot-name">值班通知</div><div class="bot-platform">Telegram · 工程組</div></div>
-            <span class="badge success dot">啟用</span>
-          </div>
-          <div class="bot-stats">
-            <div class="bot-stat"><strong>560</strong>本月推播</div>
-            <div class="bot-stat"><strong>78</strong>互動次數</div>
-            <div class="bot-stat"><strong>5</strong>排程</div>
-          </div>
-        </div>
-        <div class="bot-card">
-          <div class="bot-head">
-            <div class="bot-icon line">行</div>
-            <div style="flex:1;"><div class="bot-name">行銷活動 Bot</div><div class="bot-platform">LINE · 季度活動</div></div>
-            <span class="badge warning dot">待設定</span>
-          </div>
-          <div class="bot-stats">
-            <div class="bot-stat"><strong>0</strong>本月推播</div>
-            <div class="bot-stat"><strong>0</strong>互動次數</div>
-            <div class="bot-stat"><strong>0</strong>關鍵字</div>
-          </div>
-        </div>
-        <div class="bot-card">
-          <div class="bot-head">
-            <div class="bot-icon slack">會</div>
-            <div style="flex:1;"><div class="bot-name">會議提醒 Bot</div><div class="bot-platform">Slack · DM</div></div>
-            <span class="badge neutral dot">已停用</span>
-          </div>
-          <div class="bot-stats">
-            <div class="bot-stat"><strong>—</strong>本月推播</div>
-            <div class="bot-stat"><strong>—</strong>互動次數</div>
-            <div class="bot-stat"><strong>2</strong>排程</div>
-          </div>
-        </div>
-        <div class="bot-card" style="border-style:dashed; align-items:center; justify-content:center; display:flex; flex-direction:column; min-height:160px; color: var(--text-secondary);" onclick="openModal('modal-add-bot')">
-          <div style="font-size:28px;">＋</div>
-          <div style="font-weight:600; margin-top:6px;">新增 Bot</div>
-        </div>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th style="width:44px;">照片</th>
+              <th>Bot 名稱</th>
+              <th>Bot ID</th>
+              <th>主負責人</th>
+              <th>建立時間</th>
+              <th>狀態</th>
+              <th style="width:130px;"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><div class="bot-icon line" style="width:32px;height:32px;font-size:11px;border-radius:8px;">客</div></td>
+              <td>
+                <div style="font-weight:600;">客服助手</div>
+                <div class="text-sec" style="font-size:12px;">自動回覆客服常見問題</div>
+              </td>
+              
+              <td><code style="font-size:12px;color:var(--text-secondary);">BOT-00123</code></td>
+              <td>
+                <div class="user-cell">
+                  <div class="avatar" style="width:24px;height:24px;font-size:11px;">陳</div>
+                  陳小明
+                </div>
+              </td>
+              <td class="text-sec" style="font-size:13px;">2026-03-10</td>
+              <td><span class="badge success dot">啟用中</span></td>
+              <td>
+                <div class="btn-group">
+                  <button class="btn ghost sm" onclick="openBotViewDrawer('客服助手')">查看</button>
+                  <button class="btn ghost sm" onclick="openBotEditDrawer('客服助手')">編輯</button>
+                  <button class="btn ghost sm danger-ghost" onclick="openModal('modal-delete-confirm')">刪除</button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td><div class="bot-icon slack" style="width:32px;height:32px;font-size:11px;border-radius:8px;">公</div></td>
+              <td>
+                <div style="font-weight:600;">內部公告 Bot</div>
+                <div class="text-sec" style="font-size:12px;">排程推播公司公告</div>
+              </td>
+              
+              <td><code style="font-size:12px;color:var(--text-secondary);">BOT-00124</code></td>
+              <td>
+                <div class="user-cell">
+                  <div class="avatar" style="width:24px;height:24px;font-size:11px;">林</div>
+                  林曉華
+                </div>
+              </td>
+              <td class="text-sec" style="font-size:13px;">2026-03-15</td>
+              <td><span class="badge success dot">啟用中</span></td>
+              <td>
+                <div class="btn-group">
+                  <button class="btn ghost sm" onclick="openBotViewDrawer('內部公告 Bot')">查看</button>
+                  <button class="btn ghost sm" onclick="openBotEditDrawer('內部公告 Bot')">編輯</button>
+                  <button class="btn ghost sm danger-ghost" onclick="openModal('modal-delete-confirm')">刪除</button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td><div class="bot-icon tg" style="width:32px;height:32px;font-size:11px;border-radius:8px;">值</div></td>
+              <td>
+                <div style="font-weight:600;">值班通知</div>
+                <div class="text-sec" style="font-size:12px;">輪班 / Oncall 通知</div>
+              </td>
+              
+              <td><code style="font-size:12px;color:var(--text-secondary);">BOT-00125</code></td>
+              <td>
+                <div class="user-cell">
+                  <div class="avatar" style="width:24px;height:24px;font-size:11px;">王</div>
+                  王大偉
+                </div>
+              </td>
+              <td class="text-sec" style="font-size:13px;">2026-03-20</td>
+              <td><span class="badge success dot">啟用中</span></td>
+              <td>
+                <div class="btn-group">
+                  <button class="btn ghost sm" onclick="openBotViewDrawer('值班通知')">查看</button>
+                  <button class="btn ghost sm" onclick="openBotEditDrawer('值班通知')">編輯</button>
+                  <button class="btn ghost sm danger-ghost" onclick="openModal('modal-delete-confirm')">刪除</button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td><div class="bot-icon line" style="width:32px;height:32px;font-size:11px;border-radius:8px;background:#4f46e5;">行</div></td>
+              <td>
+                <div style="font-weight:600;">行銷活動 Bot</div>
+                <div class="text-sec" style="font-size:12px;">季度活動推播</div>
+              </td>
+              
+              <td><code style="font-size:12px;color:var(--text-secondary);">BOT-00126</code></td>
+              <td>
+                <div class="user-cell">
+                  <div class="avatar" style="width:24px;height:24px;font-size:11px;">陳</div>
+                  陳小明
+                </div>
+              </td>
+              <td class="text-sec" style="font-size:13px;">2026-04-01</td>
+              <td><span class="badge warning dot">待設定</span></td>
+              <td>
+                <div class="btn-group">
+                  <button class="btn ghost sm" onclick="openBotViewDrawer('行銷活動 Bot')">查看</button>
+                  <button class="btn ghost sm" onclick="openBotEditDrawer('行銷活動 Bot')">編輯</button>
+                  <button class="btn ghost sm danger-ghost" onclick="openModal('modal-delete-confirm')">刪除</button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td><div class="bot-icon slack" style="width:32px;height:32px;font-size:11px;border-radius:8px;background:#6b7280;">會</div></td>
+              <td>
+                <div style="font-weight:600;">會議提醒 Bot</div>
+                <div class="text-sec" style="font-size:12px;">DM 發送會議提醒</div>
+              </td>
+              <td><code style="font-size:12px;color:var(--text-secondary);">BOT-00127</code></td>
+              <td>
+                <div class="user-cell">
+                  <div class="avatar" style="width:24px;height:24px;font-size:11px;">李</div>
+                  李怡君
+                </div>
+              </td>
+              <td class="text-sec" style="font-size:13px;">2026-04-10</td>
+              <td><span class="badge neutral dot">已停用</span></td>
+              <td>
+                <div class="btn-group">
+                  <button class="btn ghost sm" onclick="openBotViewDrawer('會議提醒 Bot')">查看</button>
+                  <button class="btn ghost sm" onclick="openBotEditDrawer('會議提醒 Bot')">編輯</button>
+                  <button class="btn ghost sm danger-ghost" onclick="openModal('modal-delete-confirm')">刪除</button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </section>
 
@@ -4507,8 +4565,7 @@
           <button class="tab active">全部 (24)</button>
           <button class="tab">草稿 (3)</button>
           <button class="tab">已排程 (12)</button>
-          <button class="tab">推播中 (1)</button>
-          <button class="tab">已推播 (8)</button>
+          <button class="tab">已完成 (9)</button>
         </div>
         <div class="toolbar" style="padding: 14px 20px 0;">
           <input class="input search-input" placeholder="搜尋推播名稱…" />
@@ -4519,48 +4576,115 @@
             <tr><th>名稱</th><th>Bot</th><th>類型</th><th>排程時間</th><th>對象</th><th>狀態</th><th></th></tr>
           </thead>
           <tbody>
-            <tr><td><strong>5/6 產品週會提醒</strong><div class="text-sec">明天上午發送</div></td><td><div class="user-cell"><div class="bot-icon slack" style="width:28px;height:28px;font-size:11px;">公</div>內部公告</div></td><td>排程推播</td><td>2026-05-06 09:30</td><td>研發部 (24人)</td><td><span class="badge info dot">已排程</span></td><td><button class="btn ghost sm">編輯</button></td></tr>
-            <tr><td><strong>每日值班輪換通知</strong><div class="text-sec">每日 09:00 重複</div></td><td><div class="user-cell"><div class="bot-icon tg" style="width:28px;height:28px;font-size:11px;">值</div>值班通知</div></td><td>循環排程</td><td>每日 09:00</td><td>工程組 (18人)</td><td><span class="badge info dot">已排程</span></td><td><button class="btn ghost sm">編輯</button></td></tr>
+            <tr><td><strong>5/6 產品週會提醒</strong><div class="text-sec">明天上午發送</div></td><td><div class="user-cell"><div class="bot-icon slack" style="width:28px;height:28px;font-size:11px;">公</div>內部公告</div></td><td>排程推播</td><td>2026-05-06 09:30</td><td>研發部 (24人)</td><td><span class="badge info dot">已排程</span></td><td><button class="btn ghost sm" onclick="openPushEditModal('5/6 產品週會提醒')">編輯</button></td></tr>
+            <tr><td><strong>每日值班輪換通知</strong><div class="text-sec">每日 09:00 重複</div></td><td><div class="user-cell"><div class="bot-icon tg" style="width:28px;height:28px;font-size:11px;">值</div>值班通知</div></td><td>循環排程</td><td>每日 09:00</td><td>工程組 (18人)</td><td><span class="badge info dot">已排程</span></td><td><button class="btn ghost sm" onclick="openPushEditModal('每日值班輪換通知')">編輯</button></td></tr>
             <tr><td><strong>新功能上線公告</strong></td><td><div class="user-cell"><div class="bot-icon line" style="width:28px;height:28px;font-size:11px;">客</div>客服助手</div></td><td>立即推播</td><td>進行中…</td><td>所有訂閱者</td><td><span class="badge warning dot">推播中</span></td><td><button class="btn ghost sm">查看</button></td></tr>
             <tr><td><strong>5/3 母親節活動</strong></td><td><div class="user-cell"><div class="bot-icon line" style="width:28px;height:28px;font-size:11px;">行</div>行銷活動</div></td><td>排程推播</td><td>2026-05-03 10:00</td><td>VIP 客戶 (245人)</td><td><span class="badge success dot">已推播</span></td><td><button class="btn ghost sm">查看</button></td></tr>
-            <tr><td><strong>夏季優惠草稿</strong><div class="text-sec">尚未排程</div></td><td><div class="user-cell"><div class="bot-icon line" style="width:28px;height:28px;font-size:11px;">行</div>行銷活動</div></td><td>—</td><td>—</td><td>—</td><td><span class="badge neutral dot">草稿</span></td><td><button class="btn ghost sm">編輯</button></td></tr>
+            <tr><td><strong>夏季優惠草稿</strong><div class="text-sec">尚未排程</div></td><td><div class="user-cell"><div class="bot-icon line" style="width:28px;height:28px;font-size:11px;">行</div>行銷活動</div></td><td>—</td><td>—</td><td>—</td><td><span class="badge neutral dot">草稿</span></td><td><button class="btn ghost sm" onclick="openPushEditModal('夏季優惠草稿')">編輯</button></td></tr>
           </tbody>
         </table>
       </div>
     </section>
 
-    <!-- ============= 5.3 Bot 選單設定 ============= -->
+    <!-- ============= 5.3 選單設定 ============= -->
     <section id="page-5.3" class="page-wrap hidden">
       <div class="page-head">
         <div>
-          <h1 class="page-title">Bot 選單設定</h1>
-          <p class="page-desc">設定快速選單與 Rich Menu，提供使用者一鍵互動入口。</p>
+          <h1 class="page-title">選單設定</h1>
+          <p class="page-desc">設定各 Bot 的快速選單與 Rich Menu，提供使用者一鍵互動入口。</p>
         </div>
         <div class="btn-group">
-          <select class="input"><option>客服助手</option><option>行銷活動 Bot</option></select>
           <button class="btn primary" onclick="openModal('modal-add-menu')">+ 新增選單</button>
         </div>
       </div>
 
-      <div class="dash-2col">
-        <div class="card">
-          <div class="card-head">
-            <div class="title">選單列表</div>
-            <span class="text-sec">共 4 個</span>
-          </div>
-          <table class="data-table">
-            <thead><tr><th>名稱</th><th>類型</th><th>按鈕數</th><th>狀態</th><th></th></tr></thead>
+      <!-- 篩選列 -->
+      <div class="card" style="padding:12px 16px; margin-bottom:14px;">
+        <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+          <select class="input" style="width:160px;"><option>所有 Bot</option><option>客服助手</option><option>內部公告 Bot</option><option>值班通知</option></select>
+          <select class="input" style="width:140px;"><option>所有類型</option><option>Rich Menu</option><option>快速選單</option></select>
+          <select class="input" style="width:120px;"><option>所有狀態</option><option>啟用</option><option>停用</option></select>
+        </div>
+      </div>
+
+      <!-- 列表 + 動態預覽區 -->
+      <div id="menu-layout" style="display:grid; grid-template-columns:1fr; gap:16px; transition: grid-template-columns .25s;">
+        <div class="card" id="menu-list-card">
+          <table class="data-table" id="menu-table">
+            <thead>
+              <tr>
+                <th>選單名稱</th>
+                <th>指定 Bot</th>
+                <th>選單類型</th>
+                <th>狀態</th>
+                <th>建立時間</th>
+                <th style="width:100px;"></th>
+              </tr>
+            </thead>
             <tbody>
-              <tr><td><strong>主選單</strong></td><td>Rich Menu</td><td>6</td><td><span class="badge success dot">裝置使用中</span></td><td><button class="btn ghost sm">編輯</button></td></tr>
-              <tr><td><strong>會員專區</strong></td><td>Rich Menu</td><td>4</td><td><span class="badge neutral dot">備用</span></td><td><button class="btn ghost sm">編輯</button></td></tr>
-              <tr><td><strong>快速回覆</strong></td><td>快速選單</td><td>5</td><td><span class="badge success dot">裝置使用中</span></td><td><button class="btn ghost sm">編輯</button></td></tr>
-              <tr><td><strong>客服分流</strong></td><td>快速選單</td><td>4</td><td><span class="badge success dot">裝置使用中</span></td><td><button class="btn ghost sm">編輯</button></td></tr>
+              <tr class="menu-row" onclick="showMenuPreview('主選單','Rich Menu')" style="cursor:pointer;">
+                <td><strong>主選單</strong></td>
+                <td><div class="user-cell"><div class="bot-icon line" style="width:22px;height:22px;font-size:10px;border-radius:6px;">客</div>客服助手</div></td>
+                <td><span class="type-chip">Rich Menu</span></td>
+                <td><span class="badge success dot">啟用</span></td>
+                <td class="text-sec" style="font-size:13px;">2026-03-10</td>
+                <td>
+                  <div class="btn-group">
+                    <button class="btn ghost sm" onclick="event.stopPropagation(); openEditDrawer('menu',null,'主選單')">編輯</button>
+                    <button class="btn ghost sm danger-ghost" onclick="event.stopPropagation(); openModal('modal-delete-confirm')">刪除</button>
+                  </div>
+                </td>
+              </tr>
+              <tr class="menu-row" onclick="showMenuPreview('會員專區','Rich Menu')" style="cursor:pointer;">
+                <td><strong>會員專區</strong></td>
+                <td><div class="user-cell"><div class="bot-icon line" style="width:22px;height:22px;font-size:10px;border-radius:6px;">客</div>客服助手</div></td>
+                <td><span class="type-chip">Rich Menu</span></td>
+                <td><span class="badge neutral dot">停用</span></td>
+                <td class="text-sec" style="font-size:13px;">2026-03-12</td>
+                <td>
+                  <div class="btn-group">
+                    <button class="btn ghost sm" onclick="event.stopPropagation(); openEditDrawer('menu',null,'會員專區')">編輯</button>
+                    <button class="btn ghost sm danger-ghost" onclick="event.stopPropagation(); openModal('modal-delete-confirm')">刪除</button>
+                  </div>
+                </td>
+              </tr>
+              <tr class="menu-row" onclick="showMenuPreview('快速回覆','快速選單')" style="cursor:pointer;">
+                <td><strong>快速回覆</strong></td>
+                <td><div class="user-cell"><div class="bot-icon slack" style="width:22px;height:22px;font-size:10px;border-radius:6px;">公</div>內部公告 Bot</div></td>
+                <td><span class="type-chip">快速選單</span></td>
+                <td><span class="badge success dot">啟用</span></td>
+                <td class="text-sec" style="font-size:13px;">2026-03-18</td>
+                <td>
+                  <div class="btn-group">
+                    <button class="btn ghost sm" onclick="event.stopPropagation(); openEditDrawer('menu',null,'快速回覆')">編輯</button>
+                    <button class="btn ghost sm danger-ghost" onclick="event.stopPropagation(); openModal('modal-delete-confirm')">刪除</button>
+                  </div>
+                </td>
+              </tr>
+              <tr class="menu-row" onclick="showMenuPreview('客服分流','快速選單')" style="cursor:pointer;">
+                <td><strong>客服分流</strong></td>
+                <td><div class="user-cell"><div class="bot-icon line" style="width:22px;height:22px;font-size:10px;border-radius:6px;">客</div>客服助手</div></td>
+                <td><span class="type-chip">快速選單</span></td>
+                <td><span class="badge success dot">啟用</span></td>
+                <td class="text-sec" style="font-size:13px;">2026-03-25</td>
+                <td>
+                  <div class="btn-group">
+                    <button class="btn ghost sm" onclick="event.stopPropagation(); openEditDrawer('menu',null,'客服分流')">編輯</button>
+                    <button class="btn ghost sm danger-ghost" onclick="event.stopPropagation(); openModal('modal-delete-confirm')">刪除</button>
+                  </div>
+                </td>
+              </tr>
             </tbody>
           </table>
         </div>
-        <div class="card">
-          <div class="card-head"><div class="title">Rich Menu 預覽：主選單</div></div>
-          <div class="card-body">
+
+        <!-- 動態預覽面板（預設隱藏） -->
+        <div class="card hidden" id="menu-preview-card" style="min-width:0;">
+          <div class="card-head">
+            <div class="title" id="menu-preview-title">預覽</div>
+            <button class="btn ghost sm" onclick="hideMenuPreview()" style="font-size:18px; line-height:1; padding:0 6px;">×</button>
+          </div>
+          <div class="card-body" id="menu-preview-body">
             <div class="richmenu-canvas">
               <div class="rm-cell"><div class="rm-icon">🏠</div>首頁</div>
               <div class="rm-cell"><div class="rm-icon">📦</div>商品</div>
@@ -4569,10 +4693,11 @@
               <div class="rm-cell"><div class="rm-icon">📰</div>最新消息</div>
               <div class="rm-cell"><div class="rm-icon">👤</div>會員中心</div>
             </div>
-            <div class="text-sec mt-16" style="font-size:12px;">點擊任一格可編輯按鈕觸發動作（傳送訊息、開啟連結、觸發關鍵字）。</div>
+            <div class="text-sec" style="font-size:12px; margin-top:10px;">點擊任一格可編輯按鈕觸發動作。</div>
           </div>
         </div>
-      </div>
+
+      </div><!-- /menu-layout -->
     </section>
 
     <!-- ============= 5.4 關鍵字設定 ============= -->
@@ -4583,25 +4708,63 @@
           <p class="page-desc">當訊息符合關鍵字時，Bot 自動回覆對應內容。</p>
         </div>
         <div class="btn-group">
-          <select class="input"><option>客服助手</option></select>
-          <button class="btn primary" onclick="openModal('modal-add-keyword')">+ 新增關鍵字</button>
+          <button class="btn primary" onclick="openModal('modal-add-keyword')">+ 新增</button>
         </div>
       </div>
 
       <div class="card">
         <div class="toolbar" style="padding: 16px 20px 0;">
-          <input class="input search-input" placeholder="搜尋關鍵字或回覆…" />
-          <select class="input"><option>所有比對方式</option><option>完全相符</option><option>包含</option><option>正則</option></select>
-          <span class="text-sec right" style="padding-right:8px;">共 12 組</span>
+          <input class="input search-input" placeholder="搜尋關鍵字名稱…" />
+          <select class="input" style="width:160px;"><option>所有 Bot</option><option>客服助手</option><option>內部公告 Bot</option><option>值班通知</option></select>
+          <select class="input" style="width:120px;"><option>所有狀態</option><option>啟用</option><option>停用</option></select>
+          <span class="text-sec right" style="padding-right:8px; font-size:13px;">共 <strong>5</strong> 組</span>
         </div>
         <table class="data-table">
-          <thead><tr><th>關鍵字</th><th>比對方式</th><th>回覆訊息</th><th>觸發次數</th><th>狀態</th><th></th></tr></thead>
+          <thead>
+            <tr>
+              <th>Bot 名稱</th>
+              <th>關鍵字名稱</th>
+              <th>觸發次數</th>
+              <th>狀態</th>
+              <th style="width:100px;"></th>
+            </tr>
+          </thead>
           <tbody>
-            <tr><td><strong>營業時間</strong></td><td><span class="type-chip">包含</span></td><td class="text-sec">客服服務時間：週一至週五 09:00–18:00…</td><td>342</td><td><span class="badge success dot">啟用</span></td><td><button class="btn ghost sm">編輯</button></td></tr>
-            <tr><td><strong>運費 / 寄送</strong></td><td><span class="type-chip">正則</span></td><td class="text-sec">滿 1,000 元免運，未滿 80 元運費…</td><td>198</td><td><span class="badge success dot">啟用</span></td><td><button class="btn ghost sm">編輯</button></td></tr>
-            <tr><td><strong>退貨</strong></td><td><span class="type-chip">完全相符</span></td><td class="text-sec">退貨需於 7 日內申請，請參考…</td><td>87</td><td><span class="badge success dot">啟用</span></td><td><button class="btn ghost sm">編輯</button></td></tr>
-            <tr><td><strong>真人客服</strong></td><td><span class="type-chip">包含</span></td><td class="text-sec">已為您轉接真人客服，請稍候…</td><td>56</td><td><span class="badge success dot">啟用</span></td><td><button class="btn ghost sm">編輯</button></td></tr>
-            <tr><td><strong>促銷</strong></td><td><span class="type-chip">包含</span></td><td class="text-sec">本月優惠活動：母親節滿千折百…</td><td>134</td><td><span class="badge neutral dot">已停用</span></td><td><button class="btn ghost sm">編輯</button></td></tr>
+            <tr>
+              <td><div class="user-cell"><div class="bot-icon line" style="width:22px;height:22px;font-size:10px;border-radius:6px;">客</div>客服助手</div></td>
+              <td><strong>營業時間</strong></td>
+              <td>342</td>
+              <td><span class="badge success dot">啟用</span></td>
+              <td><div class="btn-group"><button class="btn ghost sm" onclick="openEditDrawer('keyword',null,'營業時間')">編輯</button><button class="btn ghost sm danger-ghost" onclick="openModal('modal-delete-confirm')">刪除</button></div></td>
+            </tr>
+            <tr>
+              <td><div class="user-cell"><div class="bot-icon line" style="width:22px;height:22px;font-size:10px;border-radius:6px;">客</div>客服助手</div></td>
+              <td><strong>運費 / 寄送</strong></td>
+              <td>198</td>
+              <td><span class="badge success dot">啟用</span></td>
+              <td><div class="btn-group"><button class="btn ghost sm" onclick="openEditDrawer('keyword',null,'運費/寄送')">編輯</button><button class="btn ghost sm danger-ghost" onclick="openModal('modal-delete-confirm')">刪除</button></div></td>
+            </tr>
+            <tr>
+              <td><div class="user-cell"><div class="bot-icon line" style="width:22px;height:22px;font-size:10px;border-radius:6px;">客</div>客服助手</div></td>
+              <td><strong>退貨</strong></td>
+              <td>87</td>
+              <td><span class="badge success dot">啟用</span></td>
+              <td><div class="btn-group"><button class="btn ghost sm" onclick="openEditDrawer('keyword',null,'退貨')">編輯</button><button class="btn ghost sm danger-ghost" onclick="openModal('modal-delete-confirm')">刪除</button></div></td>
+            </tr>
+            <tr>
+              <td><div class="user-cell"><div class="bot-icon line" style="width:22px;height:22px;font-size:10px;border-radius:6px;">客</div>客服助手</div></td>
+              <td><strong>真人客服</strong></td>
+              <td>56</td>
+              <td><span class="badge success dot">啟用</span></td>
+              <td><div class="btn-group"><button class="btn ghost sm" onclick="openEditDrawer('keyword',null,'真人客服')">編輯</button><button class="btn ghost sm danger-ghost" onclick="openModal('modal-delete-confirm')">刪除</button></div></td>
+            </tr>
+            <tr>
+              <td><div class="user-cell"><div class="bot-icon line" style="width:22px;height:22px;font-size:10px;border-radius:6px;">客</div>客服助手</div></td>
+              <td><strong>促銷</strong></td>
+              <td>134</td>
+              <td><span class="badge neutral dot">停用</span></td>
+              <td><div class="btn-group"><button class="btn ghost sm" onclick="openEditDrawer('keyword',null,'促銷')">編輯</button><button class="btn ghost sm danger-ghost" onclick="openModal('modal-delete-confirm')">刪除</button></div></td>
+            </tr>
           </tbody>
         </table>
       </div>
@@ -4627,10 +4790,10 @@
         <table class="data-table">
           <thead><tr><th>名稱</th><th>類型</th><th>內容預覽</th><th>使用次數</th><th>更新時間</th><th></th></tr></thead>
           <tbody>
-            <tr><td><strong>歡迎詞</strong></td><td><span class="type-chip">純文字</span></td><td class="text-sec">您好，歡迎加入 LWS 官方帳號…</td><td>3,421</td><td>2026-04-22</td><td><button class="btn ghost sm">複製</button> <button class="btn ghost sm">編輯</button></td></tr>
-            <tr><td><strong>商品促銷卡</strong></td><td><span class="type-chip">圖卡</span></td><td class="text-sec">[圖片] 母親節限定優惠 + 立即購買按鈕</td><td>892</td><td>2026-04-30</td><td><button class="btn ghost sm">複製</button> <button class="btn ghost sm">編輯</button></td></tr>
-            <tr><td><strong>客服分流選單</strong></td><td><span class="type-chip">圖文選單</span></td><td class="text-sec">[3 按鈕] 訂單問題 / 退換貨 / 真人客服</td><td>1,205</td><td>2026-04-15</td><td><button class="btn ghost sm">複製</button> <button class="btn ghost sm">編輯</button></td></tr>
-            <tr><td><strong>離場訊息</strong></td><td><span class="type-chip">純文字</span></td><td class="text-sec">感謝您的詢問，期待再次為您服務…</td><td>2,123</td><td>2026-04-10</td><td><button class="btn ghost sm">複製</button> <button class="btn ghost sm">編輯</button></td></tr>
+            <tr><td><strong>歡迎詞</strong></td><td><span class="type-chip">純文字</span></td><td class="text-sec">您好，歡迎加入 LWS 官方帳號…</td><td>3,421</td><td>2026-04-22</td><td><button class="btn ghost sm">複製</button> <button class="btn ghost sm" onclick="openEditDrawer('message',null,'歡迎詞')">編輯</button></td></tr>
+            <tr><td><strong>商品促銷卡</strong></td><td><span class="type-chip">圖卡</span></td><td class="text-sec">[圖片] 母親節限定優惠 + 立即購買按鈕</td><td>892</td><td>2026-04-30</td><td><button class="btn ghost sm">複製</button> <button class="btn ghost sm" onclick="openEditDrawer('message',null,'商品促銷卡')">編輯</button></td></tr>
+            <tr><td><strong>客服分流選單</strong></td><td><span class="type-chip">圖文選單</span></td><td class="text-sec">[3 按鈕] 訂單問題 / 退換貨 / 真人客服</td><td>1,205</td><td>2026-04-15</td><td><button class="btn ghost sm">複製</button> <button class="btn ghost sm" onclick="openEditDrawer('message',null,'客服分流選單')">編輯</button></td></tr>
+            <tr><td><strong>離場訊息</strong></td><td><span class="type-chip">純文字</span></td><td class="text-sec">感謝您的詢問，期待再次為您服務…</td><td>2,123</td><td>2026-04-10</td><td><button class="btn ghost sm">複製</button> <button class="btn ghost sm" onclick="openEditDrawer('message',null,'離場訊息')">編輯</button></td></tr>
           </tbody>
         </table>
       </div>
@@ -4878,7 +5041,7 @@
           <div class="text-sec" style="font-size:12px;">本月已預約 18 次</div>
           <div class="btn-group mt-16">
             <button class="btn sm">查看排程</button>
-            <button class="btn sm">編輯</button>
+            <button class="btn sm" onclick="openEditDrawer('resource',null,'大會議室')">編輯</button>
           </div>
         </div>
         <div class="resource-card">
@@ -4890,7 +5053,7 @@
           <div class="text-sec" style="font-size:12px;">本月已預約 32 次</div>
           <div class="btn-group mt-16">
             <button class="btn sm">查看排程</button>
-            <button class="btn sm">編輯</button>
+            <button class="btn sm" onclick="openEditDrawer('resource',null,'會議室 A')">編輯</button>
           </div>
         </div>
         <div class="resource-card">
@@ -4902,7 +5065,7 @@
           <div class="text-sec" style="font-size:12px;">本月已預約 24 次</div>
           <div class="btn-group mt-16">
             <button class="btn sm">查看排程</button>
-            <button class="btn sm">編輯</button>
+            <button class="btn sm" onclick="openEditDrawer('resource',null,'會議室 B')">編輯</button>
           </div>
         </div>
         <div class="resource-card">
@@ -4914,7 +5077,7 @@
           <div class="text-sec" style="font-size:12px;">本月已預約 5 次</div>
           <div class="btn-group mt-16">
             <button class="btn sm">查看排程</button>
-            <button class="btn sm">編輯</button>
+            <button class="btn sm" onclick="openEditDrawer('resource',null,'行動投影機 #1')">編輯</button>
           </div>
         </div>
         <div class="resource-card">
@@ -4926,7 +5089,7 @@
           <div class="text-sec" style="font-size:12px;">本月已預約 0 次</div>
           <div class="btn-group mt-16">
             <button class="btn sm">查看排程</button>
-            <button class="btn sm">編輯</button>
+            <button class="btn sm" onclick="openEditDrawer('resource',null,'會議室 C')">編輯</button>
           </div>
         </div>
         <div class="resource-card" style="border-style:dashed; display:flex; align-items:center; justify-content:center; flex-direction:column; color:var(--text-secondary); cursor:pointer;" onclick="openModal('modal-add-resource')">
@@ -5182,10 +5345,10 @@
         </div>
 
         <div style="font-weight:600; margin-bottom: 14px;">自訂欄位</div>
-        <div class="attr-card"><span class="grip">⋮⋮</span><div class="attr-icon">💼</div><div style="flex:1;"><div class="attr-name">職稱</div><div class="attr-meta">選填 · 文字</div></div><span class="type-chip">文字</span><button class="btn ghost sm">編輯</button><button class="btn ghost sm danger">刪除</button></div>
-        <div class="attr-card"><span class="grip">⋮⋮</span><div class="attr-icon">🌐</div><div style="flex:1;"><div class="attr-name">公司網站</div><div class="attr-meta">選填 · 網址</div></div><span class="type-chip">網址</span><button class="btn ghost sm">編輯</button><button class="btn ghost sm danger">刪除</button></div>
-        <div class="attr-card"><span class="grip">⋮⋮</span><div class="attr-icon">📍</div><div style="flex:1;"><div class="attr-name">地址</div><div class="attr-meta">選填 · 文字</div></div><span class="type-chip">文字</span><button class="btn ghost sm">編輯</button><button class="btn ghost sm danger">刪除</button></div>
-        <div class="attr-card" style="margin-bottom:0;"><span class="grip">⋮⋮</span><div class="attr-icon">🏷</div><div style="flex:1;"><div class="attr-name">標籤</div><div class="attr-meta">選填 · 多選</div></div><span class="type-chip">多選</span><button class="btn ghost sm">編輯</button><button class="btn ghost sm danger">刪除</button></div>
+        <div class="attr-card"><span class="grip">⋮⋮</span><div class="attr-icon">💼</div><div style="flex:1;"><div class="attr-name">職稱</div><div class="attr-meta">選填 · 文字</div></div><span class="type-chip">文字</span><button class="btn ghost sm" onclick="openEditDrawer('attr',null,'職稱')">編輯</button><button class="btn ghost sm danger">刪除</button></div>
+        <div class="attr-card"><span class="grip">⋮⋮</span><div class="attr-icon">🌐</div><div style="flex:1;"><div class="attr-name">公司網站</div><div class="attr-meta">選填 · 網址</div></div><span class="type-chip">網址</span><button class="btn ghost sm" onclick="openEditDrawer('attr',null,'公司網站')">編輯</button><button class="btn ghost sm danger">刪除</button></div>
+        <div class="attr-card"><span class="grip">⋮⋮</span><div class="attr-icon">📍</div><div style="flex:1;"><div class="attr-name">地址</div><div class="attr-meta">選填 · 文字</div></div><span class="type-chip">文字</span><button class="btn ghost sm" onclick="openEditDrawer('attr',null,'地址')">編輯</button><button class="btn ghost sm danger">刪除</button></div>
+        <div class="attr-card" style="margin-bottom:0;"><span class="grip">⋮⋮</span><div class="attr-icon">🏷</div><div style="flex:1;"><div class="attr-name">標籤</div><div class="attr-meta">選填 · 多選</div></div><span class="type-chip">多選</span><button class="btn ghost sm" onclick="openEditDrawer('attr',null,'標籤')">編輯</button><button class="btn ghost sm danger">刪除</button></div>
       </div>
     </section>
 
@@ -6545,47 +6708,143 @@
   </div>
 </div>
 
-<!-- ============= Modal：新增 Bot 5.1.1 ============= -->
+<!-- ============= Modal：新增 Bot 5.1.1.1 ============= -->
 <div class="modal-overlay" id="modal-add-bot" onclick="closeModalIfBackdrop(event, 'modal-add-bot')">
-  <div class="modal" style="width: 600px;">
+  <div class="modal" style="width: 620px; max-height:90vh; display:flex; flex-direction:column;">
     <div class="modal-head">
       <h3 class="modal-title">新增 Bot</h3>
       <button class="icon-btn" onclick="closeModal('modal-add-bot')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
     </div>
-    <div class="modal-body">
+    <div class="modal-body" style="overflow-y:auto; flex:1;">
+
+      <!-- Bot 基本資訊 -->
+      <div style="font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:10px;">基本資訊</div>
+
       <div class="form-row">
-        <label>Bot 平台<span class="req">*</span></label>
-        <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:8px;">
-          <label class="card" style="padding:14px; cursor:pointer; text-align:center;"><input type="radio" name="bplat" hidden checked /><div style="font-size:24px;">💬</div><div style="font-weight:600; font-size:13px;">LINE</div></label>
-          <label class="card" style="padding:14px; cursor:pointer; text-align:center;"><input type="radio" name="bplat" hidden /><div style="font-size:24px;">#️⃣</div><div style="font-weight:600; font-size:13px;">Slack</div></label>
-          <label class="card" style="padding:14px; cursor:pointer; text-align:center;"><input type="radio" name="bplat" hidden /><div style="font-size:24px;">✈️</div><div style="font-weight:600; font-size:13px;">Telegram</div></label>
+        <label>Bot 名稱 <span class="req">*</span></label>
+        <input class="input full" id="bot-name-input" placeholder="例：客服助手" />
+      </div>
+
+      <div class="form-row">
+        <label>說明</label>
+        <textarea class="input full" rows="2" placeholder="此 Bot 的用途說明（選填）"></textarea>
+      </div>
+
+      <div class="form-row">
+        <label>Bot 照片</label>
+        <div class="row-flex" style="gap:10px; align-items:center;">
+          <div id="bot-avatar-preview" style="width:48px;height:48px;border-radius:12px;background:var(--primary);display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:18px;flex-shrink:0;">?</div>
+          <div>
+            <button class="btn sm">上傳照片</button>
+            <div class="help" style="margin-top:4px;">建議 200×200，PNG / JPG，上限 1 MB</div>
+          </div>
         </div>
       </div>
-      <div class="form-grid-2">
-        <div class="form-row"><label>Bot 名稱<span class="req">*</span></label><input class="input full" placeholder="例：客服助手" /></div>
-        <div class="form-row"><label>Bot ID</label><input class="input full" placeholder="@lws_customer" /></div>
-      </div>
+
       <div class="form-row">
-        <label>頭像</label>
-        <div class="row-flex">
-          <div class="bot-icon line">?</div>
-          <button class="btn sm">上傳圖片</button>
-          <span class="text-sec" style="font-size:12px;">建議 200×200，PNG / JPG</span>
+        <label>Bot 類型 <span class="req">*</span></label>
+        <select class="input full" id="bot-type-select">
+          <option value="">— 無（自訂 Bot）—</option>
+          <option value="客服回覆範本">客服回覆範本</option>
+          <option value="內部公告範本">內部公告範本</option>
+          <option value="值班通知範本">值班通知範本</option>
+          <option value="打卡 Bot 範本">打卡 Bot 範本</option>
+        </select>
+        <div class="help">選擇範本後，系統將自動帶入對應的選單、關鍵字與設定。</div>
+      </div>
+
+      <!-- Callback URL -->
+      <div style="font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;margin:16px 0 10px;">Callback URL 設定</div>
+
+      <div class="form-row" style="margin-bottom:0;">
+        <label style="display:flex; align-items:center; justify-content:space-between;">
+          <span>啟用 Callback URL</span>
+          <label class="switch" style="margin-left:8px;">
+            <input type="checkbox" id="callback-toggle" onchange="toggleCallbackFields(this.checked)" />
+            <span class="slider"></span>
+          </label>
+        </label>
+      </div>
+
+      <div id="callback-fields" style="display:none; margin-top:10px;">
+        <div class="form-row">
+          <label>Callback URL <span class="req">*</span></label>
+          <input class="input full" placeholder="https://your-domain.com/bot/callback" />
+          <div class="help">使用者傳送的訊息將轉發至此網址。</div>
+        </div>
+        <div class="form-row" style="margin-bottom:0;">
+          <label>Callback Event Settings</label>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+            <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;"><input type="checkbox" checked style="accent-color:var(--primary);"/>收到訊息 (message)</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;"><input type="checkbox" checked style="accent-color:var(--primary);"/>加入聊天室 (join)</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;"><input type="checkbox" style="accent-color:var(--primary);"/>追蹤 Bot (follow)</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;"><input type="checkbox" style="accent-color:var(--primary);"/>取消追蹤 (unfollow)</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;"><input type="checkbox" style="accent-color:var(--primary);"/>點擊按鈕 (postback)</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;"><input type="checkbox" style="accent-color:var(--primary);"/>圖片回傳 (image)</label>
+          </div>
         </div>
       </div>
-      <div class="form-row"><label>描述</label><textarea class="input full" placeholder="此 Bot 的用途說明（選填）"></textarea></div>
-      <div class="form-row">
-        <label>Webhook URL<span class="req">*</span></label>
-        <input class="input full" placeholder="https://api.lws.com/bot/webhook/..." />
-        <div class="help">使用者訊息會傳送到此網址。</div>
+
+      <!-- 加入聊天室政策 -->
+      <div style="font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;margin:16px 0 10px;">加入聊天室政策</div>
+
+      <div class="form-row" style="margin-bottom:0;">
+        <label>聊天室類型 <span class="req">*</span></label>
+        <div class="admin-option-box" style="margin-top:6px;">
+          <div class="admin-opt-item">
+            <label class="admin-radio-lbl active" id="chat-policy-lbl-team" onclick="selectChatPolicy('team')">
+              <input type="radio" name="chat-policy" value="team" checked style="accent-color:var(--primary);" />
+              可邀請加入團隊 / 群組 &amp; 1:N 聊天室
+            </label>
+            <div class="admin-opt-sub" id="chat-policy-sub-team">
+              <div style="font-size:12px;color:var(--text-secondary);margin-bottom:8px;">可指定允許加入的群組聊天室（選填）</div>
+              <select class="input full" style="font-size:13px;">
+                <option>不限制（所有群組）</option>
+                <option>研發部群組</option>
+                <option>產品部群組</option>
+                <option>行銷部群組</option>
+                <option>全公司公告群組</option>
+              </select>
+            </div>
+          </div>
+          <div class="admin-opt-item">
+            <label class="admin-radio-lbl" id="chat-policy-lbl-one" onclick="selectChatPolicy('one')">
+              <input type="radio" name="chat-policy" value="one" style="accent-color:var(--primary);" />
+              僅可使用 1:1 聊天
+            </label>
+            <div class="admin-opt-sub" id="chat-policy-sub-one" style="display:none;">
+              <div style="font-size:12px;color:var(--text-secondary);">Bot 僅能與個別使用者進行一對一對話，無法被加入群組。</div>
+            </div>
+          </div>
+        </div>
       </div>
+
+      <!-- 負責人 -->
+      <div style="font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;margin:16px 0 10px;">負責人</div>
+
       <div class="form-grid-2">
-        <div class="form-row"><label>Channel Access Token</label><input class="input full" placeholder="輸入 Token" /></div>
-        <div class="form-row"><label>Channel Secret</label><input class="input full" placeholder="輸入 Secret" /></div>
+        <div class="form-row">
+          <label>主負責人 <span class="req">*</span></label>
+          <select class="input full">
+            <option>— 選擇成員 —</option>
+            <option>陳小明</option>
+            <option>林曉華</option>
+            <option>王大偉</option>
+            <option>李怡君</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label>副負責人</label>
+          <select class="input full">
+            <option>— 選擇成員（選填）—</option>
+            <option>陳小明</option>
+            <option>林曉華</option>
+            <option>王大偉</option>
+            <option>李怡君</option>
+          </select>
+        </div>
       </div>
-      <div class="form-row">
-        <label class="row-flex" style="gap:8px;"><input type="checkbox" checked />建立後立即啟用</label>
-      </div>
+
     </div>
     <div class="modal-foot">
       <button class="btn" onclick="closeModal('modal-add-bot')">取消</button>
@@ -6594,41 +6853,570 @@
   </div>
 </div>
 
-<!-- ============= Modal：新增推播 5.2.1 ============= -->
-<div class="modal-overlay" id="modal-add-push" onclick="closeModalIfBackdrop(event, 'modal-add-push')">
-  <div class="modal" style="width: 640px;">
-    <div class="modal-head"><h3 class="modal-title">新增推播</h3><button class="icon-btn" onclick="closeModal('modal-add-push')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button></div>
-    <div class="modal-body">
-      <div class="form-grid-2">
-        <div class="form-row"><label>推播名稱<span class="req">*</span></label><input class="input full" placeholder="例：5/6 產品週會提醒" /></div>
-        <div class="form-row"><label>使用 Bot<span class="req">*</span></label><select class="input full"><option>客服助手</option><option>內部公告 Bot</option><option>值班通知</option></select></div>
+<!-- ============= Drawer：查看 Bot 5.1.1.3 ============= -->
+<div id="bot-view-overlay" class="drawer-overlay hidden" onclick="closeBotViewDrawer()"></div>
+<aside id="bot-view-drawer" class="drawer" style="width:520px; display:none; flex-direction:column;">
+  <div class="drawer-head">
+    <div>
+      <div class="drawer-title" id="bot-view-title">查看 Bot</div>
+      <div class="text-sec" style="font-size:12px;" id="bot-view-subtitle">Bot 詳細資訊</div>
+    </div>
+    <button class="icon-btn" onclick="closeBotViewDrawer()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+  </div>
+  <div class="drawer-body" style="padding:20px 24px; overflow-y:auto;">
+
+    <!-- 基本資訊 -->
+    <div style="display:flex; align-items:center; gap:14px; padding:14px 16px; background:var(--bg); border-radius:var(--radius); margin-bottom:16px;">
+      <div id="bot-view-avatar" class="bot-icon line" style="width:52px;height:52px;font-size:18px;border-radius:12px;flex-shrink:0;">客</div>
+      <div>
+        <div style="font-size:16px; font-weight:700;" id="bot-view-name">客服助手</div>
+        <div class="text-sec" style="font-size:12px; margin-top:2px;" id="bot-view-type"><span class="type-chip">客服回覆範本</span></div>
       </div>
-      <div class="form-row">
-        <label>推播類型<span class="req">*</span></label>
-        <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:8px;">
-          <label class="card" style="padding:12px; cursor:pointer; text-align:center;"><input type="radio" name="ptype" hidden checked /><div style="font-weight:600;">立即推播</div><div class="text-sec" style="font-size:11px;">立刻發送</div></label>
-          <label class="card" style="padding:12px; cursor:pointer; text-align:center;"><input type="radio" name="ptype" hidden /><div style="font-weight:600;">排程推播</div><div class="text-sec" style="font-size:11px;">指定時間</div></label>
-          <label class="card" style="padding:12px; cursor:pointer; text-align:center;"><input type="radio" name="ptype" hidden /><div style="font-weight:600;">循環排程</div><div class="text-sec" style="font-size:11px;">每日/週/月</div></label>
-        </div>
-      </div>
-      <div class="form-grid-2">
-        <div class="form-row"><label>排程時間</label><input type="datetime-local" class="input full" /></div>
-        <div class="form-row"><label>對象</label><select class="input full"><option>所有訂閱者</option><option>指定部門</option><option>指定標籤</option></select></div>
-      </div>
-      <div class="form-row">
-        <label>訊息內容</label>
-        <select class="input full mb-12" style="margin-bottom: 8px;"><option>使用預設訊息：歡迎詞</option><option>自訂訊息</option></select>
-        <textarea class="input full" placeholder="或在此輸入自訂訊息" rows="4"></textarea>
+      <span class="badge success dot" style="margin-left:auto;" id="bot-view-status">啟用中</span>
+    </div>
+
+    <div style="font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;">基本資訊</div>
+    <div class="card" style="padding:4px 14px; margin-bottom:16px;">
+      <div class="field-row"><div class="field-label">Bot 名稱</div><div class="field-value">客服助手</div></div>
+      <div class="field-row"><div class="field-label">說明</div><div class="field-value text-sec" style="font-size:13px;">自動回覆常見問題與引導對應窗口。</div></div>
+      <div class="field-row"><div class="field-label">Bot 類型</div><div class="field-value"><span class="type-chip">客服回覆範本</span></div></div>
+      <div class="field-row"><div class="field-label">主負責人</div><div class="field-value"><div class="user-cell"><div class="avatar" style="width:24px;height:24px;font-size:11px;">陳</div>陳小明</div></div></div>
+      <div class="field-row" style="border-bottom:none;"><div class="field-label">副負責人</div><div class="field-value"><div class="user-cell"><div class="avatar" style="width:24px;height:24px;font-size:11px;">林</div>林曉華</div></div></div>
+    </div>
+
+    <div style="font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;">Callback URL</div>
+    <div class="card" style="padding:4px 14px; margin-bottom:16px;">
+      <div class="field-row"><div class="field-label">狀態</div><div class="field-value"><span class="badge success dot">已啟用</span></div></div>
+      <div class="field-row"><div class="field-label">Callback URL</div><div class="field-value" style="font-size:12px;word-break:break-all;color:var(--primary);">https://api.example.com/bot/callback</div></div>
+      <div class="field-row" style="border-bottom:none;"><div class="field-label">Events</div><div class="field-value"><div style="display:flex;flex-wrap:wrap;gap:4px;"><span class="type-chip">message</span><span class="type-chip">join</span><span class="type-chip">postback</span></div></div></div>
+    </div>
+
+    <div style="font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;">加入聊天室政策</div>
+    <div class="card" style="padding:4px 14px; margin-bottom:16px;">
+      <div class="field-row"><div class="field-label">政策</div><div class="field-value">可邀請加入團隊 / 群組 &amp; 1:N 聊天室</div></div>
+      <div class="field-row" style="border-bottom:none;"><div class="field-label">已加入群組</div><div class="field-value"><div style="display:flex;flex-wrap:wrap;gap:4px;"><span class="type-chip">研發部群組</span><span class="type-chip">產品部群組</span><span class="type-chip">全公司公告群組</span></div></div></div>
+    </div>
+
+    <div style="font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;">系統憑證</div>
+    <div class="card" style="padding:4px 14px; margin-bottom:16px;">
+      <div class="field-row"><div class="field-label">Bot ID</div><div class="field-value"><code style="font-size:12px;">BOT-00123</code></div></div>
+      <div class="field-row"><div class="field-label">Bot Secret</div><div class="field-value"><code style="font-size:12px;letter-spacing:0.1em;">••••••••••••••••</code></div></div>
+      <div class="field-row" style="border-bottom:none;"><div class="field-label">Access Token</div><div class="field-value"><code style="font-size:12px;letter-spacing:0.1em;">••••••••••••••••</code></div></div>
+    </div>
+
+  </div>
+  <div class="drawer-foot">
+    <button class="btn" onclick="closeBotViewDrawer()">關閉</button>
+    <button class="btn primary" onclick="closeBotViewDrawer(); openBotEditDrawer('客服助手')">切換至編輯</button>
+  </div>
+</aside>
+
+<!-- ============= Drawer：編輯 Bot 5.1.1.2 ============= -->
+<div id="bot-edit-overlay" class="drawer-overlay hidden" onclick="closeBotEditDrawer()"></div>
+<aside id="bot-edit-drawer" class="drawer" style="width:520px; display:none; flex-direction:column;">
+  <div class="drawer-head">
+    <div>
+      <div class="drawer-title" id="bot-edit-title">編輯 Bot</div>
+      <div class="text-sec" style="font-size:12px;" id="bot-edit-subtitle">編輯 Bot 設定</div>
+    </div>
+    <button class="icon-btn" onclick="closeBotEditDrawer()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+  </div>
+  <div class="drawer-body" style="padding:20px 24px; overflow-y:auto;">
+
+    <div style="font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:10px;">基本資訊</div>
+
+    <div class="form-row"><label>Bot 名稱 <span class="req">*</span></label><input class="input full" value="客服助手" /></div>
+    <div class="form-row"><label>說明</label><textarea class="input full" rows="2">自動回覆常見問題與引導對應窗口。</textarea></div>
+    <div class="form-row">
+      <label>Bot 照片</label>
+      <div class="row-flex" style="gap:10px; align-items:center;">
+        <div style="width:48px;height:48px;border-radius:12px;background:var(--primary);display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:18px;flex-shrink:0;">客</div>
+        <div><button class="btn sm">更換照片</button><div class="help" style="margin-top:4px;">建議 200×200，PNG / JPG</div></div>
       </div>
     </div>
+    <div class="form-row">
+      <label>Bot 類型 <span class="req">*</span></label>
+      <select class="input full"><option value="客服回覆範本" selected>客服回覆範本</option><option value="">— 無（自訂）—</option><option value="內部公告範本">內部公告範本</option><option value="值班通知範本">值班通知範本</option><option value="打卡 Bot 範本">打卡 Bot 範本</option></select>
+    </div>
+
+    <div style="font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;margin:16px 0 10px;">Callback URL 設定</div>
+    <div class="form-row" style="margin-bottom:0;">
+      <label style="display:flex; align-items:center; justify-content:space-between;">
+        <span>啟用 Callback URL</span>
+        <label class="switch" style="margin-left:8px;"><input type="checkbox" checked onchange="toggleEditCallbackFields(this.checked)" /><span class="slider"></span></label>
+      </label>
+    </div>
+    <div id="edit-callback-fields" style="margin-top:10px;">
+      <div class="form-row"><label>Callback URL <span class="req">*</span></label><input class="input full" value="https://api.example.com/bot/callback" /></div>
+      <div class="form-row" style="margin-bottom:0;">
+        <label>Callback Event Settings</label>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+          <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;"><input type="checkbox" checked style="accent-color:var(--primary);"/>message</label>
+          <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;"><input type="checkbox" checked style="accent-color:var(--primary);"/>join</label>
+          <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;"><input type="checkbox" style="accent-color:var(--primary);"/>follow</label>
+          <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;"><input type="checkbox" style="accent-color:var(--primary);"/>unfollow</label>
+          <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;"><input type="checkbox" checked style="accent-color:var(--primary);"/>postback</label>
+          <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;"><input type="checkbox" style="accent-color:var(--primary);"/>image</label>
+        </div>
+      </div>
+    </div>
+
+    <div style="font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;margin:16px 0 10px;">加入聊天室政策</div>
+    <div class="form-row">
+      <label>聊天室類型 <span class="req">*</span></label>
+      <select class="input full"><option selected>可邀請加入團隊 / 群組 &amp; 1:N 聊天室</option><option>僅可使用 1:1 聊天</option></select>
+    </div>
+    <div class="form-row" style="margin-bottom:0;">
+      <label>已加入團隊 / 群組 / 1:N 聊天室</label>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;padding:10px 12px;background:var(--bg);border-radius:var(--radius-sm);">
+        <span class="type-chip" style="display:flex;align-items:center;gap:4px;">研發部群組 <span style="cursor:pointer;color:var(--text-muted);">×</span></span>
+        <span class="type-chip" style="display:flex;align-items:center;gap:4px;">產品部群組 <span style="cursor:pointer;color:var(--text-muted);">×</span></span>
+        <span class="type-chip" style="display:flex;align-items:center;gap:4px;">全公司公告群組 <span style="cursor:pointer;color:var(--text-muted);">×</span></span>
+        <button class="btn ghost sm" style="height:22px;">+ 新增</button>
+      </div>
+    </div>
+
+    <div style="font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;margin:16px 0 10px;">負責人</div>
+    <div class="form-grid-2">
+      <div class="form-row"><label>主負責人 <span class="req">*</span></label><select class="input full"><option selected>陳小明</option><option>林曉華</option><option>王大偉</option><option>李怡君</option></select></div>
+      <div class="form-row"><label>副負責人</label><select class="input full"><option selected>林曉華</option><option>陳小明</option><option>王大偉</option><option>李怡君</option></select></div>
+    </div>
+
+    <div style="font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;margin:16px 0 10px;">系統憑證（唯讀）</div>
+    <div class="card" style="padding:4px 14px;">
+      <div class="field-row"><div class="field-label">Bot ID</div><div class="field-value"><code style="font-size:12px;">BOT-00123</code></div></div>
+      <div class="field-row"><div class="field-label">Bot Secret</div><div class="field-value" style="display:flex;align-items:center;gap:8px;"><code style="font-size:12px;letter-spacing:0.1em;">••••••••••••••••</code><button class="btn ghost sm" style="height:22px;">複製</button></div></div>
+      <div class="field-row" style="border-bottom:none;"><div class="field-label">Access Token</div><div class="field-value" style="display:flex;align-items:center;gap:8px;"><code style="font-size:12px;letter-spacing:0.1em;">••••••••••••••••</code><button class="btn ghost sm" style="height:22px;">複製</button><button class="btn ghost sm" style="height:22px;">重新產生</button></div></div>
+    </div>
+
+  </div>
+  <div class="drawer-foot">
+    <button class="btn" onclick="closeBotEditDrawer()">取消</button>
+    <button class="btn primary" onclick="closeBotEditDrawer(); showSyncToast();">儲存變更</button>
+  </div>
+</aside>
+
+<!-- ============= Modal：Bot 範本編輯 ============= -->
+<div class="modal-overlay" id="modal-bot-template-edit" onclick="closeModalIfBackdrop(event,'modal-bot-template-edit')">
+  <div class="modal" style="width:600px; max-height:88vh; display:flex; flex-direction:column;">
+    <div class="modal-head">
+      <h3 class="modal-title" id="tmpl-edit-title">編輯範本</h3>
+      <button class="icon-btn" onclick="closeModal('modal-bot-template-edit')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+    </div>
+
+    <!-- Step tabs -->
+    <div style="display:flex; gap:0; border-bottom:1px solid var(--border); padding: 0 24px; background:var(--surface);">
+      <button id="tmpl-step1-tab" class="tab active" style="border-radius:0; border-bottom:2px solid var(--primary); padding:10px 16px;" onclick="selectTmplStep(1, document.getElementById('tmpl-step2-tab').style.display!=='none')">
+        Step 1 · 基本設定
+      </button>
+      <button id="tmpl-step2-tab" class="tab" style="border-radius:0; padding:10px 16px; display:none;" onclick="selectTmplStep(2, true)">
+        Step 2 · 專屬設定
+      </button>
+    </div>
+
+    <div class="modal-body" style="overflow-y:auto; flex:1;">
+
+      <!-- Step 1：基本設定 -->
+      <div id="tmpl-step1-panel">
+        <div style="font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:10px;">基本資訊</div>
+        <div class="form-row">
+          <label>範本名稱 <span class="req">*</span></label>
+          <input class="input full" id="tmpl-edit-name" placeholder="範本名稱" />
+        </div>
+        <div class="form-row">
+          <label>頭像</label>
+          <div class="row-flex" style="gap:10px; align-items:center;">
+            <div style="width:48px;height:48px;border-radius:12px;background:var(--primary);display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:16px;">客服</div>
+            <div><button class="btn sm">更換照片</button><div class="help" style="margin-top:4px;">建議 200×200，PNG / JPG</div></div>
+          </div>
+        </div>
+        <div style="font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;margin:16px 0 10px;">Webhook 設定</div>
+        <div class="form-row" style="margin-bottom:0;">
+          <label style="display:flex; align-items:center; justify-content:space-between;">
+            <span>啟用 Callback URL</span>
+            <label class="switch" style="margin-left:8px;"><input type="checkbox" checked /><span class="slider"></span></label>
+          </label>
+        </div>
+        <div style="margin-top:10px;">
+          <div class="form-row">
+            <label>Callback URL <span class="req">*</span></label>
+            <input class="input full" value="https://api.example.com/bot/callback" />
+            <div class="help">使用者傳送的訊息將轉發至此網址。</div>
+          </div>
+          <div class="form-row" style="margin-bottom:0;">
+            <label>Callback Event Settings</label>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+              <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;"><input type="checkbox" checked style="accent-color:var(--primary);"/>message</label>
+              <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;"><input type="checkbox" checked style="accent-color:var(--primary);"/>join</label>
+              <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;"><input type="checkbox" style="accent-color:var(--primary);"/>follow</label>
+              <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;"><input type="checkbox" checked style="accent-color:var(--primary);"/>postback</label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2：打卡 Bot 專屬設定 -->
+      <div id="tmpl-step2-panel" style="display:none;">
+        <div style="font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:10px;">打卡 Bot 專屬設定</div>
+        <div class="form-row">
+          <label>班別設定 <span class="req">*</span></label>
+          <div style="display:grid; gap:8px;">
+            <div style="display:flex; align-items:center; gap:8px; padding:10px 12px; background:var(--bg); border-radius:var(--radius-sm);">
+              <span style="flex:1; font-size:13px; font-weight:600;">早班</span>
+              <input class="input" type="time" value="08:30" style="width:100px;" />
+              <span class="text-sec" style="font-size:12px;">至</span>
+              <input class="input" type="time" value="17:30" style="width:100px;" />
+              <button class="btn ghost sm danger-ghost" style="padding:2px 8px;">刪除</button>
+            </div>
+            <div style="display:flex; align-items:center; gap:8px; padding:10px 12px; background:var(--bg); border-radius:var(--radius-sm);">
+              <span style="flex:1; font-size:13px; font-weight:600;">晚班</span>
+              <input class="input" type="time" value="14:00" style="width:100px;" />
+              <span class="text-sec" style="font-size:12px;">至</span>
+              <input class="input" type="time" value="23:00" style="width:100px;" />
+              <button class="btn ghost sm danger-ghost" style="padding:2px 8px;">刪除</button>
+            </div>
+          </div>
+          <button class="btn ghost sm" style="margin-top:8px;">+ 新增班別</button>
+        </div>
+        <div class="form-row">
+          <label>打卡方式 <span class="req">*</span></label>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+            <label class="card" style="padding:12px; cursor:pointer; text-align:center;">
+              <input type="radio" name="checkin-type" hidden checked />
+              <div style="font-size:18px; margin-bottom:4px;">📍</div>
+              <div style="font-weight:600; font-size:13px;">GPS 位置</div>
+              <div class="text-sec" style="font-size:11px;">需回傳目前位置</div>
+            </label>
+            <label class="card" style="padding:12px; cursor:pointer; text-align:center;">
+              <input type="radio" name="checkin-type" hidden />
+              <div style="font-size:18px; margin-bottom:4px;">🔘</div>
+              <div style="font-weight:600; font-size:13px;">純按鈕打卡</div>
+              <div class="text-sec" style="font-size:11px;">點擊即完成打卡</div>
+            </label>
+          </div>
+        </div>
+        <div class="form-row">
+          <label>允許範圍（GPS 模式）</label>
+          <div style="display:flex; gap:8px; align-items:center;">
+            <input class="input" placeholder="辦公室地址或座標" style="flex:1;" />
+            <select class="input" style="width:120px;"><option>200 m</option><option>500 m</option><option>1 km</option></select>
+          </div>
+          <div class="help">超出範圍打卡時將顯示警告，仍可完成打卡。</div>
+        </div>
+        <div class="form-row" style="margin-bottom:0;">
+          <label>遲到寬限時間</label>
+          <div style="display:flex; gap:8px; align-items:center;">
+            <input class="input" type="number" value="10" style="width:80px;" />
+            <span class="text-sec" style="font-size:13px;">分鐘</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2 notice for non-打卡 templates -->
+      <div id="tmpl-step2-notice" style="display:none;"></div>
+
+    </div>
+
     <div class="modal-foot">
-      <button class="btn" onclick="closeModal('modal-add-push')">儲存草稿</button>
-      <button class="btn primary" onclick="closeModal('modal-add-push')">建立推播</button>
+      <button class="btn" onclick="closeModal('modal-bot-template-edit')">取消</button>
+      <button id="tmpl-footer-next" class="btn" style="display:none;" onclick="selectTmplStep(2, true)">
+        下一步：專屬設定 →
+      </button>
+      <button id="tmpl-footer-save" class="btn primary" onclick="closeModal('modal-bot-template-edit'); showSyncToast();">
+        儲存設定
+      </button>
     </div>
   </div>
 </div>
 
-<!-- ============= Modal：新增選單 5.3.1 ============= -->
+<!-- ============= Modal：新增推播 5.2.1 ============= -->
+<div class="modal-overlay" id="modal-add-push" onclick="closeModalIfBackdrop(event, 'modal-add-push')">
+  <div class="modal" style="width:880px; max-height:92vh; display:flex; flex-direction:column;">
+    <div class="modal-head">
+      <h3 class="modal-title">新增推播</h3>
+      <button class="icon-btn" onclick="closeModal('modal-add-push')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 280px; gap:0; flex:1; overflow:hidden;">
+
+      <!-- 左：表單 -->
+      <div class="modal-body" style="overflow-y:auto; border-right:1px solid var(--border);">
+
+        <div class="form-grid-2">
+          <div class="form-row">
+            <label>推播名稱 <span class="req">*</span></label>
+            <input class="input full" id="push-add-name" placeholder="例：5/6 產品週會提醒" oninput="updatePushPreview('add')" />
+          </div>
+          <div class="form-row">
+            <label>Bot <span class="req">*</span></label>
+            <select class="input full" id="push-add-bot">
+              <option>— 選擇 Bot —</option>
+              <option>客服助手</option>
+              <option>內部公告 Bot</option>
+              <option>值班通知</option>
+              <option>行銷活動 Bot</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <label>排程時間 <span class="req">*</span></label>
+          <input type="datetime-local" class="input full" id="push-add-time" />
+          <div class="help">留空則視為立即推播。</div>
+        </div>
+
+        <div class="form-row">
+          <label>推播對象 <span class="req">*</span></label>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:10px;">
+            <label class="card" style="padding:10px 12px; cursor:pointer; display:flex; align-items:center; gap:8px;">
+              <input type="radio" name="push-add-target" value="all" checked style="accent-color:var(--primary);" onchange="switchPushTarget('add','all')" />
+              <div><div style="font-weight:600; font-size:13px;">所有訂閱者</div></div>
+            </label>
+            <label class="card" style="padding:10px 12px; cursor:pointer; display:flex; align-items:center; gap:8px;">
+              <input type="radio" name="push-add-target" value="dept" style="accent-color:var(--primary);" onchange="switchPushTarget('add','dept')" />
+              <div><div style="font-weight:600; font-size:13px;">指定部門</div></div>
+            </label>
+            <label class="card" style="padding:10px 12px; cursor:pointer; display:flex; align-items:center; gap:8px;">
+              <input type="radio" name="push-add-target" value="group" style="accent-color:var(--primary);" onchange="switchPushTarget('add','group')" />
+              <div><div style="font-weight:600; font-size:13px;">指定群組</div></div>
+            </label>
+            <label class="card" style="padding:10px 12px; cursor:pointer; display:flex; align-items:center; gap:8px;">
+              <input type="radio" name="push-add-target" value="member" style="accent-color:var(--primary);" onchange="switchPushTarget('add','member')" />
+              <div><div style="font-weight:600; font-size:13px;">指定成員</div></div>
+            </label>
+          </div>
+          <div id="push-add-target-detail" style="display:none;">
+            <select class="input full" style="margin-bottom:6px;"><option>— 選擇目標 —</option><option>研發部</option><option>產品部</option><option>行銷部</option><option>工程組</option></select>
+          </div>
+        </div>
+
+        <!-- 對象人數預覽 -->
+        <div class="form-row" style="background:var(--bg); border-radius:var(--radius-sm); padding:10px 12px; margin-bottom:14px;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            <span style="font-size:13px;">對象人數預覽：</span>
+            <strong style="color:var(--primary); font-size:15px;" id="push-add-count">1,248 人</strong>
+            <span class="text-sec" style="font-size:12px;">（所有訂閱者）</span>
+          </div>
+        </div>
+
+        <!-- 訊息內容（同 5.5.1 預設訊息格式） -->
+        <div style="font-size:12px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:10px;">訊息內容</div>
+
+        <div class="form-row">
+          <label>訊息格式 <span class="req">*</span></label>
+          <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:8px;">
+            <label class="card" style="padding:10px; cursor:pointer; text-align:center;" onclick="setPushMsgType('add','text')">
+              <input type="radio" name="push-add-msgtype" hidden checked />
+              <div style="font-size:18px; margin-bottom:3px;">📝</div>
+              <div style="font-weight:600; font-size:12px;">純文字</div>
+            </label>
+            <label class="card" style="padding:10px; cursor:pointer; text-align:center;" onclick="setPushMsgType('add','card')">
+              <input type="radio" name="push-add-msgtype" hidden />
+              <div style="font-size:18px; margin-bottom:3px;">🖼</div>
+              <div style="font-weight:600; font-size:12px;">圖卡</div>
+            </label>
+            <label class="card" style="padding:10px; cursor:pointer; text-align:center;" onclick="setPushMsgType('add','menu')">
+              <input type="radio" name="push-add-msgtype" hidden />
+              <div style="font-size:18px; margin-bottom:3px;">📋</div>
+              <div style="font-weight:600; font-size:12px;">圖文選單</div>
+            </label>
+          </div>
+        </div>
+
+        <div id="push-add-image-row" class="form-row" style="display:none;">
+          <label>圖片</label>
+          <div class="row-flex"><button class="btn sm">上傳圖片</button><span class="help" style="margin-left:8px;">建議 1024×512，PNG / JPG</span></div>
+        </div>
+
+        <div class="form-row">
+          <label>訊息文字 <span class="req">*</span></label>
+          <textarea class="input full" id="push-add-text" rows="4" placeholder="輸入推播訊息內容…" oninput="updatePushPreview('add')"></textarea>
+        </div>
+
+        <div class="form-row">
+          <label>按鈕</label>
+          <select class="input full" id="push-add-btn-count"><option>無按鈕</option><option>1 個按鈕</option><option>2 個按鈕</option><option>3 個按鈕</option></select>
+        </div>
+
+        <div class="form-row" style="margin-bottom:0;">
+          <label>套用預設訊息</label>
+          <select class="input full">
+            <option>— 從預設訊息套用 —</option>
+            <option>歡迎詞</option>
+            <option>商品促銷卡</option>
+            <option>客服分流選單</option>
+            <option>離場訊息</option>
+          </select>
+          <div class="help">套用後會覆蓋目前訊息內容。</div>
+        </div>
+
+      </div>
+
+      <!-- 右：即時預覽 -->
+      <div style="padding:16px 14px; background:var(--bg); overflow-y:auto; display:flex; flex-direction:column; gap:10px;">
+        <div style="font-size:12px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.06em;">預覽</div>
+        <!-- 手機框 -->
+        <div style="width:200px; margin:0 auto; background:#fff; border-radius:28px; box-shadow:0 4px 20px rgba(0,0,0,.15); padding:12px 10px; border:2px solid #e5e7eb;">
+          <div style="height:8px; width:60px; background:#e5e7eb; border-radius:4px; margin:0 auto 10px;"></div>
+          <!-- 訊息泡泡 -->
+          <div style="background:#f0f0f0; border-radius:12px 12px 12px 4px; padding:10px 12px; font-size:12px; line-height:1.5; color:#111; min-height:60px; word-break:break-word;" id="push-add-preview-text">
+            訊息內容預覽將顯示在這裡。
+          </div>
+          <div style="height:8px; width:40px; background:#e5e7eb; border-radius:4px; margin:10px auto 0;"></div>
+        </div>
+        <div class="text-sec" style="font-size:11px; text-align:center;">此為示意預覽，實際顯示依 Bot 設定</div>
+      </div>
+
+    </div>
+    <div class="modal-foot">
+      <button class="btn" onclick="closeModal('modal-add-push')">取消</button>
+      <button class="btn" onclick="closeModal('modal-add-push')">儲存草稿</button>
+      <button class="btn primary" onclick="closeModal('modal-add-push')">儲存確認</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============= Modal：編輯推播 5.2.2 ============= -->
+<div class="modal-overlay" id="modal-edit-push" onclick="closeModalIfBackdrop(event, 'modal-edit-push')">
+  <div class="modal" style="width:880px; max-height:92vh; display:flex; flex-direction:column;">
+    <div class="modal-head">
+      <h3 class="modal-title" id="edit-push-modal-title">編輯推播</h3>
+      <button class="icon-btn" onclick="closeModal('modal-edit-push')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 280px; gap:0; flex:1; overflow:hidden;">
+
+      <!-- 左：表單 -->
+      <div class="modal-body" style="overflow-y:auto; border-right:1px solid var(--border);">
+
+        <div class="form-grid-2">
+          <div class="form-row">
+            <label>推播名稱 <span class="req">*</span></label>
+            <input class="input full" id="push-edit-name" placeholder="例：5/6 產品週會提醒" oninput="updatePushPreview('edit')" />
+          </div>
+          <div class="form-row">
+            <label>Bot <span class="req">*</span></label>
+            <select class="input full" id="push-edit-bot">
+              <option>— 選擇 Bot —</option>
+              <option selected>客服助手</option>
+              <option>內部公告 Bot</option>
+              <option>值班通知</option>
+              <option>行銷活動 Bot</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <label>排程時間 <span class="req">*</span></label>
+          <input type="datetime-local" class="input full" id="push-edit-time" />
+          <div class="help">留空則視為立即推播。</div>
+        </div>
+
+        <div class="form-row">
+          <label>推播對象 <span class="req">*</span></label>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:10px;">
+            <label class="card" style="padding:10px 12px; cursor:pointer; display:flex; align-items:center; gap:8px; background:var(--primary-soft); border-color:var(--primary);">
+              <input type="radio" name="push-edit-target" value="all" checked style="accent-color:var(--primary);" onchange="switchPushTarget('edit','all')" />
+              <div><div style="font-weight:600; font-size:13px;">所有訂閱者</div></div>
+            </label>
+            <label class="card" style="padding:10px 12px; cursor:pointer; display:flex; align-items:center; gap:8px;">
+              <input type="radio" name="push-edit-target" value="dept" style="accent-color:var(--primary);" onchange="switchPushTarget('edit','dept')" />
+              <div><div style="font-weight:600; font-size:13px;">指定部門</div></div>
+            </label>
+            <label class="card" style="padding:10px 12px; cursor:pointer; display:flex; align-items:center; gap:8px;">
+              <input type="radio" name="push-edit-target" value="group" style="accent-color:var(--primary);" onchange="switchPushTarget('edit','group')" />
+              <div><div style="font-weight:600; font-size:13px;">指定群組</div></div>
+            </label>
+            <label class="card" style="padding:10px 12px; cursor:pointer; display:flex; align-items:center; gap:8px;">
+              <input type="radio" name="push-edit-target" value="member" style="accent-color:var(--primary);" onchange="switchPushTarget('edit','member')" />
+              <div><div style="font-weight:600; font-size:13px;">指定成員</div></div>
+            </label>
+          </div>
+          <div id="push-edit-target-detail" style="display:none;">
+            <select class="input full" style="margin-bottom:6px;"><option>— 選擇目標 —</option><option>研發部</option><option>產品部</option><option>行銷部</option><option>工程組</option></select>
+          </div>
+        </div>
+
+        <!-- 對象人數預覽 -->
+        <div class="form-row" style="background:var(--bg); border-radius:var(--radius-sm); padding:10px 12px; margin-bottom:14px;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            <span style="font-size:13px;">對象人數預覽：</span>
+            <strong style="color:var(--primary); font-size:15px;" id="push-edit-count">1,248 人</strong>
+            <span class="text-sec" style="font-size:12px;">（所有訂閱者）</span>
+          </div>
+        </div>
+
+        <!-- 訊息內容 -->
+        <div style="font-size:12px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:10px;">訊息內容</div>
+
+        <div class="form-row">
+          <label>訊息格式 <span class="req">*</span></label>
+          <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:8px;">
+            <label class="card" style="padding:10px; cursor:pointer; text-align:center; background:var(--primary-soft); border-color:var(--primary);">
+              <input type="radio" name="push-edit-msgtype" hidden checked />
+              <div style="font-size:18px; margin-bottom:3px;">📝</div>
+              <div style="font-weight:600; font-size:12px;">純文字</div>
+            </label>
+            <label class="card" style="padding:10px; cursor:pointer; text-align:center;">
+              <input type="radio" name="push-edit-msgtype" hidden />
+              <div style="font-size:18px; margin-bottom:3px;">🖼</div>
+              <div style="font-weight:600; font-size:12px;">圖卡</div>
+            </label>
+            <label class="card" style="padding:10px; cursor:pointer; text-align:center;">
+              <input type="radio" name="push-edit-msgtype" hidden />
+              <div style="font-size:18px; margin-bottom:3px;">📋</div>
+              <div style="font-weight:600; font-size:12px;">圖文選單</div>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <label>訊息文字 <span class="req">*</span></label>
+          <textarea class="input full" id="push-edit-text" rows="4" placeholder="輸入推播訊息內容…" oninput="updatePushPreview('edit')">5/6 產品週會提醒：明天上午 09:30 請準時出席，會議室在 3F-A。</textarea>
+        </div>
+
+        <div class="form-row">
+          <label>按鈕</label>
+          <select class="input full"><option>無按鈕</option><option>1 個按鈕</option><option>2 個按鈕</option><option>3 個按鈕</option></select>
+        </div>
+
+        <div class="form-row" style="margin-bottom:0;">
+          <label>套用預設訊息</label>
+          <select class="input full">
+            <option>— 從預設訊息套用 —</option>
+            <option>歡迎詞</option>
+            <option>商品促銷卡</option>
+            <option>客服分流選單</option>
+            <option>離場訊息</option>
+          </select>
+          <div class="help">套用後會覆蓋目前訊息內容。</div>
+        </div>
+
+      </div>
+
+      <!-- 右：即時預覽 -->
+      <div style="padding:16px 14px; background:var(--bg); overflow-y:auto; display:flex; flex-direction:column; gap:10px;">
+        <div style="font-size:12px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.06em;">預覽</div>
+        <div style="width:200px; margin:0 auto; background:#fff; border-radius:28px; box-shadow:0 4px 20px rgba(0,0,0,.15); padding:12px 10px; border:2px solid #e5e7eb;">
+          <div style="height:8px; width:60px; background:#e5e7eb; border-radius:4px; margin:0 auto 10px;"></div>
+          <div style="background:#f0f0f0; border-radius:12px 12px 12px 4px; padding:10px 12px; font-size:12px; line-height:1.5; color:#111; min-height:60px; word-break:break-word;" id="push-edit-preview-text">
+            5/6 產品週會提醒：明天上午 09:30 請準時出席，會議室在 3F-A。
+          </div>
+          <div style="height:8px; width:40px; background:#e5e7eb; border-radius:4px; margin:10px auto 0;"></div>
+        </div>
+        <div class="text-sec" style="font-size:11px; text-align:center;">此為示意預覽，實際顯示依 Bot 設定</div>
+      </div>
+
+    </div>
+    <div class="modal-foot">
+      <button class="btn" onclick="closeModal('modal-edit-push')">取消</button>
+      <button class="btn" onclick="closeModal('modal-edit-push')">儲存草稿</button>
+      <button class="btn primary" onclick="closeModal('modal-edit-push'); showSyncToast();">儲存確認</button>
+    </div>
+  </div>
+</div>
+
+
 <div class="modal-overlay" id="modal-add-menu" onclick="closeModalIfBackdrop(event, 'modal-add-menu')">
   <div class="modal" style="width: 600px;">
     <div class="modal-head"><h3 class="modal-title">新增選單</h3><button class="icon-btn" onclick="closeModal('modal-add-menu')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button></div>
@@ -7584,11 +8372,12 @@
     '3.3': { section: '組織管理', name: '雇用類別', group: 'group-org' },
     '3.4': { section: '組織管理', name: '組織圖權限', group: 'group-org' },
     '4.1': { section: '成員管理', name: '成員列表', group: 'group-member' },
+    'member-detail': { section: '成員管理', name: '成員資料', group: 'group-member' },
     '4.2': { section: '成員管理', name: '成員資料顯示', group: 'group-member' },
     '4.3': { section: '成員管理', name: '離職程序', group: 'group-member' },
     '5.1': { section: 'Bot 管理', name: 'Bot 列表', group: 'group-bot' },
     '5.2': { section: 'Bot 管理', name: '推播排程', group: 'group-bot' },
-    '5.3': { section: 'Bot 管理', name: 'Bot 選單設定', group: 'group-bot' },
+    '5.3': { section: 'Bot 管理', name: '選單設定', group: 'group-bot' },
     '5.4': { section: 'Bot 管理', name: '關鍵字設定', group: 'group-bot' },
     '5.5': { section: 'Bot 管理', name: '預設訊息', group: 'group-bot' },
     '6.1': { section: '行事曆管理', name: '公司行事曆', group: 'group-cal' },
@@ -7615,6 +8404,9 @@
       }
       if (typeof orgApplyViewMode === 'function') orgApplyViewMode();
       if (typeof orgRenderDetail  === 'function') orgRenderDetail();
+    }
+    if (id === '4.1') {
+      if (typeof initMemberOrgTree === 'function') initMemberOrgTree();
     }
     document.querySelectorAll('.sidebar .nav-item').forEach(el => el.classList.remove('active'));
     const navItem = document.querySelector(`.nav-item[data-page="${id}"]`);
@@ -7687,12 +8479,98 @@
   }
   /* ===== [修改結束] ===== */
   function openMemberDetail() {
-    document.getElementById('member-drawer').classList.add('open');
-    document.getElementById('member-overlay').classList.add('open');
+    goPage('member-detail');
   }
   function closeMemberDetail() {
-    document.getElementById('member-drawer').classList.remove('open');
-    document.getElementById('member-overlay').classList.remove('open');
+    goPage('4.1');
+  }
+
+  // ===== Member List Org Tree =====
+  var _memberTreeSelectedId = null;
+
+  function initMemberOrgTree() {
+    var container = document.getElementById('member-org-tree');
+    if (!container) return;
+    container.innerHTML = '';
+    container.appendChild(memberTreeRenderNode(ORG_DATA, 0));
+  }
+
+  function memberTreeRenderNode(node, depth) {
+    var wrap = document.createElement('div');
+    wrap.className = 'member-org-node';
+
+    var hasChildren = node.children && node.children.length > 0;
+
+    var row = document.createElement('div');
+    row.className = 'member-org-row' + (_memberTreeSelectedId === node.id ? ' selected' : '');
+
+    var tog = document.createElement('div');
+    tog.className = 'member-org-toggle';
+    tog.innerHTML = hasChildren ? (node.expanded !== false ? '▼' : '▶') : '';
+    if (hasChildren) {
+      tog.onclick = function(e) {
+        e.stopPropagation();
+        node.expanded = (node.expanded !== false) ? false : true;
+        initMemberOrgTree();
+      };
+    }
+
+    var ico = document.createElement('span');
+    ico.className = 'member-org-ico';
+    ico.textContent = node.icon;
+
+    var lbl = document.createElement('span');
+    lbl.className = 'member-org-label';
+    lbl.textContent = node.name;
+
+    var cnt = document.createElement('span');
+    cnt.className = 'member-org-count';
+    cnt.textContent = node.count;
+
+    row.append(tog, ico, lbl, cnt);
+    row.onclick = function() {
+      _memberTreeSelectedId = (_memberTreeSelectedId === node.id) ? null : node.id;
+      initMemberOrgTree();
+      updateMemberTreeFilter();
+    };
+
+    wrap.appendChild(row);
+
+    if (hasChildren && node.expanded !== false) {
+      var childWrap = document.createElement('div');
+      childWrap.className = 'member-org-children';
+      node.children.forEach(function(child) {
+        childWrap.appendChild(memberTreeRenderNode(child, depth + 1));
+      });
+      wrap.appendChild(childWrap);
+    }
+
+    return wrap;
+  }
+
+  function memberTreeSelectAll() {
+    _memberTreeSelectedId = null;
+    initMemberOrgTree();
+    updateMemberTreeFilter();
+  }
+
+  function updateMemberTreeFilter() {
+    var node = _memberTreeSelectedId ? memberOrgFindNode(_memberTreeSelectedId, ORG_DATA) : null;
+    var label = node ? node.name : '';
+    var deptSel = document.getElementById('fl-dept');
+    if (deptSel) {
+      deptSel.value = label;
+      applyMemberFilter();
+    }
+  }
+
+  function memberOrgFindNode(id, node) {
+    if (node.id === id) return node;
+    for (var i = 0; i < (node.children || []).length; i++) {
+      var found = memberOrgFindNode(id, node.children[i]);
+      if (found) return found;
+    }
+    return null;
   }
 
   function selectEmpStatus(type) {
@@ -9022,6 +9900,156 @@ function orgLangAccToggle() {
   trigger.classList.toggle('open');
   body.classList.toggle('open');
 }
+
+  /* ===== 推播 Modal JS ===== */
+  function openPushEditModal(name) {
+    var titleEl = document.getElementById('edit-push-modal-title');
+    var nameEl  = document.getElementById('push-edit-name');
+    if (titleEl) titleEl.textContent = '編輯推播：' + name;
+    if (nameEl)  nameEl.value = name;
+    updatePushPreview('edit');
+    openModal('modal-edit-push');
+  }
+  function switchPushTarget(mode, val) {
+    var detailId = 'push-' + mode + '-target-detail';
+    var countId  = 'push-' + mode + '-count';
+    var el = document.getElementById(detailId);
+    var countEl = document.getElementById(countId);
+    var nonAll = val !== 'all';
+    if (el) el.style.display = nonAll ? 'block' : 'none';
+    if (countEl) {
+      var labels = { all:'所有訂閱者', dept:'指定部門', group:'指定群組', member:'指定成員' };
+      var counts  = { all:'1,248', dept:'24', group:'18', member:'3' };
+      countEl.textContent = counts[val] + ' 人';
+      var parent = countEl.parentElement;
+      var span = parent ? parent.querySelector('span.text-sec') : null;
+      if (span) span.textContent = '（' + labels[val] + '）';
+    }
+  }
+  function updatePushPreview(mode) {
+    var textEl    = document.getElementById('push-' + mode + '-text');
+    var previewEl = document.getElementById('push-' + mode + '-preview-text');
+    if (textEl && previewEl) {
+      var txt = textEl.value.trim();
+      previewEl.textContent = txt || '訊息內容預覽將顯示在這裡。';
+    }
+  }
+  /* ===== End 推播 Modal JS ===== */
+
+  /* ===== 選單設定：動態預覽 JS ===== */
+  function showMenuPreview(name, type) {
+    var layout = document.getElementById('menu-layout');
+    var card   = document.getElementById('menu-preview-card');
+    var title  = document.getElementById('menu-preview-title');
+    if (!layout || !card) return;
+    title.textContent = type + ' 預覽：' + name;
+    card.classList.remove('hidden');
+    layout.style.gridTemplateColumns = '1fr 340px';
+    // highlight active row
+    document.querySelectorAll('.menu-row').forEach(function(r){ r.style.background=''; });
+    event.currentTarget && (event.currentTarget.style.background = 'var(--primary-soft)');
+  }
+  function hideMenuPreview() {
+    var layout = document.getElementById('menu-layout');
+    var card   = document.getElementById('menu-preview-card');
+    if (!layout || !card) return;
+    card.classList.add('hidden');
+    layout.style.gridTemplateColumns = '1fr';
+    document.querySelectorAll('.menu-row').forEach(function(r){ r.style.background=''; });
+  }
+
+  /* ===== Bot 範本編輯 Modal JS ===== */
+  function openBotTemplateEdit(templateName, hasSpecialConfig) {
+    var modal = document.getElementById('modal-bot-template-edit');
+    if (!modal) return;
+    document.getElementById('tmpl-edit-title').textContent = '編輯範本：' + templateName;
+    document.getElementById('tmpl-edit-name').value = templateName;
+    var step2Tab = document.getElementById('tmpl-step2-tab');
+    var step2Panel = document.getElementById('tmpl-step2-panel');
+    var step2Notice = document.getElementById('tmpl-step2-notice');
+    if (hasSpecialConfig) {
+      step2Tab.style.display = 'inline-flex';
+      step2Panel.style.display = 'none';
+      step2Notice.style.display = 'none';
+    } else {
+      step2Tab.style.display = 'none';
+      step2Panel.style.display = 'none';
+      step2Notice.style.display = 'none';
+    }
+    selectTmplStep(1, hasSpecialConfig);
+    openModal('modal-bot-template-edit');
+  }
+  function selectTmplStep(step, hasSpecial) {
+    var s = hasSpecial !== undefined ? hasSpecial : (document.getElementById('tmpl-step2-tab').style.display !== 'none');
+    document.getElementById('tmpl-step1-tab').classList.toggle('active', step === 1);
+    document.getElementById('tmpl-step2-tab').classList.toggle('active', step === 2);
+    document.getElementById('tmpl-step1-panel').style.display = step === 1 ? 'block' : 'none';
+    document.getElementById('tmpl-step2-panel').style.display = step === 2 ? 'block' : 'none';
+    document.getElementById('tmpl-footer-next').style.display = (step === 1 && s) ? 'inline-flex' : 'none';
+    document.getElementById('tmpl-footer-save').style.display = (step === 2 || !s) ? 'inline-flex' : 'none';
+  }
+  /* ===== End 選單/範本 JS ===== */
+
+  /* ===== Bot 查看 / 編輯 Drawer JS ===== */
+  function openBotViewDrawer(name) {
+    document.getElementById('bot-view-title').textContent = name || 'Bot 詳細資訊';
+    document.getElementById('bot-view-subtitle').textContent = '查看模式（唯讀）';
+    var overlay = document.getElementById('bot-view-overlay');
+    var drawer  = document.getElementById('bot-view-drawer');
+    overlay.classList.remove('hidden');
+    drawer.style.display = 'flex';
+    setTimeout(function(){ drawer.classList.add('open'); }, 10);
+  }
+  function closeBotViewDrawer() {
+    var drawer  = document.getElementById('bot-view-drawer');
+    var overlay = document.getElementById('bot-view-overlay');
+    drawer.classList.remove('open');
+    setTimeout(function(){
+      drawer.style.display = 'none';
+      overlay.classList.add('hidden');
+    }, 260);
+  }
+  function openBotEditDrawer(name) {
+    document.getElementById('bot-edit-title').textContent = '編輯 Bot：' + (name || '');
+    document.getElementById('bot-edit-subtitle').textContent = '帶 * 欄位可編輯';
+    var overlay = document.getElementById('bot-edit-overlay');
+    var drawer  = document.getElementById('bot-edit-drawer');
+    overlay.classList.remove('hidden');
+    drawer.style.display = 'flex';
+    setTimeout(function(){ drawer.classList.add('open'); }, 10);
+  }
+  function closeBotEditDrawer() {
+    var drawer  = document.getElementById('bot-edit-drawer');
+    var overlay = document.getElementById('bot-edit-overlay');
+    drawer.classList.remove('open');
+    setTimeout(function(){
+      drawer.style.display = 'none';
+      overlay.classList.add('hidden');
+    }, 260);
+  }
+  function openBotModalWithTemplate(templateName) {
+    var sel = document.getElementById('bot-type-select');
+    if (sel) sel.value = templateName;
+    openModal('modal-add-bot');
+  }
+  function toggleCallbackFields(show) {
+    var el = document.getElementById('callback-fields');
+    if (el) el.style.display = show ? 'block' : 'none';
+  }
+  function toggleEditCallbackFields(show) {
+    var el = document.getElementById('edit-callback-fields');
+    if (el) el.style.display = show ? 'block' : 'none';
+  }
+  function selectChatPolicy(val) {
+    ['team','one'].forEach(function(v) {
+      var lbl = document.getElementById('chat-policy-lbl-' + v);
+      var sub = document.getElementById('chat-policy-sub-' + v);
+      if (lbl) lbl.classList.toggle('active', v === val);
+      if (sub) sub.style.display = v === val ? 'block' : 'none';
+    });
+  }
+  /* ===== End Bot Drawer JS ===== */
+
 /* ===== [修改結束] ===== */
 </script>
 
@@ -9703,6 +10731,16 @@ function openMemberList(roleName, total) {
   document.addEventListener('DOMContentLoaded', function() {
     ['pos-tbody','lv-tbody','emp-tbody'].forEach(initDragList);
     ['group-personal','group-company','group-custom'].forEach(initAttrGroupDrag);
+
+    // Delegated click for member table: user-cell or ⋯ button → open detail
+    var tbody = document.getElementById('member-tbody');
+    if (tbody) {
+      tbody.addEventListener('click', function(e) {
+        var cell = e.target.closest('.user-cell');
+        var btn  = e.target.closest('button.btn.ghost.sm');
+        if (cell || btn) openMemberDetail();
+      });
+    }
   });
 
   /* ===== 4.2 within-group drag-and-drop ===== */
@@ -10259,6 +11297,208 @@ function openMemberList(roleName, total) {
   /* ===== [修改結束] ===== */
 
 </script>
+
+<!-- ===== [修改開始] 通用右開式編輯 Drawer ===== -->
+<div class="drawer-overlay" id="edit-overlay" onclick="closeEditDrawer()"></div>
+<aside class="drawer" id="edit-drawer">
+  <div class="drawer-head" id="edit-drawer-head">
+    <div style="display:flex;align-items:center;gap:12px;min-width:0;">
+      <div id="edit-drawer-icon" style="font-size:26px;flex-shrink:0;"></div>
+      <div style="min-width:0;">
+        <div id="edit-drawer-title" style="font-size:16px;font-weight:700;line-height:1.2;"></div>
+        <div id="edit-drawer-sub" style="font-size:11px;color:var(--text-muted);margin-top:3px;"></div>
+      </div>
+    </div>
+    <button class="icon-btn" onclick="closeEditDrawer()" style="flex-shrink:0;">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+    </button>
+  </div>
+  <div class="drawer-body" id="edit-drawer-body"></div>
+  <div class="drawer-foot">
+    <button class="btn primary" id="edit-drawer-save" onclick="closeEditDrawer();showSyncToast();">儲存變更</button>
+    <button class="btn" onclick="closeEditDrawer()">取消</button>
+  </div>
+</aside>
+
+<script>
+/* ===== [修改開始] 通用右開式 Drawer 控制器 ===== */
+
+var _EDIT_DRAWER_TEMPLATES = {
+
+  user: function(name, extra) {
+    var mail = extra && extra.mail ? extra.mail : name.toLowerCase().replace(/\s+/g,'.')+'@lws.com';
+    var role = extra && extra.role ? extra.role : 'IT管理員';
+    return '<div class="dw-section">' +
+      '<div class="dw-section-head"><span class="dw-section-title">帳號資訊</span></div>' +
+      '<div class="card" style="padding:4px 14px;">' +
+      '<div class="field-row"><div class="field-label">使用者名稱</div><div class="field-value"><input class="input" value="'+name+'" style="width:100%;"/></div></div>' +
+      '<div class="field-row"><div class="field-label">電子信箱</div><div class="field-value"><input class="input" type="email" value="'+mail+'" style="width:100%;"/></div></div>' +
+      '<div class="field-row" style="border-bottom:none;"><div class="field-label">關聯角色</div><div class="field-value"><select class="input" style="width:100%;"><option>IT管理員</option><option>HR 管理員</option><option>部門主管</option><option>一般員工</option><option>測試角色</option></select></div></div>' +
+      '</div></div>' +
+      '<div class="dw-section">' +
+      '<div class="dw-section-head"><span class="dw-section-title">帳號狀態</span></div>' +
+      '<div class="card" style="padding:4px 14px;">' +
+      '<div class="field-row" style="border-bottom:none;"><div class="field-label">狀態</div><div class="field-value"><select class="input" style="width:auto;"><option>啟用</option><option>停用</option></select></div></div>' +
+      '</div></div>';
+  },
+
+  role: function(name) {
+    var data = { 'IT管理員':'IT 部門系統管理，含組織設定與成員管理權限', 'HR 管理員':'人資作業，含成員管理與角色指派', '部門主管':'部門層級管理，可查看與編輯所屬部門', '一般員工':'基本查閱權限', '測試角色':'測試用途，尚未指派任何成員' };
+    var desc = data[name] || '';
+    var perms = ['組織管理','成員管理','Bot 管理','行事曆','佈告欄','通訊錄','郵件管理'];
+    var rows = perms.map(function(p){
+      return '<div class="field-row" style="align-items:center;"><div class="field-label" style="width:90px;">'+p+'</div><div class="field-value" style="display:flex;gap:10px;flex-wrap:wrap;">' +
+        ['檢視','新增','編輯','刪除'].map(function(a){ return '<label style="display:flex;align-items:center;gap:4px;font-size:12px;cursor:pointer;"><input type="checkbox" checked style="accent-color:var(--primary);"/> '+a+'</label>'; }).join('') +
+        '</div></div>';
+    }).join('');
+    return '<div class="dw-section">' +
+      '<div class="dw-section-head"><span class="dw-section-title">角色基本設定</span></div>' +
+      '<div class="card" style="padding:4px 14px;">' +
+      '<div class="field-row"><div class="field-label">角色名稱</div><div class="field-value"><input class="input" value="'+name+'" style="width:100%;"/></div></div>' +
+      '<div class="field-row" style="border-bottom:none;"><div class="field-label">說明</div><div class="field-value"><input class="input" value="'+desc+'" style="width:100%;"/></div></div>' +
+      '</div></div>' +
+      '<div class="dw-section">' +
+      '<div class="dw-section-head"><span class="dw-section-title">功能權限</span></div>' +
+      '<div class="card" style="padding:4px 14px;">'+rows+'</div></div>';
+  },
+
+  push: function(name) {
+    return '<div class="dw-section">' +
+      '<div class="dw-section-head"><span class="dw-section-title">推播設定</span></div>' +
+      '<div class="card" style="padding:4px 14px;">' +
+      '<div class="field-row"><div class="field-label">推播名稱</div><div class="field-value"><input class="input" value="'+name+'" style="width:100%;"/></div></div>' +
+      '<div class="field-row"><div class="field-label">推播類型</div><div class="field-value"><select class="input" style="width:100%;"><option>排程推播</option><option>循環排程</option><option>即時推播</option></select></div></div>' +
+      '<div class="field-row"><div class="field-label">目標對象</div><div class="field-value"><select class="input" style="width:100%;"><option>研發部 (24人)</option><option>工程組 (18人)</option><option>全公司</option></select></div></div>' +
+      '<div class="field-row" style="border-bottom:none;"><div class="field-label">發送時間</div><div class="field-value"><input class="input" type="datetime-local" style="width:100%;"/></div></div>' +
+      '</div></div>' +
+      '<div class="dw-section">' +
+      '<div class="dw-section-head"><span class="dw-section-title">訊息內容</span></div>' +
+      '<div class="card" style="padding:4px 14px;">' +
+      '<div class="field-row" style="border-bottom:none;"><div class="field-label">內容</div><div class="field-value"><textarea class="input" rows="4" style="width:100%;resize:vertical;">請輸入推播內容…</textarea></div></div>' +
+      '</div></div>';
+  },
+
+  menu: function(name) {
+    return '<div class="dw-section">' +
+      '<div class="dw-section-head"><span class="dw-section-title">選單設定</span></div>' +
+      '<div class="card" style="padding:4px 14px;">' +
+      '<div class="field-row"><div class="field-label">選單名稱</div><div class="field-value"><input class="input" value="'+name+'" style="width:100%;"/></div></div>' +
+      '<div class="field-row"><div class="field-label">選單類型</div><div class="field-value"><select class="input" style="width:100%;"><option>Rich Menu</option><option>快速選單</option></select></div></div>' +
+      '<div class="field-row"><div class="field-label">按鈕數</div><div class="field-value"><input class="input" type="number" value="6" min="1" max="12" style="width:80px;"/></div></div>' +
+      '<div class="field-row" style="border-bottom:none;"><div class="field-label">狀態</div><div class="field-value"><select class="input" style="width:auto;"><option>裝置使用中</option><option>備用</option><option>停用</option></select></div></div>' +
+      '</div></div>';
+  },
+
+  keyword: function(name) {
+    return '<div class="dw-section">' +
+      '<div class="dw-section-head"><span class="dw-section-title">關鍵字設定</span></div>' +
+      '<div class="card" style="padding:4px 14px;">' +
+      '<div class="field-row"><div class="field-label">關鍵字</div><div class="field-value"><input class="input" value="'+name+'" style="width:100%;"/></div></div>' +
+      '<div class="field-row"><div class="field-label">匹配類型</div><div class="field-value"><select class="input" style="width:100%;"><option>包含</option><option>完全相符</option><option>正則</option></select></div></div>' +
+      '<div class="field-row"><div class="field-label">啟用</div><div class="field-value"><label style="display:flex;align-items:center;gap:6px;cursor:pointer;"><input type="checkbox" checked style="accent-color:var(--primary);width:15px;height:15px;"/> 啟用此關鍵字</label></div></div>' +
+      '</div></div>' +
+      '<div class="dw-section">' +
+      '<div class="dw-section-head"><span class="dw-section-title">自動回覆內容</span></div>' +
+      '<div class="card" style="padding:4px 14px;">' +
+      '<div class="field-row" style="border-bottom:none;"><div class="field-label">回覆內容</div><div class="field-value"><textarea class="input" rows="5" style="width:100%;resize:vertical;">請輸入自動回覆內容…</textarea></div></div>' +
+      '</div></div>';
+  },
+
+  message: function(name) {
+    var types = {'歡迎詞':'純文字','商品促銷卡':'圖卡','客服分流選單':'圖文選單','離場訊息':'純文字'};
+    var t = types[name] || '純文字';
+    return '<div class="dw-section">' +
+      '<div class="dw-section-head"><span class="dw-section-title">訊息設定</span></div>' +
+      '<div class="card" style="padding:4px 14px;">' +
+      '<div class="field-row"><div class="field-label">訊息名稱</div><div class="field-value"><input class="input" value="'+name+'" style="width:100%;"/></div></div>' +
+      '<div class="field-row" style="border-bottom:none;"><div class="field-label">訊息類型</div><div class="field-value"><select class="input" style="width:100%;"><option'+(t==='純文字'?' selected':'')+'>純文字</option><option'+(t==='圖卡'?' selected':'')+'>圖卡</option><option'+(t==='圖文選單'?' selected':'')+'>圖文選單</option></select></div></div>' +
+      '</div></div>' +
+      '<div class="dw-section">' +
+      '<div class="dw-section-head"><span class="dw-section-title">訊息內容</span></div>' +
+      '<div class="card" style="padding:4px 14px;">' +
+      '<div class="field-row" style="border-bottom:none;"><div class="field-label">內容</div><div class="field-value"><textarea class="input" rows="6" style="width:100%;resize:vertical;">請輸入訊息內容…</textarea></div></div>' +
+      '</div></div>';
+  },
+
+  resource: function(name) {
+    var caps = {'大會議室':12,'會議室 A':6,'會議室 B':4,'行動投影機 #1':1,'會議室 C':8};
+    var cap = caps[name] || 1;
+    var isEquip = name.indexOf('投影機') > -1 || name.indexOf('設備') > -1;
+    return '<div class="dw-section">' +
+      '<div class="dw-section-head"><span class="dw-section-title">資源設定</span></div>' +
+      '<div class="card" style="padding:4px 14px;">' +
+      '<div class="field-row"><div class="field-label">資源名稱</div><div class="field-value"><input class="input" value="'+name+'" style="width:100%;"/></div></div>' +
+      '<div class="field-row"><div class="field-label">類型</div><div class="field-value"><select class="input" style="width:100%;"><option'+(isEquip?'':' selected')+'>會議室</option><option'+(isEquip?' selected':'')+'>設備</option><option>停車位</option></select></div></div>' +
+      '<div class="field-row"><div class="field-label">容量（人）</div><div class="field-value"><input class="input" type="number" value="'+cap+'" min="1" style="width:80px;"/></div></div>' +
+      '<div class="field-row"><div class="field-label">設備配置</div><div class="field-value" style="display:flex;gap:10px;flex-wrap:wrap;">' +
+        ['投影機','螢幕','視訊','白板','電話'].map(function(e){ return '<label style="display:flex;align-items:center;gap:4px;font-size:12px;cursor:pointer;"><input type="checkbox" style="accent-color:var(--primary);"/> '+e+'</label>'; }).join('') +
+      '</div></div>' +
+      '<div class="field-row" style="border-bottom:none;"><div class="field-label">狀態</div><div class="field-value"><select class="input" style="width:auto;"><option>可用</option><option>使用中</option><option>停用</option><option>維修中</option></select></div></div>' +
+      '</div></div>';
+  },
+
+  attr: function(name) {
+    var metas = {'職稱':'文字','公司網站':'網址','地址':'文字','標籤':'多選'};
+    var t = metas[name] || '文字';
+    return '<div class="dw-section">' +
+      '<div class="dw-section-head"><span class="dw-section-title">欄位設定</span></div>' +
+      '<div class="card" style="padding:4px 14px;">' +
+      '<div class="field-row"><div class="field-label">欄位名稱</div><div class="field-value"><input class="input" value="'+name+'" style="width:100%;"/></div></div>' +
+      '<div class="field-row"><div class="field-label">欄位類型</div><div class="field-value"><select class="input" style="width:100%;"><option'+(t==='文字'?' selected':'')+'>文字</option><option'+(t==='網址'?' selected':'')+'>網址</option><option'+(t==='多選'?' selected':'')+'>多選</option><option>日期</option><option>數字</option></select></div></div>' +
+      '<div class="field-row"><div class="field-label">必填</div><div class="field-value"><label style="display:flex;align-items:center;gap:6px;cursor:pointer;"><input type="checkbox" style="accent-color:var(--primary);width:15px;height:15px;"/> 設為必填欄位</label></div></div>' +
+      '<div class="field-row" style="border-bottom:none;"><div class="field-label">成員可編輯</div><div class="field-value"><label style="display:flex;align-items:center;gap:6px;cursor:pointer;"><input type="checkbox" checked style="accent-color:var(--primary);width:15px;height:15px;"/> 允許成員自行修改</label></div></div>' +
+      '</div></div>';
+  }
+};
+
+var _EDIT_DRAWER_META = {
+  user:     { icon:'👤', sub:'帳號與角色設定', lg: false },
+  role:     { icon:'🛡️', sub:'角色名稱、說明與功能權限', lg: true  },
+  push:     { icon:'📣', sub:'推播設定與訊息內容', lg: false },
+  menu:     { icon:'📋', sub:'選單設定', lg: false },
+  keyword:  { icon:'🔑', sub:'關鍵字觸發與自動回覆', lg: false },
+  message:  { icon:'💬', sub:'預設訊息內容', lg: false },
+  resource: { icon:'🏢', sub:'資源資訊與設備配置', lg: false },
+  attr:     { icon:'🗂️', sub:'欄位類型與顯示設定', lg: false }
+};
+
+function openEditDrawer(type, triggerEl, name) {
+  var resolvedName = name;
+  if (!resolvedName && triggerEl) {
+    var row = triggerEl.closest('tr');
+    if (row) resolvedName = row.getAttribute('data-uname') || row.querySelector('.user-name') && row.querySelector('.user-name').textContent || '未命名';
+  }
+  if (!resolvedName) resolvedName = '編輯項目';
+
+  var meta = _EDIT_DRAWER_META[type] || { icon:'✏️', sub:'', lg:false };
+  var tmpl = _EDIT_DRAWER_TEMPLATES[type];
+
+  document.getElementById('edit-drawer-icon').textContent  = meta.icon;
+  document.getElementById('edit-drawer-title').textContent = resolvedName;
+  document.getElementById('edit-drawer-sub').textContent   = meta.sub;
+  document.getElementById('edit-drawer-body').innerHTML    = tmpl ? tmpl(resolvedName) : '<p style="color:var(--text-muted);padding:20px 0;">尚無編輯表單</p>';
+
+  var drawer = document.getElementById('edit-drawer');
+  drawer.classList.toggle('drawer-lg', !!meta.lg);
+  drawer.classList.add('open');
+  document.getElementById('edit-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function openEditDrawerFromRow(type, btn) {
+  var row = btn.closest('tr');
+  var name = row ? (row.getAttribute('data-uname') || (row.querySelector('.user-name') ? row.querySelector('.user-name').textContent.trim() : '')) : '';
+  openEditDrawer(type, null, name || '帳號');
+}
+
+function closeEditDrawer() {
+  document.getElementById('edit-drawer').classList.remove('open');
+  document.getElementById('edit-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+/* ===== [修改結束] ===== */
+</script>
+<!-- ===== [修改結束] ===== -->
 
 </body>
 </html>
