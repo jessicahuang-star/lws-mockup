@@ -3282,7 +3282,7 @@
       <div class="page-head">
         <div>
           <h1 class="page-title">成員建立排程</h1>
-          <p class="page-desc">此為新增成員後已設定進行開通的推播通知</p>
+          <p class="page-desc">此為新增成員有設定進行預約發送通知</p>
         </div>
         <div>
           <button class="btn ghost sm" onclick="goPage('4.1')" style="display:inline-flex;align-items:center;gap:5px;">
@@ -3309,8 +3309,8 @@
                 <th>員工編號</th>
                 <th>職位</th>
                 <th>職等</th>
-                <th>生效時間</th>
-                <th>到職日</th>
+                <th>啟用時間</th>
+                <th>成員建立時間</th>
                 <th style="width:100px;">操作</th>
               </tr>
             </thead>
@@ -3323,10 +3323,10 @@
                       <span id="ms-selected-count-scheduled" style="font-size:13px;font-weight:600;color:var(--primary);">已選 0 筆</span>
                       <button class="btn ghost sm" style="font-size:12px;display:inline-flex;align-items:center;gap:5px;">
                         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                        更改部門
+                        變更部門
                       </button>
                     </div>
-                    <button class="btn ghost sm" onclick="msClearSelection('scheduled')" style="font-size:12px;">取消選擇</button>
+                    <button class="btn ghost sm" onclick="msClearSelection('scheduled')" style="font-size:12px;">取消選取</button>
                   </div>
                 </td>
               </tr>
@@ -3337,37 +3337,37 @@
                 <td style="font-size:13px;">研發主管</td>
                 <td><span class="badge neutral" style="font-size:11px;">M1 主任</span></td>
                 <td style="color:var(--text-secondary);font-size:13px;">2022-03-01</td>
-                <td style="color:var(--text-secondary);font-size:13px;">2022-03-01</td>
+                <td style="color:var(--text-secondary);font-size:13px;">2022-03-01 10:00</td>
                 <td><div style="display:flex;gap:8px;"><button class="btn ghost sm" style="font-size:12px;padding:4px 10px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> 編輯</button><button class="btn ghost sm" style="font-size:12px;padding:4px 10px;color:var(--danger,#ef4444);border-color:transparent;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg> 刪除</button></div></td>
               </tr>
               <tr>
                 <td class="row-checkbox"><input type="checkbox" onchange="msCheckboxChange('scheduled')"></td>
-                <td><div style="display:flex;align-items:center;gap:10px;"><div class="user-avatar c2" style="width:32px;height:32px;font-size:13px;">陳</div><div><div style="font-weight:500;font-size:13px;">陳怡君</div><div style="color:var(--text-muted);font-size:12px;">yj.cheng@lws.com</div></div></div></td>
+                <td><div style="display:flex;align-items:center;gap:10px;"><div class="user-avatar c2" style="width:32px;height:32px;font-size:13px;">陳</div><div><div style="font-weight:500;font-size:13px;">陳怡君</div><div style="color:var(--text-muted);font-size:12px;">yj.chen@lws.com</div></div></div></td>
                 <td style="color:var(--text-secondary);font-size:13px;">EMP-0023</td>
-                <td style="font-size:13px;">數據工程師</td>
+                <td style="font-size:13px;">軟體工程師</td>
                 <td><span class="badge info" style="font-size:11px;">L3 資深</span></td>
                 <td style="color:var(--text-secondary);font-size:13px;">2022-03-01</td>
-                <td style="color:var(--text-secondary);font-size:13px;">2022-03-01</td>
+                <td style="color:var(--text-secondary);font-size:13px;">2022-03-01 10:00</td>
                 <td><div style="display:flex;gap:8px;"><button class="btn ghost sm" style="font-size:12px;padding:4px 10px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> 編輯</button><button class="btn ghost sm" style="font-size:12px;padding:4px 10px;color:var(--danger,#ef4444);border-color:transparent;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg> 刪除</button></div></td>
               </tr>
               <tr>
                 <td class="row-checkbox"><input type="checkbox" onchange="msCheckboxChange('scheduled')"></td>
-                <td><div style="display:flex;align-items:center;gap:10px;"><div class="user-avatar c3" style="width:32px;height:32px;font-size:13px;">李</div><div><div style="font-weight:500;font-size:13px;">李宜倫</div><div style="color:var(--text-muted);font-size:12px;">jy.lee@lws.com</div></div></div></td>
+                <td><div style="display:flex;align-items:center;gap:10px;"><div class="user-avatar c3" style="width:32px;height:32px;font-size:13px;">李</div><div><div style="font-weight:500;font-size:13px;">李志遠</div><div style="color:var(--text-muted);font-size:12px;">jy.lee@lws.com</div></div></div></td>
                 <td style="color:var(--text-secondary);font-size:13px;">EMP-0034</td>
                 <td style="font-size:13px;">軟體工程師</td>
                 <td><span class="badge neutral" style="font-size:11px;">M1 主任</span></td>
                 <td style="color:var(--text-secondary);font-size:13px;">2022-03-01</td>
-                <td style="color:var(--text-secondary);font-size:13px;">2022-03-01</td>
+                <td style="color:var(--text-secondary);font-size:13px;">2022-03-01 10:00</td>
                 <td><div style="display:flex;gap:8px;"><button class="btn ghost sm" style="font-size:12px;padding:4px 10px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> 編輯</button><button class="btn ghost sm" style="font-size:12px;padding:4px 10px;color:var(--danger,#ef4444);border-color:transparent;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg> 刪除</button></div></td>
               </tr>
               <tr>
                 <td class="row-checkbox"><input type="checkbox" onchange="msCheckboxChange('scheduled')"></td>
-                <td><div style="display:flex;align-items:center;gap:10px;"><div class="user-avatar c4" style="width:32px;height:32px;font-size:13px;">張</div><div><div style="font-weight:500;font-size:13px;">張玉翠</div><div style="color:var(--text-muted);font-size:12px;">yw.chang@lws.com</div></div></div></td>
+                <td><div style="display:flex;align-items:center;gap:10px;"><div class="user-avatar c4" style="width:32px;height:32px;font-size:13px;">張</div><div><div style="font-weight:500;font-size:13px;">張雅雯</div><div style="color:var(--text-muted);font-size:12px;">yw.chang@lws.com</div></div></div></td>
                 <td style="color:var(--text-secondary);font-size:13px;">EMP-0048</td>
                 <td style="font-size:13px;">產品經理</td>
                 <td><span class="badge info" style="font-size:11px;">L3 資深</span></td>
                 <td style="color:var(--text-secondary);font-size:13px;">2022-03-01</td>
-                <td style="color:var(--text-secondary);font-size:13px;">2022-03-01</td>
+                <td style="color:var(--text-secondary);font-size:13px;">2022-03-01 10:00</td>
                 <td><div style="display:flex;gap:8px;"><button class="btn ghost sm" style="font-size:12px;padding:4px 10px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> 編輯</button><button class="btn ghost sm" style="font-size:12px;padding:4px 10px;color:var(--danger,#ef4444);border-color:transparent;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg> 刪除</button></div></td>
               </tr>
               <tr>
@@ -3377,7 +3377,7 @@
                 <td style="font-size:13px;">UI/UX 設計師</td>
                 <td><span class="badge neutral" style="font-size:11px;">L2 中階</span></td>
                 <td style="color:var(--text-secondary);font-size:13px;">2022-03-01</td>
-                <td style="color:var(--text-secondary);font-size:13px;">2022-03-01</td>
+                <td style="color:var(--text-secondary);font-size:13px;">2022-03-01 10:00</td>
                 <td><div style="display:flex;gap:8px;"><button class="btn ghost sm" style="font-size:12px;padding:4px 10px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> 編輯</button><button class="btn ghost sm" style="font-size:12px;padding:4px 10px;color:var(--danger,#ef4444);border-color:transparent;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg> 刪除</button></div></td>
               </tr>
               <tr>
@@ -3387,7 +3387,7 @@
                 <td style="font-size:13px;">業務代表</td>
                 <td><span class="badge neutral" style="font-size:11px;">L2 中階</span></td>
                 <td style="color:var(--text-secondary);font-size:13px;">2022-03-01</td>
-                <td style="color:var(--text-secondary);font-size:13px;">2022-03-01</td>
+                <td style="color:var(--text-secondary);font-size:13px;">2022-03-01 10:00</td>
                 <td><div style="display:flex;gap:8px;"><button class="btn ghost sm" style="font-size:12px;padding:4px 10px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> 編輯</button><button class="btn ghost sm" style="font-size:12px;padding:4px 10px;color:var(--danger,#ef4444);border-color:transparent;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg> 刪除</button></div></td>
               </tr>
               <tr>
@@ -3397,37 +3397,37 @@
                 <td style="font-size:13px;">行銷企劃</td>
                 <td><span class="badge neutral" style="font-size:11px;">L1 初階</span></td>
                 <td style="color:var(--text-secondary);font-size:13px;">2022-03-01</td>
-                <td style="color:var(--text-secondary);font-size:13px;">2022-03-01</td>
+                <td style="color:var(--text-secondary);font-size:13px;">2022-03-01 10:00</td>
                 <td><div style="display:flex;gap:8px;"><button class="btn ghost sm" style="font-size:12px;padding:4px 10px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> 編輯</button><button class="btn ghost sm" style="font-size:12px;padding:4px 10px;color:var(--danger,#ef4444);border-color:transparent;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg> 刪除</button></div></td>
               </tr>
               <tr>
                 <td class="row-checkbox"><input type="checkbox" onchange="msCheckboxChange('scheduled')"></td>
-                <td><div style="display:flex;align-items:center;gap:10px;"><div class="user-avatar c2" style="width:32px;height:32px;font-size:13px;">蔡</div><div><div style="font-weight:500;font-size:13px;">蔡欣怡</div><div style="color:var(--text-muted);font-size:12px;">yh.tsai@lws.com</div></div></div></td>
+                <td><div style="display:flex;align-items:center;gap:10px;"><div class="user-avatar c2" style="width:32px;height:32px;font-size:13px;">蔡</div><div><div style="font-weight:500;font-size:13px;">蔡欣怡</div><div style="color:var(--text-muted);font-size:12px;">xy.tsai@lws.com</div></div></div></td>
                 <td style="color:var(--text-secondary);font-size:13px;">EMP-0094</td>
                 <td style="font-size:13px;">人資專員</td>
                 <td><span class="badge neutral" style="font-size:11px;">L2 中階</span></td>
                 <td style="color:var(--text-secondary);font-size:13px;">2022-03-01</td>
-                <td style="color:var(--text-secondary);font-size:13px;">2022-03-01</td>
+                <td style="color:var(--text-secondary);font-size:13px;">2022-03-01 10:00</td>
                 <td><div style="display:flex;gap:8px;"><button class="btn ghost sm" style="font-size:12px;padding:4px 10px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> 編輯</button><button class="btn ghost sm" style="font-size:12px;padding:4px 10px;color:var(--danger,#ef4444);border-color:transparent;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg> 刪除</button></div></td>
               </tr>
               <tr>
                 <td class="row-checkbox"><input type="checkbox" onchange="msCheckboxChange('scheduled')"></td>
-                <td><div style="display:flex;align-items:center;gap:10px;"><div class="user-avatar c3" style="width:32px;height:32px;font-size:13px;">許</div><div><div style="font-weight:500;font-size:13px;">許雅婷</div><div style="color:var(--text-muted);font-size:12px;">yc.hsuj@lws.com</div></div></div></td>
+                <td><div style="display:flex;align-items:center;gap:10px;"><div class="user-avatar c3" style="width:32px;height:32px;font-size:13px;">許</div><div><div style="font-weight:500;font-size:13px;">許雅婷</div><div style="color:var(--text-muted);font-size:12px;">yt.hsu@lws.com</div></div></div></td>
                 <td style="color:var(--text-secondary);font-size:13px;">EMP-0102</td>
                 <td style="font-size:13px;">QA 工程師</td>
                 <td><span class="badge neutral" style="font-size:11px;">L1 初階</span></td>
                 <td style="color:var(--text-secondary);font-size:13px;">2022-03-01</td>
-                <td style="color:var(--text-secondary);font-size:13px;">2022-03-01</td>
+                <td style="color:var(--text-secondary);font-size:13px;">2022-03-01 10:00</td>
                 <td><div style="display:flex;gap:8px;"><button class="btn ghost sm" style="font-size:12px;padding:4px 10px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> 編輯</button><button class="btn ghost sm" style="font-size:12px;padding:4px 10px;color:var(--danger,#ef4444);border-color:transparent;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg> 刪除</button></div></td>
               </tr>
               <tr>
                 <td class="row-checkbox"><input type="checkbox" onchange="msCheckboxChange('scheduled')"></td>
-                <td><div style="display:flex;align-items:center;gap:10px;"><div class="user-avatar c4" style="width:32px;height:32px;font-size:13px;">鄭</div><div><div style="font-weight:500;font-size:13px;">鄭子程</div><div style="color:var(--text-muted);font-size:12px;">yc.cheng@lws.com</div></div></div></td>
-                <td style="color:var(--text-secondary);font-size:13px;">EMP-0116</td>
+                <td><div style="display:flex;align-items:center;gap:10px;"><div class="user-avatar c4" style="width:32px;height:32px;font-size:13px;">鄭</div><div><div style="font-weight:500;font-size:13px;">鄭子翔</div><div style="color:var(--text-muted);font-size:12px;">tx.cheng@lws.com</div></div></div></td>
+                <td style="color:var(--text-secondary);font-size:13px;">EMP-0118</td>
                 <td style="font-size:13px;">會計專員</td>
                 <td><span class="badge neutral" style="font-size:11px;">L2 中階</span></td>
                 <td style="color:var(--text-secondary);font-size:13px;">2022-03-01</td>
-                <td style="color:var(--text-secondary);font-size:13px;">2022-03-01</td>
+                <td style="color:var(--text-secondary);font-size:13px;">2022-03-01 10:00</td>
                 <td><div style="display:flex;gap:8px;"><button class="btn ghost sm" style="font-size:12px;padding:4px 10px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> 編輯</button><button class="btn ghost sm" style="font-size:12px;padding:4px 10px;color:var(--danger,#ef4444);border-color:transparent;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg> 刪除</button></div></td>
               </tr>
             </tbody>
@@ -3447,28 +3447,163 @@
         </div>
       </div>
 
-      <!-- 排程失敗 Tab Content -->
+      <!-- 排程失敗 Tab Content (515:10944 + 515:11653) -->
       <div id="ms-content-failed" style="display:none;">
         <div class="card" style="overflow:hidden;padding:0;">
           <table class="data-table">
             <thead>
               <tr>
-                <th class="row-checkbox"><input type="checkbox"></th>
+                <th class="row-checkbox"><input type="checkbox" id="ms-select-all-failed" onchange="msSelectAll('failed', this)"></th>
                 <th>成員</th>
                 <th>員工編號</th>
                 <th>職位</th>
                 <th>職等</th>
-                <th>生效時間</th>
-                <th>到職日</th>
+                <th>啟用時間</th>
+                <th>成員建立時間</th>
+                <th>狀態</th>
                 <th style="width:100px;">操作</th>
               </tr>
             </thead>
             <tbody>
+              <!-- bulk selection bar for failed tab -->
+              <tr id="ms-bulk-bar-failed" style="display:none;background:var(--primary-soft,#eff6ff);">
+                <td colspan="9" style="padding:10px 16px;border-bottom:1px solid var(--border);">
+                  <div style="display:flex;align-items:center;justify-content:space-between;">
+                    <div style="display:flex;align-items:center;gap:10px;">
+                      <span id="ms-selected-count-failed" style="font-size:13px;font-weight:600;color:var(--primary);">已選 0 筆</span>
+                      <button class="btn ghost sm" style="font-size:12px;display:inline-flex;align-items:center;gap:5px;">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                        變更部門
+                      </button>
+                    </div>
+                    <button class="btn ghost sm" onclick="msClearSelection('failed')" style="font-size:12px;">取消選取</button>
+                  </div>
+                </td>
+              </tr>
               <tr>
-                <td colspan="8" style="text-align:center;padding:40px 0;color:var(--text-muted);font-size:14px;">目前沒有排程失敗的成員</td>
+                <td class="row-checkbox"><input type="checkbox" onchange="msCheckboxChange('failed')"></td>
+                <td><div style="display:flex;align-items:center;gap:10px;"><div class="user-avatar c1" style="width:32px;height:32px;font-size:13px;">王</div><div><div style="font-weight:500;font-size:13px;">王明德</div><div style="color:var(--text-muted);font-size:12px;">ming.wang@lws.com</div></div></div></td>
+                <td style="color:var(--text-secondary);font-size:13px;">EMP-0001</td>
+                <td style="font-size:13px;">研發主管</td>
+                <td><span class="badge neutral" style="font-size:11px;">M1 主任</span></td>
+                <td style="color:var(--text-secondary);font-size:13px;">2022-03-01</td>
+                <td style="color:var(--text-secondary);font-size:13px;">2022-03-01 10:00</td>
+                <td><span style="font-size:11px;color:#ef4444;background:#fef2f2;border:1px solid #fecaca;padding:3px 8px;border-radius:4px;white-space:nowrap;">Error400, Gateway Timeout</span></td>
+                <td><div style="display:flex;gap:8px;"><button class="btn ghost sm" style="font-size:12px;padding:4px 10px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> 編輯</button><button class="btn ghost sm" style="font-size:12px;padding:4px 10px;color:var(--danger,#ef4444);border-color:transparent;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg> 刪除</button></div></td>
+              </tr>
+              <tr>
+                <td class="row-checkbox"><input type="checkbox" onchange="msCheckboxChange('failed')"></td>
+                <td><div style="display:flex;align-items:center;gap:10px;"><div class="user-avatar c2" style="width:32px;height:32px;font-size:13px;">陳</div><div><div style="font-weight:500;font-size:13px;">陳怡君</div><div style="color:var(--text-muted);font-size:12px;">yj.chen@lws.com</div></div></div></td>
+                <td style="color:var(--text-secondary);font-size:13px;">EMP-0023</td>
+                <td style="font-size:13px;">軟體工程師</td>
+                <td><span class="badge info" style="font-size:11px;">L3 資深</span></td>
+                <td style="color:var(--text-secondary);font-size:13px;">2022-03-01</td>
+                <td style="color:var(--text-secondary);font-size:13px;">2022-03-01 10:00</td>
+                <td><span style="font-size:11px;color:#ef4444;background:#fef2f2;border:1px solid #fecaca;padding:3px 8px;border-radius:4px;white-space:nowrap;">Error400, Gateway Timeout</span></td>
+                <td><div style="display:flex;gap:8px;"><button class="btn ghost sm" style="font-size:12px;padding:4px 10px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> 編輯</button><button class="btn ghost sm" style="font-size:12px;padding:4px 10px;color:var(--danger,#ef4444);border-color:transparent;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg> 刪除</button></div></td>
+              </tr>
+              <tr>
+                <td class="row-checkbox"><input type="checkbox" onchange="msCheckboxChange('failed')"></td>
+                <td><div style="display:flex;align-items:center;gap:10px;"><div class="user-avatar c3" style="width:32px;height:32px;font-size:13px;">李</div><div><div style="font-weight:500;font-size:13px;">李志遠</div><div style="color:var(--text-muted);font-size:12px;">jy.lee@lws.com</div></div></div></td>
+                <td style="color:var(--text-secondary);font-size:13px;">EMP-0034</td>
+                <td style="font-size:13px;">軟體工程師</td>
+                <td><span class="badge neutral" style="font-size:11px;">M1 主任</span></td>
+                <td style="color:var(--text-secondary);font-size:13px;">2022-03-01</td>
+                <td style="color:var(--text-secondary);font-size:13px;">2022-03-01 10:00</td>
+                <td><span style="font-size:11px;color:#ef4444;background:#fef2f2;border:1px solid #fecaca;padding:3px 8px;border-radius:4px;white-space:nowrap;">Error400, Gateway Timeout</span></td>
+                <td><div style="display:flex;gap:8px;"><button class="btn ghost sm" style="font-size:12px;padding:4px 10px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> 編輯</button><button class="btn ghost sm" style="font-size:12px;padding:4px 10px;color:var(--danger,#ef4444);border-color:transparent;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg> 刪除</button></div></td>
+              </tr>
+              <tr>
+                <td class="row-checkbox"><input type="checkbox" onchange="msCheckboxChange('failed')"></td>
+                <td><div style="display:flex;align-items:center;gap:10px;"><div class="user-avatar c4" style="width:32px;height:32px;font-size:13px;">張</div><div><div style="font-weight:500;font-size:13px;">張雅雯</div><div style="color:var(--text-muted);font-size:12px;">yw.chang@lws.com</div></div></div></td>
+                <td style="color:var(--text-secondary);font-size:13px;">EMP-0048</td>
+                <td style="font-size:13px;">產品經理</td>
+                <td><span class="badge info" style="font-size:11px;">L3 資深</span></td>
+                <td style="color:var(--text-secondary);font-size:13px;">2022-03-01</td>
+                <td style="color:var(--text-secondary);font-size:13px;">2022-03-01 10:00</td>
+                <td><span style="font-size:11px;color:#ef4444;background:#fef2f2;border:1px solid #fecaca;padding:3px 8px;border-radius:4px;white-space:nowrap;">Error400, Gateway Timeout</span></td>
+                <td><div style="display:flex;gap:8px;"><button class="btn ghost sm" style="font-size:12px;padding:4px 10px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> 編輯</button><button class="btn ghost sm" style="font-size:12px;padding:4px 10px;color:var(--danger,#ef4444);border-color:transparent;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg> 刪除</button></div></td>
+              </tr>
+              <tr>
+                <td class="row-checkbox"><input type="checkbox" onchange="msCheckboxChange('failed')"></td>
+                <td><div style="display:flex;align-items:center;gap:10px;"><div class="user-avatar c5" style="width:32px;height:32px;font-size:13px;">林</div><div><div style="font-weight:500;font-size:13px;">林家豪</div><div style="color:var(--text-muted);font-size:12px;">jh.lin@lws.com</div></div></div></td>
+                <td style="color:var(--text-secondary);font-size:13px;">EMP-0067</td>
+                <td style="font-size:13px;">UI/UX 設計師</td>
+                <td><span class="badge neutral" style="font-size:11px;">L2 中階</span></td>
+                <td style="color:var(--text-secondary);font-size:13px;">2022-03-01</td>
+                <td style="color:var(--text-secondary);font-size:13px;">2022-03-01 10:00</td>
+                <td><span style="font-size:11px;color:#ef4444;background:#fef2f2;border:1px solid #fecaca;padding:3px 8px;border-radius:4px;white-space:nowrap;">Error400, Gateway Timeout</span></td>
+                <td><div style="display:flex;gap:8px;"><button class="btn ghost sm" style="font-size:12px;padding:4px 10px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> 編輯</button><button class="btn ghost sm" style="font-size:12px;padding:4px 10px;color:var(--danger,#ef4444);border-color:transparent;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg> 刪除</button></div></td>
+              </tr>
+              <tr>
+                <td class="row-checkbox"><input type="checkbox" onchange="msCheckboxChange('failed')"></td>
+                <td><div style="display:flex;align-items:center;gap:10px;"><div class="user-avatar c6" style="width:32px;height:32px;font-size:13px;">黃</div><div><div style="font-weight:500;font-size:13px;">黃詩涵</div><div style="color:var(--text-muted);font-size:12px;">sh.huang@lws.com</div></div></div></td>
+                <td style="color:var(--text-secondary);font-size:13px;">EMP-0072</td>
+                <td style="font-size:13px;">業務代表</td>
+                <td><span class="badge neutral" style="font-size:11px;">L2 中階</span></td>
+                <td style="color:var(--text-secondary);font-size:13px;">2022-03-01</td>
+                <td style="color:var(--text-secondary);font-size:13px;">2022-03-01 10:00</td>
+                <td><span style="font-size:11px;color:#ef4444;background:#fef2f2;border:1px solid #fecaca;padding:3px 8px;border-radius:4px;white-space:nowrap;">Error400, Gateway Timeout</span></td>
+                <td><div style="display:flex;gap:8px;"><button class="btn ghost sm" style="font-size:12px;padding:4px 10px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> 編輯</button><button class="btn ghost sm" style="font-size:12px;padding:4px 10px;color:var(--danger,#ef4444);border-color:transparent;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg> 刪除</button></div></td>
+              </tr>
+              <tr>
+                <td class="row-checkbox"><input type="checkbox" onchange="msCheckboxChange('failed')"></td>
+                <td><div style="display:flex;align-items:center;gap:10px;"><div class="user-avatar c1" style="width:32px;height:32px;font-size:13px;">吳</div><div><div style="font-weight:500;font-size:13px;">吳承翰</div><div style="color:var(--text-muted);font-size:12px;">ch.wu@lws.com</div></div></div></td>
+                <td style="color:var(--text-secondary);font-size:13px;">EMP-0089</td>
+                <td style="font-size:13px;">行銷企劃</td>
+                <td><span class="badge neutral" style="font-size:11px;">L1 初階</span></td>
+                <td style="color:var(--text-secondary);font-size:13px;">2022-03-01</td>
+                <td style="color:var(--text-secondary);font-size:13px;">2022-03-01 10:00</td>
+                <td><span style="font-size:11px;color:#ef4444;background:#fef2f2;border:1px solid #fecaca;padding:3px 8px;border-radius:4px;white-space:nowrap;">Error400, Gateway Timeout</span></td>
+                <td><div style="display:flex;gap:8px;"><button class="btn ghost sm" style="font-size:12px;padding:4px 10px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> 編輯</button><button class="btn ghost sm" style="font-size:12px;padding:4px 10px;color:var(--danger,#ef4444);border-color:transparent;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg> 刪除</button></div></td>
+              </tr>
+              <tr>
+                <td class="row-checkbox"><input type="checkbox" onchange="msCheckboxChange('failed')"></td>
+                <td><div style="display:flex;align-items:center;gap:10px;"><div class="user-avatar c2" style="width:32px;height:32px;font-size:13px;">蔡</div><div><div style="font-weight:500;font-size:13px;">蔡欣怡</div><div style="color:var(--text-muted);font-size:12px;">xy.tsai@lws.com</div></div></div></td>
+                <td style="color:var(--text-secondary);font-size:13px;">EMP-0094</td>
+                <td style="font-size:13px;">人資專員</td>
+                <td><span class="badge neutral" style="font-size:11px;">L2 中階</span></td>
+                <td style="color:var(--text-secondary);font-size:13px;">2022-03-01</td>
+                <td style="color:var(--text-secondary);font-size:13px;">2022-03-01 10:00</td>
+                <td><span style="font-size:11px;color:#ef4444;background:#fef2f2;border:1px solid #fecaca;padding:3px 8px;border-radius:4px;white-space:nowrap;">Error400, Gateway Timeout</span></td>
+                <td><div style="display:flex;gap:8px;"><button class="btn ghost sm" style="font-size:12px;padding:4px 10px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> 編輯</button><button class="btn ghost sm" style="font-size:12px;padding:4px 10px;color:var(--danger,#ef4444);border-color:transparent;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg> 刪除</button></div></td>
+              </tr>
+              <tr>
+                <td class="row-checkbox"><input type="checkbox" onchange="msCheckboxChange('failed')"></td>
+                <td><div style="display:flex;align-items:center;gap:10px;"><div class="user-avatar c3" style="width:32px;height:32px;font-size:13px;">許</div><div><div style="font-weight:500;font-size:13px;">許雅婷</div><div style="color:var(--text-muted);font-size:12px;">yt.hsu@lws.com</div></div></div></td>
+                <td style="color:var(--text-secondary);font-size:13px;">EMP-0102</td>
+                <td style="font-size:13px;">QA 工程師</td>
+                <td><span class="badge neutral" style="font-size:11px;">L1 初階</span></td>
+                <td style="color:var(--text-secondary);font-size:13px;">2022-03-01</td>
+                <td style="color:var(--text-secondary);font-size:13px;">2022-03-01 10:00</td>
+                <td><span style="font-size:11px;color:#ef4444;background:#fef2f2;border:1px solid #fecaca;padding:3px 8px;border-radius:4px;white-space:nowrap;">Error400, Gateway Timeout</span></td>
+                <td><div style="display:flex;gap:8px;"><button class="btn ghost sm" style="font-size:12px;padding:4px 10px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> 編輯</button><button class="btn ghost sm" style="font-size:12px;padding:4px 10px;color:var(--danger,#ef4444);border-color:transparent;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg> 刪除</button></div></td>
+              </tr>
+              <tr>
+                <td class="row-checkbox"><input type="checkbox" onchange="msCheckboxChange('failed')"></td>
+                <td><div style="display:flex;align-items:center;gap:10px;"><div class="user-avatar c4" style="width:32px;height:32px;font-size:13px;">鄭</div><div><div style="font-weight:500;font-size:13px;">鄭子翔</div><div style="color:var(--text-muted);font-size:12px;">tx.cheng@lws.com</div></div></div></td>
+                <td style="color:var(--text-secondary);font-size:13px;">EMP-0118</td>
+                <td style="font-size:13px;">會計專員</td>
+                <td><span class="badge neutral" style="font-size:11px;">L2 中階</span></td>
+                <td style="color:var(--text-secondary);font-size:13px;">2022-03-01</td>
+                <td style="color:var(--text-secondary);font-size:13px;">2022-03-01 10:00</td>
+                <td><span style="font-size:11px;color:#ef4444;background:#fef2f2;border:1px solid #fecaca;padding:3px 8px;border-radius:4px;white-space:nowrap;">Error400, Gateway Timeout</span></td>
+                <td><div style="display:flex;gap:8px;"><button class="btn ghost sm" style="font-size:12px;padding:4px 10px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> 編輯</button><button class="btn ghost sm" style="font-size:12px;padding:4px 10px;color:var(--danger,#ef4444);border-color:transparent;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg> 刪除</button></div></td>
               </tr>
             </tbody>
           </table>
+          <div class="pagination">
+            <span>第 1–10 筆，共 30 筆</span>
+            <div class="page-nums">
+              <button class="page-num">‹</button>
+              <button class="page-num active">1</button>
+              <button class="page-num">2</button>
+              <button class="page-num">3</button>
+              <button class="page-num" style="pointer-events:none;border:none;background:none;">…</button>
+              <button class="page-num">13</button>
+              <button class="page-num">›</button>
+            </div>
+          </div>
         </div>
       </div>
 
