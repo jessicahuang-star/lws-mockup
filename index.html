@@ -2286,6 +2286,47 @@
   }
   /* ===== [修改結束] ===== */
 
+  /* ===== [Figma Sync] 新增成員 wizard + 編輯成員 page ===== */
+  .am-step-bar { display:flex; align-items:center; margin-bottom:20px; }
+  .am-step-item { display:flex; align-items:center; gap:8px; font-size:13px; font-weight:500; color:var(--text-muted); }
+  .am-step-item.active { color:var(--primary); font-weight:600; }
+  .am-step-item.done { color:var(--success); }
+  .am-step-num { width:24px; height:24px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; background:var(--border); color:var(--text-muted); flex-shrink:0; }
+  .am-step-item.active .am-step-num { background:var(--primary); color:#fff; }
+  .am-step-item.done .am-step-num { background:var(--success); color:#fff; }
+  .am-step-line { flex:1; height:1px; background:var(--border); margin:0 8px; }
+  .am-step-line.done { background:var(--success); }
+  .am-act-cards { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px; }
+  .am-act-card { border:2px solid var(--border); border-radius:var(--radius); padding:16px; cursor:pointer; transition:border-color .15s, background .15s; }
+  .am-act-card.selected { border-color:var(--primary); background:var(--primary-soft); }
+  .am-act-card .am-act-title { font-size:13px; font-weight:600; color:var(--text); margin-bottom:4px; }
+  .am-act-card.selected .am-act-title { color:var(--primary); }
+  .am-act-card .am-act-desc { font-size:12px; color:var(--text-secondary); line-height:1.5; }
+  .am-lang-panel { border:2px solid var(--primary); border-radius:var(--radius-sm); overflow:hidden; }
+  .am-lang-trigger { display:flex; align-items:center; justify-content:space-between; padding:7px 12px; cursor:pointer; font-size:13px; color:var(--text-muted); background:var(--surface); user-select:none; gap:6px; }
+  .am-lang-body { background:var(--surface); }
+  .am-lang-row { display:flex; align-items:center; gap:8px; padding:5px 10px; border-bottom:1px solid var(--border); }
+  .am-lang-row:last-child { border-bottom:none; }
+  .am-lang-flag { font-size:15px; flex-shrink:0; }
+  .am-lang-label { font-size:12px; color:var(--text-muted); width:26px; flex-shrink:0; }
+  .am-lang-row .input { flex:1; font-size:13px; padding:5px 8px; }
+  .am-summary-bar { background:var(--primary-soft); border:1px solid #c7d2fe; border-radius:var(--radius-sm); padding:10px 14px; font-size:13px; color:var(--text); margin-top:12px; }
+  .am-notif-preview-box { border:1px solid var(--border); border-radius:var(--radius-sm); overflow:hidden; margin-top:10px; }
+  .am-notif-member-row { display:flex; align-items:center; gap:10px; padding:10px 14px; border-bottom:1px solid var(--border); font-size:13px; }
+  .am-notif-member-row:last-child { border-bottom:none; }
+  .am-sched-panel { background:#faf5ff; border:1px solid #e9d5ff; border-radius:var(--radius-sm); padding:14px 16px; margin:12px 0; }
+  /* member detail page */
+  .mdetail-profile-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:20px 24px; box-shadow:var(--shadow-sm); margin-bottom:16px; display:flex; align-items:flex-start; gap:20px; }
+  .mdetail-avatar-wrap { position:relative; flex-shrink:0; }
+  .mdetail-avatar-cam { position:absolute; bottom:0; right:0; width:22px; height:22px; background:var(--surface); border:1px solid var(--border); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; }
+  .mdetail-info-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow-sm); overflow:hidden; }
+  .mdetail-info-card-head { padding:14px 18px; border-bottom:1px solid var(--border); font-size:13px; font-weight:700; color:var(--text); }
+  .mdetail-row { display:flex; align-items:flex-start; padding:10px 18px; border-bottom:1px solid var(--border); font-size:13px; gap:12px; }
+  .mdetail-row:last-child { border-bottom:none; }
+  .mdetail-row-label { width:130px; flex-shrink:0; color:var(--text-muted); }
+  .mdetail-row-val { flex:1; color:var(--text); }
+  /* ===== [Figma Sync 結束] ===== */
+
 </style>
 </head>
 <body>
@@ -2862,8 +2903,7 @@
       <div class="dept-stat-row" style="margin-bottom: 20px;">
         <div class="stat-card"><div class="stat-label">總成員數</div><div class="stat-value">30</div></div>
         <div class="stat-card"><div class="stat-label">裝置使用中</div><div class="stat-value" style="color: var(--success)">21</div></div>
-        <div class="stat-card"><div class="stat-label">離職程序中</div><div class="stat-value" style="color: var(--warning)">5</div></div>
-        <div class="stat-card"><div class="stat-label">新增成員排程</div><div class="stat-value">4</div></div>
+        <div class="stat-card" onclick="goPage('member-schedule')" style="cursor:pointer;transition:box-shadow .15s;"><div class="stat-label" style="display:flex;align-items:center;gap:5px;">成員建立排程 <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="var(--primary)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="stat-value" style="color:var(--primary)">10</div></div>
       </div>
 
       <div class="member-list-layout">
@@ -3145,151 +3185,295 @@
     </section>
 
     <!-- ============= 4.1.D 成員詳情頁面 ============= -->
-    <section id="page-member-detail" class="mdetail-panel hidden">
-
-      <!-- ── Custom Header ── -->
-      <div class="mdetail-header">
-        <button class="btn ghost sm" onclick="goPage('4.1')" style="gap:5px;flex-shrink:0;">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
-          返回列表
-        </button>
-        <div style="width:1px;height:28px;background:var(--border);flex-shrink:0;"></div>
-        <div class="user-avatar c1" style="width:44px;height:44px;font-size:16px;flex-shrink:0;">王</div>
-        <div style="flex:1;min-width:0;">
-          <div style="font-size:17px;font-weight:700;line-height:1.2;">王明德</div>
-          <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">EMP-0001 · ming.wang@lws.com · 研發部</div>
+    <!-- ===== [Figma Sync] page-member-detail 成員詳細頁 (434:36246) ===== -->
+    <section id="page-member-detail" class="page-wrap hidden">
+      <div class="page-head">
+        <div>
+          <h1 class="page-title">編輯成員</h1>
+          <p class="page-desc">成員詳細資訊，可由此查看或編輯相關信息</p>
         </div>
-        <span class="badge success dot" style="flex-shrink:0;">使用中</span>
+        <div class="btn-group">
+          <button class="btn ghost sm" onclick="goPage('4.1')" style="gap:5px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+            返回上一步
+          </button>
+          <button class="btn primary" onclick="openModal('modal-edit-member')" style="gap:6px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            編輯成員
+          </button>
+        </div>
       </div>
 
-      <!-- ── Scrollable Body ── -->
-      <div class="mdetail-body">
-
-        <!-- 2-col info grid -->
-        <div class="mdetail-info-grid">
-
-          <!-- ① 基本資料 -->
-          <!-- ===== [修改開始] 基本資料 inline edit ===== -->
-          <div class="mdetail-section" id="msec-basic">
-            <div class="mdetail-section-head">
-              <div class="mdetail-section-title">基本資料</div>
-              <div style="display:flex;gap:6px;">
-                <button class="btn ghost sm" id="msec-basic-cancel" style="display:none;" onclick="cancelMsecEdit('msec-basic')">取消</button>
-                <button class="btn ghost sm" id="msec-basic-btn" onclick="toggleMsecEdit('msec-basic')">編輯</button>
-              </div>
-            </div>
-            <div class="mdetail-fields">
-              <div class="mdetail-field"><div class="mdetail-field-label">中文姓名</div><div class="mdetail-field-val" data-etype="text">王明德</div></div>
-              <div class="mdetail-field"><div class="mdetail-field-label">英文姓名</div><div class="mdetail-field-val" data-etype="text">Ming Wang</div></div>
-              <div class="mdetail-field"><div class="mdetail-field-label">LWS 帳號</div><div class="mdetail-field-val" data-etype="email">ming.wang@lws.com</div></div>
-              <div class="mdetail-field"><div class="mdetail-field-label">公司信箱</div><div class="mdetail-field-val" data-etype="email">ming.wang@lws.com</div></div>
-              <div class="mdetail-field"><div class="mdetail-field-label">手機號碼</div><div class="mdetail-field-val" data-etype="text">+886 912 345 678</div></div>
-              <div class="mdetail-field"><div class="mdetail-field-label">分機</div><div class="mdetail-field-val" data-etype="text">#2001</div></div>
-            </div>
+      <!-- 成員 Profile Card -->
+      <div class="mdetail-profile-card">
+        <div class="mdetail-avatar-wrap">
+          <div class="user-avatar c1" style="width:72px;height:72px;font-size:26px;">王</div>
+          <div class="mdetail-avatar-cam">📷</div>
+        </div>
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:20px;font-weight:700;line-height:1.2;margin-bottom:4px;">王 明德 <span style="color:var(--text-secondary);font-weight:400;">(Ming)</span></div>
+          <div style="font-size:13px;color:var(--text-muted);margin-bottom:10px;">產品研發中心 / 研發部 · 研發主管 · M1 主任/經理</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <span class="badge success" style="display:inline-flex;align-items:center;gap:5px;"><span style="width:7px;height:7px;border-radius:50%;background:var(--success);display:inline-block;"></span>裝置使用中</span>
+            <span class="badge success" style="display:inline-flex;align-items:center;gap:5px;"><span style="width:7px;height:7px;border-radius:50%;background:var(--success);display:inline-block;"></span>在職中</span>
           </div>
-          <!-- ===== [修改結束] ===== -->
+        </div>
+      </div>
 
-          <!-- ② 職務資訊 -->
-          <!-- ===== [修改開始] 職務資訊 inline edit ===== -->
-          <div class="mdetail-section" id="msec-job">
-            <div class="mdetail-section-head">
-              <div class="mdetail-section-title">職務資訊</div>
-              <div style="display:flex;gap:6px;">
-                <button class="btn ghost sm" id="msec-job-cancel" style="display:none;" onclick="cancelMsecEdit('msec-job')">取消</button>
-                <button class="btn ghost sm" id="msec-job-btn" onclick="toggleMsecEdit('msec-job')">編輯</button>
-              </div>
-            </div>
-            <div class="mdetail-fields">
-              <div class="mdetail-field"><div class="mdetail-field-label">部門</div><div class="mdetail-field-val" data-etype="text">產品研發中心 / 研發部</div></div>
-              <div class="mdetail-field"><div class="mdetail-field-label">職位</div><div class="mdetail-field-val" data-etype="text">研發主管</div></div>
-              <div class="mdetail-field"><div class="mdetail-field-label">職等</div><div class="mdetail-field-val" data-etype="text">M1 主任 / 經理</div></div>
-              <div class="mdetail-field"><div class="mdetail-field-label">直屬主管</div><div class="mdetail-field-val" data-etype="text" data-display="林家豪"><div style="display:inline-flex;align-items:center;gap:6px;"><div class="user-avatar c2" style="width:20px;height:20px;font-size:9px;">林</div>林家豪</div></div></div>
-              <div class="mdetail-field"><div class="mdetail-field-label">員工編號</div><div class="mdetail-field-val" data-etype="text">EMP-0001</div></div>
-              <div class="mdetail-field"><div class="mdetail-field-label">到職日</div><div class="mdetail-field-val" data-etype="date">2022-03-01</div></div>
-              <div class="mdetail-field"><div class="mdetail-field-label">雇用類別</div><div class="mdetail-field-val" data-etype="select" data-options="正職,兼職,約聘,外包" data-display="正職"><span class="badge info">正職</span></div></div>
-            </div>
-          </div>
-          <!-- ===== [修改結束] ===== -->
+      <!-- 兩欄資訊卡片 -->
+      <div class="mdetail-info-grid">
 
-          <!-- ③ 自訂屬性 -->
-          <!-- ===== [修改開始] 自訂屬性 inline edit ===== -->
-          <div class="mdetail-section" id="msec-custom" style="grid-column:1/-1;">
-            <div class="mdetail-section-head">
-              <div class="mdetail-section-title">自訂屬性</div>
-              <div style="display:flex;gap:6px;">
-                <button class="btn ghost sm" id="msec-custom-cancel" style="display:none;" onclick="cancelMsecEdit('msec-custom')">取消</button>
-                <button class="btn ghost sm" id="msec-custom-btn" onclick="toggleMsecEdit('msec-custom')">編輯</button>
-              </div>
-            </div>
-            <div class="mdetail-fields" style="grid-template-columns:repeat(4,1fr);">
-              <div class="mdetail-field"><div class="mdetail-field-label">辦公地點</div><div class="mdetail-field-val" data-etype="text">台北總部</div></div>
-              <div class="mdetail-field"><div class="mdetail-field-label">LinkedIn</div><div class="mdetail-field-val" data-etype="url" style="color:var(--primary);">linkedin.com/in/mingwang</div></div>
-              <div class="mdetail-field" style="grid-column:span 2;"><div class="mdetail-field-label">技能標籤</div><div class="mdetail-field-val" data-etype="tags" data-display="React,Node.js,Python,系統架構" style="display:flex;gap:5px;flex-wrap:wrap;margin-top:2px;"><span class="badge neutral">React</span><span class="badge neutral">Node.js</span><span class="badge neutral">Python</span><span class="badge neutral">系統架構</span></div></div>
-            </div>
-          </div>
-          <!-- ===== [修改結束] ===== -->
+        <!-- 基本資料 -->
+        <div class="mdetail-info-card">
+          <div class="mdetail-info-card-head">基本資料</div>
+          <div class="mdetail-row"><div class="mdetail-row-label">姓氏/名字</div><div class="mdetail-row-val">王 / 明德</div></div>
+          <div class="mdetail-row"><div class="mdetail-row-label">暱稱</div><div class="mdetail-row-val">Ming</div></div>
+          <div class="mdetail-row"><div class="mdetail-row-label">多國語言顯示</div><div class="mdetail-row-val" style="color:var(--text-secondary);">Ming Wang / おう めいとく / 왕명덕</div></div>
+          <div class="mdetail-row"><div class="mdetail-row-label">LWS ID</div><div class="mdetail-row-val">ming.wang@lws.com <button class="btn ghost sm" style="padding:2px 8px;font-size:12px;margin-left:4px;">變更</button></div></div>
+          <div class="mdetail-row"><div class="mdetail-row-label">手機號碼</div><div class="mdetail-row-val">+886 912 345 678</div></div>
+          <div class="mdetail-row"><div class="mdetail-row-label">聯絡電話</div><div class="mdetail-row-val">02-2752-9910</div></div>
+          <div class="mdetail-row"><div class="mdetail-row-label">個人電子郵件地址</div><div class="mdetail-row-val">ming.wang@gmail.com</div></div>
+          <div class="mdetail-row"><div class="mdetail-row-label">備用電子郵件地址</div><div class="mdetail-row-val">ming.wang@lws.com</div></div>
+        </div>
 
-        </div><!-- /info-grid -->
+        <!-- 職務資料 -->
+        <div class="mdetail-info-card">
+          <div class="mdetail-info-card-head">職務資料</div>
+          <div class="mdetail-row"><div class="mdetail-row-label">公司</div><div class="mdetail-row-val">酷必資訊公司</div></div>
+          <div class="mdetail-row"><div class="mdetail-row-label">部門</div><div class="mdetail-row-val">產品研發中心 / 研發部</div></div>
+          <div class="mdetail-row"><div class="mdetail-row-label">職位</div><div class="mdetail-row-val">研發主管</div></div>
+          <div class="mdetail-row"><div class="mdetail-row-label">職等</div><div class="mdetail-row-val">M1 主任 / 經理</div></div>
+          <div class="mdetail-row"><div class="mdetail-row-label">直屬主管</div><div class="mdetail-row-val"><div style="display:inline-flex;align-items:center;gap:6px;"><div class="user-avatar c2" style="width:22px;height:22px;font-size:10px;">林</div>林家豪</div></div></div>
+          <div class="mdetail-row"><div class="mdetail-row-label">員工編號</div><div class="mdetail-row-val">EMP-0001</div></div>
+          <div class="mdetail-row"><div class="mdetail-row-label">到職日</div><div class="mdetail-row-val">2022-03-01</div></div>
+          <div class="mdetail-row"><div class="mdetail-row-label">雇用類別</div><div class="mdetail-row-val"><span class="badge info">正職</span></div></div>
+        </div>
 
-        <!-- ④ 職位狀態 -->
-        <div class="mdetail-section" style="margin-top:16px;">
-          <div class="mdetail-section-head"><div class="mdetail-section-title">職位狀態</div></div>
-          <div class="admin-option-box">
-            <div class="admin-opt-item">
-              <label class="admin-radio-lbl active" id="emp-lbl-active" onclick="selectEmpStatus('active')">
-                <input type="radio" name="emp-status" value="active" checked style="accent-color:var(--primary);" />在職中
-              </label>
-              <div class="admin-opt-sub" id="emp-sub-active"><div style="font-size:12px;color:var(--text-secondary);">・目前正常在職狀態，帳戶完整啟用。</div></div>
+        <!-- 自訂屬性（全寬） -->
+        <div class="mdetail-info-card" style="grid-column:1/-1;">
+          <div class="mdetail-info-card-head">自訂屬性</div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);">
+            <div class="mdetail-row" style="grid-column:auto;flex-direction:column;gap:4px;border-right:1px solid var(--border);border-bottom:none;">
+              <div style="font-size:11px;color:var(--text-muted);font-weight:600;">辦公地點</div>
+              <div style="font-size:13px;">ming.wang@lws.com</div>
             </div>
-            <div class="admin-opt-item">
-              <label class="admin-radio-lbl" id="emp-lbl-leave" onclick="selectEmpStatus('leave')">
-                <input type="radio" name="emp-status" value="leave" style="accent-color:var(--primary);" />留職停薪
-              </label>
-              <div class="admin-opt-sub" id="emp-sub-leave" style="display:none;">
-                <div style="font-size:12px;color:var(--text-secondary);margin-bottom:8px;">・成員帳戶將暫停，停薪期間無法登入服務。</div>
-                <div style="display:flex;gap:10px;">
-                  <div style="flex:1;"><div style="font-size:11px;font-weight:600;color:var(--text-secondary);margin-bottom:4px;">開始日期</div><input class="input full" type="date" /></div>
-                  <div style="flex:1;"><div style="font-size:11px;font-weight:600;color:var(--text-secondary);margin-bottom:4px;">預計復職日</div><input class="input full" type="date" /></div>
-                </div>
-              </div>
+            <div class="mdetail-row" style="grid-column:auto;flex-direction:column;gap:4px;border-right:1px solid var(--border);border-bottom:none;">
+              <div style="font-size:11px;color:var(--text-muted);font-weight:600;">社群媒體</div>
+              <div style="font-size:13px;">LINE / Ming1191</div>
             </div>
-            <div class="admin-opt-item">
-              <label class="admin-radio-lbl" id="emp-lbl-resigned" onclick="selectEmpStatus('resigned')">
-                <input type="radio" name="emp-status" value="resigned" style="accent-color:var(--primary);" />離職
-              </label>
-              <div class="admin-opt-sub" id="emp-sub-resigned" style="display:none;">
-                <div style="font-size:12px;color:var(--text-secondary);margin-bottom:8px;">・帳戶將於離職日後停用。</div>
-                <div><div style="font-size:11px;font-weight:600;color:var(--text-secondary);margin-bottom:4px;">離職日期</div><input class="input" type="date" style="width:180px;" /></div>
-              </div>
+            <div class="mdetail-row" style="grid-column:auto;flex-direction:column;gap:4px;border-right:1px solid var(--border);border-bottom:none;">
+              <div style="font-size:11px;color:var(--text-muted);font-weight:600;">負責業務</div>
+              <div style="font-size:13px;">後端</div>
+            </div>
+            <div class="mdetail-row" style="grid-column:auto;flex-direction:column;gap:4px;border-bottom:none;">
+              <div style="font-size:11px;color:var(--text-muted);font-weight:600;">技能標籤</div>
+              <div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:2px;"><span class="badge neutral">React</span><span class="badge neutral">Node.js</span><span class="badge neutral">Python</span><span class="badge neutral">系統架構</span></div>
             </div>
           </div>
         </div>
 
-      </div><!-- /mdetail-body -->
+      </div><!-- /info-grid -->
 
-      <!-- ── Sticky Bottom Bar ── -->
-      <div class="mdetail-footer">
-        <button class="btn danger" onclick="openModal('modal-member-resign')">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-          離職申請
-        </button>
-        <div style="flex:1;"></div>
-        <button class="btn" onclick="openModal('modal-member-suspend')">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
-          暫停成員
-        </button>
-        <button class="btn danger" onclick="resetAndOpenDeleteModal('modal-member-delete')">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M9 6V4h6v2"/></svg>
-          刪除成員
-        </button>
-        <button class="btn primary">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-          儲存變更
-        </button>
+    </section>
+    <!-- ===== [Figma Sync 結束] ===== -->
+
+    <!-- ===== [Figma Sync] page-member-schedule 成員建立排程 (434:36596) ===== -->
+    <section id="page-member-schedule" class="page-wrap hidden">
+      <div class="page-head">
+        <div>
+          <h1 class="page-title">成員建立排程</h1>
+          <p class="page-desc">此為新增成員後已設定進行開通的推播通知</p>
+        </div>
+        <div>
+          <button class="btn ghost sm" onclick="goPage('4.1')" style="display:inline-flex;align-items:center;gap:5px;">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            返回上一步
+          </button>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div style="display:flex;gap:0;border-bottom:2px solid var(--border);margin-bottom:16px;">
+        <button id="ms-tab-scheduled" onclick="msSetTab('scheduled')" style="padding:10px 20px;background:none;border:none;font-size:14px;font-weight:600;cursor:pointer;color:var(--primary);border-bottom:2px solid var(--primary);margin-bottom:-2px;font-family:inherit;">已排程</button>
+        <button id="ms-tab-failed" onclick="msSetTab('failed')" style="padding:10px 20px;background:none;border:none;font-size:14px;font-weight:500;cursor:pointer;color:var(--text-muted);border-bottom:2px solid transparent;margin-bottom:-2px;font-family:inherit;">排程失敗</button>
+      </div>
+
+      <!-- 已排程 Tab Content -->
+      <div id="ms-content-scheduled">
+        <div class="card" style="overflow:hidden;padding:0;">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th class="row-checkbox"><input type="checkbox" id="ms-select-all-scheduled" onchange="msSelectAll('scheduled', this)"></th>
+                <th>成員</th>
+                <th>員工編號</th>
+                <th>職位</th>
+                <th>職等</th>
+                <th>生效時間</th>
+                <th>到職日</th>
+                <th style="width:100px;">操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- [Figma 488:2328] bulk selection action bar — hidden until rows are checked -->
+              <tr id="ms-bulk-bar-scheduled" style="display:none;background:var(--primary-soft,#eff6ff);">
+                <td colspan="8" style="padding:10px 16px;border-bottom:1px solid var(--border);">
+                  <div style="display:flex;align-items:center;justify-content:space-between;">
+                    <div style="display:flex;align-items:center;gap:10px;">
+                      <span id="ms-selected-count-scheduled" style="font-size:13px;font-weight:600;color:var(--primary);">已選 0 筆</span>
+                      <button class="btn ghost sm" style="font-size:12px;display:inline-flex;align-items:center;gap:5px;">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                        更改部門
+                      </button>
+                    </div>
+                    <button class="btn ghost sm" onclick="msClearSelection('scheduled')" style="font-size:12px;">取消選擇</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td class="row-checkbox"><input type="checkbox" onchange="msCheckboxChange('scheduled')"></td>
+                <td><div style="display:flex;align-items:center;gap:10px;"><div class="user-avatar c1" style="width:32px;height:32px;font-size:13px;">王</div><div><div style="font-weight:500;font-size:13px;">王明德</div><div style="color:var(--text-muted);font-size:12px;">ming.wang@lws.com</div></div></div></td>
+                <td style="color:var(--text-secondary);font-size:13px;">EMP-0001</td>
+                <td style="font-size:13px;">研發主管</td>
+                <td><span class="badge neutral" style="font-size:11px;">M1 主任</span></td>
+                <td style="color:var(--text-secondary);font-size:13px;">2022-03-01</td>
+                <td style="color:var(--text-secondary);font-size:13px;">2022-03-01</td>
+                <td><div style="display:flex;gap:8px;"><button class="btn ghost sm" style="font-size:12px;padding:4px 10px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> 編輯</button><button class="btn ghost sm" style="font-size:12px;padding:4px 10px;color:var(--danger,#ef4444);border-color:transparent;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg> 刪除</button></div></td>
+              </tr>
+              <tr>
+                <td class="row-checkbox"><input type="checkbox" onchange="msCheckboxChange('scheduled')"></td>
+                <td><div style="display:flex;align-items:center;gap:10px;"><div class="user-avatar c2" style="width:32px;height:32px;font-size:13px;">陳</div><div><div style="font-weight:500;font-size:13px;">陳怡君</div><div style="color:var(--text-muted);font-size:12px;">yj.cheng@lws.com</div></div></div></td>
+                <td style="color:var(--text-secondary);font-size:13px;">EMP-0023</td>
+                <td style="font-size:13px;">數據工程師</td>
+                <td><span class="badge info" style="font-size:11px;">L3 資深</span></td>
+                <td style="color:var(--text-secondary);font-size:13px;">2022-03-01</td>
+                <td style="color:var(--text-secondary);font-size:13px;">2022-03-01</td>
+                <td><div style="display:flex;gap:8px;"><button class="btn ghost sm" style="font-size:12px;padding:4px 10px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> 編輯</button><button class="btn ghost sm" style="font-size:12px;padding:4px 10px;color:var(--danger,#ef4444);border-color:transparent;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg> 刪除</button></div></td>
+              </tr>
+              <tr>
+                <td class="row-checkbox"><input type="checkbox" onchange="msCheckboxChange('scheduled')"></td>
+                <td><div style="display:flex;align-items:center;gap:10px;"><div class="user-avatar c3" style="width:32px;height:32px;font-size:13px;">李</div><div><div style="font-weight:500;font-size:13px;">李宜倫</div><div style="color:var(--text-muted);font-size:12px;">jy.lee@lws.com</div></div></div></td>
+                <td style="color:var(--text-secondary);font-size:13px;">EMP-0034</td>
+                <td style="font-size:13px;">軟體工程師</td>
+                <td><span class="badge neutral" style="font-size:11px;">M1 主任</span></td>
+                <td style="color:var(--text-secondary);font-size:13px;">2022-03-01</td>
+                <td style="color:var(--text-secondary);font-size:13px;">2022-03-01</td>
+                <td><div style="display:flex;gap:8px;"><button class="btn ghost sm" style="font-size:12px;padding:4px 10px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> 編輯</button><button class="btn ghost sm" style="font-size:12px;padding:4px 10px;color:var(--danger,#ef4444);border-color:transparent;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg> 刪除</button></div></td>
+              </tr>
+              <tr>
+                <td class="row-checkbox"><input type="checkbox" onchange="msCheckboxChange('scheduled')"></td>
+                <td><div style="display:flex;align-items:center;gap:10px;"><div class="user-avatar c4" style="width:32px;height:32px;font-size:13px;">張</div><div><div style="font-weight:500;font-size:13px;">張玉翠</div><div style="color:var(--text-muted);font-size:12px;">yw.chang@lws.com</div></div></div></td>
+                <td style="color:var(--text-secondary);font-size:13px;">EMP-0048</td>
+                <td style="font-size:13px;">產品經理</td>
+                <td><span class="badge info" style="font-size:11px;">L3 資深</span></td>
+                <td style="color:var(--text-secondary);font-size:13px;">2022-03-01</td>
+                <td style="color:var(--text-secondary);font-size:13px;">2022-03-01</td>
+                <td><div style="display:flex;gap:8px;"><button class="btn ghost sm" style="font-size:12px;padding:4px 10px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> 編輯</button><button class="btn ghost sm" style="font-size:12px;padding:4px 10px;color:var(--danger,#ef4444);border-color:transparent;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg> 刪除</button></div></td>
+              </tr>
+              <tr>
+                <td class="row-checkbox"><input type="checkbox" onchange="msCheckboxChange('scheduled')"></td>
+                <td><div style="display:flex;align-items:center;gap:10px;"><div class="user-avatar c5" style="width:32px;height:32px;font-size:13px;">林</div><div><div style="font-weight:500;font-size:13px;">林家豪</div><div style="color:var(--text-muted);font-size:12px;">jh.lin@lws.com</div></div></div></td>
+                <td style="color:var(--text-secondary);font-size:13px;">EMP-0067</td>
+                <td style="font-size:13px;">UI/UX 設計師</td>
+                <td><span class="badge neutral" style="font-size:11px;">L2 中階</span></td>
+                <td style="color:var(--text-secondary);font-size:13px;">2022-03-01</td>
+                <td style="color:var(--text-secondary);font-size:13px;">2022-03-01</td>
+                <td><div style="display:flex;gap:8px;"><button class="btn ghost sm" style="font-size:12px;padding:4px 10px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> 編輯</button><button class="btn ghost sm" style="font-size:12px;padding:4px 10px;color:var(--danger,#ef4444);border-color:transparent;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg> 刪除</button></div></td>
+              </tr>
+              <tr>
+                <td class="row-checkbox"><input type="checkbox" onchange="msCheckboxChange('scheduled')"></td>
+                <td><div style="display:flex;align-items:center;gap:10px;"><div class="user-avatar c6" style="width:32px;height:32px;font-size:13px;">黃</div><div><div style="font-weight:500;font-size:13px;">黃詩涵</div><div style="color:var(--text-muted);font-size:12px;">sh.huang@lws.com</div></div></div></td>
+                <td style="color:var(--text-secondary);font-size:13px;">EMP-0072</td>
+                <td style="font-size:13px;">業務代表</td>
+                <td><span class="badge neutral" style="font-size:11px;">L2 中階</span></td>
+                <td style="color:var(--text-secondary);font-size:13px;">2022-03-01</td>
+                <td style="color:var(--text-secondary);font-size:13px;">2022-03-01</td>
+                <td><div style="display:flex;gap:8px;"><button class="btn ghost sm" style="font-size:12px;padding:4px 10px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> 編輯</button><button class="btn ghost sm" style="font-size:12px;padding:4px 10px;color:var(--danger,#ef4444);border-color:transparent;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg> 刪除</button></div></td>
+              </tr>
+              <tr>
+                <td class="row-checkbox"><input type="checkbox" onchange="msCheckboxChange('scheduled')"></td>
+                <td><div style="display:flex;align-items:center;gap:10px;"><div class="user-avatar c1" style="width:32px;height:32px;font-size:13px;">吳</div><div><div style="font-weight:500;font-size:13px;">吳承翰</div><div style="color:var(--text-muted);font-size:12px;">ch.wu@lws.com</div></div></div></td>
+                <td style="color:var(--text-secondary);font-size:13px;">EMP-0089</td>
+                <td style="font-size:13px;">行銷企劃</td>
+                <td><span class="badge neutral" style="font-size:11px;">L1 初階</span></td>
+                <td style="color:var(--text-secondary);font-size:13px;">2022-03-01</td>
+                <td style="color:var(--text-secondary);font-size:13px;">2022-03-01</td>
+                <td><div style="display:flex;gap:8px;"><button class="btn ghost sm" style="font-size:12px;padding:4px 10px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> 編輯</button><button class="btn ghost sm" style="font-size:12px;padding:4px 10px;color:var(--danger,#ef4444);border-color:transparent;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg> 刪除</button></div></td>
+              </tr>
+              <tr>
+                <td class="row-checkbox"><input type="checkbox" onchange="msCheckboxChange('scheduled')"></td>
+                <td><div style="display:flex;align-items:center;gap:10px;"><div class="user-avatar c2" style="width:32px;height:32px;font-size:13px;">蔡</div><div><div style="font-weight:500;font-size:13px;">蔡欣怡</div><div style="color:var(--text-muted);font-size:12px;">yh.tsai@lws.com</div></div></div></td>
+                <td style="color:var(--text-secondary);font-size:13px;">EMP-0094</td>
+                <td style="font-size:13px;">人資專員</td>
+                <td><span class="badge neutral" style="font-size:11px;">L2 中階</span></td>
+                <td style="color:var(--text-secondary);font-size:13px;">2022-03-01</td>
+                <td style="color:var(--text-secondary);font-size:13px;">2022-03-01</td>
+                <td><div style="display:flex;gap:8px;"><button class="btn ghost sm" style="font-size:12px;padding:4px 10px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> 編輯</button><button class="btn ghost sm" style="font-size:12px;padding:4px 10px;color:var(--danger,#ef4444);border-color:transparent;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg> 刪除</button></div></td>
+              </tr>
+              <tr>
+                <td class="row-checkbox"><input type="checkbox" onchange="msCheckboxChange('scheduled')"></td>
+                <td><div style="display:flex;align-items:center;gap:10px;"><div class="user-avatar c3" style="width:32px;height:32px;font-size:13px;">許</div><div><div style="font-weight:500;font-size:13px;">許雅婷</div><div style="color:var(--text-muted);font-size:12px;">yc.hsuj@lws.com</div></div></div></td>
+                <td style="color:var(--text-secondary);font-size:13px;">EMP-0102</td>
+                <td style="font-size:13px;">QA 工程師</td>
+                <td><span class="badge neutral" style="font-size:11px;">L1 初階</span></td>
+                <td style="color:var(--text-secondary);font-size:13px;">2022-03-01</td>
+                <td style="color:var(--text-secondary);font-size:13px;">2022-03-01</td>
+                <td><div style="display:flex;gap:8px;"><button class="btn ghost sm" style="font-size:12px;padding:4px 10px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> 編輯</button><button class="btn ghost sm" style="font-size:12px;padding:4px 10px;color:var(--danger,#ef4444);border-color:transparent;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg> 刪除</button></div></td>
+              </tr>
+              <tr>
+                <td class="row-checkbox"><input type="checkbox" onchange="msCheckboxChange('scheduled')"></td>
+                <td><div style="display:flex;align-items:center;gap:10px;"><div class="user-avatar c4" style="width:32px;height:32px;font-size:13px;">鄭</div><div><div style="font-weight:500;font-size:13px;">鄭子程</div><div style="color:var(--text-muted);font-size:12px;">yc.cheng@lws.com</div></div></div></td>
+                <td style="color:var(--text-secondary);font-size:13px;">EMP-0116</td>
+                <td style="font-size:13px;">會計專員</td>
+                <td><span class="badge neutral" style="font-size:11px;">L2 中階</span></td>
+                <td style="color:var(--text-secondary);font-size:13px;">2022-03-01</td>
+                <td style="color:var(--text-secondary);font-size:13px;">2022-03-01</td>
+                <td><div style="display:flex;gap:8px;"><button class="btn ghost sm" style="font-size:12px;padding:4px 10px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> 編輯</button><button class="btn ghost sm" style="font-size:12px;padding:4px 10px;color:var(--danger,#ef4444);border-color:transparent;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg> 刪除</button></div></td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="pagination">
+            <span>第 1–10 筆，共 30 筆</span>
+            <div class="page-nums">
+              <button class="page-num">‹</button>
+              <button class="page-num active">1</button>
+              <button class="page-num">2</button>
+              <button class="page-num">3</button>
+              <button class="page-num" style="pointer-events:none;border:none;background:none;">…</button>
+              <button class="page-num">13</button>
+              <button class="page-num">›</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 排程失敗 Tab Content -->
+      <div id="ms-content-failed" style="display:none;">
+        <div class="card" style="overflow:hidden;padding:0;">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th class="row-checkbox"><input type="checkbox"></th>
+                <th>成員</th>
+                <th>員工編號</th>
+                <th>職位</th>
+                <th>職等</th>
+                <th>生效時間</th>
+                <th>到職日</th>
+                <th style="width:100px;">操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td colspan="8" style="text-align:center;padding:40px 0;color:var(--text-muted);font-size:14px;">目前沒有排程失敗的成員</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
 
     </section>
-
+    <!-- ===== [Figma Sync 結束] ===== -->
 
     <!-- ============= 4.2 成員資料顯示 ============= -->
     <section id="page-4.2" class="page-wrap hidden">
@@ -4652,8 +4836,8 @@
         </div>
       </div>
 
-      <!-- 列表 + 動態預覽區 -->
-      <div id="menu-layout" style="display:grid; grid-template-columns:1fr; gap:16px; transition: grid-template-columns .25s;">
+      <!-- 列表 -->
+      <div id="menu-layout">
         <div class="card" id="menu-list-card">
           <table class="data-table" id="menu-table">
             <thead>
@@ -4661,115 +4845,80 @@
                 <th>選單名稱</th>
                 <th>指定 Bot</th>
                 <th>選單類型</th>
-                <th>版型</th>
-                <th>圖片</th>
+                <th style="width:180px;">圖片預覽</th>
                 <th>狀態</th>
                 <th>建立時間</th>
                 <th style="width:110px;"></th>
               </tr>
             </thead>
             <tbody>
-              <tr class="menu-row" onclick="showMenuPreview('主選單','Rich Menu')" style="cursor:pointer;">
+              <tr>
                 <td><strong>主選單</strong></td>
                 <td><div class="user-cell"><div class="bot-icon line" style="width:22px;height:22px;font-size:10px;border-radius:6px;">客</div>客服助手</div></td>
                 <td><span class="type-chip">Rich Menu</span></td>
-                <td><span class="type-chip">版型 7 (3×2)</span></td>
-                <td><span class="badge success dot" style="font-size:11px;">已上傳</span></td>
                 <td>
-                  <label class="switch" onclick="event.stopPropagation();">
-                    <input type="checkbox" checked />
-                    <span class="slider"></span>
-                  </label>
-                </td>
-                <td class="text-sec" style="font-size:13px;">2026-03-10</td>
-                <td>
-                  <div class="btn-group">
-                    <button class="btn ghost sm" onclick="event.stopPropagation(); openModal('modal-edit-menu')">編輯</button>
-                    <button class="btn ghost sm danger-ghost" onclick="event.stopPropagation(); openModal('modal-delete-confirm')">刪除</button>
+                  <div style="width:160px; aspect-ratio:5/2.5; background:#4f46e5; border-radius:6px; overflow:hidden; display:grid; grid-template-columns:1fr 1fr 1fr; grid-template-rows:1fr 1fr; gap:1px;">
+                    <div style="background:linear-gradient(135deg,#4f46e5,#6366f1);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:10px;color:white;">🏠<span style="font-size:8px;">首頁</span></div>
+                    <div style="background:linear-gradient(135deg,#6366f1,#818cf8);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:10px;color:white;">📦<span style="font-size:8px;">商品</span></div>
+                    <div style="background:linear-gradient(135deg,#818cf8,#a5b4fc);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:10px;color:white;">🛒<span style="font-size:8px;">購物車</span></div>
+                    <div style="background:linear-gradient(135deg,#7c3aed,#8b5cf6);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:10px;color:white;">📞<span style="font-size:8px;">客服</span></div>
+                    <div style="background:linear-gradient(135deg,#8b5cf6,#a78bfa);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:10px;color:white;">📰<span style="font-size:8px;">消息</span></div>
+                    <div style="background:linear-gradient(135deg,#db2777,#f472b6);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:10px;color:white;">👤<span style="font-size:8px;">會員</span></div>
                   </div>
                 </td>
+                <td><label class="switch"><input type="checkbox" checked /><span class="slider"></span></label></td>
+                <td class="text-sec" style="font-size:13px;">2026-03-10</td>
+                <td><div class="btn-group"><button class="btn ghost sm" onclick="openModal('modal-edit-menu')">編輯</button><button class="btn ghost sm danger-ghost" onclick="openModal('modal-delete-confirm')">刪除</button></div></td>
               </tr>
-              <tr class="menu-row" onclick="showMenuPreview('會員專區','Rich Menu')" style="cursor:pointer;">
+              <tr>
                 <td><strong>會員專區</strong></td>
                 <td><div class="user-cell"><div class="bot-icon line" style="width:22px;height:22px;font-size:10px;border-radius:6px;">客</div>客服助手</div></td>
                 <td><span class="type-chip">Rich Menu</span></td>
-                <td><span class="type-chip">版型 5 (2×2)</span></td>
-                <td><span class="badge success dot" style="font-size:11px;">已上傳</span></td>
                 <td>
-                  <label class="switch" onclick="event.stopPropagation();">
-                    <input type="checkbox" />
-                    <span class="slider"></span>
-                  </label>
-                </td>
-                <td class="text-sec" style="font-size:13px;">2026-03-12</td>
-                <td>
-                  <div class="btn-group">
-                    <button class="btn ghost sm" onclick="event.stopPropagation(); openModal('modal-edit-menu')">編輯</button>
-                    <button class="btn ghost sm danger-ghost" onclick="event.stopPropagation(); openModal('modal-delete-confirm')">刪除</button>
+                  <div style="width:160px; aspect-ratio:5/2.5; background:#7c3aed; border-radius:6px; overflow:hidden; display:grid; grid-template-columns:1fr 1fr; grid-template-rows:1fr 1fr; gap:1px;">
+                    <div style="background:linear-gradient(135deg,#6366f1,#8b5cf6);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:10px;color:white;">🎁<span style="font-size:8px;">優惠</span></div>
+                    <div style="background:linear-gradient(135deg,#8b5cf6,#a78bfa);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:10px;color:white;">💎<span style="font-size:8px;">會員</span></div>
+                    <div style="background:linear-gradient(135deg,#a78bfa,#c4b5fd);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:10px;color:white;">📋<span style="font-size:8px;">訂單</span></div>
+                    <div style="background:linear-gradient(135deg,#c4b5fd,#ddd6fe);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:10px;color:#4f46e5;">⚙️<span style="font-size:8px;">設定</span></div>
                   </div>
                 </td>
+                <td><label class="switch"><input type="checkbox" /><span class="slider"></span></label></td>
+                <td class="text-sec" style="font-size:13px;">2026-03-12</td>
+                <td><div class="btn-group"><button class="btn ghost sm" onclick="openModal('modal-edit-menu')">編輯</button><button class="btn ghost sm danger-ghost" onclick="openModal('modal-delete-confirm')">刪除</button></div></td>
               </tr>
-              <tr class="menu-row" onclick="showMenuPreview('快速回覆','快速選單')" style="cursor:pointer;">
+              <tr>
                 <td><strong>快速回覆</strong></td>
                 <td><div class="user-cell"><div class="bot-icon slack" style="width:22px;height:22px;font-size:10px;border-radius:6px;">公</div>內部公告 Bot</div></td>
                 <td><span class="type-chip">快速選單</span></td>
-                <td><span class="type-chip">4 按鈕</span></td>
-                <td><span class="badge neutral" style="font-size:11px;">無圖片</span></td>
                 <td>
-                  <label class="switch" onclick="event.stopPropagation();">
-                    <input type="checkbox" checked />
-                    <span class="slider"></span>
-                  </label>
-                </td>
-                <td class="text-sec" style="font-size:13px;">2026-03-18</td>
-                <td>
-                  <div class="btn-group">
-                    <button class="btn ghost sm" onclick="event.stopPropagation(); openModal('modal-edit-menu')">編輯</button>
-                    <button class="btn ghost sm danger-ghost" onclick="event.stopPropagation(); openModal('modal-delete-confirm')">刪除</button>
+                  <div style="width:160px; background:#f0f2f5; border-radius:6px; padding:6px; display:grid; grid-template-columns:1fr 1fr; gap:4px;">
+                    <div style="background:white;border-radius:4px;padding:5px 4px;text-align:center;font-size:9px;font-weight:600;color:#4f46e5;box-shadow:0 1px 2px rgba(0,0,0,0.1);">訂單查詢</div>
+                    <div style="background:white;border-radius:4px;padding:5px 4px;text-align:center;font-size:9px;font-weight:600;color:#4f46e5;box-shadow:0 1px 2px rgba(0,0,0,0.1);">退換貨</div>
+                    <div style="background:white;border-radius:4px;padding:5px 4px;text-align:center;font-size:9px;font-weight:600;color:#4f46e5;box-shadow:0 1px 2px rgba(0,0,0,0.1);">真人客服</div>
+                    <div style="background:white;border-radius:4px;padding:5px 4px;text-align:center;font-size:9px;font-weight:600;color:#4f46e5;box-shadow:0 1px 2px rgba(0,0,0,0.1);">常見問題</div>
                   </div>
                 </td>
+                <td><label class="switch"><input type="checkbox" checked /><span class="slider"></span></label></td>
+                <td class="text-sec" style="font-size:13px;">2026-03-18</td>
+                <td><div class="btn-group"><button class="btn ghost sm" onclick="openModal('modal-edit-menu')">編輯</button><button class="btn ghost sm danger-ghost" onclick="openModal('modal-delete-confirm')">刪除</button></div></td>
               </tr>
-              <tr class="menu-row" onclick="showMenuPreview('客服分流','快速選單')" style="cursor:pointer;">
+              <tr>
                 <td><strong>客服分流</strong></td>
                 <td><div class="user-cell"><div class="bot-icon line" style="width:22px;height:22px;font-size:10px;border-radius:6px;">客</div>客服助手</div></td>
                 <td><span class="type-chip">快速選單</span></td>
-                <td><span class="type-chip">3 按鈕</span></td>
-                <td><span class="badge neutral" style="font-size:11px;">無圖片</span></td>
                 <td>
-                  <label class="switch" onclick="event.stopPropagation();">
-                    <input type="checkbox" checked />
-                    <span class="slider"></span>
-                  </label>
-                </td>
-                <td class="text-sec" style="font-size:13px;">2026-03-25</td>
-                <td>
-                  <div class="btn-group">
-                    <button class="btn ghost sm" onclick="event.stopPropagation(); openModal('modal-edit-menu')">編輯</button>
-                    <button class="btn ghost sm danger-ghost" onclick="event.stopPropagation(); openModal('modal-delete-confirm')">刪除</button>
+                  <div style="width:160px; background:#f0f2f5; border-radius:6px; padding:6px; display:grid; grid-template-columns:1fr 1fr 1fr; gap:4px;">
+                    <div style="background:white;border-radius:4px;padding:5px 4px;text-align:center;font-size:9px;font-weight:600;color:#4f46e5;box-shadow:0 1px 2px rgba(0,0,0,0.1);">訂單</div>
+                    <div style="background:white;border-radius:4px;padding:5px 4px;text-align:center;font-size:9px;font-weight:600;color:#4f46e5;box-shadow:0 1px 2px rgba(0,0,0,0.1);">退貨</div>
+                    <div style="background:white;border-radius:4px;padding:5px 4px;text-align:center;font-size:9px;font-weight:600;color:#4f46e5;box-shadow:0 1px 2px rgba(0,0,0,0.1);">客服</div>
                   </div>
                 </td>
+                <td><label class="switch"><input type="checkbox" checked /><span class="slider"></span></label></td>
+                <td class="text-sec" style="font-size:13px;">2026-03-25</td>
+                <td><div class="btn-group"><button class="btn ghost sm" onclick="openModal('modal-edit-menu')">編輯</button><button class="btn ghost sm danger-ghost" onclick="openModal('modal-delete-confirm')">刪除</button></div></td>
               </tr>
             </tbody>
           </table>
-        </div>
-
-        <!-- 動態預覽面板（預設隱藏） -->
-        <div class="card hidden" id="menu-preview-card" style="min-width:0;">
-          <div class="card-head">
-            <div class="title" id="menu-preview-title">預覽</div>
-            <button class="btn ghost sm" onclick="hideMenuPreview()" style="font-size:18px; line-height:1; padding:0 6px;">×</button>
-          </div>
-          <div class="card-body" id="menu-preview-body">
-            <div class="richmenu-canvas">
-              <div class="rm-cell"><div class="rm-icon">🏠</div>首頁</div>
-              <div class="rm-cell"><div class="rm-icon">📦</div>商品</div>
-              <div class="rm-cell"><div class="rm-icon">🛒</div>購物車</div>
-              <div class="rm-cell"><div class="rm-icon">📞</div>聯絡客服</div>
-              <div class="rm-cell"><div class="rm-icon">📰</div>最新消息</div>
-              <div class="rm-cell"><div class="rm-icon">👤</div>會員中心</div>
-            </div>
-            <div class="text-sec" style="font-size:12px; margin-top:10px;">點擊任一格可編輯按鈕觸發動作。</div>
-          </div>
         </div>
 
       </div><!-- /menu-layout -->
@@ -4797,8 +4946,8 @@
         <table class="data-table">
           <thead>
             <tr>
-              <th>Bot 名稱</th>
               <th>關鍵字名稱</th>
+              <th>Bot 名稱</th>
               <th>觸發次數</th>
               <th>狀態</th>
               <th style="width:110px;"></th>
@@ -4806,36 +4955,36 @@
           </thead>
           <tbody>
             <tr>
-              <td><div class="user-cell"><div class="bot-icon line" style="width:22px;height:22px;font-size:10px;border-radius:6px;">客</div>客服助手</div></td>
               <td><strong>營業時間</strong><div class="text-sec" style="font-size:11px;">完全相符</div></td>
+              <td><div class="user-cell"><div class="bot-icon line" style="width:22px;height:22px;font-size:10px;border-radius:6px;">客</div>客服助手</div></td>
               <td>342</td>
               <td><label class="switch"><input type="checkbox" checked /><span class="slider"></span></label></td>
               <td><div class="btn-group"><button class="btn ghost sm" onclick="openModal('modal-edit-keyword')">編輯</button><button class="btn ghost sm danger-ghost" onclick="openModal('modal-keyword-delete-confirm')">刪除</button></div></td>
             </tr>
             <tr>
-              <td><div class="user-cell"><div class="bot-icon line" style="width:22px;height:22px;font-size:10px;border-radius:6px;">客</div>客服助手</div></td>
               <td><strong>運費 / 寄送</strong><div class="text-sec" style="font-size:11px;">包含</div></td>
+              <td><div class="user-cell"><div class="bot-icon line" style="width:22px;height:22px;font-size:10px;border-radius:6px;">客</div>客服助手</div></td>
               <td>198</td>
               <td><label class="switch"><input type="checkbox" checked /><span class="slider"></span></label></td>
               <td><div class="btn-group"><button class="btn ghost sm" onclick="openModal('modal-edit-keyword')">編輯</button><button class="btn ghost sm danger-ghost" onclick="openModal('modal-keyword-delete-confirm')">刪除</button></div></td>
             </tr>
             <tr>
-              <td><div class="user-cell"><div class="bot-icon line" style="width:22px;height:22px;font-size:10px;border-radius:6px;">客</div>客服助手</div></td>
               <td><strong>退貨</strong><div class="text-sec" style="font-size:11px;">包含</div></td>
+              <td><div class="user-cell"><div class="bot-icon line" style="width:22px;height:22px;font-size:10px;border-radius:6px;">客</div>客服助手</div></td>
               <td>87</td>
               <td><label class="switch"><input type="checkbox" checked /><span class="slider"></span></label></td>
               <td><div class="btn-group"><button class="btn ghost sm" onclick="openModal('modal-edit-keyword')">編輯</button><button class="btn ghost sm danger-ghost" onclick="openModal('modal-keyword-delete-confirm')">刪除</button></div></td>
             </tr>
             <tr>
-              <td><div class="user-cell"><div class="bot-icon line" style="width:22px;height:22px;font-size:10px;border-radius:6px;">客</div>客服助手</div></td>
               <td><strong>真人客服</strong><div class="text-sec" style="font-size:11px;">完全相符</div></td>
+              <td><div class="user-cell"><div class="bot-icon line" style="width:22px;height:22px;font-size:10px;border-radius:6px;">客</div>客服助手</div></td>
               <td>56</td>
               <td><label class="switch"><input type="checkbox" checked /><span class="slider"></span></label></td>
               <td><div class="btn-group"><button class="btn ghost sm" onclick="openModal('modal-edit-keyword')">編輯</button><button class="btn ghost sm danger-ghost" onclick="openModal('modal-keyword-delete-confirm')">刪除</button></div></td>
             </tr>
             <tr>
-              <td><div class="user-cell"><div class="bot-icon line" style="width:22px;height:22px;font-size:10px;border-radius:6px;">客</div>客服助手</div></td>
               <td><strong>促銷</strong><div class="text-sec" style="font-size:11px;">包含</div></td>
+              <td><div class="user-cell"><div class="bot-icon line" style="width:22px;height:22px;font-size:10px;border-radius:6px;">客</div>客服助手</div></td>
               <td>134</td>
               <td><label class="switch"><input type="checkbox" /><span class="slider"></span></label></td>
               <td><div class="btn-group"><button class="btn ghost sm" onclick="openModal('modal-edit-keyword')">編輯</button><button class="btn ghost sm danger-ghost" onclick="openModal('modal-keyword-delete-confirm')">刪除</button></div></td>
@@ -6297,308 +6446,533 @@
   })();
 </script>
 
-<!-- ============= Modal：新增成員 4.1 ============= -->
+<!-- ===== [Figma Sync] Modal：新增成員 2-step wizard (488:1302 / 500:4739 / 500:4838 / 500:7580) ===== -->
 <div class="modal-overlay" id="modal-add-member" onclick="closeModalIfBackdrop(event, 'modal-add-member')">
-  <div class="modal" style="width:600px;max-height:88vh;">
+  <div class="modal" style="width:660px;max-height:92vh;display:flex;flex-direction:column;">
     <div class="modal-head">
       <h3 class="modal-title">新增成員</h3>
-      <button class="icon-btn" onclick="closeModal('modal-add-member')">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-      </button>
+      <button class="icon-btn" onclick="closeModal('modal-add-member')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
     </div>
-    <div class="modal-body" style="overflow-y:auto;">
+    <div class="modal-body" style="overflow-y:auto;flex:1;">
 
-      <!-- 姓名 -->
-      <div class="form-row">
-        <label>姓名 <span class="req">*</span></label>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-          <input class="input full" placeholder="中文姓名" id="mem-name-zh" />
-          <input class="input full" placeholder="English Name (選填)" />
+      <!-- ===== STEP 1 ===== -->
+      <div id="am-step1">
+
+      <!-- 步驟指示器 -->
+      <div class="am-step-bar">
+        <div class="am-step-item active"><span class="am-step-num">1</span>基本設定</div>
+        <div class="am-step-line"></div>
+        <div class="am-step-item"><span class="am-step-num">2</span>設定開通時間</div>
+      </div>
+
+      <!-- 展開時顯示「基本資訊」section header -->
+      <div id="am-section-basic" style="display:none;font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:12px;">基本資訊</div>
+
+      <!-- 姓名（+ 頭像） -->
+      <div style="display:flex;align-items:flex-start;gap:14px;margin-bottom:14px;">
+        <div style="position:relative;flex-shrink:0;">
+          <div style="width:48px;height:48px;border-radius:50%;background:#e5e7eb;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:600;color:#9ca3af;">A</div>
+          <div style="position:absolute;bottom:0;right:0;width:18px;height:18px;background:var(--surface);border:1px solid var(--border);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;cursor:pointer;">📷</div>
+        </div>
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:5px;">姓名 <span class="req">*</span></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+            <input class="input full" placeholder="姓氏" id="mem-name-last" />
+            <input class="input full" placeholder="名字" id="mem-name-first" />
+          </div>
         </div>
       </div>
 
-      <div style="height:1px;background:var(--border);margin:4px 0 16px;"></div>
+      <!-- 展開欄位（多語系、詳細資料、職務資料） -->
+      <div id="am-extra-fields" style="display:none;">
 
-      <!-- 區塊：登入設定 -->
-      <div style="font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:12px;">登入設定</div>
+        <!-- 多語系 -->
+        <div class="form-row" style="margin-bottom:10px;">
+          <label>多語系</label>
+          <div class="am-lang-panel">
+            <div class="am-lang-trigger" onclick="amLangToggle('am-lang-body-add')">
+              <span style="display:flex;align-items:center;gap:6px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>多國語言名稱</span>
+              <svg id="am-lang-chev-add" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="transition:transform .2s;transform:rotate(90deg);"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+            <div class="am-lang-body" id="am-lang-body-add">
+              <div class="am-lang-row"><span class="am-lang-flag">🇹🇼</span><span class="am-lang-label">繁中</span><input class="input" placeholder="繁體中文名稱" /></div>
+              <div class="am-lang-row"><span class="am-lang-flag">🇨🇳</span><span class="am-lang-label">簡中</span><input class="input" placeholder="简体中文名称" /></div>
+              <div class="am-lang-row"><span class="am-lang-flag">🇺🇸</span><span class="am-lang-label">英文</span><input class="input" placeholder="English name" /></div>
+              <div class="am-lang-row"><span class="am-lang-flag">🇯🇵</span><span class="am-lang-label">日文</span><input class="input" placeholder="日本語名称" /></div>
+              <div class="am-lang-row"><span class="am-lang-flag">🇰🇷</span><span class="am-lang-label">韓文</span><input class="input" placeholder="한국어 이름" /></div>
+            </div>
+          </div>
+        </div>
 
-      <!-- LWS 帳號（登入 ID） -->
+        <!-- 使用語言 / 社群媒體 -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <div class="form-row"><label>使用語言</label><select class="input full"><option>繁體中文</option><option>简体中文</option><option>English</option><option>日本語</option><option>한국어</option></select></div>
+          <div class="form-row"><label>社群媒體</label><select class="input full"><option>無</option><option>LINE</option><option>WeChat</option></select></div>
+        </div>
+
+        <!-- 生日 -->
+        <div class="form-row">
+          <label style="display:flex;align-items:center;justify-content:space-between;">
+            <span>生日</span>
+            <span style="display:flex;gap:12px;font-weight:400;font-size:13px;">
+              <label style="display:flex;align-items:center;gap:5px;cursor:pointer;"><input type="radio" name="am-cal" value="solar" checked style="accent-color:var(--primary);" />陽曆</label>
+              <label style="display:flex;align-items:center;gap:5px;cursor:pointer;"><input type="radio" name="am-cal" value="lunar" style="accent-color:var(--primary);" />農曆</label>
+            </span>
+          </label>
+          <input class="input full" type="date" placeholder="年/月/日" />
+        </div>
+
+        <!-- 電話 / 手機 -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <div class="form-row"><label>電話</label><input class="input full" placeholder="(02)" /></div>
+          <div class="form-row"><label>手機</label><input class="input full" placeholder="0900-000-000" /></div>
+        </div>
+
+        <!-- 個人 / 備用 email -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <div class="form-row"><label>個人電子郵件地址</label><input class="input full" type="email" placeholder="個人電子郵件地址" /></div>
+          <div class="form-row"><label>備用電子郵件地址</label><input class="input full" type="email" placeholder="備用電子郵件地址" /></div>
+        </div>
+
+        <div style="height:1px;background:var(--border);margin:4px 0 14px;"></div>
+        <div style="font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:12px;">職務資料</div>
+
+        <!-- 部門 -->
+        <div class="form-row">
+          <label>部門 <span class="req">*</span></label>
+          <select class="input full">
+            <option value="">選擇部門</option>
+            <optgroup label="產品研發中心"><option>研發部</option><option>研發部 / 前端組</option><option>研發部 / 後端組</option><option>產品部</option></optgroup>
+            <optgroup label="其他部門"><option>業務部</option><option>設計部</option><option>行銷部</option><option>人資部</option><option>財會部</option></optgroup>
+          </select>
+        </div>
+
+        <!-- 職位 / 職等 -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <div class="form-row"><label>職位</label><select class="input full"><option value="">選擇職位</option><option>執行長</option><option>主管</option><option>研發主管</option><option>專員</option><option>工程師</option><option>設計師</option></select></div>
+          <div class="form-row"><label>職等</label><select class="input full"><option value="">選擇職等</option><option>D1 董事</option><option>M1 主任 / 經理</option><option>L3 資深</option><option>L2 中階</option><option>L1 初階</option></select></div>
+        </div>
+
+        <!-- 直屬主管 -->
+        <div class="form-row"><label>直屬主管</label><select class="input full"><option value="">選擇主管</option><option>王明德 · 研發主管</option><option>林家豪 · UI/UX 設計師</option><option>張雅雯 · 產品經理</option></select></div>
+
+        <!-- 員工編號 -->
+        <div class="form-row">
+          <label>員工編號</label>
+          <input class="input full" placeholder="例如：EMP-0128（選填，可自動生成）" />
+          <div class="help">留空將由系統自動分配編號。</div>
+        </div>
+
+        <!-- 到職日 / 雇用類別 -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <div class="form-row"><label>到職日</label><input class="input full" type="date" /></div>
+          <div class="form-row"><label>雇用類別</label><select class="input full"><option value="">選擇類別</option><option>正職</option><option>兼職</option><option>外包</option><option>實習生</option></select></div>
+        </div>
+
+        <div style="height:1px;background:var(--border);margin:4px 0 14px;"></div>
+
+      </div><!-- /am-extra-fields -->
+
+      <!-- 暱稱 / LWS ID -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
+        <div class="form-row" style="margin-bottom:0;"><label>暱稱</label><input class="input full" placeholder="暱稱" id="mem-nick" /></div>
+        <div class="form-row" style="margin-bottom:0;"><label>LWS ID</label><input class="input full" placeholder="ID" id="mem-lwsid" /></div>
+      </div>
+
+      <!-- 展開時顯示的額外資料（插在暱稱/LWS ID 之後） -->
+      <div id="am-extra-fields-2" style="display:none;">
+        <!-- 使用語言 / 社群媒體 -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <div class="form-row"><label>使用語言</label><select class="input full"><option>繁體中文</option><option>简体中文</option><option>English</option><option>日本語</option></select></div>
+          <div class="form-row"><label>社群媒體</label><select class="input full"><option>無</option><option>LINE</option><option>WeChat</option></select></div>
+        </div>
+        <!-- 生日 -->
+        <div class="form-row">
+          <label style="display:flex;align-items:center;justify-content:space-between;">
+            <span>生日</span>
+            <span style="display:flex;gap:12px;font-weight:400;font-size:13px;">
+              <label style="display:flex;align-items:center;gap:5px;cursor:pointer;"><input type="radio" name="am-cal" value="solar" checked style="accent-color:var(--primary);" />陽曆</label>
+              <label style="display:flex;align-items:center;gap:5px;cursor:pointer;"><input type="radio" name="am-cal" value="lunar" style="accent-color:var(--primary);" />農曆</label>
+            </span>
+          </label>
+          <input class="input full" type="date" placeholder="年/月/日" />
+        </div>
+        <!-- 電話 / 手機 -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <div class="form-row"><label>電話</label><input class="input full" placeholder="(02)" /></div>
+          <div class="form-row"><label>手機</label><input class="input full" placeholder="0900-000-000" /></div>
+        </div>
+        <!-- 個人 / 備用 email -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <div class="form-row"><label>個人電子郵件地址</label><input class="input full" type="email" placeholder="個人電子郵件地址" /></div>
+          <div class="form-row"><label>備用電子郵件地址</label><input class="input full" type="email" placeholder="備用電子郵件地址" /></div>
+        </div>
+
+        <div style="height:1px;background:var(--border);margin:4px 0 14px;"></div>
+        <div style="font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:12px;">職務資料</div>
+
+        <!-- 部門 -->
+        <div class="form-row">
+          <label>部門 <span class="req">*</span></label>
+          <select class="input full">
+            <option value="">選擇部門</option>
+            <optgroup label="產品研發中心"><option>研發部</option><option>研發部 / 前端組</option><option>研發部 / 後端組</option><option>產品部</option></optgroup>
+            <optgroup label="其他部門"><option>業務部</option><option>設計部</option><option>行銷部</option><option>人資部</option><option>財會部</option></optgroup>
+          </select>
+        </div>
+        <!-- 職位 / 職等 -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <div class="form-row"><label>職位</label><select class="input full"><option value="">選擇職位</option><option>執行長</option><option>主管</option><option>研發主管</option><option>專員</option><option>工程師</option><option>設計師</option></select></div>
+          <div class="form-row"><label>職等</label><select class="input full"><option value="">選擇職等</option><option>D1 董事</option><option>M1 主任 / 經理</option><option>L3 資深</option><option>L2 中階</option><option>L1 初階</option></select></div>
+        </div>
+        <!-- 直屬主管 -->
+        <div class="form-row"><label>直屬主管</label><select class="input full"><option value="">選擇主管</option><option>王明德 · 研發主管</option><option>林家豪 · UI/UX 設計師</option><option>張雅雯 · 產品經理</option></select></div>
+        <!-- 員工編號 -->
+        <div class="form-row">
+          <label>員工編號</label>
+          <input class="input full" placeholder="例如：EMP-0128（選填，可自動生成）" />
+          <div class="help">留空將由系統自動分配編號。</div>
+        </div>
+        <!-- 到職日 / 雇用類別 -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <div class="form-row"><label>到職日</label><input class="input full" type="date" /></div>
+          <div class="form-row"><label>雇用類別</label><select class="input full"><option value="">選擇類別</option><option>正職</option><option>兼職</option><option>外包</option><option>實習生</option></select></div>
+        </div>
+        <div style="height:1px;background:var(--border);margin:4px 0 14px;"></div>
+      </div><!-- /am-extra-fields-2 -->
+
+      <!-- 登入設定 section -->
+      <div style="height:1px;background:var(--border);margin:0 0 14px;"></div>
+      <div style="font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px;">登入設定</div>
+      <div style="font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:8px;">登入設定</div>
+
+      <!-- LWS 帳號 -->
       <div class="form-row">
         <label>LWS 帳號 <span class="req">*</span>
           <span style="font-size:11px;font-weight:400;color:var(--text-muted);margin-left:4px;">成員用於登入的唯一識別 ID</span>
         </label>
-        <div style="display:flex;align-items:center;gap:0;">
+        <div style="display:flex;align-items:center;">
           <input class="input" style="flex:1;border-radius:var(--radius-sm) 0 0 var(--radius-sm);border-right:none;" placeholder="帳號前綴（例如：ming.wang）" id="mem-account" />
           <span style="padding:7px 12px;background:var(--bg);border:1px solid var(--border-strong);border-left:none;border-radius:0 var(--radius-sm) var(--radius-sm) 0;font-size:13px;color:var(--text-secondary);white-space:nowrap;">@coolbe.work.com</span>
         </div>
         <div class="help">帳號建立後無法修改。僅可使用英文字母、數字、底線、連字號（例如 ming.wang、j_lee）。</div>
       </div>
 
-      <!-- 密碼 -->
-      <div class="admin-field-row">
-        <div class="admin-field-label">密碼</div>
-        <div class="admin-option-box">
+      <!-- 密碼 + 帳戶 兩欄並排 -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:8px;">
 
-          <!-- 1. 自動建立 -->
-          <div class="admin-opt-item">
-            <label class="admin-radio-lbl active" id="pw-lbl-auto" onclick="selectPw('auto')">
-              <input type="radio" name="pw-v2" value="auto" checked style="accent-color:var(--primary);" />
-              自動建立
-            </label>
-            <div class="admin-opt-sub" id="pw-sub-auto">
-              <label style="display:flex;align-items:center;gap:7px;cursor:pointer;font-size:13px;color:var(--text-secondary);">
-                <input type="checkbox" checked style="accent-color:var(--primary);width:14px;height:14px;" />
-                要求成員在登入時變更密碼。
+        <!-- 密碼欄 -->
+        <div>
+          <div style="font-size:12px;color:var(--text-muted);margin-bottom:6px;display:flex;align-items:center;gap:5px;"><span style="width:6px;height:6px;border-radius:50%;background:var(--text-muted);display:inline-block;"></span>密碼</div>
+          <div class="admin-option-box" style="font-size:13px;">
+            <div class="admin-opt-item">
+              <label class="admin-radio-lbl active" id="pw-lbl-auto" onclick="selectPw('auto')">
+                <input type="radio" name="pw-v2" value="auto" checked style="accent-color:var(--primary);" />自動建立
               </label>
-            </div>
-          </div>
-
-          <!-- 2. 由管理員登錄 -->
-          <div class="admin-opt-item">
-            <label class="admin-radio-lbl" id="pw-lbl-admin" onclick="selectPw('admin')">
-              <input type="radio" name="pw-v2" value="admin" style="accent-color:var(--primary);" />
-              由管理員登錄
-            </label>
-            <div class="admin-opt-sub" id="pw-sub-admin" style="display:none;">
-              <!-- ===== [修改] 移除確認密碼欄位 ===== -->
-              <div style="margin-bottom:8px;">
-                <div style="font-size:11px;font-weight:600;color:var(--text-secondary);margin-bottom:4px;">密碼 <span style="color:var(--danger);">*</span></div>
-                <input class="input" style="width:100%;max-width:320px;" type="password" placeholder="請輸入密碼" id="pw-manual-input" oninput="checkPwStrength(this.value)" />
+              <div class="admin-opt-sub" id="pw-sub-auto">
+                <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:12px;color:var(--text-secondary);">
+                  <input type="checkbox" checked style="accent-color:var(--primary);width:13px;height:13px;" />要求成員在登入時變更密碼。
+                </label>
               </div>
-              <!-- 強度列 -->
-              <div id="pw-strength-wrap" style="display:none;margin-bottom:6px;">
-                <div style="display:flex;gap:3px;margin-bottom:3px;">
-                  <div id="pw-str-1" style="height:3px;flex:1;border-radius:2px;background:var(--border);transition:background 0.2s;"></div>
-                  <div id="pw-str-2" style="height:3px;flex:1;border-radius:2px;background:var(--border);transition:background 0.2s;"></div>
-                  <div id="pw-str-3" style="height:3px;flex:1;border-radius:2px;background:var(--border);transition:background 0.2s;"></div>
-                  <div id="pw-str-4" style="height:3px;flex:1;border-radius:2px;background:var(--border);transition:background 0.2s;"></div>
+            </div>
+            <div class="admin-opt-item">
+              <label class="admin-radio-lbl" id="pw-lbl-admin" onclick="selectPw('admin')">
+                <input type="radio" name="pw-v2" value="admin" style="accent-color:var(--primary);" />由管理員登錄
+              </label>
+              <div class="admin-opt-sub" id="pw-sub-admin" style="display:none;">
+                <input class="input" style="width:100%;" type="password" placeholder="請輸入密碼" id="pw-manual-input" oninput="checkPwStrength(this.value)" />
+                <div id="pw-strength-wrap" style="display:none;margin-top:4px;">
+                  <div style="display:flex;gap:3px;"><div id="pw-str-1" style="height:3px;flex:1;border-radius:2px;background:var(--border);"></div><div id="pw-str-2" style="height:3px;flex:1;border-radius:2px;background:var(--border);"></div><div id="pw-str-3" style="height:3px;flex:1;border-radius:2px;background:var(--border);"></div><div id="pw-str-4" style="height:3px;flex:1;border-radius:2px;background:var(--border);"></div></div>
+                  <div id="pw-strength-label" style="font-size:11px;color:var(--text-muted);"></div>
                 </div>
-                <div id="pw-strength-label" style="font-size:11px;color:var(--text-muted);"></div>
               </div>
-              <!-- 規則 -->
-              <div style="font-size:11px;color:var(--text-muted);line-height:1.7;margin-bottom:8px;">
-                ・長度 8〜20 字元　・須含大寫 / 小寫 / 數字 / 符號其中 2 種以上
+            </div>
+            <div class="admin-opt-item">
+              <label class="admin-radio-lbl" id="pw-lbl-member" onclick="selectPw('member')">
+                <input type="radio" name="pw-v2" value="member" style="accent-color:var(--primary);" />由成員登錄
+              </label>
+              <div class="admin-opt-sub" id="pw-sub-member" style="display:none;">
+                <input class="input" type="email" style="width:100%;" placeholder="輸入電子郵件地址" />
               </div>
-              <label style="display:flex;align-items:center;gap:7px;cursor:pointer;font-size:13px;color:var(--text-secondary);">
-                <input type="checkbox" style="accent-color:var(--primary);width:14px;height:14px;" />
-                要求成員在登入時變更密碼。
+            </div>
+          </div>
+        </div>
+
+        <!-- 帳戶欄 -->
+        <div>
+          <div style="font-size:12px;color:var(--text-muted);margin-bottom:6px;display:flex;align-items:center;gap:5px;"><span style="width:6px;height:6px;border-radius:50%;background:var(--text-muted);display:inline-block;"></span>帳戶</div>
+          <div class="admin-option-box" style="font-size:13px;">
+            <div class="admin-opt-item">
+              <label class="admin-radio-lbl active" id="act-lbl-now" onclick="selectAct('now')">
+                <input type="radio" name="act-v2" value="now" checked style="accent-color:var(--primary);" />立即啟用
+              </label>
+              <div class="admin-opt-sub" id="act-sub-now">
+                <div style="font-size:12px;color:var(--text-secondary);">・成員可以立即使用 LINE WORKS。</div>
+              </div>
+            </div>
+            <div class="admin-opt-item">
+              <label class="admin-radio-lbl" id="act-lbl-schedule" onclick="selectAct('schedule')">
+                <input type="radio" name="act-v2" value="schedule" style="accent-color:var(--primary);" />啟用預約
+              </label>
+              <div class="admin-opt-sub" id="act-sub-schedule" style="display:none;">
+                <input class="input" type="datetime-local" id="act-dt" style="width:100%;" />
+              </div>
+            </div>
+            <div style="height:1px;background:var(--border);"></div>
+            <div class="admin-opt-item">
+              <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:12px;color:var(--text-secondary);">
+                <input type="checkbox" id="act-hire-sync" style="accent-color:var(--primary);width:13px;height:13px;" onchange="toggleHireDateSync2(this)" />
+                啟用日期亦會儲存為入職日資訊。
               </label>
             </div>
           </div>
+        </div>
 
-          <!-- 3. 由成員登錄 -->
-          <div class="admin-opt-item">
-            <label class="admin-radio-lbl" id="pw-lbl-member" onclick="selectPw('member')">
-              <input type="radio" name="pw-v2" value="member" style="accent-color:var(--primary);" />
-              由成員登錄
-            </label>
-            <div class="admin-opt-sub" id="pw-sub-member" style="display:none;">
-              <div style="font-size:13px;color:var(--text-secondary);margin-bottom:7px;">・向成員傳送邀請郵件，由成員自行設定初始密碼。邀請連結有效期限 7 天。</div>
-              <input class="input" type="email" style="width:100%;max-width:280px;" placeholder="輸入電子郵件地址" />
+      </div><!-- /密碼+帳戶 grid -->
+
+      <!-- 顯示所有選項 toggle（底部） -->
+      <div style="height:1px;background:var(--border);margin:12px 0 10px;"></div>
+      <div style="text-align:center;">
+        <button id="am-toggle-btn" onclick="amToggleAllFields()" style="background:none;border:none;color:var(--primary);font-size:13px;font-weight:500;cursor:pointer;display:inline-flex;align-items:center;gap:5px;">
+          顯示所有選項
+          <svg id="am-toggle-chev" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="transition:transform .2s;transform:rotate(180deg);"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+      </div>
+
+      </div><!-- /am-step1 -->
+
+      <!-- ===== STEP 2 ===== -->
+      <div id="am-step2" style="display:none;">
+
+      <!-- 步驟指示器 step2 -->
+      <div class="am-step-bar">
+        <div class="am-step-item done"><span class="am-step-num">✓</span>基本設定</div>
+        <div class="am-step-line done"></div>
+        <div class="am-step-item active"><span class="am-step-num">2</span>設定開通時間</div>
+      </div>
+
+      <div style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:6px;">設定此成員可使用的時間</div>
+      <div style="font-size:13px;color:var(--text-secondary);margin-bottom:18px;">可預先設定成員資訊，待實際報到日的時候更新</div>
+
+      <!-- 即時新增 / 排程新增 選項卡 -->
+      <div class="am-act-cards">
+        <div class="am-act-card selected" id="am-act-now" onclick="amSelectActivation('now')">
+          <div class="am-act-radio">
+            <input type="radio" name="am-act" value="now" checked style="accent-color:var(--primary);margin-top:2px;flex-shrink:0;" />
+            <div>
+              <div class="am-act-title">即時新增</div>
+              <div class="am-act-desc">儲存後，系統立即生效成員的帳號設定。</div>
             </div>
           </div>
-
+        </div>
+        <div class="am-act-card" id="am-act-sched" onclick="amSelectActivation('sched')">
+          <div class="am-act-radio">
+            <input type="radio" name="am-act" value="sched" style="accent-color:var(--primary);margin-top:2px;flex-shrink:0;" />
+            <div>
+              <div class="am-act-title">排程新增</div>
+              <div class="am-act-desc">指定日期時間後才生效，適合提前設定但不立即生效的成員。</div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <!-- 帳戶啟用 -->
-      <div class="admin-field-row" style="margin-bottom:0;">
-        <div class="admin-field-label">帳戶啟用</div>
-        <div class="admin-option-box">
-
-          <!-- 立即啟用 -->
-          <div class="admin-opt-item">
-            <label class="admin-radio-lbl active" id="act-lbl-now" onclick="selectAct('now')">
-              <input type="radio" name="act-v2" value="now" checked style="accent-color:var(--primary);" />
-              立即啟用
-            </label>
-            <div class="admin-opt-sub" id="act-sub-now">
-              <div style="font-size:13px;color:var(--text-secondary);">・成員可以立即使用 LINE WORKS。</div>
-            </div>
-          </div>
-
-          <!-- 啟用預約 -->
-          <div class="admin-opt-item">
-            <label class="admin-radio-lbl" id="act-lbl-schedule" onclick="selectAct('schedule')">
-              <input type="radio" name="act-v2" value="schedule" style="accent-color:var(--primary);" />
-              啟用預約
-            </label>
-            <div class="admin-opt-sub" id="act-sub-schedule" style="display:none;">
-              <input class="input" type="datetime-local" id="act-dt" style="width:220px;" oninput="syncHireDate2(this.value)" />
-            </div>
-          </div>
-
-          <!-- 底部分隔線 + 勾選項 -->
-          <div style="height:1px;background:var(--border);"></div>
-          <div class="admin-opt-item">
-            <label style="display:flex;align-items:center;gap:7px;cursor:pointer;font-size:13px;color:var(--text-secondary);">
-              <input type="checkbox" id="act-hire-sync" style="accent-color:var(--primary);width:14px;height:14px;" onchange="toggleHireDateSync2(this)" />
-              啟用日期亦會儲存為入職日資訊。
-            </label>
-          </div>
-
+      <!-- 排程時間（排程新增時顯示） -->
+      <div id="am-sched-panel" class="am-sched-panel" style="display:none;">
+        <div style="font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:10px;">排程時間</div>
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+          <input class="input" type="date" style="width:150px;font-size:13px;" />
+          <input class="input" type="time" style="width:110px;font-size:13px;" value="09:00" />
+          <span style="font-size:12px;color:var(--text-muted);">（以管理員所在時區為準）</span>
         </div>
       </div>
 
-      <div style="height:1px;background:var(--border);margin:16px 0;"></div>
+      <!-- 設定推播通知 -->
+      <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;margin-bottom:8px;">
+        <input type="checkbox" id="am-push-notif" onchange="amToggleNotifPreview(this)" style="accent-color:var(--primary);width:15px;height:15px;" />
+        <span style="font-weight:500;">設定推播通知</span>
+      </label>
 
-      <!-- 區塊：職務資訊 -->
-      <div style="font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:12px;">職務資訊</div>
+      <!-- 通知預覽（勾選後顯示） -->
+      <div id="am-notif-preview" style="display:none;">
+        <div style="font-size:12px;color:var(--text-secondary);margin-bottom:8px;">通知信將自動寄送至各成員的公司電子郵件地址。以下為本次匯入成員清單：</div>
+        <div class="am-notif-preview-box">
+          <div class="am-notif-member-row">
+            <div class="user-avatar c5" style="width:28px;height:28px;font-size:12px;flex-shrink:0;">林</div>
+            <div style="flex:1;">林雨晴</div>
+            <div style="font-size:12px;color:var(--text-muted);">yc.lin@company.com</div>
+            <span class="badge neutral" style="font-size:11px;flex-shrink:0;">待發送</span>
+          </div>
+          <div style="padding:8px 14px;font-size:12px;color:var(--text-secondary);display:flex;align-items:center;gap:6px;">
+            <input type="checkbox" checked style="accent-color:var(--primary);width:13px;height:13px;" />
+            1 位成員將收到通知
+          </div>
+        </div>
+
+        <!-- Summary bar -->
+        <div class="am-summary-bar">
+          即將新增：<strong>1 位成員</strong>　密碼方式：<strong style="color:var(--primary);">自動建立</strong>　通知：<strong style="color:var(--primary);">即時發送</strong>
+        </div>
+      </div>
+
+      </div><!-- /am-step2 -->
+
+    </div><!-- /modal-body -->
+
+    <!-- Step 1 footer -->
+    <div class="modal-foot" id="am-foot-step1">
+      <button class="btn" onclick="closeModal('modal-add-member')">取消</button>
+      <div style="flex:1;"></div>
+      <button class="btn primary" onclick="amGoStep2()">
+        下一步
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left:4px;"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+    </div>
+
+    <!-- Step 2 footer -->
+    <div class="modal-foot" id="am-foot-step2" style="display:none;">
+      <button class="btn ghost sm" onclick="amGoStep1()" style="gap:5px;">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+        上一步
+      </button>
+      <div style="flex:1;"></div>
+      <button class="btn" onclick="closeModal('modal-add-member')">取消</button>
+      <button class="btn primary" onclick="closeModal('modal-add-member')">送出</button>
+    </div>
+  </div>
+</div>
+<!-- ===== [Figma Sync 結束] modal-add-member ===== -->
+
+<!-- ===== [Figma Sync] Modal：編輯成員 (500:9366) ===== -->
+<div class="modal-overlay" id="modal-edit-member" onclick="closeModalIfBackdrop(event, 'modal-edit-member')">
+  <div class="modal" style="width:660px;max-height:92vh;display:flex;flex-direction:column;">
+    <div class="modal-head">
+      <h3 class="modal-title">編輯成員</h3>
+      <button class="icon-btn" onclick="closeModal('modal-edit-member')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+    </div>
+    <div class="modal-body" style="overflow-y:auto;flex:1;">
+
+      <!-- 基本資訊 section -->
+      <div style="font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:14px;">基本資訊</div>
+
+      <!-- 頭像 + 姓名 -->
+      <div style="display:flex;align-items:flex-start;gap:16px;margin-bottom:16px;">
+        <div style="position:relative;flex-shrink:0;">
+          <div class="user-avatar c1" style="width:56px;height:56px;font-size:20px;">王</div>
+          <div style="position:absolute;bottom:0;right:0;width:20px;height:20px;background:var(--surface);border:1px solid var(--border);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;cursor:pointer;">📷</div>
+        </div>
+        <div style="flex:1;min-width:0;">
+          <div class="form-row" style="margin-bottom:0;">
+            <label>姓名 <span class="req">*</span></label>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+              <input class="input full" placeholder="姓氏" value="王" />
+              <input class="input full" placeholder="名字" value="明德" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 多語系 -->
+      <div class="form-row">
+        <label>多語系</label>
+        <div class="am-lang-panel">
+          <div class="am-lang-trigger" onclick="amLangToggle('em-lang-body')">
+            <span style="display:flex;align-items:center;gap:6px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>多國語言名稱</span>
+            <svg id="em-lang-chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="transition:transform .2s;transform:rotate(180deg);"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="am-lang-body" id="em-lang-body">
+            <div class="am-lang-row"><span class="am-lang-flag">🇹🇼</span><span class="am-lang-label">繁中</span><input class="input" value="王明德" /></div>
+            <div class="am-lang-row"><span class="am-lang-flag">🇨🇳</span><span class="am-lang-label">簡中</span><input class="input" placeholder="简体中文名称" /></div>
+            <div class="am-lang-row"><span class="am-lang-flag">🇺🇸</span><span class="am-lang-label">英文</span><input class="input" placeholder="English name" /></div>
+            <div class="am-lang-row"><span class="am-lang-flag">🇯🇵</span><span class="am-lang-label">日文</span><input class="input" placeholder="日本語名称" /></div>
+            <div class="am-lang-row"><span class="am-lang-flag">🇰🇷</span><span class="am-lang-label">韓文</span><input class="input" placeholder="한국어 이름" /></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 暱稱 / LWS ID -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <div class="form-row"><label>暱稱</label><input class="input full" value="Ming" /></div>
+        <div class="form-row"><label>LWS ID</label><input class="input full" value="ming.wang@lws.com" /></div>
+      </div>
+
+      <!-- 使用語言 / 社群媒體 -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <div class="form-row"><label>使用語言</label><select class="input full"><option selected>繁體中文</option><option>简体中文</option><option>English</option><option>日本語</option></select></div>
+        <div class="form-row"><label>社群媒體</label><select class="input full"><option selected>無</option><option>LINE</option><option>WeChat</option></select></div>
+      </div>
+
+      <!-- 生日 -->
+      <div class="form-row">
+        <label style="display:flex;align-items:center;justify-content:space-between;">
+          <span>生日</span>
+          <span style="display:flex;gap:12px;font-weight:400;font-size:13px;">
+            <label style="display:flex;align-items:center;gap:5px;cursor:pointer;"><input type="radio" name="em-cal" value="solar" checked style="accent-color:var(--primary);" />陽曆</label>
+            <label style="display:flex;align-items:center;gap:5px;cursor:pointer;"><input type="radio" name="em-cal" value="lunar" style="accent-color:var(--primary);" />農曆</label>
+          </span>
+        </label>
+        <input class="input full" type="date" placeholder="年/月/日" />
+      </div>
+
+      <!-- 電話 / 手機 -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <div class="form-row"><label>電話</label><input class="input full" placeholder="(02)" /></div>
+        <div class="form-row"><label>手機</label><input class="input full" placeholder="0900-000-000" /></div>
+      </div>
+
+      <!-- 個人 / 備用 email -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <div class="form-row"><label>個人電子郵件地址</label><input class="input full" type="email" placeholder="個人電子郵件地址" /></div>
+        <div class="form-row"><label>備用電子郵件地址</label><input class="input full" type="email" placeholder="備用電子郵件地址" /></div>
+      </div>
+
+      <div style="height:1px;background:var(--border);margin:4px 0 16px;"></div>
+
+      <!-- 職務資料 section -->
+      <div style="font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:14px;">職務資料</div>
 
       <!-- 部門 -->
       <div class="form-row">
         <label>部門 <span class="req">*</span></label>
         <select class="input full">
-          <option value="">— 請選擇部門 —</option>
-          <optgroup label="產品研發中心">
-            <option>研發部</option>
-            <option>研發部 / 前端組</option>
-            <option>研發部 / 後端組</option>
-            <option>研發部 / 測試組</option>
-            <option>產品部</option>
-          </optgroup>
-          <optgroup label="其他部門">
-            <option>業務部</option>
-            <option>設計部</option>
-            <option>行銷部</option>
-            <option>人資部</option>
-            <option>財會部</option>
-          </optgroup>
+          <option selected>產品研發中心 / 研發部</option>
+          <optgroup label="產品研發中心"><option>研發部</option><option>研發部 / 前端組</option><option>產品部</option></optgroup>
+          <optgroup label="其他部門"><option>業務部</option><option>設計部</option><option>行銷部</option></optgroup>
         </select>
       </div>
 
-      <!-- 職位 & 職等 -->
-      <div class="form-row">
-        <label>職位 / 職等</label>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-          <select class="input full">
-            <option value="">— 職位 —</option>
-            <option>執行長</option>
-            <option>主管</option>
-            <option>部長</option>
-            <option>專員</option>
-            <option>工程師</option>
-            <option>設計師</option>
-            <option>業務代表</option>
-            <option>實習生</option>
-          </select>
-          <select class="input full">
-            <option value="">— 職等 —</option>
-            <option>D1 董事</option>
-            <option>M1 主任 / 經理</option>
-            <option>L3 資深</option>
-            <option>L2 中階</option>
-            <option>L1 初階</option>
-          </select>
-        </div>
+      <!-- 職位 / 職等 -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <div class="form-row"><label>職位</label><select class="input full"><option selected>研發主管</option><option>執行長</option><option>主管</option><option>專員</option><option>工程師</option></select></div>
+        <div class="form-row"><label>職等</label><select class="input full"><option>D1 董事</option><option selected>M1 主任 / 經理</option><option>L3 資深</option><option>L2 中階</option><option>L1 初階</option></select></div>
       </div>
 
-      <!-- 直屬主管 & 員工編號 -->
+      <!-- 直屬主管 -->
       <div class="form-row">
         <label>直屬主管</label>
-        <select class="input full">
-          <option value="">— 請選擇 —</option>
-          <option>王明德 · 研發主管</option>
-          <option>陳怡君 · 前端工程師</option>
-          <option>張雅雯 · 產品經理</option>
-        </select>
+        <select class="input full"><option selected>林家豪</option><option>王明德 · 研發主管</option><option>張雅雯 · 產品經理</option></select>
       </div>
 
+      <!-- 員工編號 -->
       <div class="form-row">
         <label>員工編號</label>
-        <input class="input full" placeholder="例如：EMP-0128（選填，可自動生成）" />
+        <input class="input full" value="EMP-0001" />
         <div class="help">留空將由系統自動分配編號。</div>
       </div>
 
-      <!-- 到職日 & 雇用類別 -->
+      <!-- 到職日 / 雇用類別 -->
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-        <div class="form-row">
-          <label>到職日 <span id="hire-date-auto-tag" style="display:none;font-size:11px;font-weight:400;color:var(--primary);margin-left:4px;">（由啟用日期自動填入）</span></label>
-          <input class="input full" type="date" id="hire-date-field" />
-        </div>
-        <div class="form-row">
-          <label>雇用類別</label>
-          <select class="input full">
-            <option>正職</option>
-            <option>兼職</option>
-            <option>外包</option>
-            <option>實習生</option>
-          </select>
-        </div>
+        <div class="form-row"><label>到職日</label><input class="input full" type="date" value="2022-03-01" /></div>
+        <div class="form-row"><label>雇用類別</label><select class="input full"><option selected>正職</option><option>兼職</option><option>外包</option><option>實習生</option></select></div>
       </div>
-
-
-      <!-- ===== [修改開始] 通知設定區塊 ===== -->
-      <div style="border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:4px;">
-        <!-- Header row -->
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--bg);border-bottom:1px solid var(--border);">
-          <div>
-            <div style="font-weight:600;font-size:13px;">通知設定</div>
-            <div style="font-size:12px;color:var(--text-muted);margin-top:1px;">新增成員後發送帳號通知信</div>
-          </div>
-          <label class="switch" style="flex-shrink:0;">
-            <input type="checkbox" id="am-notif-toggle" checked onchange="amToggleNotif(this)"/>
-            <span class="slider"></span>
-          </label>
-        </div>
-        <!-- Body: collapses when toggle is off -->
-        <div id="am-notif-body" style="padding:14px 16px;display:flex;flex-direction:column;gap:12px;">
-
-          <!-- 發送時機 -->
-          <div>
-            <div style="font-size:11px;font-weight:600;color:var(--text-secondary);margin-bottom:7px;">發送時機</div>
-            <div style="display:flex;flex-direction:column;gap:6px;">
-              <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;">
-                <input type="radio" name="am-notif-timing" value="immediate" checked style="accent-color:var(--primary);" onchange="amNotifTiming(this)"/>
-                <div>
-                  <span style="font-weight:500;">立即發送</span>
-                  <span style="font-size:12px;color:var(--text-muted);margin-left:6px;">成員建立後立即寄出通知信</span>
-                </div>
-              </label>
-              <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;">
-                <input type="radio" name="am-notif-timing" value="schedule" style="accent-color:var(--primary);" onchange="amNotifTiming(this)"/>
-                <span style="font-weight:500;">排程發送</span>
-              </label>
-              <!-- 排程日期時間 picker -->
-              <div id="am-notif-dt-wrap" style="display:none;padding-left:22px;">
-                <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-                  <input class="input" type="date" id="am-notif-date" style="width:148px;font-size:13px;" placeholder="yyyy/mm/dd"/>
-                  <input class="input" type="time" id="am-notif-time" style="width:106px;font-size:13px;" value="09:00"/>
-                  <span style="font-size:12px;color:var(--text-muted);">（以管理員所在時區為準）</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- 發送至 / 公司信箱 -->
-          <div>
-            <div style="font-size:11px;font-weight:600;color:var(--text-secondary);margin-bottom:7px;">發送至（公司信箱）</div>
-            <div style="position:relative;max-width:340px;">
-              <input class="input" type="email" id="am-notif-email" style="width:100%;padding-right:88px;"
-                     placeholder="尚未填寫公司信箱"
-                     value=""/>
-              <button type="button" onclick="amFillCompanyEmail()"
-                      style="position:absolute;right:6px;top:50%;transform:translateY(-50%);font-size:11px;color:var(--primary);background:var(--primary-soft);border:1px solid #a5b4fc;border-radius:4px;padding:2px 8px;cursor:pointer;white-space:nowrap;">
-                自動帶入
-              </button>
-            </div>
-            <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">將自動帶入上方填寫的公司電子郵件信箱</div>
-          </div>
-
-        </div>
-      </div>
-      <!-- ===== [修改結束] ===== -->
 
     </div>
     <div class="modal-foot">
-      <button class="btn" onclick="closeModal('modal-add-member')">取消</button>
-      <button class="btn primary" onclick="closeModal('modal-add-member')">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
-        新增成員
-      </button>
+      <button class="btn" onclick="closeModal('modal-edit-member')">取消</button>
+      <button class="btn primary" onclick="closeModal('modal-edit-member')">儲存</button>
     </div>
   </div>
 </div>
+<!-- ===== [Figma Sync 結束] modal-edit-member ===== -->
 
 <!-- ===== [修改開始] Modal：編輯資料 4.2 ===== -->
 <div class="modal-overlay" id="modal-edit-attr" onclick="closeModalIfBackdrop(event, 'modal-edit-attr')">
@@ -7043,7 +7417,6 @@
             <th>成員</th>
             <th>員編</th>
             <th>部門</th>
-            <th style="width:140px; text-align:center;">控制權限</th>
             <th style="width:72px;"></th>
           </tr>
         </thead>
@@ -7054,28 +7427,12 @@
             <td>
               <div class="user-cell">
                 <div class="avatar" style="width:30px;height:30px;font-size:12px;">陳</div>
-                <div>
-                  <div style="font-weight:600; font-size:13px;">陳小明</div>
-                </div>
+                <div><div style="font-weight:600; font-size:13px;">陳小明</div></div>
               </div>
             </td>
             <td><code style="font-size:12px; color:var(--text-secondary);">EMP-001</code></td>
             <td class="text-sec" style="font-size:13px;">研發部</td>
-            <td>
-              <div style="display:flex; gap:6px; justify-content:center;">
-                <label class="card" style="padding:4px 10px; cursor:pointer; display:flex; align-items:center; gap:4px; font-size:12px; font-weight:500; border-color:var(--primary); background:var(--primary-soft);">
-                  <input type="radio" name="perm-r1" value="edit" checked style="accent-color:var(--primary); width:12px; height:12px;" />
-                  <span style="color:var(--primary);">編輯</span>
-                </label>
-                <label class="card" style="padding:4px 10px; cursor:pointer; display:flex; align-items:center; gap:4px; font-size:12px; font-weight:500;">
-                  <input type="radio" name="perm-r1" value="view" style="accent-color:var(--primary); width:12px; height:12px;" />
-                  <span>檢視</span>
-                </label>
-              </div>
-            </td>
-            <td>
-              <button class="btn ghost sm danger-ghost" onclick="openModal('modal-keyword-delete-confirm')" style="font-size:11px;">刪除</button>
-            </td>
+            <td><button class="btn ghost sm danger-ghost" onclick="openModal('modal-keyword-delete-confirm')" style="font-size:11px;">刪除</button></td>
           </tr>
 
           <!-- 資料列 2 -->
@@ -7083,28 +7440,12 @@
             <td>
               <div class="user-cell">
                 <div class="avatar" style="width:30px;height:30px;font-size:12px;">林</div>
-                <div>
-                  <div style="font-weight:600; font-size:13px;">林曉華</div>
-                </div>
+                <div><div style="font-weight:600; font-size:13px;">林曉華</div></div>
               </div>
             </td>
             <td><code style="font-size:12px; color:var(--text-secondary);">EMP-003</code></td>
             <td class="text-sec" style="font-size:13px;">產品部</td>
-            <td>
-              <div style="display:flex; gap:6px; justify-content:center;">
-                <label class="card" style="padding:4px 10px; cursor:pointer; display:flex; align-items:center; gap:4px; font-size:12px; font-weight:500;">
-                  <input type="radio" name="perm-r2" value="edit" style="accent-color:var(--primary); width:12px; height:12px;" />
-                  <span>編輯</span>
-                </label>
-                <label class="card" style="padding:4px 10px; cursor:pointer; display:flex; align-items:center; gap:4px; font-size:12px; font-weight:500; border-color:var(--primary); background:var(--primary-soft);">
-                  <input type="radio" name="perm-r2" value="view" checked style="accent-color:var(--primary); width:12px; height:12px;" />
-                  <span style="color:var(--primary);">檢視</span>
-                </label>
-              </div>
-            </td>
-            <td>
-              <button class="btn ghost sm danger-ghost" onclick="openModal('modal-keyword-delete-confirm')" style="font-size:11px;">刪除</button>
-            </td>
+            <td><button class="btn ghost sm danger-ghost" onclick="openModal('modal-keyword-delete-confirm')" style="font-size:11px;">刪除</button></td>
           </tr>
 
           <!-- 資料列 3 -->
@@ -7112,28 +7453,12 @@
             <td>
               <div class="user-cell">
                 <div class="avatar" style="width:30px;height:30px;font-size:12px;">張</div>
-                <div>
-                  <div style="font-weight:600; font-size:13px;">張雅婷</div>
-                </div>
+                <div><div style="font-weight:600; font-size:13px;">張雅婷</div></div>
               </div>
             </td>
             <td><code style="font-size:12px; color:var(--text-secondary);">EMP-007</code></td>
             <td class="text-sec" style="font-size:13px;">行銷部</td>
-            <td>
-              <div style="display:flex; gap:6px; justify-content:center;">
-                <label class="card" style="padding:4px 10px; cursor:pointer; display:flex; align-items:center; gap:4px; font-size:12px; font-weight:500; border-color:var(--primary); background:var(--primary-soft);">
-                  <input type="radio" name="perm-r3" value="edit" checked style="accent-color:var(--primary); width:12px; height:12px;" />
-                  <span style="color:var(--primary);">編輯</span>
-                </label>
-                <label class="card" style="padding:4px 10px; cursor:pointer; display:flex; align-items:center; gap:4px; font-size:12px; font-weight:500;">
-                  <input type="radio" name="perm-r3" value="view" style="accent-color:var(--primary); width:12px; height:12px;" />
-                  <span>檢視</span>
-                </label>
-              </div>
-            </td>
-            <td>
-              <button class="btn ghost sm danger-ghost" onclick="openModal('modal-keyword-delete-confirm')" style="font-size:11px;">刪除</button>
-            </td>
+            <td><button class="btn ghost sm danger-ghost" onclick="openModal('modal-keyword-delete-confirm')" style="font-size:11px;">刪除</button></td>
           </tr>
 
         </tbody>
@@ -7159,7 +7484,7 @@
     <div class="modal-body">
 
       <!-- 成員搜尋選擇 -->
-      <div class="form-row">
+      <div class="form-row" style="margin-bottom:0;">
         <label>選擇成員 <span class="req">*</span></label>
         <input class="input full" id="perm-add-search" placeholder="輸入姓名或員編搜尋…" oninput="filterPermAddMembers(this.value)" />
         <!-- 下拉成員清單 -->
@@ -7193,27 +7518,6 @@
             <div class="text-sec" style="font-size:11px;" id="perm-add-sel-info">—</div>
           </div>
           <button class="btn ghost sm" onclick="clearPermSelection()" style="font-size:18px; line-height:1; padding:0 6px;">×</button>
-        </div>
-      </div>
-
-      <!-- 控制權限 -->
-      <div class="form-row" style="margin-bottom:0;">
-        <label>控制權限 <span class="req">*</span></label>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
-          <label class="card" style="padding:14px 16px; cursor:pointer; border-color:var(--primary); background:var(--primary-soft);">
-            <input type="radio" name="perm-add-level" value="edit" checked style="accent-color:var(--primary); margin-right:8px;" />
-            <div style="display:inline-block;">
-              <div style="font-weight:700; font-size:13px; color:var(--primary);">編輯</div>
-              <div class="text-sec" style="font-size:11px; margin-top:2px;">可查看並修改 Bot 設定</div>
-            </div>
-          </label>
-          <label class="card" style="padding:14px 16px; cursor:pointer;">
-            <input type="radio" name="perm-add-level" value="view" style="accent-color:var(--primary); margin-right:8px;" />
-            <div style="display:inline-block;">
-              <div style="font-weight:700; font-size:13px;">檢視</div>
-              <div class="text-sec" style="font-size:11px; margin-top:2px;">僅可查看 Bot 資訊</div>
-            </div>
-          </label>
         </div>
       </div>
 
@@ -8251,10 +8555,50 @@
         </div>
         <div class="help">選擇後自動帶入下方回覆內容。</div>
       </div>
+
+      <!-- 訊息內容（同預設訊息格式） -->
       <div class="form-row">
-        <label>自動回覆內容 <span class="req">*</span></label>
-        <textarea class="input full" id="kw-add-reply" placeholder="輸入回覆訊息內容…" rows="5"></textarea>
+        <label>訊息內容 <span class="req">*</span></label>
+        <!-- 格式選擇 -->
+        <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:6px; margin-bottom:10px;" id="kw-add-format-grid">
+          <label class="card" style="padding:8px 4px; cursor:pointer; text-align:center; border-color:var(--primary); background:var(--primary-soft);" onclick="selectKwFormat('add','text')"><input type="radio" name="kw-add-fmt" value="text" hidden checked /><div style="font-size:14px; margin-bottom:2px;">✏️</div><div style="font-size:11px; font-weight:600;">文字</div></label>
+          <label class="card" style="padding:8px 4px; cursor:pointer; text-align:center;" onclick="selectKwFormat('add','image')"><input type="radio" name="kw-add-fmt" value="image" hidden /><div style="font-size:14px; margin-bottom:2px;">🖼️</div><div style="font-size:11px; font-weight:600;">圖片</div></label>
+          <label class="card" style="padding:8px 4px; cursor:pointer; text-align:center;" onclick="selectKwFormat('add','button')"><input type="radio" name="kw-add-fmt" value="button" hidden /><div style="font-size:14px; margin-bottom:2px;">🔘</div><div style="font-size:11px; font-weight:600;">按鈕</div></label>
+          <label class="card" style="padding:8px 4px; cursor:pointer; text-align:center;" onclick="selectKwFormat('add','carousel')"><input type="radio" name="kw-add-fmt" value="carousel" hidden /><div style="font-size:14px; margin-bottom:2px;">🎠</div><div style="font-size:11px; font-weight:600;">輪播圖</div></label>
+        </div>
+        <!-- 動態欄位 -->
+        <div id="kw-add-field-text">
+          <textarea class="input full" id="kw-add-reply" placeholder="輸入回覆訊息內容…" rows="5"></textarea>
+        </div>
+        <div id="kw-add-field-image" style="display:none;">
+          <div style="border:2px dashed var(--border);border-radius:var(--radius);padding:18px;text-align:center;cursor:pointer;background:var(--bg);" onclick="openModal('modal-image-create')">
+            <div style="font-size:22px;margin-bottom:4px;">🖼️</div>
+            <div style="font-size:12px;">點擊上傳圖片</div>
+            <div class="help" style="margin-top:4px;">PNG / JPG，建議 1040×1040px</div>
+          </div>
+          <input class="input full" placeholder="點擊圖片後跳轉的網址（選填）" style="margin-top:8px;" />
+        </div>
+        <div id="kw-add-field-button" style="display:none;">
+          <input class="input full" placeholder="標題文字" style="margin-bottom:6px;" />
+          <div style="display:grid;gap:6px;" id="kw-add-btn-list">
+            <div style="display:flex;gap:6px;align-items:center;"><input class="input" placeholder="按鈕文字" style="flex:1;" /><select class="input" style="width:90px;"><option>文字</option><option>連結</option></select></div>
+            <div style="display:flex;gap:6px;align-items:center;"><input class="input" placeholder="按鈕文字" style="flex:1;" /><select class="input" style="width:90px;"><option>文字</option><option>連結</option></select></div>
+          </div>
+          <button class="btn ghost sm" style="margin-top:6px;">+ 新增按鈕</button>
+        </div>
+        <div id="kw-add-field-carousel" style="display:none;">
+          <div style="display:grid;gap:10px;" id="kw-add-carousel-list">
+            <div class="card" style="padding:10px;" data-carousel-item>
+              <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;"><div style="font-size:11px;font-weight:700;color:var(--primary);">第 1 張</div><button class="btn ghost sm danger-ghost" style="margin-left:auto;padding:2px 6px;font-size:11px;" onclick="this.closest('[data-carousel-item]').remove()">移除</button></div>
+              <div style="border:2px dashed var(--border);border-radius:6px;padding:14px;text-align:center;cursor:pointer;background:var(--bg);margin-bottom:6px;" onclick="openModal('modal-image-create')"><div style="font-size:18px;">🖼️</div><div style="font-size:11px;">上傳圖片</div></div>
+              <input class="input full" placeholder="標題" style="margin-bottom:5px;" />
+              <input class="input full" placeholder="按鈕文字（選填）" />
+            </div>
+          </div>
+          <button class="btn ghost sm" style="margin-top:8px;" onclick="addKwCarouselItem()">+ 新增輪播項目</button>
+        </div>
       </div>
+
       <div class="form-row" style="margin-bottom:0;">
         <label style="display:flex; align-items:center; justify-content:space-between;">
           <span>啟用此關鍵字</span>
@@ -8288,10 +8632,45 @@
         </div>
         <div class="help">選擇後自動帶入下方回覆內容。</div>
       </div>
+
+      <!-- 訊息內容（同預設訊息格式） -->
       <div class="form-row">
-        <label>自動回覆內容 <span class="req">*</span></label>
-        <textarea class="input full" id="kw-edit-reply" rows="5">您好！我們的營業時間為週一至週五 09:00–18:00，週六日及國定假日不開放。如有緊急需求，請來信至 service@lws.com.tw，我們將在工作時間內盡快回覆。感謝您的理解！</textarea>
+        <label>訊息內容 <span class="req">*</span></label>
+        <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:6px; margin-bottom:10px;" id="kw-edit-format-grid">
+          <label class="card" style="padding:8px 4px; cursor:pointer; text-align:center; border-color:var(--primary); background:var(--primary-soft);" onclick="selectKwFormat('edit','text')"><input type="radio" name="kw-edit-fmt" value="text" hidden checked /><div style="font-size:14px; margin-bottom:2px;">✏️</div><div style="font-size:11px; font-weight:600;">文字</div></label>
+          <label class="card" style="padding:8px 4px; cursor:pointer; text-align:center;" onclick="selectKwFormat('edit','image')"><input type="radio" name="kw-edit-fmt" value="image" hidden /><div style="font-size:14px; margin-bottom:2px;">🖼️</div><div style="font-size:11px; font-weight:600;">圖片</div></label>
+          <label class="card" style="padding:8px 4px; cursor:pointer; text-align:center;" onclick="selectKwFormat('edit','button')"><input type="radio" name="kw-edit-fmt" value="button" hidden /><div style="font-size:14px; margin-bottom:2px;">🔘</div><div style="font-size:11px; font-weight:600;">按鈕</div></label>
+          <label class="card" style="padding:8px 4px; cursor:pointer; text-align:center;" onclick="selectKwFormat('edit','carousel')"><input type="radio" name="kw-edit-fmt" value="carousel" hidden /><div style="font-size:14px; margin-bottom:2px;">🎠</div><div style="font-size:11px; font-weight:600;">輪播圖</div></label>
+        </div>
+        <div id="kw-edit-field-text">
+          <textarea class="input full" id="kw-edit-reply" rows="5">您好！我們的營業時間為週一至週五 09:00–18:00，週六日及國定假日不開放。如有緊急需求，請來信至 service@lws.com.tw，我們將在工作時間內盡快回覆。感謝您的理解！</textarea>
+        </div>
+        <div id="kw-edit-field-image" style="display:none;">
+          <div style="border:2px dashed var(--border);border-radius:var(--radius);padding:18px;text-align:center;cursor:pointer;background:var(--bg);" onclick="openModal('modal-image-create')">
+            <div style="font-size:22px;margin-bottom:4px;">🖼️</div>
+            <div style="font-size:12px;">點擊上傳圖片</div>
+          </div>
+          <input class="input full" placeholder="點擊圖片後跳轉的網址（選填）" style="margin-top:8px;" />
+        </div>
+        <div id="kw-edit-field-button" style="display:none;">
+          <input class="input full" placeholder="標題文字" style="margin-bottom:6px;" />
+          <div style="display:grid;gap:6px;">
+            <div style="display:flex;gap:6px;align-items:center;"><input class="input" placeholder="按鈕文字" style="flex:1;" /><select class="input" style="width:90px;"><option>文字</option><option>連結</option></select></div>
+          </div>
+          <button class="btn ghost sm" style="margin-top:6px;">+ 新增按鈕</button>
+        </div>
+        <div id="kw-edit-field-carousel" style="display:none;">
+          <div style="display:grid;gap:10px;">
+            <div class="card" style="padding:10px;" data-carousel-item>
+              <div style="font-size:11px;font-weight:700;color:var(--primary);margin-bottom:8px;">第 1 張</div>
+              <div style="border:2px dashed var(--border);border-radius:6px;padding:14px;text-align:center;cursor:pointer;background:var(--bg);margin-bottom:6px;" onclick="openModal('modal-image-create')"><div style="font-size:18px;">🖼️</div><div style="font-size:11px;">上傳圖片</div></div>
+              <input class="input full" placeholder="標題" />
+            </div>
+          </div>
+          <button class="btn ghost sm" style="margin-top:8px;">+ 新增輪播項目</button>
+        </div>
       </div>
+
       <div class="form-row" style="margin-bottom:0;">
         <label style="display:flex; align-items:center; justify-content:space-between;">
           <span>啟用此關鍵字</span>
@@ -9565,6 +9944,7 @@
     '3.4': { section: '組織管理', name: '組織圖權限', group: 'group-org' },
     '4.1': { section: '成員管理', name: '成員列表', group: 'group-member' },
     'member-detail': { section: '成員管理', name: '成員資料', group: 'group-member' },
+    'member-schedule': { section: '成員管理', name: '成員建立排程', group: 'group-member' },
     '4.2': { section: '成員管理', name: '成員資料顯示', group: 'group-member' },
     '4.3': { section: '成員管理', name: '離職程序', group: 'group-member' },
     '5.1': { section: 'Bot 管理', name: 'Bot 列表', group: 'group-bot' },
@@ -11611,7 +11991,36 @@ function orgLangAccToggle() {
   }
   /* ===== [修改結束] 快速選單 / 訊息格式 JS ===== */
 
-  /* ===== Bot 使用權限 Modal JS ===== */
+  /* ===== 關鍵字訊息格式切換 JS ===== */
+  var KW_FORMATS = ['text','image','button','carousel'];
+  function selectKwFormat(mode, fmt) {
+    KW_FORMATS.forEach(function(f) {
+      var el = document.getElementById('kw-' + mode + '-field-' + f);
+      if (el) el.style.display = f === fmt ? 'block' : 'none';
+    });
+    var grid = document.getElementById('kw-' + mode + '-format-grid');
+    if (grid) {
+      grid.querySelectorAll('.card').forEach(function(card) {
+        var radio = card.querySelector('input[type="radio"]');
+        var sel = radio && radio.value === fmt;
+        card.style.borderColor = sel ? 'var(--primary)' : '';
+        card.style.background  = sel ? 'var(--primary-soft)' : '';
+      });
+    }
+  }
+
+  function addKwCarouselItem() {
+    var list = document.getElementById('kw-add-carousel-list');
+    if (!list) return;
+    var n = list.querySelectorAll('[data-carousel-item]').length + 1;
+    var div = document.createElement('div');
+    div.className = 'card';
+    div.style.padding = '10px';
+    div.setAttribute('data-carousel-item','');
+    div.innerHTML = '<div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;"><div style="font-size:11px;font-weight:700;color:var(--primary);">第 ' + n + ' 張</div><button class="btn ghost sm danger-ghost" style="margin-left:auto;padding:2px 6px;font-size:11px;" onclick="this.closest(\'[data-carousel-item]\').remove()">移除</button></div><div style="border:2px dashed var(--border);border-radius:6px;padding:14px;text-align:center;cursor:pointer;background:var(--bg);margin-bottom:6px;" onclick="openModal(\'modal-image-create\')"><div style="font-size:18px;">🖼️</div><div style="font-size:11px;">上傳圖片</div></div><input class="input full" placeholder="標題" style="margin-bottom:5px;" /><input class="input full" placeholder="按鈕文字（選填）" />';
+    list.appendChild(div);
+  }
+  /* ===== End 關鍵字訊息格式切換 JS ===== */
   function openBotPermModal(botName, botId) {
     var titleEl = document.getElementById('bot-perm-title');
     var subEl   = document.getElementById('bot-perm-subtitle');
@@ -12611,16 +13020,130 @@ function openMemberList(roleName, total) {
     if (wrap) wrap.style.display = radio.value === 'schedule' ? 'block' : 'none';
   }
   function amFillCompanyEmail() {
-    // Try to pull from the email field in the modal
     var emailField = document.querySelector('#modal-add-member input[type="email"]');
     var target = document.getElementById('am-notif-email');
     if (target) {
       var val = emailField ? emailField.value.trim() : '';
-      target.value = val || 'member@company.com'; // fallback demo
+      target.value = val || 'member@company.com';
       target.style.borderColor = 'var(--primary)';
       setTimeout(function(){ target.style.borderColor = ''; }, 800);
     }
   }
+
+  /* ===== [Figma Sync] 新增成員 wizard JS ===== */
+  function amGoStep2() {
+    document.getElementById('am-step1').style.display = 'none';
+    document.getElementById('am-step2').style.display = '';
+    document.getElementById('am-foot-step1').style.display = 'none';
+    document.getElementById('am-foot-step2').style.display = '';
+  }
+  function amGoStep1() {
+    document.getElementById('am-step2').style.display = 'none';
+    document.getElementById('am-step1').style.display = '';
+    document.getElementById('am-foot-step2').style.display = 'none';
+    document.getElementById('am-foot-step1').style.display = '';
+  }
+  function amToggleAllFields() {
+    var panel  = document.getElementById('am-extra-fields');
+    var panel2 = document.getElementById('am-extra-fields-2');
+    var secBasic = document.getElementById('am-section-basic');
+    var chev   = document.getElementById('am-toggle-chev');
+    var btn    = document.getElementById('am-toggle-btn');
+    if (!panel) return;
+    var open = panel.style.display !== 'none';
+    panel.style.display  = open ? 'none' : '';
+    if (panel2)   panel2.style.display   = open ? 'none' : '';
+    if (secBasic) secBasic.style.display = open ? 'none' : '';
+    if (chev) chev.style.transform = open ? '' : 'rotate(180deg)';
+    if (btn) {
+      var txt = btn.childNodes[0];
+      if (txt && txt.nodeType === 3) txt.nodeValue = open ? '顯示所有選項' : '收起選項';
+    }
+  }
+  function msSetTab(tab) {
+    var tabs = ['scheduled', 'failed'];
+    tabs.forEach(function(t) {
+      var btn = document.getElementById('ms-tab-' + t);
+      var content = document.getElementById('ms-content-' + t);
+      var isActive = (t === tab);
+      if (btn) {
+        btn.style.color = isActive ? 'var(--primary)' : 'var(--text-muted)';
+        btn.style.fontWeight = isActive ? '600' : '500';
+        btn.style.borderBottom = isActive ? '2px solid var(--primary)' : '2px solid transparent';
+      }
+      if (content) content.style.display = isActive ? '' : 'none';
+    });
+    // clear selection when switching tabs
+    msClearSelection(tab);
+  }
+  // [Figma 488:2328] Bulk selection helpers for member-schedule table
+  function msCheckboxChange(tabId) {
+    var bar = document.getElementById('ms-bulk-bar-' + tabId);
+    var countEl = document.getElementById('ms-selected-count-' + tabId);
+    var allCb = document.getElementById('ms-select-all-' + tabId);
+    var rows = document.querySelectorAll('#ms-content-' + tabId + ' tbody tr:not([id^="ms-bulk-bar"]) td.row-checkbox input[type=checkbox]');
+    var checked = Array.from(rows).filter(function(cb) { return cb.checked; });
+    if (bar) bar.style.display = checked.length > 0 ? '' : 'none';
+    if (countEl) countEl.textContent = '已選 ' + checked.length + ' 筆';
+    if (allCb) {
+      allCb.checked = checked.length === rows.length && rows.length > 0;
+      allCb.indeterminate = checked.length > 0 && checked.length < rows.length;
+    }
+  }
+  function msSelectAll(tabId, headerCb) {
+    var rows = document.querySelectorAll('#ms-content-' + tabId + ' tbody tr:not([id^="ms-bulk-bar"]) td.row-checkbox input[type=checkbox]');
+    rows.forEach(function(cb) { cb.checked = headerCb.checked; });
+    msCheckboxChange(tabId);
+  }
+  function msClearSelection(tabId) {
+    var allCb = document.getElementById('ms-select-all-' + tabId);
+    var rows = document.querySelectorAll('#ms-content-' + tabId + ' tbody tr:not([id^="ms-bulk-bar"]) td.row-checkbox input[type=checkbox]');
+    rows.forEach(function(cb) { cb.checked = false; });
+    if (allCb) { allCb.checked = false; allCb.indeterminate = false; }
+    var bar = document.getElementById('ms-bulk-bar-' + tabId);
+    if (bar) bar.style.display = 'none';
+  }
+  function amSelectActivation(type) {
+    ['now','sched'].forEach(function(t) {
+      var card = document.getElementById('am-act-' + t);
+      var radio = card ? card.querySelector('input[type=radio]') : null;
+      if (card) card.classList.toggle('selected', t === type);
+      if (radio) radio.checked = (t === type);
+    });
+    var panel = document.getElementById('am-sched-panel');
+    if (panel) panel.style.display = type === 'sched' ? '' : 'none';
+  }
+  function amToggleNotifPreview(cb) {
+    var preview = document.getElementById('am-notif-preview');
+    if (preview) preview.style.display = cb.checked ? '' : 'none';
+  }
+  function amLangToggle(bodyId) {
+    var body = document.getElementById(bodyId);
+    if (!body) return;
+    var chevId = bodyId === 'em-lang-body' ? 'em-lang-chev' : 'am-lang-chev-add';
+    var chev = document.getElementById(chevId);
+    var open = body.style.display !== 'none';
+    body.style.display = open ? 'none' : '';
+    if (chev) chev.style.transform = open ? 'rotate(90deg)' : 'rotate(180deg)';
+  }
+  /* reset modal-add-member when closed */
+  document.addEventListener('DOMContentLoaded', function() {
+    var overlay = document.getElementById('modal-add-member');
+    if (overlay) {
+      overlay.addEventListener('click', function(e) {
+        if (e.target === overlay) {
+          setTimeout(function() {
+            amGoStep1();
+            var extra = document.getElementById('am-extra-fields');
+            if (extra) extra.style.display = 'none';
+            var chev = document.getElementById('am-toggle-chev');
+            if (chev) chev.style.transform = '';
+          }, 300);
+        }
+      });
+    }
+  });
+  /* ===== [Figma Sync 結束] ===== */
 
   // ── 刪除成員：checkbox gating ─────────────────────
   function resetAndOpenDeleteModal(modalId) {
