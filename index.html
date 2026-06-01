@@ -2371,7 +2371,8 @@
         <div class="nav-item" data-page="3.1" onclick="goPage('3.1')">3.1 部門設定</div>
         <div class="nav-item" data-page="3.2" onclick="goPage('3.2')">3.2 職位和職等</div>
         <div class="nav-item" data-page="3.3" onclick="goPage('3.3')">3.3 雇用類別</div>
-        <div class="nav-item" data-page="3.4" onclick="goPage('3.4')">3.4 組織圖權限</div>
+        <!-- ===== [修改開始] 拿掉 3.4 組織圖權限 ===== -->
+        <!-- ===== [修改結束] ===== -->
       </div>
     </div>
 
@@ -2382,9 +2383,11 @@
         <svg class="chev" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
       </div>
       <div class="nav-children">
-        <div class="nav-item" data-page="4.1" onclick="goPage('4.1')">4.1 成員列表</div>
-        <div class="nav-item" data-page="4.2" onclick="goPage('4.2')">4.2 成員資料顯示</div>
-        <div class="nav-item" data-page="4.3" onclick="goPage('4.3')">4.3 離職程序</div>
+        <!-- ===== [修改開始] 移除 4.2 成員資料顯示、拿掉 4.1 數字 ===== -->
+        <div class="nav-item" data-page="4.1" onclick="goPage('4.1')">成員列表</div>
+        <!-- 4.2 成員資料顯示 已移除 -->
+        <!-- 4.3 離職程序 已移除 -->
+        <!-- ===== [修改結束] ===== -->
       </div>
     </div>
 
@@ -10076,12 +10079,12 @@
     '3.1': { section: '組織管理', name: '部門設定', group: 'group-org' },
     '3.2': { section: '組織管理', name: '職位和職等', group: 'group-org' },
     '3.3': { section: '組織管理', name: '雇用類別', group: 'group-org' },
-    '3.4': { section: '組織管理', name: '組織圖權限', group: 'group-org' },
+    /* 3.4 組織圖權限 已移除 */
     '4.1': { section: '成員管理', name: '成員列表', group: 'group-member' },
     'member-detail': { section: '成員管理', name: '成員資料', group: 'group-member' },
     'member-schedule': { section: '成員管理', name: '成員建立排程', group: 'group-member' },
-    '4.2': { section: '成員管理', name: '成員資料顯示', group: 'group-member' },
-    '4.3': { section: '成員管理', name: '離職程序', group: 'group-member' },
+    /* 4.2 成員資料顯示 已移除 */
+    /* 4.3 離職程序 已移除 */
     '5.1': { section: 'Bot 管理', name: 'Bot 列表', group: 'group-bot' },
     '5.2': { section: 'Bot 管理', name: '推播排程', group: 'group-bot' },
     '5.3': { section: 'Bot 管理', name: '選單設定', group: 'group-bot' },
