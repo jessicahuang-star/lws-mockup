@@ -1851,6 +1851,42 @@
   }
   .tree-member-row:hover { background: var(--bg); }
 
+  /* ===== 打卡記錄頁面 ===== */
+  .checkin-stat-card {
+    transition: all .15s;
+  }
+  .checkin-stat-card:hover:not(.active) {
+    border-color: var(--primary) !important;
+    box-shadow: var(--shadow-sm);
+  }
+  .checkin-panel { }
+  /* ===== Push Filter Tags (推播狀態篩選) ===== */
+  .push-filter-tag {
+    display: inline-flex; align-items: center;
+    padding: 4px 12px; border-radius: 20px;
+    border: 1.5px solid var(--border); cursor: pointer;
+    font-size: 12px; font-weight: 500; background: white;
+    transition: all .15s; user-select: none;
+  }
+  .push-filter-tag.active {
+    background: var(--primary-soft);
+    border-color: var(--primary);
+    color: var(--primary);
+  }
+  .push-filter-tag:hover { border-color: var(--primary); }
+  /* ===== Push Item Card ===== */
+  .push-item-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 1px 2px rgba(0,0,0,.04);
+    overflow: hidden;
+    transition: box-shadow .15s;
+  }
+  .push-item-card:hover { box-shadow: var(--shadow-md); }
+  /* ===== Rich Menu Layout Cards ===== */
+  .rm-layout-card:hover { border-color: var(--primary) !important; }
+  .rm-layout-card input:checked ~ div:first-of-type { color: var(--primary); }
   /* ===== Push Msg Type Picker ===== */
   .push-msg-type-item:hover {
     border-color: var(--primary) !important;
@@ -5219,7 +5255,7 @@
             <div style="display:flex; align-items:center; justify-content:space-between; margin-top:4px;">
               <div style="display:flex; gap:6px; align-items:center;">
                 <!-- 打卡記錄快捷按鈕 -->
-                <button class="btn ghost sm" style="font-size:12px; color:var(--info);" onclick="goPage('5.2')">
+                <button class="btn ghost sm" style="font-size:12px; color:var(--info);" onclick="goPage('bot-checkin')">
                   <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:3px;vertical-align:-1px;"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
                   打卡記錄
                 </button>
@@ -5757,7 +5793,6 @@
             <button class="btn primary sm" onclick="openModal('modal-add-push')">+ 新增推播</button>
           </div>
           <div class="card" style="overflow:hidden;">
-            <!-- 狀態篩選 -->
             <div style="padding:10px 16px; border-bottom:1px solid var(--border); display:flex; flex-wrap:wrap; gap:8px; align-items:center;">
               <label style="display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:20px;border:1.5px solid var(--border);cursor:pointer;font-size:12px;font-weight:500;background:white;">
                 <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>草稿
@@ -5779,7 +5814,7 @@
                   <td class="text-sec" style="font-size:13px;">2026-05-06 09:30</td>
                   <td><button class="btn ghost sm" style="font-size:12px;padding:3px 8px;">研發部 (24人)</button></td>
                   <td><span class="badge info dot">已排程</span></td>
-                  <td><div class="btn-group"><button class="btn ghost sm" onclick="openPushEditModal('5/6 產品週會提醒','scheduled')">編輯</button><button class="btn ghost sm danger-ghost">刪除</button></div></td>
+                  <td><div class="btn-group"><button class="btn ghost sm" onclick="openModal('modal-edit-push')">編輯</button><button class="btn ghost sm danger-ghost">刪除</button></div></td>
                 </tr>
                 <tr>
                   <td><strong>新功能上線公告</strong></td>
@@ -5787,7 +5822,7 @@
                   <td class="text-sec" style="font-size:13px;">2026-05-05 14:22</td>
                   <td><button class="btn ghost sm" style="font-size:12px;padding:3px 8px;">所有訂閱者 (1,248人)</button></td>
                   <td><span class="badge success dot">已完成</span></td>
-                  <td><div class="btn-group"><button class="btn ghost sm">查看</button></div></td>
+                  <td><div class="btn-group"><button class="btn ghost sm" onclick="openModal('modal-edit-push')">查看</button></div></td>
                 </tr>
                 <tr>
                   <td><strong>5/3 母親節活動</strong></td>
@@ -5795,7 +5830,7 @@
                   <td class="text-sec" style="font-size:13px;">2026-05-03 10:00</td>
                   <td><button class="btn ghost sm" style="font-size:12px;padding:3px 8px;">VIP 客戶 (245人)</button></td>
                   <td><span class="badge success dot">已完成</span></td>
-                  <td><div class="btn-group"><button class="btn ghost sm">查看</button></div></td>
+                  <td><div class="btn-group"><button class="btn ghost sm" onclick="openModal('modal-edit-push')">查看</button></div></td>
                 </tr>
                 <tr>
                   <td><strong>夏季優惠草稿</strong><div class="text-sec" style="font-size:11px;">尚未排程</div></td>
@@ -5803,7 +5838,7 @@
                   <td class="text-sec">—</td>
                   <td class="text-sec">—</td>
                   <td><span class="badge neutral dot">草稿</span></td>
-                  <td><div class="btn-group"><button class="btn ghost sm">編輯</button><button class="btn ghost sm danger-ghost">刪除</button></div></td>
+                  <td><div class="btn-group"><button class="btn ghost sm" onclick="openModal('modal-edit-push')">編輯</button><button class="btn ghost sm danger-ghost">刪除</button></div></td>
                 </tr>
               </tbody>
             </table>
@@ -5898,46 +5933,91 @@
         </div>
 
         <!-- 預設訊息（Figma 849:64138 — 事件型訊息設定） -->
+        <!-- 預設訊息（Figma 849:63753 — block-based editor + 右側手機預覽） -->
         <div id="bot-subtab-message" class="bot-sub-tab-pane" style="display:none;">
-          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;">
-            <div>
-              <div style="font-weight:600; font-size:15px; margin-bottom:2px;">預設訊息設定</div>
-              <div class="text-sec" style="font-size:12px;">設定各事件觸發時 Bot 自動發送的訊息內容</div>
-            </div>
+          <div style="margin-bottom:14px;">
+            <div style="font-weight:600; font-size:15px; margin-bottom:2px;">預設訊息</div>
+            <div class="text-sec" style="font-size:12px;">當訊息符合關鍵字時，Bot 自動回覆對應內容</div>
           </div>
-          <div style="display:flex; flex-direction:column; gap:12px; max-width:700px;">
 
-            <!-- 歡迎訊息（成員加入） -->
-            <div class="card" style="overflow:hidden;">
-              <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 16px; border-bottom:1px solid var(--border);">
-                <div>
-                  <div style="font-size:13px;font-weight:600;">歡迎訊息（成員加入）</div>
-                  <div style="font-size:10px;color:var(--text-muted);">新用戶受邀進入已有機器人的團隊、群組或多人聊天室時發送。</div>
-                </div>
-                <label class="switch"><input type="checkbox" checked /><span class="slider"></span></label>
-              </div>
-              <div style="padding:14px 16px; display:flex; flex-direction:column; gap:10px;">
-                <div>
-                  <div style="font-size:12px;font-weight:600;margin-bottom:6px;">回應方式</div>
-                  <div style="display:flex; gap:20px;">
-                    <label style="display:flex;align-items:center;gap:5px;font-size:13px;cursor:pointer;"><input type="radio" name="be-msg-type-join" checked style="accent-color:var(--primary);"/>文字訊息</label>
-                    <label style="display:flex;align-items:center;gap:5px;font-size:13px;cursor:pointer;"><input type="radio" name="be-msg-type-join" style="accent-color:var(--primary);"/>圖片訊息</label>
-                    <label style="display:flex;align-items:center;gap:5px;font-size:13px;cursor:pointer;"><input type="radio" name="be-msg-type-join" style="accent-color:var(--primary);"/>關鍵字</label>
+          <div style="display:flex; gap:16px; align-items:flex-start;">
+
+            <!-- 左：成員加入事件卡片（藍色選中邊框） -->
+            <div style="flex:1; min-width:0;">
+              <div style="background:#f7f8fa; border:2px solid var(--primary); border-radius:var(--radius-lg); overflow:hidden; padding:8px;" id="msg-event-join-card">
+                <!-- Header -->
+                <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 16px; border-bottom:1px solid var(--border);">
+                  <div>
+                    <div style="font-size:13px; font-weight:600;">成員加入事件</div>
+                    <div style="font-size:10px; color:var(--text-muted);">新用戶受邀進入已有機器人的團隊、群組或多人聊天室時發送。</div>
                   </div>
+                  <label class="switch"><input type="checkbox" checked /><span class="slider"></span></label>
                 </div>
-                <div>
-                  <textarea class="input full" rows="3" placeholder="輸入推播訊息內容" style="resize:vertical;">歡迎加入！我是 {{Bot名稱}}，有什麼問題都可以問我。</textarea>
-                  <div style="display:flex; gap:6px; margin-top:6px; flex-wrap:wrap;">
-                    <span style="background:#ecf8fd;color:#0d6efd;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:500;cursor:pointer;">{{姓名}}</span>
-                    <span style="background:#ecf8fd;color:#0d6efd;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:500;cursor:pointer;">{{部門}}</span>
-                    <span style="background:#ecf8fd;color:#0d6efd;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:500;cursor:pointer;">{{日期}}</span>
-                    <span style="background:#ecf8fd;color:#0d6efd;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:500;cursor:pointer;">{{時間}}</span>
+
+                <!-- Body：回覆訊息內容 -->
+                <div style="padding:16px;">
+                  <!-- Section header -->
+                  <div style="border-top:1px solid var(--border); padding-top:10px; margin-bottom:12px;">
+                    <div style="font-size:12px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.06em;">回覆訊息內容</div>
+                  </div>
+
+                  <!-- 訊息格式 block chips -->
+                  <div style="margin-bottom:8px;">
+                    <div style="display:flex; align-items:center; gap:14px; margin-bottom:8px;">
+                      <span style="font-size:13px; font-weight:600;">訊息格式</span>
+                      <span style="font-size:12px; color:var(--text-muted);">一般訊息 <span id="def-msg-block-count" style="color:var(--danger);">0</span> / 5</span>
+                      <span style="font-size:12px; color:var(--text-muted);">快速回覆 <span style="color:var(--danger);">0</span> / 1</span>
+                    </div>
+                    <!-- chips row -->
+                    <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;" id="def-msg-blocks-row">
+                      <!-- 新增按鈕（dashed, primary color, Figma 849:63753） -->
+                      <button onclick="openModal('modal-push-msg-type'); _pushMsgCtx='def-msg';" style="display:inline-flex;align-items:center;gap:4px;padding:5px 10px;border-radius:6px;border:1.5px dashed var(--primary);background:#f2f3f5;cursor:pointer;font-size:12px;color:var(--primary);font-family:inherit;">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        新增
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Active block editor (shown when a block is added) -->
+                  <div id="def-msg-block-editors" style="display:none;">
+                    <div id="def-msg-editor-text" class="card" style="padding:14px; border:2px solid var(--border);">
+                      <div style="font-size:13px; font-weight:600; margin-bottom:8px;">文字訊息</div>
+                      <textarea class="input full" id="def-msg-text" rows="3" placeholder="輸入推播訊息內容" oninput="updateDefMsgPreview()" style="resize:vertical;"></textarea>
+                      <div style="display:flex; gap:6px; margin-top:6px; flex-wrap:wrap;">
+                        <span class="push-var-chip" onclick="insertPushVar('def-msg-text','{{姓名}}')">{{姓名}}</span>
+                        <span class="push-var-chip" onclick="insertPushVar('def-msg-text','{{部門}}')">{{部門}}</span>
+                        <span class="push-var-chip" onclick="insertPushVar('def-msg-text','{{日期}}')">{{日期}}</span>
+                        <span class="push-var-chip" onclick="insertPushVar('def-msg-text','{{時間}}')">{{時間}}</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
 
-
+            <!-- 右：即時手機預覽（Figma 849:63753） -->
+            <div style="width:260px; flex-shrink:0; position:sticky; top:0;">
+              <div style="font-size:12px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:10px; text-align:center;">即時預覽</div>
+              <div style="background:#1a1a2e; border-radius:28px; padding:12px; box-shadow:0 8px 24px rgba(0,0,0,0.28);">
+                <div style="background:#111; border-radius:16px 16px 0 0; padding:8px 12px; display:flex; align-items:center; gap:8px;">
+                  <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#4f46e5,#7c3aed);display:flex;align-items:center;justify-content:center;font-size:11px;color:white;font-weight:700;">客</div>
+                  <div><div style="font-size:11px;font-weight:700;color:white;">客服助手</div><div style="font-size:9px;color:#888;">Bot</div></div>
+                </div>
+                <div style="background:#f0f2f5; border-radius:0 0 16px 16px; padding:12px; min-height:280px;">
+                  <div style="font-size:10px;color:#aaa;text-align:center;margin-bottom:12px;">今天</div>
+                  <div id="def-msg-phone-bubble">
+                    <div style="max-width:85%;"><div style="background:white;border-radius:4px 16px 16px 16px;padding:10px 12px;font-size:12px;color:#888;box-shadow:0 1px 3px rgba(0,0,0,0.1);line-height:1.6;">填寫左側內容即時更新…</div></div>
+                  </div>
+                  <!-- Quick reply buttons preview -->
+                  <div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:16px;">
+                    <div style="background:rgba(0,0,0,0.8); padding:6px 10px; border-radius:16px; font-size:10px; color:#888;">訊息</div>
+                    <div style="background:rgba(0,0,0,0.8); padding:6px 10px; border-radius:16px; font-size:10px; color:#888;">訊息</div>
+                    <div style="background:rgba(0,0,0,0.8); padding:6px 10px; border-radius:16px; font-size:10px; color:#888;">訊息</div>
+                  </div>
+                </div>
+              </div>
+              <div class="help" style="margin-top:8px; text-align:center; font-size:11px;">此為示意預覽</div>
+            </div>
           </div>
         </div>
 
@@ -5971,8 +6051,7 @@
     </section>
     <!-- ============= /Bot 整頁編輯 ============= -->
 
-    <!-- ============= 5.2 BOT使用數據 ============= -->
-    <!-- ===== [修改開始] 5.2 全新頁面：BOT使用數據 v2 ===== -->
+    <!-- ============= 5.2 BOT使用數據（Figma 999:11989） ============= -->
     <section id="page-5.2" class="page-wrap hidden">
       <div class="page-head">
         <div>
@@ -5985,166 +6064,112 @@
             <option value="30" selected>最近 30 天</option>
             <option value="90">最近 90 天</option>
           </select>
-          <button class="btn" onclick="">
+          <button class="btn">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
             匯出報表
           </button>
         </div>
       </div>
 
-
       <!-- ================================================================ -->
-      <!-- SECTION 1：核心營運指標 KEY METRICS                               -->
+      <!-- SECTION 1：核心指標 — 機器人狀態 + 主動推播用量                      -->
       <!-- ================================================================ -->
-      <div style="margin-bottom:8px;">
-        <div style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:var(--text-muted); margin-bottom:12px; display:flex; align-items:center; gap:8px;">
-          <span>核心營運指標</span>
-          <span style="flex:1; height:1px; background:var(--border); display:block;"></span>
-          <span>Key Metrics</span>
-        </div>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:20px;">
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:20px;">
 
-          <!-- 機器人狀態 -->
-          <div class="card" style="padding:20px 24px;">
-            <div style="font-size:12px; font-weight:600; color:var(--text-secondary); margin-bottom:14px; display:flex; align-items:center; gap:6px;">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="16" x2="8" y2="16"/><line x1="16" y1="16" x2="16" y2="16"/></svg>
-              機器人狀態
-            </div>
-            <div style="display:flex; align-items:stretch; gap:0; border-radius:var(--radius); overflow:hidden; border:1px solid var(--border);">
-              <div style="flex:1; padding:18px 24px; text-align:center; border-right:1px solid var(--border);">
-                <div style="font-size:36px; font-weight:800; color:var(--success); line-height:1; margin-bottom:6px;">4</div>
-                <div style="font-size:12px; font-weight:600; color:var(--text-secondary); display:flex; align-items:center; justify-content:center; gap:5px;">
-                  <span style="width:7px; height:7px; border-radius:50%; background:var(--success); display:inline-block; animation:pulse-dot 1.5s ease-in-out infinite;"></span>
-                  開啟中
-                </div>
-              </div>
-              <div style="flex:1; padding:18px 24px; text-align:center;">
-                <div style="font-size:36px; font-weight:800; color:var(--text-muted); line-height:1; margin-bottom:6px;">1</div>
-                <div style="font-size:12px; font-weight:600; color:var(--text-muted); display:flex; align-items:center; justify-content:center; gap:5px;">
-                  <span style="width:7px; height:7px; border-radius:50%; background:var(--border-strong); display:inline-block;"></span>
-                  已停用
-                </div>
+        <!-- 機器人狀態 -->
+        <div class="card" style="padding:20px 24px;">
+          <div style="font-size:12px; font-weight:600; color:var(--text-secondary); margin-bottom:14px; display:flex; align-items:center; gap:6px;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/></svg>
+            機器人狀態
+          </div>
+          <div style="display:flex; align-items:stretch; border-radius:var(--radius); overflow:hidden; border:1px solid var(--border);">
+            <div style="flex:1; padding:20px 24px; text-align:center; border-right:1px solid var(--border);">
+              <div style="font-size:42px; font-weight:800; color:var(--success); line-height:1; margin-bottom:8px;">4</div>
+              <div style="font-size:13px; font-weight:600; color:var(--text-secondary); display:flex; align-items:center; justify-content:center; gap:5px;">
+                <span style="width:7px; height:7px; border-radius:50%; background:var(--success); display:inline-block;"></span>開啟中
               </div>
             </div>
-            <div style="margin-top:12px; display:flex; flex-direction:column; gap:6px;">
-              <div style="display:flex; align-items:center; gap:8px; font-size:12px;">
-                <div class="bot-icon line" style="width:22px;height:22px;font-size:9px;border-radius:6px;flex-shrink:0;">客</div>
-                <span style="flex:1;">客服助手</span>
-                <span class="badge success dot" style="font-size:10px;padding:1px 7px;">啟用中</span>
-              </div>
-              <div style="display:flex; align-items:center; gap:8px; font-size:12px;">
-                <div class="bot-icon slack" style="width:22px;height:22px;font-size:9px;border-radius:6px;flex-shrink:0;">公</div>
-                <span style="flex:1;">內部公告 Bot</span>
-                <span class="badge success dot" style="font-size:10px;padding:1px 7px;">啟用中</span>
-              </div>
-              <div style="display:flex; align-items:center; gap:8px; font-size:12px;">
-                <div class="bot-icon tg" style="width:22px;height:22px;font-size:9px;border-radius:6px;flex-shrink:0;">值</div>
-                <span style="flex:1;">值班通知</span>
-                <span class="badge success dot" style="font-size:10px;padding:1px 7px;">啟用中</span>
-              </div>
-              <div style="display:flex; align-items:center; gap:8px; font-size:12px;">
-                <div class="bot-icon line" style="width:22px;height:22px;font-size:9px;border-radius:6px;flex-shrink:0;background:linear-gradient(135deg,#f59e0b,#ef4444);">行</div>
-                <span style="flex:1;">行銷活動 Bot</span>
-                <span class="badge success dot" style="font-size:10px;padding:1px 7px;">啟用中</span>
-              </div>
-              <div style="display:flex; align-items:center; gap:8px; font-size:12px; opacity:0.5;">
-                <div class="bot-icon line" style="width:22px;height:22px;font-size:9px;border-radius:6px;flex-shrink:0;background:#9ca3af;">訓</div>
-                <span style="flex:1;">訓練通知 Bot</span>
-                <span class="badge neutral dot" style="font-size:10px;padding:1px 7px;">已停用</span>
+            <div style="flex:1; padding:20px 24px; text-align:center;">
+              <div style="font-size:42px; font-weight:800; color:var(--text-muted); line-height:1; margin-bottom:8px;">1</div>
+              <div style="font-size:13px; font-weight:600; color:var(--text-muted); display:flex; align-items:center; justify-content:center; gap:5px;">
+                <span style="width:7px; height:7px; border-radius:50%; background:var(--border-strong); display:inline-block;"></span>已停用
               </div>
             </div>
           </div>
+        </div>
 
-          <!-- 主動推播用量 -->
-          <div class="card" style="padding:20px 24px;">
-            <div style="font-size:12px; font-weight:600; color:var(--text-secondary); margin-bottom:14px; display:flex; align-items:center; gap:6px;">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/></svg>
-              主動推播用量
+        <!-- 主動推播用量 -->
+        <div class="card" style="padding:20px 24px;">
+          <div style="font-size:12px; font-weight:600; color:var(--text-secondary); margin-bottom:14px; display:flex; align-items:center; gap:6px;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/></svg>
+            主動推播用量
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px;">
+            <div style="padding:14px 16px; background:var(--primary-soft); border-radius:var(--radius); border:1px solid #c7d2fe;">
+              <div style="font-size:11px; font-weight:600; color:var(--primary); margin-bottom:5px;">本月（截至今日）</div>
+              <div style="font-size:30px; font-weight:800; color:var(--primary); line-height:1;">3,204</div>
+              <div style="font-size:11px; color:var(--primary); opacity:0.75; margin-top:3px;">2026/05/01 – 05/05</div>
             </div>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px;">
-              <div style="padding:14px 16px; background:var(--primary-soft); border-radius:var(--radius); border:1px solid #c7d2fe;">
-                <div style="font-size:11px; font-weight:600; color:var(--primary); margin-bottom:6px;">本月（截至今日）</div>
-                <div style="font-size:30px; font-weight:800; color:var(--primary); line-height:1;">3,204</div>
-                <div style="font-size:11px; color:var(--primary); opacity:0.75; margin-top:4px;">2026/05/01 – 05/05</div>
-              </div>
-              <div style="padding:14px 16px; background:var(--bg); border-radius:var(--radius); border:1px solid var(--border);">
-                <div style="font-size:11px; font-weight:600; color:var(--text-muted); margin-bottom:6px;">上月同期</div>
-                <div style="font-size:30px; font-weight:800; color:var(--text-secondary); line-height:1;">2,991</div>
-                <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">2026/04/01 – 04/05</div>
-              </div>
-            </div>
-            <div style="padding:10px 14px; background:#ecfdf5; border-radius:var(--radius-sm); border:1px solid #a7f3d0; display:flex; align-items:center; gap:8px;">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
-              <span style="font-size:12px; font-weight:700; color:#059669;">+213 筆（+7.1%）</span>
-              <span style="font-size:12px; color:#065f46;">較上月同期成長</span>
-            </div>
-            <div style="margin-top:14px; padding-top:14px; border-top:1px solid var(--border);">
-              <div style="font-size:11px; font-weight:600; color:var(--text-muted); margin-bottom:8px;">本月推播類型</div>
-              <div style="display:flex; flex-direction:column; gap:6px;">
-                <div style="display:flex; align-items:center; gap:8px; font-size:12px;">
-                  <span style="flex:0 0 70px;">循環排程</span>
-                  <div style="flex:1; height:6px; background:var(--bg); border-radius:3px; overflow:hidden;"><div style="width:62%; height:100%; background:#4f46e5; border-radius:3px;"></div></div>
-                  <span style="font-weight:700; min-width:36px; text-align:right;">1,986</span>
-                </div>
-                <div style="display:flex; align-items:center; gap:8px; font-size:12px;">
-                  <span style="flex:0 0 70px;">即時推播</span>
-                  <div style="flex:1; height:6px; background:var(--bg); border-radius:3px; overflow:hidden;"><div style="width:27%; height:100%; background:#10b981; border-radius:3px;"></div></div>
-                  <span style="font-weight:700; min-width:36px; text-align:right;">867</span>
-                </div>
-                <div style="display:flex; align-items:center; gap:8px; font-size:12px;">
-                  <span style="flex:0 0 70px;">單次排程</span>
-                  <div style="flex:1; height:6px; background:var(--bg); border-radius:3px; overflow:hidden;"><div style="width:11%; height:100%; background:#f59e0b; border-radius:3px;"></div></div>
-                  <span style="font-weight:700; min-width:36px; text-align:right;">351</span>
-                </div>
-              </div>
+            <div style="padding:14px 16px; background:var(--bg); border-radius:var(--radius); border:1px solid var(--border); position:relative;">
+              <div style="font-size:11px; font-weight:600; color:var(--text-muted); margin-bottom:5px;">上月同期</div>
+              <div style="font-size:30px; font-weight:800; color:var(--text-secondary); line-height:1;">2,991</div>
+              <div style="font-size:11px; color:var(--text-muted); margin-top:3px;">2026/04/01 – 04/05</div>
+              <div style="position:absolute; top:12px; right:14px; font-size:12px; font-weight:700; color:#059669;">+213 筆（+7.1%）</div>
             </div>
           </div>
-
+          <div style="padding:10px 14px; background:#ecfdf5; border-radius:var(--radius-sm); border:1px solid #a7f3d0; display:flex; align-items:center; gap:8px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+            <span style="font-size:12px; font-weight:700; color:#059669;">較上月同期成長</span>
+          </div>
         </div>
+
       </div>
 
       <!-- ================================================================ -->
-      <!-- SECTION 2：每日活躍用戶 DAU                                       -->
+      <!-- SECTION 2：Bot 活躍度（僅顯示開啟的 Bot）                           -->
       <!-- ================================================================ -->
-      <div style="margin-bottom:8px;">
+      <div style="margin-bottom:20px;">
         <div style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:var(--text-muted); margin-bottom:12px; display:flex; align-items:center; gap:8px;">
-          <span>每日活躍用戶</span>
+          <span>Bot活躍度</span>
+          <span style="font-size:10px; font-weight:400; text-transform:none; letter-spacing:0; color:var(--text-muted);">（僅顯示狀態為開啟的BOT）</span>
           <span style="flex:1; height:1px; background:var(--border); display:block;"></span>
-          <span>DAU</span>
         </div>
 
-        <div class="card" style="padding:0; overflow:hidden; margin-bottom:16px;">
-          <div style="padding:0 20px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:0; background:var(--surface);">
-            <button class="dau-tab active" id="dau-tab-0" onclick="dauSetTab(0)" style="padding:12px 16px; background:none; border:none; border-bottom:2px solid var(--primary); font-size:13px; font-weight:600; color:var(--primary); cursor:pointer; font-family:inherit; margin-bottom:-1px; display:flex; align-items:center; gap:6px;">
-              <div class="bot-icon line" style="width:18px;height:18px;font-size:8px;border-radius:5px;flex-shrink:0;">客</div>客服助手
+        <div class="card" style="overflow:hidden;">
+          <!-- Bot tab bar -->
+          <div style="border-bottom:1px solid var(--border); padding:0 20px; background:white; display:flex; align-items:center; gap:0;" id="bot-act-tabs">
+            <button class="bot-act-tab active" id="bat-0" onclick="setActTab(0)" style="display:flex;align-items:center;gap:6px;padding:12px 16px;border:none;background:none;cursor:pointer;font-size:13px;font-weight:600;color:var(--primary);border-bottom:2px solid var(--primary);margin-bottom:-1px;font-family:inherit;">
+              <div style="width:18px;height:18px;border-radius:5px;background:linear-gradient(135deg,#06d755,#14b8a6);display:flex;align-items:center;justify-content:center;font-size:7px;font-weight:700;color:white;flex-shrink:0;">打卡</div>打卡Bot
             </button>
-            <button class="dau-tab" id="dau-tab-1" onclick="dauSetTab(1)" style="padding:12px 16px; background:none; border:none; border-bottom:2px solid transparent; font-size:13px; font-weight:500; color:var(--text-muted); cursor:pointer; font-family:inherit; margin-bottom:-1px; display:flex; align-items:center; gap:6px;">
-              <div class="bot-icon slack" style="width:18px;height:18px;font-size:8px;border-radius:5px;flex-shrink:0;">公</div>內部公告 Bot
+            <button class="bot-act-tab" id="bat-1" onclick="setActTab(1)" style="display:flex;align-items:center;gap:6px;padding:12px 16px;border:none;background:none;cursor:pointer;font-size:13px;font-weight:500;color:var(--text-muted);border-bottom:2px solid transparent;margin-bottom:-1px;font-family:inherit;">
+              <div style="width:18px;height:18px;border-radius:5px;background:linear-gradient(135deg,#4a154b,#ec4899);display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;color:white;flex-shrink:0;">公</div>內部公告 Bot
             </button>
-            <button class="dau-tab" id="dau-tab-2" onclick="dauSetTab(2)" style="padding:12px 16px; background:none; border:none; border-bottom:2px solid transparent; font-size:13px; font-weight:500; color:var(--text-muted); cursor:pointer; font-family:inherit; margin-bottom:-1px; display:flex; align-items:center; gap:6px;">
-              <div class="bot-icon tg" style="width:18px;height:18px;font-size:8px;border-radius:5px;flex-shrink:0;">值</div>值班通知
+            <button class="bot-act-tab" id="bat-2" onclick="setActTab(2)" style="display:flex;align-items:center;gap:6px;padding:12px 16px;border:none;background:none;cursor:pointer;font-size:13px;font-weight:500;color:var(--text-muted);border-bottom:2px solid transparent;margin-bottom:-1px;font-family:inherit;">
+              <div style="width:18px;height:18px;border-radius:5px;background:linear-gradient(135deg,#0088cc,#3b82f6);display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;color:white;flex-shrink:0;">值</div>值班通知
             </button>
-            <button class="dau-tab" id="dau-tab-3" onclick="dauSetTab(3)" style="padding:12px 16px; background:none; border:none; border-bottom:2px solid transparent; font-size:13px; font-weight:500; color:var(--text-muted); cursor:pointer; font-family:inherit; margin-bottom:-1px; display:flex; align-items:center; gap:6px;">
-              <div class="bot-icon line" style="width:18px;height:18px;font-size:8px;border-radius:5px;flex-shrink:0;background:linear-gradient(135deg,#f59e0b,#ef4444);">行</div>行銷活動 Bot
+            <button class="bot-act-tab" id="bat-3" onclick="setActTab(3)" style="display:flex;align-items:center;gap:6px;padding:12px 16px;border:none;background:none;cursor:pointer;font-size:13px;font-weight:500;color:var(--text-muted);border-bottom:2px solid transparent;margin-bottom:-1px;font-family:inherit;">
+              <div style="width:18px;height:18px;border-radius:5px;background:linear-gradient(135deg,#f59e0b,#ef4444);display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;color:white;flex-shrink:0;">行</div>行銷活動 Bot
             </button>
           </div>
 
+          <!-- Chart area -->
           <div style="padding:20px 24px;">
             <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
               <div>
-                <span id="dau-bot-name" style="font-weight:700; font-size:15px;">客服助手</span>
+                <span id="bat-bot-name" style="font-weight:700; font-size:15px;">打卡Bot</span>
                 <span style="font-size:12px; color:var(--text-secondary); margin-left:8px;">2026年 5月 — 每月互動量趨勢</span>
               </div>
               <div style="display:flex; gap:14px; font-size:12px; color:var(--text-secondary);">
-                <span style="display:flex; align-items:center; gap:5px;"><span style="width:12px; height:3px; background:#4f46e5; display:inline-block; border-radius:2px;"></span>推播數</span>
-                <span style="display:flex; align-items:center; gap:5px;"><span style="width:12px; height:3px; background:#f59e0b; display:inline-block; border-radius:2px;"></span>選單點擊</span>
+                <span style="display:flex;align-items:center;gap:5px;"><span style="width:12px;height:3px;background:#4f46e5;display:inline-block;border-radius:2px;"></span>推播數</span>
+                <span style="display:flex;align-items:center;gap:5px;"><span style="width:12px;height:3px;background:#f59e0b;display:inline-block;border-radius:2px;stroke-dasharray:4 2;"></span>選單點擊</span>
               </div>
             </div>
 
+            <!-- SVG 折線圖 -->
             <div style="position:relative; padding-left:32px;">
-              <svg id="dau-chart-svg" viewBox="0 0 680 200" style="width:100%; height:200px; overflow:visible;" xmlns="http://www.w3.org/2000/svg">
+              <svg id="bat-chart-svg" viewBox="0 0 680 200" style="width:100%; height:200px; overflow:visible;" xmlns="http://www.w3.org/2000/svg">
                 <defs>
-                  <linearGradient id="dau-g1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#4f46e5" stop-opacity="0.18"/><stop offset="100%" stop-color="#4f46e5" stop-opacity="0"/></linearGradient>
+                  <linearGradient id="bat-g1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#4f46e5" stop-opacity="0.18"/><stop offset="100%" stop-color="#4f46e5" stop-opacity="0"/></linearGradient>
                 </defs>
                 <line x1="0" y1="0" x2="680" y2="0" stroke="#f3f4f6" stroke-width="1"/>
                 <line x1="0" y1="50" x2="680" y2="50" stroke="#f3f4f6" stroke-width="1"/>
@@ -6155,9 +6180,12 @@
                 <text x="-4" y="54" font-size="10" fill="#9ca3af" text-anchor="end">225</text>
                 <text x="-4" y="104" font-size="10" fill="#9ca3af" text-anchor="end">150</text>
                 <text x="-4" y="154" font-size="10" fill="#9ca3af" text-anchor="end">75</text>
-                <path id="dau-area1" d="M0,110 L23,100 L46,90 L69,105 L92,75 L115,65 L138,80 L161,55 L184,60 L207,45 L230,50 L253,40 L276,30 L299,35 L322,42 L345,38 L368,28 L391,22 L414,18 L437,25 L460,15 L483,20 L506,18 L529,12 L552,8 L575,10 L598,14 L621,10 L644,12 L667,8 L680,10 L680,190 L0,190 Z" fill="url(#dau-g1)"/>
-                <polyline id="dau-line1" points="0,110 23,100 46,90 69,105 92,75 115,65 138,80 161,55 184,60 207,45 230,50 253,40 276,30 299,35 322,42 345,38 368,28 391,22 414,18 437,25 460,15 483,20 506,18 529,12 552,8 575,10 598,14 621,10 644,12 667,8 680,10" fill="none" stroke="#4f46e5" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
-                <polyline id="dau-line3" points="0,155 23,150 46,148 69,155 92,140 115,135 138,142 161,128 184,130 207,118 230,122 253,115 276,108 299,112 322,116 345,114 368,105 391,100 414,98 437,104 460,92 483,96 506,94 529,88 552,84 575,86 598,88 621,85 644,87 667,80 680,82" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="4 2"/>
+                <!-- 推播數 area + line -->
+                <path id="bat-area1" d="M0,110 L23,100 L46,90 L69,105 L92,75 L115,65 L138,80 L161,55 L184,60 L207,45 L230,50 L253,40 L276,30 L299,35 L322,42 L345,38 L368,28 L391,22 L414,18 L437,25 L460,15 L483,20 L506,18 L529,12 L552,8 L575,10 L598,14 L621,10 L644,12 L667,8 L680,10 L680,190 L0,190 Z" fill="url(#bat-g1)"/>
+                <polyline id="bat-line1" points="0,110 23,100 46,90 69,105 92,75 115,65 138,80 161,55 184,60 207,45 230,50 253,40 276,30 299,35 322,42 345,38 368,28 391,22 414,18 437,25 460,15 483,20 506,18 529,12 552,8 575,10 598,14 621,10 644,12 667,8 680,10" fill="none" stroke="#4f46e5" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+                <!-- 選單點擊 dashed line -->
+                <polyline id="bat-line2" points="0,155 23,150 46,148 69,155 92,140 115,135 138,142 161,128 184,130 207,118 230,122 253,115 276,108 299,112 322,116 345,114 368,105 391,100 414,98 437,104 460,92 483,96 506,94 529,88 552,84 575,86 598,88 621,85 644,87 667,80 680,82" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="4 2"/>
+                <!-- X labels -->
                 <text x="0" y="205" font-size="10" fill="#9ca3af" text-anchor="middle">4/6</text>
                 <text x="115" y="205" font-size="10" fill="#9ca3af" text-anchor="middle">4/11</text>
                 <text x="230" y="205" font-size="10" fill="#9ca3af" text-anchor="middle">4/16</text>
@@ -6168,100 +6196,468 @@
               </svg>
             </div>
 
-            <div style="display:flex; gap:20px; padding-top:14px; border-top:1px solid var(--border); margin-top:8px;">
+            <!-- 小計 -->
+            <div style="display:flex; gap:24px; padding-top:14px; border-top:1px solid var(--border); margin-top:8px;">
               <div style="text-align:center;">
                 <div style="font-size:11px; color:var(--text-muted); margin-bottom:3px;">推播數</div>
-                <div id="dau-sum-push" style="font-size:18px; font-weight:800; color:#4f46e5;">1,024</div>
+                <div id="bat-sum-push" style="font-size:18px; font-weight:800; color:#4f46e5;">1,024</div>
               </div>
               <div style="text-align:center;">
                 <div style="font-size:11px; color:var(--text-muted); margin-bottom:3px;">選單點擊</div>
-                <div id="dau-sum-click" style="font-size:18px; font-weight:800; color:#f59e0b;">3,104</div>
+                <div id="bat-sum-click" style="font-size:18px; font-weight:800; color:#f59e0b;">3,104</div>
               </div>
             </div>
           </div>
         </div>
-
       </div>
 
       <!-- ================================================================ -->
-      <!-- 各 Bot 使用明細                                                    -->
+      <!-- SECTION 3：各 Bot 使用明細                                         -->
       <!-- ================================================================ -->
-      <div class="card" style="margin-bottom:16px;">
-        <div class="card-head" style="padding:16px 20px; border-bottom:1px solid var(--border);">
+      <div class="card" style="margin-bottom:16px; overflow:hidden;">
+        <div style="padding:16px 20px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between;">
           <div>
-            <div class="title">各 Bot 使用明細</div>
-            <div class="text-sec" style="font-size:12px; margin-top:2px;">各 Bot 互動、推播、關鍵字觸發詳細數據</div>
+            <div style="font-weight:600; font-size:14px;">各 Bot 使用明細</div>
+            <div class="text-sec" style="font-size:12px; margin-top:2px;">各 Bot 推播、關鍵字觸發、選單點擊詳細數據</div>
           </div>
-          <div style="display:flex; gap:8px; align-items:center;">
-            <input class="input search-input" placeholder="搜尋 Bot…" style="width:180px;" />
-          </div>
+          <input class="input search-input" placeholder="搜尋 Bot…" style="width:180px;" />
         </div>
         <table class="data-table">
           <thead>
             <tr>
               <th>Bot 名稱</th>
-              <th style="text-align:right;">訊息互動數</th>
               <th style="text-align:right;">推播發送數</th>
               <th style="text-align:right;">關鍵字觸發</th>
               <th style="text-align:right;">選單點擊數</th>
-              <th style="text-align:right;">活躍用戶</th>
-              <th>趨勢</th>
+              <th style="text-align:right;">使用人數</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td><div style="display:flex; align-items:center; gap:10px;"><div class="bot-icon line" style="width:30px;height:30px;font-size:11px;border-radius:8px;flex-shrink:0;">客</div><div><div style="font-weight:600;font-size:13px;">客服助手</div><span class="badge success dot" style="font-size:10px;padding:1px 6px;">啟用中</span></div></div></td>
-              <td style="text-align:right;font-weight:700;">6,295</td>
+              <td>
+                <div style="display:flex; align-items:center; gap:10px;">
+                  <div style="width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,#06d755,#14b8a6);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:white;flex-shrink:0;">打卡</div>
+                  <div><div style="font-weight:600;font-size:13px;">打卡 Bot</div><span class="badge success dot" style="font-size:10px;padding:1px 6px;">啟用中</span></div>
+                </div>
+              </td>
               <td style="text-align:right;">1,024</td>
-                            <td style="text-align:right;">2,847</td>
+              <td style="text-align:right;">2,847</td>
               <td style="text-align:right;">3,104</td>
               <td style="text-align:right;">584</td>
-              <td><svg viewBox="0 0 60 24" style="width:60px;height:24px;"><polyline points="0,18 10,14 20,16 30,8 40,10 50,5 60,7" fill="none" stroke="#4f46e5" stroke-width="2" stroke-linejoin="round"/></svg></td>
             </tr>
             <tr>
-              <td><div style="display:flex; align-items:center; gap:10px;"><div class="bot-icon slack" style="width:30px;height:30px;font-size:11px;border-radius:8px;flex-shrink:0;">公</div><div><div style="font-weight:600;font-size:13px;">內部公告 Bot</div><span class="badge success dot" style="font-size:10px;padding:1px 6px;">啟用中</span></div></div></td>
-              <td style="text-align:right;font-weight:700;">3,211</td>
+              <td>
+                <div style="display:flex; align-items:center; gap:10px;">
+                  <div style="width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,#4a154b,#ec4899);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:white;flex-shrink:0;">公</div>
+                  <div><div style="font-weight:600;font-size:13px;">內部公告 Bot</div><span class="badge success dot" style="font-size:10px;padding:1px 6px;">啟用中</span></div>
+                </div>
+              </td>
               <td style="text-align:right;">892</td>
-                            <td style="text-align:right;">1,043</td>
+              <td style="text-align:right;">1,043</td>
               <td style="text-align:right;">876</td>
               <td style="text-align:right;">312</td>
-              <td><svg viewBox="0 0 60 24" style="width:60px;height:24px;"><polyline points="0,12 10,10 20,14 30,8 40,6 50,9 60,5" fill="none" stroke="#10b981" stroke-width="2" stroke-linejoin="round"/></svg></td>
             </tr>
             <tr>
-              <td><div style="display:flex; align-items:center; gap:10px;"><div class="bot-icon tg" style="width:30px;height:30px;font-size:11px;border-radius:8px;flex-shrink:0;">值</div><div><div style="font-weight:600;font-size:13px;">值班通知</div><span class="badge success dot" style="font-size:10px;padding:1px 6px;">啟用中</span></div></div></td>
-              <td style="text-align:right;font-weight:700;">1,927</td>
+              <td>
+                <div style="display:flex; align-items:center; gap:10px;">
+                  <div style="width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,#0088cc,#3b82f6);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:white;flex-shrink:0;">值</div>
+                  <div><div style="font-weight:600;font-size:13px;">值班通知</div><span class="badge success dot" style="font-size:10px;padding:1px 6px;">啟用中</span></div>
+                </div>
+              </td>
               <td style="text-align:right;">756</td>
-                            <td style="text-align:right;">891</td>
+              <td style="text-align:right;">891</td>
               <td style="text-align:right;">432</td>
               <td style="text-align:right;">218</td>
-              <td><svg viewBox="0 0 60 24" style="width:60px;height:24px;"><polyline points="0,10 10,14 20,12 30,16 40,11 50,13 60,10" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linejoin="round"/></svg></td>
             </tr>
             <tr>
-              <td><div style="display:flex; align-items:center; gap:10px;"><div class="bot-icon line" style="width:30px;height:30px;font-size:11px;border-radius:8px;flex-shrink:0;background:linear-gradient(135deg,#f59e0b,#ef4444);">行</div><div><div style="font-weight:600;font-size:13px;">行銷活動 Bot</div><span class="badge success dot" style="font-size:10px;padding:1px 6px;">啟用中</span></div></div></td>
-              <td style="text-align:right;font-weight:700;">1,414</td>
+              <td>
+                <div style="display:flex; align-items:center; gap:10px;">
+                  <div style="width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,#f59e0b,#ef4444);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:white;flex-shrink:0;">行</div>
+                  <div><div style="font-weight:600;font-size:13px;">行銷活動 Bot</div><span class="badge success dot" style="font-size:10px;padding:1px 6px;">啟用中</span></div>
+                </div>
+              </td>
               <td style="text-align:right;">532</td>
-                            <td style="text-align:right;">838</td>
+              <td style="text-align:right;">838</td>
               <td style="text-align:right;">614</td>
               <td style="text-align:right;">134</td>
-              <td><svg viewBox="0 0 60 24" style="width:60px;height:24px;"><polyline points="0,8 10,12 20,10 30,15 40,18 50,14 60,16" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linejoin="round"/></svg></td>
             </tr>
             <tr style="opacity:0.6;">
-              <td><div style="display:flex; align-items:center; gap:10px;"><div class="bot-icon line" style="width:30px;height:30px;font-size:11px;border-radius:8px;flex-shrink:0;background:#6b7280;">訓</div><div><div style="font-weight:600;font-size:13px;">訓練通知 Bot</div><span class="badge neutral dot" style="font-size:10px;padding:1px 6px;">已停用</span></div></div></td>
-              <td style="text-align:right;font-weight:700;color:var(--text-muted);">0</td>
+              <td>
+                <div style="display:flex; align-items:center; gap:10px;">
+                  <div style="width:30px;height:30px;border-radius:8px;background:#9ca3af;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:white;flex-shrink:0;">訓</div>
+                  <div><div style="font-weight:600;font-size:13px;">訓練通知 Bot</div><span class="badge neutral dot" style="font-size:10px;padding:1px 6px;">已停用</span></div>
+                </div>
+              </td>
               <td style="text-align:right;color:var(--text-muted);">0</td>
-                            <td style="text-align:right;color:var(--text-muted);">0</td>
               <td style="text-align:right;color:var(--text-muted);">0</td>
               <td style="text-align:right;color:var(--text-muted);">0</td>
-              <td><span class="text-sec" style="font-size:11px;">停用中</span></td>
+              <td style="text-align:right;color:var(--text-muted);">0</td>
             </tr>
           </tbody>
         </table>
       </div>
 
+    </section>
 
+    <!-- ============= 打卡記錄 (Bot 範本專屬) ============= -->
+    <section id="page-bot-checkin" class="page-wrap hidden">
+
+      <!-- 頂部返回列 -->
+      <div style="display:flex; align-items:center; gap:12px; margin-bottom:20px;">
+        <button class="btn ghost sm" onclick="goPage('5.1')" style="display:inline-flex;align-items:center;gap:5px;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+          返回 Bot 列表
+        </button>
+        <div style="display:flex; align-items:center; gap:10px;">
+          <div class="bot-icon line" style="width:32px;height:32px;font-size:10px;border-radius:8px;background:#059669;flex-shrink:0;">打卡</div>
+          <div>
+            <div style="font-weight:700; font-size:16px;">打卡 Bot — 打卡記錄</div>
+            <div class="text-sec" style="font-size:12px;">查看成員打卡、異常與補打卡紀錄</div>
+          </div>
+        </div>
+        <button class="btn" style="margin-left:auto; display:inline-flex;align-items:center;gap:5px;" onclick="exportCheckinReport()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          匯出報表
+        </button>
+      </div>
+
+      <!-- ===== 總表數據（4 個統計卡） ===== -->
+      <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:20px;">
+
+        <!-- 今日應到 -->
+        <div class="card" style="padding:18px 20px; text-align:center;">
+          <div style="font-size:12px; color:var(--text-secondary); margin-bottom:6px; font-weight:500;">今日應到</div>
+          <div style="font-size:36px; font-weight:800; color:var(--text); line-height:1;">128</div>
+          <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">位成員</div>
+        </div>
+
+        <!-- 已到（可點擊） -->
+        <div class="card checkin-stat-card active" id="stat-card-arrived" onclick="switchCheckinTab('arrived',this)" style="padding:18px 20px; text-align:center; cursor:pointer; border:2px solid var(--primary); background:var(--primary-soft);">
+          <div style="font-size:12px; color:var(--primary); margin-bottom:6px; font-weight:600;">已到</div>
+          <div style="font-size:36px; font-weight:800; color:var(--primary); line-height:1;">112</div>
+          <div style="font-size:11px; color:var(--primary); margin-top:4px; opacity:0.75;">點擊查看記錄</div>
+        </div>
+
+        <!-- 異常（可點擊） -->
+        <div class="card checkin-stat-card" id="stat-card-abnormal" onclick="switchCheckinTab('abnormal',this)" style="padding:18px 20px; text-align:center; cursor:pointer; border:2px solid var(--border);">
+          <div style="font-size:12px; color:var(--text-secondary); margin-bottom:6px; font-weight:500;">異常</div>
+          <div style="font-size:36px; font-weight:800; color:var(--danger); line-height:1;">9</div>
+          <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">點擊查看記錄</div>
+        </div>
+
+        <!-- 補打卡（可點擊） -->
+        <div class="card checkin-stat-card" id="stat-card-makeup" onclick="switchCheckinTab('makeup',this)" style="padding:18px 20px; text-align:center; cursor:pointer; border:2px solid var(--border);">
+          <div style="font-size:12px; color:var(--text-secondary); margin-bottom:6px; font-weight:500;">補打卡</div>
+          <div style="font-size:36px; font-weight:800; color:var(--warning); line-height:1;">7</div>
+          <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">點擊查看記錄</div>
+        </div>
+
+      </div>
+
+      <!-- ===== 篩選條件列 ===== -->
+      <div class="card" style="padding:14px 18px; margin-bottom:16px;">
+        <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+          <!-- 搜尋成員 -->
+          <div style="position:relative; flex:0 0 200px;">
+            <svg style="position:absolute;left:9px;top:50%;transform:translateY(-50%);opacity:0.4;" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            <input class="input" placeholder="搜尋成員姓名…" style="padding-left:28px; width:100%;" />
+          </div>
+          <!-- 類型 -->
+          <select class="input" style="width:150px;">
+            <option value="">全部類型</option>
+            <option value="on">上班打卡</option>
+            <option value="off">下班打卡</option>
+            <option value="out_on">外出上班</option>
+            <option value="out_off">外出下班</option>
+          </select>
+          <!-- 時間區間 -->
+          <div style="display:flex; align-items:center; gap:6px;">
+            <input type="date" class="input" id="checkin-date-from" style="width:130px;" />
+            <span style="color:var(--text-muted); font-size:12px;">—</span>
+            <input type="date" class="input" id="checkin-date-to" style="width:130px;" />
+          </div>
+          <!-- 顯示當日 checkbox -->
+          <label style="display:flex; align-items:center; gap:6px; font-size:13px; cursor:pointer; white-space:nowrap;">
+            <input type="checkbox" id="checkin-today-only" checked style="accent-color:var(--primary);" onchange="toggleCheckinToday(this.checked)" />
+            只顯示今日
+          </label>
+          <button class="btn ghost sm" style="margin-left:auto;" onclick="resetCheckinFilters()">重設篩選</button>
+        </div>
+      </div>
+
+      <!-- ===== Tab 內容區 ===== -->
+
+      <!-- Tab 1: 全部打卡記錄（已到）-->
+      <div id="checkin-panel-arrived" class="checkin-panel">
+        <div class="card" style="overflow:hidden;">
+          <div style="padding:14px 20px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between;">
+            <div style="font-weight:600; font-size:14px;">全部打卡記錄 <span style="font-size:12px; color:var(--text-muted); font-weight:400;">共 112 筆</span></div>
+          </div>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>成員</th>
+                <th>部門</th>
+                <th>打卡方式</th>
+                <th>打卡時間</th>
+                <th>類型</th>
+                <th>來源</th>
+                <th>狀態</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><div class="user-cell"><div class="avatar" style="width:28px;height:28px;font-size:11px;">陳</div>陳小明</div></td>
+                <td class="text-sec">研發部</td>
+                <td><span style="display:inline-flex;align-items:center;gap:4px;font-size:12px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>GPS打卡</span></td>
+                <td class="text-sec" style="font-size:13px;">2026-06-08 08:52</td>
+                <td><span style="display:inline-flex;align-items:center;padding:2px 9px;border-radius:12px;font-size:11px;font-weight:600;background:#111827;color:white;">上班打卡</span></td>
+                <td><span style="font-size:12px; color:var(--text-secondary);">Bot打卡</span></td>
+                <td><span class="badge success dot" style="font-size:11px;">正常</span></td>
+              </tr>
+              <tr>
+                <td><div class="user-cell"><div class="avatar" style="width:28px;height:28px;font-size:11px;">林</div>林曉華</div></td>
+                <td class="text-sec">產品部</td>
+                <td><span style="display:inline-flex;align-items:center;gap:4px;font-size:12px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>手動打卡</span></td>
+                <td class="text-sec" style="font-size:13px;">2026-06-08 09:01</td>
+                <td><span style="display:inline-flex;align-items:center;padding:2px 9px;border-radius:12px;font-size:11px;font-weight:600;background:#111827;color:white;">上班打卡</span></td>
+                <td><span style="font-size:12px; color:var(--text-secondary);">Bot打卡</span></td>
+                <td><span class="badge success dot" style="font-size:11px;">正常</span></td>
+              </tr>
+              <tr>
+                <td><div class="user-cell"><div class="avatar" style="width:28px;height:28px;font-size:11px;">王</div>王大偉</div></td>
+                <td class="text-sec">工程組</td>
+                <td><span style="display:inline-flex;align-items:center;gap:4px;font-size:12px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>GPS打卡</span></td>
+                <td class="text-sec" style="font-size:13px;">2026-06-08 08:48</td>
+                <td><span style="display:inline-flex;align-items:center;padding:2px 9px;border-radius:12px;font-size:11px;font-weight:600;background:#111827;color:white;">上班打卡</span></td>
+                <td><span style="font-size:12px; color:var(--text-secondary);">Bot打卡</span></td>
+                <td><span class="badge success dot" style="font-size:11px;">正常</span></td>
+              </tr>
+              <tr>
+                <td><div class="user-cell"><div class="avatar" style="width:28px;height:28px;font-size:11px;">吳</div>吳建宏</div></td>
+                <td class="text-sec">研發部</td>
+                <td><span style="display:inline-flex;align-items:center;gap:4px;font-size:12px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>GPS打卡</span></td>
+                <td class="text-sec" style="font-size:13px;">2026-06-08 17:58</td>
+                <td><span style="display:inline-flex;align-items:center;padding:2px 9px;border-radius:12px;font-size:11px;font-weight:600;background:white;color:#374151;border:1.5px solid #d1d5db;">下班打卡</span></td>
+                <td><span style="font-size:12px; color:var(--text-secondary);">Bot打卡</span></td>
+                <td><span class="badge success dot" style="font-size:11px;">正常</span></td>
+              </tr>
+              <tr>
+                <td><div class="user-cell"><div class="avatar" style="width:28px;height:28px;font-size:11px;">張</div>張雅婷</div></td>
+                <td class="text-sec">行銷部</td>
+                <td><span style="display:inline-flex;align-items:center;gap:4px;font-size:12px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>手動打卡</span></td>
+                <td class="text-sec" style="font-size:13px;">2026-06-08 09:15</td>
+                <td><span style="display:inline-flex;align-items:center;padding:2px 9px;border-radius:12px;font-size:11px;font-weight:600;background:#111827;color:white;">上班打卡</span></td>
+                <td><span style="font-size:12px; color:#b45309; background:#fef3c7; padding:1px 7px; border-radius:4px; font-weight:500;">HR補登</span></td>
+                <td><span class="badge danger" style="font-size:11px;">異常</span></td>
+              </tr>
+            </tbody>
+          </table>
+          <!-- Pagination -->
+          <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 20px; border-top:1px solid var(--border);">
+            <span style="font-size:13px; color:var(--text-secondary);">第 1–5 筆，共 112 筆</span>
+            <div style="display:flex; gap:4px;">
+              <button style="width:30px;height:30px;border:none;background:none;border-radius:6px;cursor:pointer;color:var(--text-muted);">‹</button>
+              <button style="width:30px;height:30px;border:1px solid var(--primary);background:var(--primary);border-radius:6px;cursor:pointer;color:white;font-weight:600;font-size:13px;">1</button>
+              <button style="width:30px;height:30px;border:none;background:none;border-radius:6px;cursor:pointer;color:var(--text-muted);font-size:13px;">2</button>
+              <button style="width:30px;height:30px;border:none;background:none;border-radius:6px;cursor:pointer;color:var(--text-muted);font-size:13px;">3</button>
+              <button style="width:30px;height:30px;border:none;background:none;border-radius:6px;cursor:pointer;color:var(--text-muted);">›</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 2: 異常打卡記錄 -->
+      <div id="checkin-panel-abnormal" class="checkin-panel" style="display:none;">
+        <div class="card" style="overflow:hidden;">
+          <div style="padding:14px 20px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between;">
+            <div style="font-weight:600; font-size:14px;">異常打卡記錄 <span style="font-size:12px; color:var(--text-muted); font-weight:400;">共 9 筆</span></div>
+          </div>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>成員</th>
+                <th>部門</th>
+                <th>打卡時間</th>
+                <th>異常類型</th>
+                <th>說明</th>
+                <th>備註 <span style="font-size:10px; font-weight:400; color:var(--text-muted);">最多30字</span></th>
+                <th style="width:120px;">操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><div class="user-cell"><div class="avatar" style="width:28px;height:28px;font-size:11px;">張</div>張雅婷</div></td>
+                <td class="text-sec">行銷部</td>
+                <td class="text-sec" style="font-size:13px;">2026-06-08 09:12</td>
+                <td><span class="badge danger" style="font-size:11px;">遲到</span></td>
+                <td style="font-size:12px; color:var(--text-secondary); max-width:200px; line-height:1.5;">上班打卡時間 09:12，<br><span style="color:var(--danger);">超過上班時間 12 分鐘</span></td>
+                <td>
+                  <div style="position:relative;">
+                    <input type="text" class="input" placeholder="輸入備註…" maxlength="30" style="font-size:12px; padding:4px 8px;" oninput="updateNoteCount(this)" />
+                    <span style="position:absolute;right:6px;top:50%;transform:translateY(-50%);font-size:10px;color:var(--text-muted);" data-note-count>0/30</span>
+                  </div>
+                </td>
+                <td>
+                  <div class="btn-group">
+                    <button class="btn ghost sm" style="font-size:11px;" onclick="openMakeupPunchModal('張雅婷','2026-06-08')">補打卡</button>
+                    <button class="btn ghost sm danger-ghost" style="font-size:11px;" onclick="openModal('modal-delete-confirm')">刪除</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><div class="user-cell"><div class="avatar" style="width:28px;height:28px;font-size:11px;">黃</div>黃宗翰</div></td>
+                <td class="text-sec">研發部</td>
+                <td class="text-sec" style="font-size:13px;">—</td>
+                <td><span class="badge warning" style="font-size:11px;">未打卡</span></td>
+                <td style="font-size:12px; color:var(--text-secondary); max-width:200px; line-height:1.5;">當日無上班打卡記錄，<br><span style="color:var(--danger);">系統自動標記為缺打卡</span></td>
+                <td>
+                  <div style="position:relative;">
+                    <input type="text" class="input" placeholder="輸入備註…" maxlength="30" style="font-size:12px; padding:4px 8px;" oninput="updateNoteCount(this)" />
+                    <span style="position:absolute;right:6px;top:50%;transform:translateY(-50%);font-size:10px;color:var(--text-muted);" data-note-count>0/30</span>
+                  </div>
+                </td>
+                <td>
+                  <div class="btn-group">
+                    <button class="btn ghost sm" style="font-size:11px;" onclick="openMakeupPunchModal('黃宗翰','2026-06-08')">補打卡</button>
+                    <button class="btn ghost sm danger-ghost" style="font-size:11px;" onclick="openModal('modal-delete-confirm')">刪除</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><div class="user-cell"><div class="avatar" style="width:28px;height:28px;font-size:11px;">劉</div>劉怡伶</div></td>
+                <td class="text-sec">研發部</td>
+                <td class="text-sec" style="font-size:13px;">2026-06-08 09:22</td>
+                <td><span class="badge danger" style="font-size:11px;">遲到</span></td>
+                <td style="font-size:12px; color:var(--text-secondary); max-width:200px; line-height:1.5;">上班打卡時間 09:22，<br><span style="color:var(--danger);">超過上班時間 22 分鐘</span></td>
+                <td>
+                  <div style="position:relative;">
+                    <input type="text" class="input" value="已知會主管，外出會議" maxlength="30" style="font-size:12px; padding:4px 8px;" oninput="updateNoteCount(this)" />
+                    <span style="position:absolute;right:6px;top:50%;transform:translateY(-50%);font-size:10px;color:var(--text-muted);" data-note-count>10/30</span>
+                  </div>
+                </td>
+                <td>
+                  <div class="btn-group">
+                    <button class="btn ghost sm" style="font-size:11px;" onclick="openMakeupPunchModal('劉怡伶','2026-06-08')">補打卡</button>
+                    <button class="btn ghost sm danger-ghost" style="font-size:11px;" onclick="openModal('modal-delete-confirm')">刪除</button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Tab 3: 補打卡記錄 -->
+      <div id="checkin-panel-makeup" class="checkin-panel" style="display:none;">
+        <div class="card" style="overflow:hidden;">
+          <div style="padding:14px 20px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between;">
+            <div style="font-weight:600; font-size:14px;">補打卡記錄 <span style="font-size:12px; color:var(--text-muted); font-weight:400;">共 7 筆</span></div>
+          </div>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>成員</th>
+                <th>部門</th>
+                <th>說明</th>
+                <th>補打卡時間</th>
+                <th>補打卡人員</th>
+                <th>備註 <span style="font-size:10px; font-weight:400; color:var(--text-muted);">最多30字</span></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><div class="user-cell"><div class="avatar" style="width:28px;height:28px;font-size:11px;">李</div>李怡君</div></td>
+                <td class="text-sec">行銷部</td>
+                <td style="font-size:12px; color:var(--text-secondary); line-height:1.5;">上班打卡時間 09:18，<br><span style="color:var(--danger);">超過上班時間 18 分鐘</span></td>
+                <td class="text-sec" style="font-size:13px;">2026-06-08 10:30</td>
+                <td>
+                  <div class="user-cell">
+                    <div class="avatar" style="width:22px;height:22px;font-size:10px;">陳</div>
+                    <span style="font-size:12px;">陳小明（HR）</span>
+                  </div>
+                </td>
+                <td>
+                  <div style="position:relative;">
+                    <input type="text" class="input" value="因客戶緊急電話" maxlength="30" style="font-size:12px; padding:4px 8px;" oninput="updateNoteCount(this)" />
+                    <span style="position:absolute;right:6px;top:50%;transform:translateY(-50%);font-size:10px;color:var(--text-muted);" data-note-count>7/30</span>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><div class="user-cell"><div class="avatar" style="width:28px;height:28px;font-size:11px;">王</div>王大偉</div></td>
+                <td class="text-sec">工程組</td>
+                <td style="font-size:12px; color:var(--text-secondary); line-height:1.5;">當日無下班打卡記錄，<br><span style="color:var(--danger);">系統自動標記為缺打卡</span></td>
+                <td class="text-sec" style="font-size:13px;">2026-06-07 19:15</td>
+                <td>
+                  <div class="user-cell">
+                    <div class="avatar" style="width:22px;height:22px;font-size:10px;">林</div>
+                    <span style="font-size:12px;">林曉華（HR）</span>
+                  </div>
+                </td>
+                <td>
+                  <div style="position:relative;">
+                    <input type="text" class="input" placeholder="輸入備註…" maxlength="30" style="font-size:12px; padding:4px 8px;" oninput="updateNoteCount(this)" />
+                    <span style="position:absolute;right:6px;top:50%;transform:translateY(-50%);font-size:10px;color:var(--text-muted);" data-note-count>0/30</span>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
 
     </section>
-    <!-- ===== [修改結束] ===== -->
+
+    <!-- ============= Modal：補打卡 ============= -->
+    <div class="modal-overlay" id="modal-makeup-punch" onclick="closeModalIfBackdrop(event,'modal-makeup-punch')">
+      <div class="modal" style="width:480px;">
+        <div class="modal-head">
+          <div>
+            <h3 class="modal-title">補打卡</h3>
+            <div class="text-sec" style="font-size:12px; margin-top:2px;" id="makeup-member-label">張雅婷・2026-06-08</div>
+          </div>
+          <button class="icon-btn" onclick="closeModal('modal-makeup-punch')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+        </div>
+        <div class="modal-body">
+          <div class="form-row">
+            <label>補打卡類型 <span class="req">*</span></label>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+              <label class="card" style="padding:10px 14px; cursor:pointer; display:flex; align-items:center; gap:8px; border:2px solid var(--primary); background:var(--primary-soft);">
+                <input type="radio" name="makeup-type" value="on" checked style="accent-color:var(--primary);" />
+                <span style="font-size:13px; font-weight:600; color:var(--primary);">上班打卡</span>
+              </label>
+              <label class="card" style="padding:10px 14px; cursor:pointer; display:flex; align-items:center; gap:8px;">
+                <input type="radio" name="makeup-type" value="off" style="accent-color:var(--primary);" />
+                <span style="font-size:13px; font-weight:600;">下班打卡</span>
+              </label>
+            </div>
+          </div>
+          <div class="form-row">
+            <label>補打卡時間 <span class="req">*</span></label>
+            <div style="display:grid; grid-template-columns:1fr 140px; gap:8px;">
+              <input type="date" class="input full" value="2026-06-08" />
+              <input type="time" class="input full" value="09:00" />
+            </div>
+          </div>
+          <div class="form-row">
+            <label>補打卡原因 <span class="req">*</span></label>
+            <textarea class="input full" rows="2" placeholder="請說明補打卡原因…" maxlength="100"></textarea>
+          </div>
+          <div class="form-row" style="margin-bottom:0;">
+            <label>備註</label>
+            <div style="position:relative;">
+              <input type="text" class="input full" placeholder="輸入備註…" maxlength="30" oninput="this.nextElementSibling.textContent=this.value.length+'/30'" />
+              <span style="position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:11px;color:var(--text-muted);">0/30</span>
+            </div>
+          </div>
+        </div>
+        <div class="modal-foot">
+          <button class="btn" onclick="closeModal('modal-makeup-punch')">取消</button>
+          <button class="btn primary" onclick="closeModal('modal-makeup-punch'); showSyncToast('補打卡已提交');">確認補打卡</button>
+        </div>
+      </div>
+    </div>
 
     <!-- ============= 5.3 選單設定 ============= -->
     <section id="page-5.3" class="page-wrap hidden">
@@ -8878,20 +9274,45 @@
         </thead>
         <tbody id="bot-perm-tbody">
 
-          <!-- 資料列 1 -->
+          <!-- 第1筆：總管理員角色，不可刪除，顯示「負責人」標籤 -->
           <tr>
             <td>
               <div class="user-cell">
+                <div class="avatar" style="width:30px;height:30px;font-size:12px;background:linear-gradient(135deg,#7c3aed,#4f46e5);">張</div>
+                <div>
+                  <div style="font-weight:600; font-size:13px; display:flex; align-items:center; gap:6px;">
+                    張雅婷
+                    <span style="background:#eff6ff;color:#1d4ed8;font-size:10px;padding:1px 6px;border-radius:4px;font-weight:500;">負責人</span>
+                  </div>
+                </div>
+              </div>
+            </td>
+            <td><code style="font-size:12px; color:var(--text-secondary);">EMP-007</code></td>
+            <td class="text-sec" style="font-size:13px;">總管理員</td>
+            <!-- 不可刪除 -->
+            <td><span style="font-size:11px; color:var(--text-muted); padding:3px 8px; cursor:not-allowed;" title="總管理員不可移除">—</span></td>
+          </tr>
+
+          <!-- 第2筆：建立此Bot的人，不可刪除，顯示「負責人」標籤 -->
+          <tr id="bot-perm-creator-row">
+            <td>
+              <div class="user-cell">
                 <div class="avatar" style="width:30px;height:30px;font-size:12px;">陳</div>
-                <div><div style="font-weight:600; font-size:13px;">陳小明</div></div>
+                <div>
+                  <div style="font-weight:600; font-size:13px; display:flex; align-items:center; gap:6px;">
+                    陳小明
+                    <span style="background:#eff6ff;color:#1d4ed8;font-size:10px;padding:1px 6px;border-radius:4px;font-weight:500;">負責人</span>
+                  </div>
+                </div>
               </div>
             </td>
             <td><code style="font-size:12px; color:var(--text-secondary);">EMP-001</code></td>
-            <td class="text-sec" style="font-size:13px;">研發部</td>
-            <td><button class="btn ghost sm danger-ghost" onclick="openModal('modal-keyword-delete-confirm')" style="font-size:11px;">刪除</button></td>
+            <td class="text-sec" style="font-size:13px;">HR管理員</td>
+            <!-- 建立者不可刪除 -->
+            <td><span style="font-size:11px; color:var(--text-muted); padding:3px 8px; cursor:not-allowed;" title="建立者不可移除">—</span></td>
           </tr>
 
-          <!-- 資料列 2 -->
+          <!-- 第3筆：一般成員，可以刪除 -->
           <tr>
             <td>
               <div class="user-cell">
@@ -8900,20 +9321,7 @@
               </div>
             </td>
             <td><code style="font-size:12px; color:var(--text-secondary);">EMP-003</code></td>
-            <td class="text-sec" style="font-size:13px;">產品部</td>
-            <td><button class="btn ghost sm danger-ghost" onclick="openModal('modal-keyword-delete-confirm')" style="font-size:11px;">刪除</button></td>
-          </tr>
-
-          <!-- 資料列 3 -->
-          <tr>
-            <td>
-              <div class="user-cell">
-                <div class="avatar" style="width:30px;height:30px;font-size:12px;">張</div>
-                <div><div style="font-weight:600; font-size:13px;">張雅婷</div></div>
-              </div>
-            </td>
-            <td><code style="font-size:12px; color:var(--text-secondary);">EMP-007</code></td>
-            <td class="text-sec" style="font-size:13px;">行銷部</td>
+            <td class="text-sec" style="font-size:13px;">IT管理員</td>
             <td><button class="btn ghost sm danger-ghost" onclick="openModal('modal-keyword-delete-confirm')" style="font-size:11px;">刪除</button></td>
           </tr>
 
@@ -10291,194 +10699,279 @@
 </div>
 
 
+<!-- ============= Modal：新增選單（Figma 793:52338） ============= -->
 <div class="modal-overlay" id="modal-add-menu" onclick="closeModalIfBackdrop(event, 'modal-add-menu')">
-  <div class="modal" style="width: 700px; max-height:90vh; display:flex; flex-direction:column;">
-    <div class="modal-head"><h3 class="modal-title">新增選單</h3><button class="icon-btn" onclick="closeModal('modal-add-menu')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button></div>
-    <div class="modal-body" style="overflow-y:auto; flex:1;">
+  <div class="modal" style="width:700px; max-height:92vh; display:flex; flex-direction:column;">
+    <div class="modal-head">
+      <h3 class="modal-title">新增選單</h3>
+      <button class="icon-btn" onclick="closeModal('modal-add-menu')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+    </div>
+    <div class="modal-body" style="overflow-y:auto; flex:1; padding:24px;">
 
-      <!-- 基本資訊 -->
-      <div style="font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:10px;">基本資訊</div>
-      <div class="form-row"><label>選單名稱 <span class="req">*</span></label><input class="input full" placeholder="例：主選單、會員專區" /></div>
+      <!-- 選單名稱 -->
       <div class="form-row">
-        <label>指定 Bot <span class="req">*</span></label>
-        <select class="input full"><option>— 選擇 Bot —</option><option>客服助手</option><option>內部公告 Bot</option><option>值班通知</option><option>行銷活動 Bot</option></select>
+        <label>選單名稱 <span class="req">*</span></label>
+        <input class="input full" placeholder="例：主選單" />
       </div>
+
+      <!-- 顯示對象（Figma：dropdown + 人數顯示） -->
       <div class="form-row">
-        <label>選單類型 <span class="req">*</span></label>
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
-          <label class="card" style="padding:14px; cursor:pointer; text-align:center;" onclick="switchMenuType('richmenu')"><input type="radio" name="mtype" hidden checked /><div style="font-weight:600;">Rich Menu</div><div class="text-sec" style="font-size:11px;">圖文選單，支援多區塊</div></label>
-          <label class="card" style="padding:14px; cursor:pointer; text-align:center;" onclick="switchMenuType('quickmenu')"><input type="radio" name="mtype" hidden /><div style="font-weight:600;">快速選單</div><div class="text-sec" style="font-size:11px;">文字按鈕選單，類 Menu 排列</div></label>
+        <label>顯示對象 <span class="req">*</span></label>
+        <select class="input full" id="add-menu-audience" onchange="updateMenuAudienceCount(this.value)">
+          <option value="">— 選擇成員 —</option>
+          <option value="all" selected>所有訂閱者</option>
+          <option value="dept_rd">研發部</option>
+          <option value="dept_hr">HR 部門</option>
+          <option value="dept_mkt">行銷部</option>
+        </select>
+        <div style="display:flex; align-items:center; gap:8px; margin-top:8px;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          <span style="font-size:13px;">對象：</span>
+          <strong style="color:var(--primary);" id="add-menu-count">1,248 人</strong>
+          <span class="text-sec" style="font-size:12px;" id="add-menu-count-label">（全部成員）</span>
         </div>
       </div>
+
+      <!-- 版型選擇（Figma 793:52338 / 786:48072） -->
+      <div class="form-row" id="add-menu-layout-section">
 
       <!-- Rich Menu 區塊 -->
       <div id="add-menu-richmenu-section">
-      <!-- ===== [修改開始] 版型選擇 ===== -->
+      <!-- 版型選擇（Figma 793:52338 + 786:48072） -->
       <div class="form-row">
         <label>版型選擇 <span class="req">*</span></label>
-        <div style="display:flex; gap:8px; margin-bottom:10px;">
-          <button class="btn ghost sm active" id="rm-size-large" onclick="selectRmSize('large')" style="font-size:12px;">大型 2500×1686</button>
-          <button class="btn ghost sm" id="rm-size-small" onclick="selectRmSize('small')" style="font-size:12px;">小型 1200×405</button>
+        <div style="display:flex; gap:8px; margin-bottom:12px;">
+          <!-- 大型：選中為藍底藍框，未選為白底灰框 -->
+          <button id="rm-size-large" onclick="selectRmSize('large')" style="padding:4px 12px; border-radius:8px; font-size:12px; font-weight:500; cursor:pointer; background:var(--primary-soft); border:1px solid var(--primary); color:var(--primary); font-family:inherit;">大型 2500×1686</button>
+          <button id="rm-size-small" onclick="selectRmSize('small')" style="padding:4px 12px; border-radius:8px; font-size:12px; font-weight:500; cursor:pointer; background:white; border:1px solid var(--border); color:var(--text-secondary); font-family:inherit;">小型 1200×405</button>
         </div>
+        <!-- Figma 793:52338 layout grid — 5 欄，共 9 個版型 + 切換大/小型 -->
         <div style="display:grid; grid-template-columns: repeat(5, 1fr); gap:8px;" id="rm-layout-grid">
-          <!-- 版型 1 -->
-          <label class="card" style="padding:10px; cursor:pointer; text-align:center;" onclick="selectRmLayout(1)">
+          <!-- 版型 1: 大型=全寬1格；小型=全寬1格 -->
+          <label class="rm-layout-card" onclick="selectRmLayout(1)" style="padding:10px; cursor:pointer; text-align:center; border:1px solid var(--border); border-radius:8px; background:white; transition:all .15s;">
             <input type="radio" name="rmlayout" value="1" hidden checked />
             <div style="font-size:11px;font-weight:600;color:var(--text-secondary);margin-bottom:6px;">版型 1</div>
-            <div style="border:1px solid var(--border);border-radius:4px;overflow:hidden;aspect-ratio:5/2.5;display:grid;grid-template-columns:1fr;grid-template-rows:1fr;gap:1px;background:var(--border);">
-              <div style="background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--text-muted);">1</div>
+            <div style="border:1px solid var(--border);border-radius:4px;overflow:hidden;aspect-ratio:5/2.5;display:grid;grid-template-columns:1fr;gap:1px;background:var(--border);">
+              <div style="background:#f7f8fa;display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--text-muted);">1</div>
             </div>
           </label>
-          <!-- 版型 2 -->
-          <label class="card" style="padding:10px; cursor:pointer; text-align:center;" onclick="selectRmLayout(2)">
+          <!-- 版型 2: 大型=1/2 水平；小型=1/2 水平 -->
+          <label class="rm-layout-card" onclick="selectRmLayout(2)" style="padding:10px; cursor:pointer; text-align:center; border:1px solid var(--border); border-radius:8px; background:white; transition:all .15s;">
             <input type="radio" name="rmlayout" value="2" hidden />
             <div style="font-size:11px;font-weight:600;color:var(--text-secondary);margin-bottom:6px;">版型 2</div>
             <div style="border:1px solid var(--border);border-radius:4px;overflow:hidden;aspect-ratio:5/2.5;display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);">
-              <div style="background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--text-muted);">1</div>
-              <div style="background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--text-muted);">2</div>
+              <div style="background:#f7f8fa;display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--text-muted);">1</div>
+              <div style="background:#f7f8fa;display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--text-muted);">2</div>
             </div>
           </label>
-          <!-- 版型 3 -->
-          <label class="card" style="padding:10px; cursor:pointer; text-align:center;" onclick="selectRmLayout(3)">
+          <!-- 版型 3: 大型=垂直3格；小型=垂直3格 -->
+          <label class="rm-layout-card" onclick="selectRmLayout(3)" style="padding:10px; cursor:pointer; text-align:center; border:1px solid var(--border); border-radius:8px; background:white; transition:all .15s;">
             <input type="radio" name="rmlayout" value="3" hidden />
             <div style="font-size:11px;font-weight:600;color:var(--text-secondary);margin-bottom:6px;">版型 3</div>
             <div style="border:1px solid var(--border);border-radius:4px;overflow:hidden;aspect-ratio:5/2.5;display:grid;grid-template-columns:1fr;grid-template-rows:1fr 1fr 1fr;gap:1px;background:var(--border);">
-              <div style="background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--text-muted);">1</div>
-              <div style="background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--text-muted);">2</div>
-              <div style="background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--text-muted);">3</div>
+              <div style="background:#f7f8fa;display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--text-muted);">1</div>
+              <div style="background:#f7f8fa;display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--text-muted);">2</div>
+              <div style="background:#f7f8fa;display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--text-muted);">3</div>
             </div>
           </label>
           <!-- 版型 4 -->
-          <label class="card" style="padding:10px; cursor:pointer; text-align:center;" onclick="selectRmLayout(4)">
+          <label class="rm-layout-card" onclick="selectRmLayout(4)" style="padding:10px; cursor:pointer; text-align:center; border:1px solid var(--border); border-radius:8px; background:white; transition:all .15s;">
             <input type="radio" name="rmlayout" value="4" hidden />
             <div style="font-size:11px;font-weight:600;color:var(--text-secondary);margin-bottom:6px;">版型 4</div>
             <div style="border:1px solid var(--border);border-radius:4px;overflow:hidden;aspect-ratio:5/2.5;display:grid;grid-template-columns:1fr;grid-template-rows:1fr 1fr 1fr;gap:1px;background:var(--border);">
-              <div style="background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--text-muted);">1</div>
-              <div style="background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--text-muted);">2</div>
-              <div style="background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--text-muted);">3</div>
+              <div style="background:#f7f8fa;display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--text-muted);">1</div>
+              <div style="background:#f7f8fa;display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--text-muted);">2</div>
+              <div style="background:#f7f8fa;display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--text-muted);">3</div>
             </div>
           </label>
-          <!-- 版型 5 -->
-          <label class="card" style="padding:10px; cursor:pointer; text-align:center;" onclick="selectRmLayout(5)">
+          <!-- 版型 5 (Figma highlight): 2x2 grid -->
+          <label class="rm-layout-card" onclick="selectRmLayout(5)" style="padding:10px; cursor:pointer; text-align:center; border:1px solid var(--border-strong); border-radius:8px; background:#f0f3f5; transition:all .15s;">
             <input type="radio" name="rmlayout" value="5" hidden />
             <div style="font-size:11px;font-weight:600;color:var(--text-secondary);margin-bottom:6px;">版型 5</div>
             <div style="border:1px solid var(--border);border-radius:4px;overflow:hidden;aspect-ratio:5/2.5;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:1px;background:var(--border);">
-              <div style="background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--text-muted);">1</div>
-              <div style="background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--text-muted);">2</div>
-              <div style="background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--text-muted);">3</div>
-              <div style="background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--text-muted);">4</div>
+              <div style="background:#f7f8fa;display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--text-muted);">1</div>
+              <div style="background:#f7f8fa;display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--text-muted);">2</div>
+              <div style="background:#f7f8fa;display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--text-muted);">3</div>
+              <div style="background:#f7f8fa;display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--text-muted);">4</div>
             </div>
           </label>
           <!-- 版型 6 -->
-          <label class="card" style="padding:10px; cursor:pointer; text-align:center;" onclick="selectRmLayout(6)">
+          <label class="rm-layout-card" onclick="selectRmLayout(6)" style="padding:10px; cursor:pointer; text-align:center; border:1px solid var(--border); border-radius:8px; background:white; transition:all .15s;">
             <input type="radio" name="rmlayout" value="6" hidden />
             <div style="font-size:11px;font-weight:600;color:var(--text-secondary);margin-bottom:6px;">版型 6</div>
             <div style="border:1px solid var(--border);border-radius:4px;overflow:hidden;aspect-ratio:5/2.5;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:1px;background:var(--border);">
-              <div style="background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--text-muted);">1</div>
-              <div style="background:var(--bg);grid-column:2;grid-row:1/3;display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--text-muted);">2</div>
-              <div style="background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--text-muted);">3</div>
+              <div style="background:#f7f8fa;display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--text-muted);">1</div>
+              <div style="background:#f7f8fa;grid-column:2;grid-row:1/3;display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--text-muted);">2</div>
+              <div style="background:#f7f8fa;display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--text-muted);">3</div>
             </div>
           </label>
           <!-- 版型 7 -->
-          <label class="card" style="padding:10px; cursor:pointer; text-align:center;" onclick="selectRmLayout(7)">
+          <label class="rm-layout-card" onclick="selectRmLayout(7)" style="padding:10px; cursor:pointer; text-align:center; border:1px solid var(--border); border-radius:8px; background:white; transition:all .15s;">
             <input type="radio" name="rmlayout" value="7" hidden />
             <div style="font-size:11px;font-weight:600;color:var(--text-secondary);margin-bottom:6px;">版型 7</div>
             <div style="border:1px solid var(--border);border-radius:4px;overflow:hidden;aspect-ratio:5/2.5;display:grid;grid-template-columns:1fr 1fr 1fr;grid-template-rows:1fr 1fr;gap:1px;background:var(--border);">
-              <div style="background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--text-muted);">1</div>
-              <div style="background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--text-muted);">2</div>
-              <div style="background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--text-muted);">3</div>
-              <div style="background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--text-muted);">4</div>
-              <div style="background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--text-muted);">5</div>
-              <div style="background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--text-muted);">6</div>
+              <div style="background:#f7f8fa;display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--text-muted);">1</div>
+              <div style="background:#f7f8fa;display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--text-muted);">2</div>
+              <div style="background:#f7f8fa;display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--text-muted);">3</div>
+              <div style="background:#f7f8fa;display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--text-muted);">4</div>
+              <div style="background:#f7f8fa;display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--text-muted);">5</div>
+              <div style="background:#f7f8fa;display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--text-muted);">6</div>
             </div>
           </label>
           <!-- 版型 8 -->
-          <label class="card" style="padding:10px; cursor:pointer; text-align:center;" onclick="selectRmLayout(8)">
+          <label class="rm-layout-card" onclick="selectRmLayout(8)" style="padding:10px; cursor:pointer; text-align:center; border:1px solid var(--border); border-radius:8px; background:white; transition:all .15s;">
             <input type="radio" name="rmlayout" value="8" hidden />
             <div style="font-size:11px;font-weight:600;color:var(--text-secondary);margin-bottom:6px;">版型 8</div>
             <div style="border:1px solid var(--border);border-radius:4px;overflow:hidden;aspect-ratio:5/2.5;display:grid;grid-template-columns:1fr 1fr 1fr;grid-template-rows:1fr 1fr;gap:1px;background:var(--border);">
-              <div style="background:var(--bg);grid-column:1/4;display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--text-muted);">1</div>
-              <div style="background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--text-muted);">2</div>
-              <div style="background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--text-muted);">3</div>
-              <div style="background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--text-muted);">4</div>
+              <div style="background:#f7f8fa;grid-column:1/4;display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--text-muted);">1</div>
+              <div style="background:#f7f8fa;display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--text-muted);">2</div>
+              <div style="background:#f7f8fa;display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--text-muted);">3</div>
+              <div style="background:#f7f8fa;display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--text-muted);">4</div>
             </div>
           </label>
           <!-- 版型 9 -->
-          <label class="card" style="padding:10px; cursor:pointer; text-align:center;" onclick="selectRmLayout(9)">
+          <label class="rm-layout-card" onclick="selectRmLayout(9)" style="padding:10px; cursor:pointer; text-align:center; border:1px solid var(--border); border-radius:8px; background:white; transition:all .15s;">
             <input type="radio" name="rmlayout" value="9" hidden />
             <div style="font-size:11px;font-weight:600;color:var(--text-secondary);margin-bottom:6px;">版型 9</div>
             <div style="border:1px solid var(--border);border-radius:4px;overflow:hidden;aspect-ratio:5/2.5;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:1px;background:var(--border);">
-              <div style="background:var(--bg);grid-row:1/3;display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--text-muted);">1</div>
-              <div style="background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--text-muted);">2</div>
-              <div style="background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--text-muted);">3</div>
+              <div style="background:#f7f8fa;grid-row:1/3;display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--text-muted);">1</div>
+              <div style="background:#f7f8fa;display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--text-muted);">2</div>
+              <div style="background:#f7f8fa;display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--text-muted);">3</div>
             </div>
           </label>
         </div>
       </div>
       <!-- ===== [修改結束] 版型選擇 ===== -->
 
-      <!-- ===== [修改開始] 範本下載 + 圖片上傳 ===== -->
+      <!-- 選單圖片（Figma 793:52338） -->
       <div class="form-row">
-        <label>選單圖片</label>
-        <div style="display:flex; gap:8px; align-items:center; margin-bottom:10px;">
-          <button class="btn ghost sm" onclick="downloadRmTemplate()">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:6px;">
+          <div>
+            <span style="font-size:13px; font-weight:600;">選單圖片</span>
+            <div class="text-sec" style="font-size:12px; margin-top:2px;" id="rm-img-size-hint">圖片限制：2500×1686px，小於5MB。可下載範本參考</div>
+          </div>
+          <button class="btn ghost sm" onclick="downloadRmTemplate()" style="flex-shrink:0;">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:4px;vertical-align:-2px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
             下載範本
           </button>
-          <span class="text-sec" style="font-size:12px;">依版型尺寸下載範本圖片作為設計底圖</span>
         </div>
-        <div id="rm-upload-area" style="border:2px dashed var(--border); border-radius:var(--radius); padding:24px; text-align:center; cursor:pointer; background:var(--bg); transition:border-color 0.15s;" onclick="openModal('modal-image-create')" onmouseover="this.style.borderColor='var(--primary)'" onmouseout="this.style.borderColor='var(--border)'">
-          <div style="font-size:28px; margin-bottom:8px;">🖼️</div>
+        <div id="rm-upload-area" style="border:2px dashed var(--border); border-radius:var(--radius); padding:32px 24px; text-align:center; cursor:pointer; background:var(--bg); transition:border-color 0.15s;" onclick="openModal('modal-image-create')" onmouseover="this.style.borderColor='var(--primary)'" onmouseout="this.style.borderColor='var(--border)'">
+          <div style="font-size:32px; margin-bottom:8px;">🖼️</div>
           <div style="font-weight:600; font-size:13px; margin-bottom:4px;">上傳選單圖片</div>
-          <div class="text-sec" style="font-size:12px;">點擊上傳，或拖曳圖片至此區域</div>
-          <div class="text-sec" style="font-size:11px; margin-top:4px;">PNG / JPG，上傳後可在圖片編輯器中裁切與調整</div>
+          <div class="text-sec" style="font-size:12px; margin-bottom:4px;">點擊上傳，或拖曳圖片至此區域</div>
+          <div class="text-sec" style="font-size:11px;" id="rm-upload-hint">JPEG、PNG圖檔，尺寸2500×1686px，小於5MB</div>
         </div>
-        <!-- 上傳後預覽（預設隱藏） -->
         <div id="rm-img-preview" style="display:none; margin-top:10px; position:relative;">
           <img src="" alt="選單圖片預覽" id="rm-preview-img" style="width:100%; border-radius:var(--radius); border:1px solid var(--border);" />
-          <button class="btn ghost sm" style="position:absolute;top:8px;right:8px;" onclick="document.getElementById('rm-img-preview').style.display='none'; document.getElementById('rm-upload-area').style.display='block'; resetRmActionRows();">移除</button>
+          <button class="btn ghost sm" style="position:absolute;top:8px;right:8px;" onclick="document.getElementById('rm-img-preview').style.display='none'; document.getElementById('rm-upload-area').style.display='block';">移除</button>
         </div>
       </div>
 
-      <!-- 選單列動作設定（圖片上傳後出現） -->
-      <div id="rm-action-section" style="display:none;">
-        <div style="font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:10px;">選單動作設定</div>
-        <div id="rm-action-rows">
-          <!-- 動態生成 -->
+      <!-- 動作設定 #1（Figma 793:52338 - 固定顯示，非upload後才出現） -->
+      <div style="background:var(--primary-soft); border:1px solid var(--border); border-radius:var(--radius); padding:14px 16px; margin-top:4px;">
+        <div style="font-size:12px; font-weight:600; color:var(--text-secondary); margin-bottom:8px;">#1</div>
+        <div style="display:flex; gap:8px; align-items:center;">
+          <select class="input" style="width:140px; font-size:12px; color:var(--text-secondary);">
+            <option>無動作</option>
+            <option>開啟連結</option>
+            <option>傳送訊息</option>
+            <option>電話撥打</option>
+          </select>
         </div>
       </div>
-      <!-- ===== [修改結束] ===== -->
+
       </div><!-- /add-menu-richmenu-section -->
 
-      <!-- ===== [修改開始] 快速選單區塊 ===== -->
+      <!-- ===== 快速選單區塊（Figma 964:65471） ===== -->
       <div id="add-menu-quickmenu-section" style="display:none;">
-        <div class="form-row">
-          <label>按鈕數 <span class="req">*</span></label>
-          <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:10px;">
-            <button class="btn ghost sm active" id="qm-btn-2" onclick="selectQuickMenuBtns(2)" style="font-size:12px;">2 按鈕</button>
-            <button class="btn ghost sm" id="qm-btn-3" onclick="selectQuickMenuBtns(3)" style="font-size:12px;">3 按鈕</button>
-            <button class="btn ghost sm" id="qm-btn-4" onclick="selectQuickMenuBtns(4)" style="font-size:12px;">4 按鈕</button>
-            <button class="btn ghost sm" id="qm-btn-6" onclick="selectQuickMenuBtns(6)" style="font-size:12px;">6 按鈕</button>
-          </div>
-        </div>
+        <div style="display:grid; grid-template-columns:1fr 280px; gap:20px; align-items:start;">
 
-        <!-- 快速選單模擬預覽 (Menu 排列) -->
-        <div class="form-row">
-          <label>選單預覽 / 設定</label>
-          <div id="qm-preview-container" style="background:#f0f2f5; border-radius:var(--radius); padding:12px; border:1px solid var(--border);">
-            <div style="font-size:11px; color:var(--text-muted); text-align:center; margin-bottom:8px;">快速選單（模擬顯示）</div>
-            <div id="qm-buttons-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:6px;">
-              <!-- 動態生成 -->
+          <!-- 左：設定區 -->
+          <div>
+            <!-- 按鈕設定 -->
+            <div class="form-row">
+              <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+                <label style="margin:0;">按鈕設定 <span class="req">*</span></label>
+                <div style="display:flex; align-items:center; gap:10px;">
+                  <span style="font-size:12px; color:var(--text-muted);"><span style="color:var(--info);" id="qm-btn-count">0</span> / 6</span>
+                  <button onclick="addQuickMenuBtn()" class="push-add-item-btn">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    新增按鈕
+                  </button>
+                </div>
+              </div>
+              <div id="qm-btn-settings" style="display:flex; flex-direction:column; gap:8px;">
+                <!-- 按鈕行 1 -->
+                <div class="qm-btn-row" style="display:flex; gap:8px; align-items:center;">
+                  <div style="width:22px; height:22px; border-radius:50%; background:var(--primary); display:flex; align-items:center; justify-content:center; font-size:10px; color:white; font-weight:700; flex-shrink:0;">1</div>
+                  <input type="text" class="input" placeholder="按鈕文字" style="flex:1;" oninput="updateQMPreview()" />
+                  <select class="input" style="width:90px; font-size:12px;" onchange="toggleQMBtnAction(this)">
+                    <option value="none">無動作</option>
+                    <option value="link">開啟連結</option>
+                    <option value="msg">傳送訊息</option>
+                    <option value="keyword">關鍵字</option>
+                  </select>
+                  <input type="text" placeholder="動作內容" class="input" style="flex:1; display:none;" />
+                  <button onclick="this.closest('.qm-btn-row').remove(); updateQMPreview();" class="push-del-btn" style="color:var(--text-muted);">×</button>
+                </div>
+                <!-- 按鈕行 2 -->
+                <div class="qm-btn-row" style="display:flex; gap:8px; align-items:center;">
+                  <div style="width:22px; height:22px; border-radius:50%; background:var(--primary); display:flex; align-items:center; justify-content:center; font-size:10px; color:white; font-weight:700; flex-shrink:0;">2</div>
+                  <input type="text" class="input" placeholder="按鈕文字" style="flex:1;" oninput="updateQMPreview()" />
+                  <select class="input" style="width:90px; font-size:12px;">
+                    <option value="none">無動作</option>
+                    <option value="link">開啟連結</option>
+                    <option value="msg">傳送訊息</option>
+                    <option value="keyword">關鍵字</option>
+                  </select>
+                  <input type="text" placeholder="動作內容" class="input" style="flex:1; display:none;" />
+                  <button onclick="this.closest('.qm-btn-row').remove(); updateQMPreview();" class="push-del-btn" style="color:var(--text-muted);">×</button>
+                </div>
+                <!-- 按鈕行 3 -->
+                <div class="qm-btn-row" style="display:flex; gap:8px; align-items:center;">
+                  <div style="width:22px; height:22px; border-radius:50%; background:var(--primary); display:flex; align-items:center; justify-content:center; font-size:10px; color:white; font-weight:700; flex-shrink:0;">3</div>
+                  <input type="text" class="input" placeholder="按鈕文字" style="flex:1;" oninput="updateQMPreview()" />
+                  <select class="input" style="width:90px; font-size:12px;">
+                    <option value="none">無動作</option>
+                    <option value="link">開啟連結</option>
+                    <option value="msg">傳送訊息</option>
+                    <option value="keyword">關鍵字</option>
+                  </select>
+                  <input type="text" placeholder="動作內容" class="input" style="flex:1; display:none;" />
+                  <button onclick="this.closest('.qm-btn-row').remove(); updateQMPreview();" class="push-del-btn" style="color:var(--text-muted);">×</button>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
 
-        <!-- 按鈕內容設定列表 -->
-        <div class="form-row" style="margin-bottom:0;">
-          <label>按鈕設定</label>
-          <div id="qm-btn-settings" style="display:grid; gap:8px;">
-            <!-- 動態生成 -->
+          <!-- 右：即時手機預覽 -->
+          <div style="position:sticky; top:0;">
+            <div style="font-size:12px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:10px; text-align:center;">即時預覽</div>
+            <div style="background:#1a1a2e; border-radius:24px; padding:10px; box-shadow:0 6px 20px rgba(0,0,0,.25);">
+              <div style="background:#111; border-radius:12px 12px 0 0; padding:8px 10px; display:flex; gap:6px; align-items:center;">
+                <div style="width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,#4f46e5,#7c3aed);display:flex;align-items:center;justify-content:center;font-size:10px;color:white;font-weight:700;">客</div>
+                <div>
+                  <div style="font-size:10px;font-weight:700;color:white;">客服助手</div>
+                  <div style="font-size:8px;color:#888;">Bot</div>
+                </div>
+              </div>
+              <div style="background:#f0f2f5; padding:10px; min-height:80px; text-align:center; font-size:10px; color:#aaa;">聊天室訊息區域</div>
+              <!-- 快速選單預覽 -->
+              <div style="background:white; border-radius:0 0 12px 12px; overflow:hidden;" id="qm-phone-preview">
+                <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:1px; background:var(--border);" id="qm-buttons-grid">
+                  <div style="background:white;padding:10px 6px;text-align:center;font-size:10px;color:var(--primary);font-weight:600;">按鈕 1</div>
+                  <div style="background:white;padding:10px 6px;text-align:center;font-size:10px;color:var(--primary);font-weight:600;">按鈕 2</div>
+                  <div style="background:white;padding:10px 6px;text-align:center;font-size:10px;color:var(--primary);font-weight:600;">按鈕 3</div>
+                </div>
+                <div style="background:#f7f8fa; border-top:1px solid var(--border); padding:5px 10px; display:flex; align-items:center; justify-content:center; gap:4px; font-size:10px; color:var(--text-muted);">
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"/></svg>
+                  收起選單
+                </div>
+              </div>
+            </div>
+            <div class="help" style="text-align:center; margin-top:8px;">此為示意預覽</div>
           </div>
+
         </div>
       </div>
       <!-- ===== [修改結束] 快速選單區塊 ===== -->
@@ -10568,79 +11061,157 @@
 </div>
 <!-- ===== [修改結束] 圖片建立 Modal ===== -->
 
-<!-- ============= Modal：新增關鍵字 5.4.1 ============= -->
+<!-- ============= Modal：新增關鍵字（Figma 849:63385 — 960px 兩欄式） ============= -->
 <div class="modal-overlay" id="modal-add-keyword" onclick="closeModalIfBackdrop(event, 'modal-add-keyword')">
-  <div class="modal" style="width: 580px; max-height:90vh; display:flex; flex-direction:column;">
-    <div class="modal-head"><h3 class="modal-title">新增關鍵字</h3><button class="icon-btn" onclick="closeModal('modal-add-keyword')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button></div>
-    <div class="modal-body" style="overflow-y:auto; flex:1;">
-      <div class="form-row"><label>關鍵字 <span class="req">*</span></label><input class="input full" placeholder="例：營業時間、運費、退貨" /><div class="help">多個關鍵字以逗號分隔。</div></div>
-      <!-- 套用預設訊息 -->
-      <div class="form-row">
-        <label>套用預設訊息</label>
-        <div style="display:flex; gap:8px; align-items:center;">
-          <select class="input full" id="kw-add-msg-select" onchange="applyDefaultMsgToKeyword('kw-add-reply', this.value)">
-            <option value="">— 選擇預設訊息套用（選填）—</option>
-            <option value="您好，歡迎加入 LWS 官方帳號，有任何問題請直接留言！">歡迎詞</option>
-            <option value="感謝您的詢問，期待再次為您服務，祝您有美好的一天！">離場訊息</option>
-            <option value="[按鈕訊息] 訂單問題 / 退換貨 / 真人客服">客服分流選單</option>
-          </select>
-        </div>
-        <div class="help">選擇後自動帶入下方回覆內容。</div>
-      </div>
+  <div class="modal" style="width:960px; max-height:92vh; display:flex; flex-direction:column;">
+    <div class="modal-head">
+      <h3 class="modal-title">新增關鍵字</h3>
+      <button class="icon-btn" onclick="closeModal('modal-add-keyword')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 300px; flex:1; overflow:hidden; min-height:0;">
 
-      <!-- 訊息內容（同預設訊息格式） -->
-      <div class="form-row">
-        <label>訊息內容 <span class="req">*</span></label>
-        <!-- 格式選擇 -->
-        <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:6px; margin-bottom:10px;" id="kw-add-format-grid">
-          <label class="card" style="padding:8px 4px; cursor:pointer; text-align:center; border-color:var(--primary); background:var(--primary-soft);" onclick="selectKwFormat('add','text')"><input type="radio" name="kw-add-fmt" value="text" hidden checked /><div style="font-size:14px; margin-bottom:2px;">✏️</div><div style="font-size:11px; font-weight:600;">文字</div></label>
-          <label class="card" style="padding:8px 4px; cursor:pointer; text-align:center;" onclick="selectKwFormat('add','image')"><input type="radio" name="kw-add-fmt" value="image" hidden /><div style="font-size:14px; margin-bottom:2px;">🖼️</div><div style="font-size:11px; font-weight:600;">圖片</div></label>
-          <label class="card" style="padding:8px 4px; cursor:pointer; text-align:center;" onclick="selectKwFormat('add','button')"><input type="radio" name="kw-add-fmt" value="button" hidden /><div style="font-size:14px; margin-bottom:2px;">🔘</div><div style="font-size:11px; font-weight:600;">按鈕</div></label>
-          <label class="card" style="padding:8px 4px; cursor:pointer; text-align:center;" onclick="selectKwFormat('add','carousel')"><input type="radio" name="kw-add-fmt" value="carousel" hidden /><div style="font-size:14px; margin-bottom:2px;">🎠</div><div style="font-size:11px; font-weight:600;">輪播圖</div></label>
+      <!-- 左：表單 (660px) -->
+      <div style="overflow-y:auto; border-right:1px solid var(--border); padding:20px 24px;">
+
+        <!-- 關鍵字 -->
+        <div class="form-row">
+          <label>關鍵字 <span class="req">*</span></label>
+          <input class="input full" id="kw-add-keyword" placeholder="我要請假" />
+          <div class="help">多個關鍵字以逗號分隔。</div>
         </div>
-        <!-- 動態欄位 -->
-        <div id="kw-add-field-text">
-          <textarea class="input full" id="kw-add-reply" placeholder="輸入回覆訊息內容…" rows="5"></textarea>
+
+        <!-- 輸入後觸發內容 section header -->
+        <div style="border-top:1px solid var(--border); padding-top:12px; margin-bottom:14px;">
+          <div style="font-size:12px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.06em;">輸入後觸發內容</div>
         </div>
-        <div id="kw-add-field-image" style="display:none;">
-          <div style="border:2px dashed var(--border);border-radius:var(--radius);padding:18px;text-align:center;cursor:pointer;background:var(--bg);" onclick="openModal('modal-image-create')">
-            <div style="font-size:22px;margin-bottom:4px;">🖼️</div>
-            <div style="font-size:12px;">點擊上傳圖片</div>
-            <div class="help" style="margin-top:4px;">PNG / JPG，建議 1040×1040px</div>
+
+        <!-- 訊息格式 (同 push editor block-chip style) -->
+        <div class="form-row" style="margin-bottom:0;">
+          <div style="display:flex; align-items:center; gap:14px; margin-bottom:10px; flex-wrap:wrap;">
+            <span style="font-size:13px; font-weight:600;">訊息格式</span>
+            <span style="font-size:12px; color:var(--text-muted);">一般訊息 <span id="kw-add-block-count" style="color:var(--danger);">5</span> / 5</span>
+            <span style="font-size:12px; color:var(--text-muted);">快速回覆 <span id="kw-add-qr-count" style="color:var(--danger);">1</span> / 1</span>
           </div>
-          <input class="input full" placeholder="點擊圖片後跳轉的網址（選填）" style="margin-top:8px;" />
-        </div>
-        <div id="kw-add-field-button" style="display:none;">
-          <input class="input full" placeholder="標題文字" style="margin-bottom:6px;" />
-          <div style="display:grid;gap:6px;" id="kw-add-btn-list">
-            <div style="display:flex;gap:6px;align-items:center;"><input class="input" placeholder="按鈕文字" style="flex:1;" /><select class="input" style="width:90px;"><option>文字</option><option>連結</option></select></div>
-            <div style="display:flex;gap:6px;align-items:center;"><input class="input" placeholder="按鈕文字" style="flex:1;" /><select class="input" style="width:90px;"><option>文字</option><option>連結</option></select></div>
+          <!-- Block chips row (Figma 849:63385) -->
+          <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:8px;" id="kw-add-blocks-row">
+            <!-- Active chip: #1-文字 -->
+            <div class="push-block-chip" data-edkey="text" onclick="selectPushBlockByChip(this,'kw-add')" style="display:inline-flex;align-items:center;gap:4px;padding:5px 10px;border-radius:8px;border:1.5px solid var(--primary);background:var(--primary-soft);cursor:pointer;font-size:12px;font-weight:600;color:var(--primary);">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="opacity:0.6;"><line x1="9" y1="4" x2="9" y2="20"/><line x1="15" y1="4" x2="15" y2="20"/></svg>
+              <span>#1-文字</span>
+              <button onclick="event.stopPropagation();removePushBlockByChip(this,'kw-add')" class="push-del-btn" style="color:var(--primary);">🗑</button>
+            </div>
+            <div class="push-block-chip" data-edkey="image" onclick="selectPushBlockByChip(this,'kw-add')" style="display:inline-flex;align-items:center;gap:4px;padding:5px 10px;border-radius:8px;border:1.5px solid var(--border);background:white;cursor:pointer;font-size:12px;color:var(--text);">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="opacity:0.4;"><line x1="9" y1="4" x2="9" y2="20"/><line x1="15" y1="4" x2="15" y2="20"/></svg>
+              <span>#2-圖片</span>
+              <button onclick="event.stopPropagation();removePushBlockByChip(this,'kw-add')" class="push-del-btn">🗑</button>
+            </div>
+            <div class="push-block-chip" data-edkey="button" onclick="selectPushBlockByChip(this,'kw-add')" style="display:inline-flex;align-items:center;gap:4px;padding:5px 10px;border-radius:8px;border:1.5px solid var(--border);background:white;cursor:pointer;font-size:12px;color:var(--text);">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="opacity:0.4;"><line x1="9" y1="4" x2="9" y2="20"/><line x1="15" y1="4" x2="15" y2="20"/></svg>
+              <span>#3-按鈕</span>
+              <button onclick="event.stopPropagation();removePushBlockByChip(this,'kw-add')" class="push-del-btn">🗑</button>
+            </div>
+            <div class="push-block-chip" data-edkey="carousel" onclick="selectPushBlockByChip(this,'kw-add')" style="display:inline-flex;align-items:center;gap:4px;padding:5px 10px;border-radius:8px;border:1.5px solid var(--border);background:white;cursor:pointer;font-size:12px;color:var(--text);">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="opacity:0.4;"><line x1="9" y1="4" x2="9" y2="20"/><line x1="15" y1="4" x2="15" y2="20"/></svg>
+              <span>#4-輪播圖</span>
+              <button onclick="event.stopPropagation();removePushBlockByChip(this,'kw-add')" class="push-del-btn">🗑</button>
+            </div>
+            <div class="push-block-chip" data-edkey="file" onclick="selectPushBlockByChip(this,'kw-add')" style="display:inline-flex;align-items:center;gap:4px;padding:5px 10px;border-radius:8px;border:1.5px solid var(--border);background:white;cursor:pointer;font-size:12px;color:var(--text);">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="opacity:0.4;"><line x1="9" y1="4" x2="9" y2="20"/><line x1="15" y1="4" x2="15" y2="20"/></svg>
+              <span>#5-檔案</span>
+              <button onclick="event.stopPropagation();removePushBlockByChip(this,'kw-add')" class="push-del-btn">🗑</button>
+            </div>
+            <!-- 新增按鈕 (dashed border) -->
+            <button onclick="openModal('modal-push-msg-type'); _pushMsgCtx='kw-add';" style="display:inline-flex;align-items:center;gap:4px;padding:5px 10px;border-radius:6px;border:1.5px dashed var(--border);background:white;cursor:pointer;font-size:12px;color:var(--text-muted);">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              新增
+            </button>
           </div>
-          <button class="btn ghost sm" style="margin-top:6px;">+ 新增按鈕</button>
-        </div>
-        <div id="kw-add-field-carousel" style="display:none;">
-          <div style="display:grid;gap:10px;" id="kw-add-carousel-list">
-            <div class="card" style="padding:10px;" data-carousel-item>
-              <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;"><div style="font-size:11px;font-weight:700;color:var(--primary);">第 1 張</div><button class="btn ghost sm danger-ghost" style="margin-left:auto;padding:2px 6px;font-size:11px;" onclick="this.closest('[data-carousel-item]').remove()">移除</button></div>
-              <div style="border:2px dashed var(--border);border-radius:6px;padding:14px;text-align:center;cursor:pointer;background:var(--bg);margin-bottom:6px;" onclick="openModal('modal-image-create')"><div style="font-size:18px;">🖼️</div><div style="font-size:11px;">上傳圖片</div></div>
-              <input class="input full" placeholder="標題" style="margin-bottom:5px;" />
-              <input class="input full" placeholder="按鈕文字（選填）" />
+          <!-- 快速回覆 chip (second row) -->
+          <div style="display:flex; align-items:center; gap:6px; margin-bottom:12px;" id="kw-add-qr-row">
+            <div class="push-block-chip" data-edkey="quickreply" onclick="selectPushBlockByChip(this,'kw-add')" style="display:inline-flex;align-items:center;gap:4px;padding:5px 10px;border-radius:8px;border:1.5px solid var(--border);background:white;cursor:pointer;font-size:12px;color:var(--text);">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="opacity:0.4;"><line x1="9" y1="4" x2="9" y2="20"/><line x1="15" y1="4" x2="15" y2="20"/></svg>
+              <span>#6-快速回覆</span>
+              <button onclick="event.stopPropagation();removePushBlockByChip(this,'kw-add')" class="push-del-btn">🗑</button>
             </div>
           </div>
-          <button class="btn ghost sm" style="margin-top:8px;" onclick="addKwCarouselItem()">+ 新增輪播項目</button>
+
+          <!-- Active block editor -->
+          <div id="kw-add-block-editors">
+            <!-- 文字 editor (active) -->
+            <div id="kw-add-editor-text" class="card" style="padding:16px; border:2px solid var(--border);">
+              <div style="font-size:13px; font-weight:600; margin-bottom:10px;">文字訊息</div>
+              <textarea class="input full" id="kw-add-reply" rows="4" placeholder="輸入回覆訊息內容…" oninput="updateKwPreview()" style="resize:vertical;">你的請假扣打已達上限。</textarea>
+              <div style="display:flex; gap:6px; margin-top:8px; flex-wrap:wrap;">
+                <span class="push-var-chip" onclick="insertPushVar('kw-add-reply','{{姓名}}')">{{姓名}}</span>
+                <span class="push-var-chip" onclick="insertPushVar('kw-add-reply','{{部門}}')">{{部門}}</span>
+                <span class="push-var-chip" onclick="insertPushVar('kw-add-reply','{{日期}}')">{{日期}}</span>
+                <span class="push-var-chip" onclick="insertPushVar('kw-add-reply','{{時間}}')">{{時間}}</span>
+              </div>
+            </div>
+            <!-- 圖片 editor -->
+            <div id="kw-add-editor-image" class="card" style="display:none; padding:16px; border:2px solid var(--border);">
+              <div class="push-editor-label">上傳圖片</div>
+              <div class="push-upload-zone"><div style="font-size:22px; margin-bottom:4px;">🖼️</div><div style="font-size:12px; color:var(--text-muted);">支援PNG格式，大小不超過5MB</div><input type="file" accept="image/*" style="display:none;" /></div>
+            </div>
+            <!-- 按鈕 editor -->
+            <div id="kw-add-editor-button" class="card" style="display:none; padding:16px; border:2px solid var(--border);">
+              <div class="push-editor-label">按鈕訊息</div>
+              <div class="push-counter-input" style="margin-bottom:8px;"><input type="text" placeholder="標題文字" maxlength="100" /><span>0/100</span></div>
+              <div style="display:flex; gap:8px; align-items:center;">
+                <select class="input" style="width:80px;font-size:12px;"><option>連結</option><option>關鍵字</option></select>
+                <div class="push-counter-input" style="flex:0 0 150px;"><input type="text" placeholder="按鈕文字" maxlength="20" /><span>0/20</span></div>
+                <div style="flex:1;border:1px solid var(--border);border-radius:var(--radius-sm);background:white;padding:5px 10px;"><input type="text" placeholder="http://" style="border:none;outline:none;font-size:13px;width:100%;font-family:inherit;color:var(--text-muted);" /></div>
+              </div>
+            </div>
+            <!-- 輪播圖 editor -->
+            <div id="kw-add-editor-carousel" class="card" style="display:none; padding:16px; border:2px solid var(--border);">
+              <div class="push-editor-label">輪播圖</div>
+              <div class="push-upload-zone sm">🖼️ <span style="font-size:11px;color:var(--text-muted);">上傳第1張圖片</span><input type="file" accept="image/*" style="display:none;" /></div>
+              <div class="push-counter-input" style="margin-top:8px;"><input type="text" placeholder="標題" maxlength="40" /><span>0/40</span></div>
+            </div>
+            <!-- 檔案 editor -->
+            <div id="kw-add-editor-file" class="card" style="display:none; padding:16px; border:2px solid var(--border);">
+              <div class="push-editor-label">上傳檔案</div>
+              <div class="push-upload-zone"><div style="font-size:22px; margin-bottom:4px;">📎</div><div style="font-size:12px; color:var(--text-muted);">點擊上傳檔案，大小不超過20MB</div><input type="file" style="display:none;" /></div>
+            </div>
+            <!-- 快速回覆 editor -->
+            <div id="kw-add-editor-quickreply" class="card" style="display:none; padding:16px; border:2px solid var(--border);">
+              <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
+                <span style="font-size:13px; font-weight:600;">快速服務選單</span>
+                <button style="background:#f2f3f5; border:none; border-radius:6px; padding:4px 10px; cursor:pointer; font-size:12px; color:var(--primary); font-family:inherit;">+ 選單</button>
+              </div>
+              <div style="display:flex; gap:8px; align-items:center;">
+                <select class="input" style="width:80px;font-size:12px;"><option>連結</option><option>關鍵字</option></select>
+                <div class="push-counter-input" style="flex:0 0 150px;"><input type="text" placeholder="按鈕文字" maxlength="20" /><span>0/20</span></div>
+                <div style="flex:1;border:1px solid var(--border);border-radius:var(--radius-sm);background:white;padding:5px 10px;"><input type="text" placeholder="http://" style="border:none;outline:none;font-size:12px;width:100%;font-family:inherit;color:var(--text-muted);" /></div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="form-row" style="margin-bottom:0;">
-        <label style="display:flex; align-items:center; justify-content:space-between;">
-          <span>啟用此關鍵字</span>
-          <label class="switch" style="margin-left:8px;"><input type="checkbox" checked /><span class="slider"></span></label>
-        </label>
+      <!-- 右：即時手機預覽 (300px) -->
+      <div style="padding:16px; background:#f7f8fa; display:flex; flex-direction:column; align-items:center; overflow-y:auto;">
+        <div style="font-size:12px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:12px; align-self:flex-start;">即時預覽</div>
+        <div style="width:220px; background:#1a1a2e; border-radius:28px; padding:12px; box-shadow:0 8px 24px rgba(0,0,0,0.28); flex-shrink:0;">
+          <div style="background:#111; border-radius:16px 16px 0 0; padding:8px 12px; display:flex; align-items:center; gap:8px;">
+            <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#4f46e5,#7c3aed);display:flex;align-items:center;justify-content:center;font-size:11px;color:white;font-weight:700;">客</div>
+            <div><div style="font-size:11px;font-weight:700;color:white;">客服助手</div><div style="font-size:9px;color:#888;">Bot</div></div>
+          </div>
+          <div style="background:#f0f2f5; border-radius:0 0 16px 16px; padding:12px; min-height:280px;">
+            <div style="font-size:10px;color:#aaa;text-align:center;margin-bottom:12px;">今天</div>
+            <div id="kw-add-phone-bubble">
+              <div style="max-width:85%;"><div style="background:white;border-radius:4px 16px 16px 16px;padding:10px 12px;font-size:12px;color:#333;box-shadow:0 1px 3px rgba(0,0,0,0.1);line-height:1.6;">填寫左側內容即時更新…</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="help" style="margin-top:8px; text-align:center; font-size:11px;">此為示意預覽</div>
       </div>
     </div>
+
     <div class="modal-foot">
       <button class="btn" onclick="closeModal('modal-add-keyword')">取消</button>
-      <button class="btn primary" onclick="closeModal('modal-add-keyword'); showSyncToast();">建立</button>
+      <button class="btn primary" onclick="closeModal('modal-add-keyword'); showSyncToast();">確認新增</button>
     </div>
   </div>
 </div>
@@ -10651,21 +11222,8 @@
     <div class="modal-head"><h3 class="modal-title">編輯關鍵字</h3><button class="icon-btn" onclick="closeModal('modal-edit-keyword')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button></div>
     <div class="modal-body" style="overflow-y:auto; flex:1;">
       <div class="form-row"><label>關鍵字 <span class="req">*</span></label><input class="input full" value="營業時間" /><div class="help">多個關鍵字以逗號分隔。</div></div>
-      <!-- 套用預設訊息 -->
-      <div class="form-row">
-        <label>套用預設訊息</label>
-        <div style="display:flex; gap:8px; align-items:center;">
-          <select class="input full" id="kw-edit-msg-select" onchange="applyDefaultMsgToKeyword('kw-edit-reply', this.value)">
-            <option value="">— 選擇預設訊息套用（選填）—</option>
-            <option value="您好，歡迎加入 LWS 官方帳號，有任何問題請直接留言！">歡迎詞</option>
-            <option value="感謝您的詢問，期待再次為您服務，祝您有美好的一天！">離場訊息</option>
-            <option value="[按鈕訊息] 訂單問題 / 退換貨 / 真人客服">客服分流選單</option>
-          </select>
-        </div>
-        <div class="help">選擇後自動帶入下方回覆內容。</div>
-      </div>
 
-      <!-- 訊息內容（同預設訊息格式） -->
+      <!-- 訊息內容 -->
       <div class="form-row">
         <label>訊息內容 <span class="req">*</span></label>
         <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:6px; margin-bottom:10px;" id="kw-edit-format-grid">
@@ -10743,15 +11301,18 @@
 
       <div style="font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:10px;">基本資訊</div>
       <div class="form-row"><label>選單名稱 <span class="req">*</span></label><input class="input full" value="主選單" /></div>
+      <!-- 顯示對象（同新增選單 Figma 設計） -->
       <div class="form-row">
-        <label>指定 Bot <span class="req">*</span></label>
-        <select class="input full"><option selected>客服助手</option><option>內部公告 Bot</option><option>值班通知</option><option>行銷活動 Bot</option></select>
-      </div>
-      <div class="form-row">
-        <label>選單類型 <span class="req">*</span></label>
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
-          <label class="card" style="padding:14px; cursor:pointer; text-align:center; border-color:var(--primary);"><input type="radio" name="edit-mtype" hidden checked /><div style="font-weight:600; color:var(--primary);">Rich Menu</div><div class="text-sec" style="font-size:11px;">圖文選單，支援多區塊</div></label>
-          <label class="card" style="padding:14px; cursor:pointer; text-align:center;"><input type="radio" name="edit-mtype" hidden /><div style="font-weight:600;">快速選單</div><div class="text-sec" style="font-size:11px;">文字按鈕選單</div></label>
+        <label>顯示對象 <span class="req">*</span></label>
+        <select class="input full">
+          <option value="all" selected>所有訂閱者</option>
+          <option value="dept_rd">研發部</option>
+          <option value="dept_hr">HR 部門</option>
+          <option value="dept_mkt">行銷部</option>
+        </select>
+        <div style="display:flex; align-items:center; gap:8px; margin-top:8px;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+          <span style="font-size:13px;">對象：</span><strong style="color:var(--primary);">1,248 人</strong><span class="text-sec" style="font-size:12px;">（全部成員）</span>
         </div>
       </div>
 
@@ -11995,7 +12556,8 @@
     /* 4.3 離職程序 已移除 */
     '5.1': { section: 'Bot 管理', name: 'BOT管理設定', group: 'group-bot' },
     '5.2': { section: 'Bot 管理', name: 'BOT使用數據', group: 'group-bot' },
-    'bot-edit': { section: 'Bot 管理', name: '編輯 Bot', group: 'group-bot' },
+    'bot-edit':     { section: 'Bot 管理', name: '編輯 Bot',  group: 'group-bot' },
+    'bot-checkin':  { section: 'Bot 管理', name: '打卡記錄',  group: 'group-bot' },
     '6.1': { section: '行事曆管理', name: '公司行事曆', group: 'group-cal' },
     '6.2': { section: '行事曆管理', name: '資源管理', group: 'group-cal' },
     '6.3': { section: '行事曆管理', name: 'Google 行事曆同步', group: 'group-cal' },
@@ -13750,10 +14312,165 @@ function orgLangAccToggle() {
 
   function selectRmSize(size) {
     rmCurrentSize = size;
-    document.getElementById('rm-size-large').classList.toggle('active', size==='large');
-    document.getElementById('rm-size-small').classList.toggle('active', size==='small');
+    var lgBtn = document.getElementById('rm-size-large');
+    var smBtn = document.getElementById('rm-size-small');
+    /* 大型按鈕：選中=藍底藍框，未選=白底灰框 */
+    if (lgBtn) {
+      lgBtn.style.background = size==='large' ? 'var(--primary-soft)' : 'white';
+      lgBtn.style.borderColor = size==='large' ? 'var(--primary)' : 'var(--border)';
+      lgBtn.style.color = size==='large' ? 'var(--primary)' : 'var(--text-secondary)';
+    }
+    if (smBtn) {
+      smBtn.style.background = size==='small' ? 'var(--primary-soft)' : 'white';
+      smBtn.style.borderColor = size==='small' ? 'var(--primary)' : 'var(--border)';
+      smBtn.style.color = size==='small' ? 'var(--primary)' : 'var(--text-secondary)';
+    }
+    /* 更新說明文字 */
+    var hint = document.getElementById('rm-img-size-hint');
+    if (hint) hint.textContent = size==='large'
+      ? '圖片限制：2500×1686px，小於5MB。可下載範本參考'
+      : '圖片限制：1200×405px，小於5MB。可下載範本參考';
+    var uploadHint = document.getElementById('rm-upload-hint');
+    if (uploadHint) uploadHint.textContent = size==='large'
+      ? 'JPEG、PNG圖檔，尺寸2500×1686px，小於5MB'
+      : 'JPEG、PNG圖檔，尺寸1200×405px，小於5MB';
     var label = document.getElementById('rm-canvas-size-label');
     if (label) label.textContent = size==='large' ? '2500 × 1686 px' : '1200 × 405 px';
+  }
+
+  /* 選單顯示對象人數 */
+  var MENU_AUDIENCE_MAP = {
+    'all':      ['1,248 人','（全部成員）'],
+    'dept_rd':  ['24 人','（研發部）'],
+    'dept_hr':  ['12 人','（HR 部門）'],
+    'dept_mkt': ['18 人','（行銷部）']
+  };
+  /* ===== 推播狀態篩選 ===== */
+  function filterPushCards(status, tagEl) {
+    document.querySelectorAll('.push-filter-tag').forEach(function(t) { t.classList.remove('active'); });
+    if (tagEl) tagEl.classList.add('active');
+    document.querySelectorAll('.push-item-card').forEach(function(card) {
+      card.style.display = (status === 'all' || card.getAttribute('data-status') === status) ? '' : 'none';
+    });
+  }
+
+  /* ===== 快速選單按鈕 ===== */
+  function addQuickMenuBtn() {
+    var list = document.getElementById('qm-btn-settings');
+    if (!list) return;
+    var count = list.querySelectorAll('.qm-btn-row').length;
+    if (count >= 6) return;
+    var row = document.createElement('div');
+    row.className = 'qm-btn-row';
+    row.style.cssText = 'display:flex;gap:8px;align-items:center;';
+    row.innerHTML = '<div style="width:22px;height:22px;border-radius:50%;background:var(--primary);display:flex;align-items:center;justify-content:center;font-size:10px;color:white;font-weight:700;flex-shrink:0;">' + (count+1) + '</div><input type="text" class="input" placeholder="按鈕文字" style="flex:1;" oninput="updateQMPreview()" /><select class="input" style="width:90px;font-size:12px;"><option value="none">無動作</option><option value="link">開啟連結</option><option value="msg">傳送訊息</option><option value="keyword">關鍵字</option></select><input type="text" placeholder="動作內容" class="input" style="flex:1;display:none;" /><button onclick="this.closest(\'.qm-btn-row\').remove();updateQMPreview();" class="push-del-btn" style="color:var(--text-muted);">×</button>';
+    list.appendChild(row);
+    var countEl = document.getElementById('qm-btn-count');
+    if (countEl) countEl.textContent = list.querySelectorAll('.qm-btn-row').length;
+    updateQMPreview();
+  }
+  function updateQMPreview() {
+    var grid = document.getElementById('qm-buttons-grid');
+    if (!grid) return;
+    var inputs = document.querySelectorAll('#qm-btn-settings .qm-btn-row input[type="text"]');
+    grid.innerHTML = '';
+    inputs.forEach(function(inp, i) {
+      var div = document.createElement('div');
+      div.style.cssText = 'background:white;padding:10px 6px;text-align:center;font-size:10px;color:var(--primary);font-weight:600;';
+      div.textContent = inp.value || '按鈕 ' + (i+1);
+      grid.appendChild(div);
+    });
+  }
+
+  /* ===== 關鍵字 block editors ===== */
+  function updateKwPreview() {
+    var bubble = document.getElementById('kw-add-phone-bubble');
+    var textArea = document.getElementById('kw-add-reply');
+    if (bubble && textArea && textArea.value) {
+      bubble.innerHTML = '<div style="max-width:85%;"><div style="background:white;border-radius:4px 16px 16px 16px;padding:10px 12px;font-size:12px;color:#333;box-shadow:0 1px 3px rgba(0,0,0,0.1);line-height:1.6;">' + textArea.value + '</div></div>';
+    }
+  }
+
+  /* ===== 預設訊息 block editors ===== */
+  function updateDefMsgPreview() {
+    var bubble = document.getElementById('def-msg-phone-bubble');
+    var textArea = document.getElementById('def-msg-text');
+    if (bubble && textArea && textArea.value) {
+      bubble.innerHTML = '<div style="max-width:85%;"><div style="background:white;border-radius:4px 16px 16px 16px;padding:10px 12px;font-size:12px;color:#333;box-shadow:0 1px 3px rgba(0,0,0,0.1);line-height:1.6;">' + textArea.value + '</div></div>';
+    }
+  }
+
+  /* ===== 打卡記錄 JS ===== */
+  function switchCheckinTab(tab, card) {
+    /* 更新統計卡片 active 狀態 */
+    document.querySelectorAll('.checkin-stat-card').forEach(function(c) {
+      c.style.border = '2px solid var(--border)';
+      c.style.background = '';
+      /* 重設文字顏色 */
+      var label = c.querySelector('div:first-child');
+      var num   = c.querySelector('div:nth-child(2)');
+      var hint  = c.querySelector('div:nth-child(3)');
+      if (label) label.style.color = '';
+      if (num)   num.style.color = '';
+      if (hint)  hint.style.color = '';
+    });
+    if (card) {
+      card.style.border = '2px solid var(--primary)';
+      card.style.background = 'var(--primary-soft)';
+      var label = card.querySelector('div:first-child');
+      var hint  = card.querySelector('div:nth-child(3)');
+      if (label) label.style.color = 'var(--primary)';
+      if (hint)  hint.style.color = 'var(--primary)';
+    }
+    /* 顯示對應 panel */
+    document.querySelectorAll('.checkin-panel').forEach(function(p) { p.style.display = 'none'; });
+    var target = document.getElementById('checkin-panel-' + tab);
+    if (target) target.style.display = '';
+  }
+
+  function updateNoteCount(input) {
+    var len = input.value.length;
+    var span = input.closest('div').querySelector('[data-note-count]');
+    if (span) span.textContent = len + '/30';
+    if (len >= 28) input.style.color = 'var(--danger)';
+    else input.style.color = '';
+  }
+
+  function openMakeupPunchModal(name, date) {
+    var label = document.getElementById('makeup-member-label');
+    if (label) label.textContent = name + '・' + date;
+    openModal('modal-makeup-punch');
+  }
+
+  function toggleCheckinToday(checked) {
+    var from = document.getElementById('checkin-date-from');
+    var to   = document.getElementById('checkin-date-to');
+    if (checked) {
+      var today = new Date().toISOString().slice(0,10);
+      if (from) from.value = today;
+      if (to)   to.value   = today;
+    }
+  }
+
+  function resetCheckinFilters() {
+    document.querySelectorAll('#page-bot-checkin input[type="text"], #page-bot-checkin input[type="date"]').forEach(function(i){ i.value = ''; });
+    document.querySelectorAll('#page-bot-checkin select').forEach(function(s){ s.selectedIndex = 0; });
+    var todayCheck = document.getElementById('checkin-today-only');
+    if (todayCheck) { todayCheck.checked = true; toggleCheckinToday(true); }
+  }
+
+  function exportCheckinReport() {
+    showSyncToast('報表匯出中…');
+  }
+
+  /* ===== page map 新增 bot-checkin ===== */
+
+  function updateMenuAudienceCount(val) {
+    var countEl = document.getElementById('add-menu-count');
+    var labelEl = document.getElementById('add-menu-count-label');
+    var data = MENU_AUDIENCE_MAP[val] || ['—',''];
+    if (countEl) countEl.textContent = data[0];
+    if (labelEl) labelEl.textContent = data[1];
   }
 
   function selectRmLayout(n) {
@@ -14045,10 +14762,15 @@ function orgLangAccToggle() {
   }
   /* ===== End 關鍵字訊息格式切換 JS ===== */
   function openBotPermModal(botName, botId) {
-    var titleEl = document.getElementById('bot-perm-title');
-    var subEl   = document.getElementById('bot-perm-subtitle');
+    var titleEl    = document.getElementById('bot-perm-title');
+    var subEl      = document.getElementById('bot-perm-subtitle');
+    var creatorRow = document.getElementById('bot-perm-creator-row');
     if (titleEl) titleEl.textContent = botName + '・使用權限';
     if (subEl)   subEl.textContent   = botId;
+    /* 範本 Bot（BOT-TMPL-xxx）只顯示總管理員，不顯示建立者那行 */
+    if (creatorRow) {
+      creatorRow.style.display = (botId && botId.indexOf('TMPL') !== -1) ? 'none' : '';
+    }
     openModal('modal-bot-perm');
   }
 
@@ -14367,6 +15089,31 @@ function orgLangAccToggle() {
 
   /* ===== BOT使用數據 JS ===== */
   function botDataRangeChange(val) { /* placeholder for range filter */ }
+
+  /* ===== Bot活躍度 Tab（Figma 999:11989） ===== */
+  var BAT_DATA = [
+    { name: '打卡Bot',     push: 1024, click: 3104, users: 584 },
+    { name: '內部公告 Bot', push: 892,  click: 876,  users: 312 },
+    { name: '值班通知',    push: 756,  click: 432,  users: 218 },
+    { name: '行銷活動 Bot', push: 532,  click: 614,  users: 134 }
+  ];
+  function setActTab(idx) {
+    document.querySelectorAll('.bot-act-tab').forEach(function(t, i) {
+      var isActive = (i === idx);
+      t.style.color = isActive ? 'var(--primary)' : 'var(--text-muted)';
+      t.style.fontWeight = isActive ? '600' : '500';
+      t.style.borderBottomColor = isActive ? 'var(--primary)' : 'transparent';
+    });
+    var d = BAT_DATA[idx] || BAT_DATA[0];
+    var nameEl = document.getElementById('bat-bot-name');
+    if (nameEl) nameEl.textContent = d.name;
+    var pushEl = document.getElementById('bat-sum-push');
+    if (pushEl) pushEl.textContent = d.push.toLocaleString();
+    var clickEl = document.getElementById('bat-sum-click');
+    if (clickEl) clickEl.textContent = d.click.toLocaleString();
+    var usersEl = document.getElementById('bat-sum-users');
+    if (usersEl) usersEl.textContent = d.users.toLocaleString();
+  }
 
   var DAU_DATA = [
     { name:'客服助手', push:1024, open:700, click:3104, rate:'68.4%', color:'#4f46e5' },
