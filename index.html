@@ -4,6 +4,9 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>LWS SaaS — 組織管理 / 成員管理 Mockup</title>
+<!-- Leaflet.js for 打卡位置地圖 -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV/XN/WLcE=" crossorigin=""></script>
 <style>
   :root {
     --bg: #f7f8fa;
@@ -6104,15 +6107,56 @@
                     <div style="display:flex; align-items:center; gap:8px; flex:1;">
                       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
                       <input type="text" value="位置1" class="loc-name-input" style="border:none; background:transparent; font-size:12px; font-weight:600; color:var(--text); outline:none; width:120px; cursor:text;" placeholder="位置名稱" />
-                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2" style="opacity:0.4;flex-shrink:0;"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2" style="cursor:pointer;flex-shrink:0;" title="點擊編輯名稱" onclick="this.previousElementSibling.focus();this.previousElementSibling.select();"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>
                     </div>
                     <button onclick="this.closest('.checkin-loc-item').remove();" style="border:none;background:none;cursor:pointer;color:var(--text-muted);font-size:16px;padding:2px 4px;line-height:1;" title="移除此地址">×</button>
                   </div>
                   <div style="padding:12px 14px; display:flex; flex-direction:column; gap:8px;">
-                    <div style="display:flex; gap:8px;">
-                      <input type="text" class="input" placeholder="輸入地址，例：台北市信義區信義路五段7號" style="flex:1;" oninput="geocodeAddress(this, 0)" />
-                      <button class="btn ghost sm" onclick="geocodeManual(0, this)" style="flex-shrink:0; font-size:12px;">查詢座標</button>
+                    <!-- 縣市 + 區域 + 詳細地址 三欄 -->
+                    <div style="display:grid; grid-template-columns:140px 160px 1fr; gap:8px; align-items:end;">
+                      <div>
+                        <div style="font-size:11px; color:var(--text-muted); margin-bottom:3px;">縣市 <span style="color:var(--danger);">*</span></div>
+                        <select class="input" onchange="onCityChange(this, 0)" style="font-size:13px;">
+                          <option value="">— 選擇縣市 —</option>
+                          <option value="台北市">台北市</option>
+                          <option value="新北市">新北市</option>
+                          <option value="桃園市">桃園市</option>
+                          <option value="台中市">台中市</option>
+                          <option value="台南市">台南市</option>
+                          <option value="高雄市">高雄市</option>
+                          <option value="新竹市">新竹市</option>
+                          <option value="新竹縣">新竹縣</option>
+                          <option value="基隆市">基隆市</option>
+                          <option value="苗栗縣">苗栗縣</option>
+                          <option value="彰化縣">彰化縣</option>
+                          <option value="南投縣">南投縣</option>
+                          <option value="雲林縣">雲林縣</option>
+                          <option value="嘉義市">嘉義市</option>
+                          <option value="嘉義縣">嘉義縣</option>
+                          <option value="屏東縣">屏東縣</option>
+                          <option value="宜蘭縣">宜蘭縣</option>
+                          <option value="花蓮縣">花蓮縣</option>
+                          <option value="台東縣">台東縣</option>
+                          <option value="澎湖縣">澎湖縣</option>
+                          <option value="金門縣">金門縣</option>
+                          <option value="連江縣">連江縣</option>
+                        </select>
+                      </div>
+                      <div>
+                        <div style="font-size:11px; color:var(--text-muted); margin-bottom:3px;">區域 <span style="color:var(--danger);">*</span></div>
+                        <select class="input loc-district" id="loc-dist-0" onchange="onDistrictChange(this, 0)" style="font-size:13px;">
+                          <option value="">— 先選縣市 —</option>
+                        </select>
+                      </div>
+                      <div>
+                        <div style="font-size:11px; color:var(--text-muted); margin-bottom:3px;">詳細地址</div>
+                        <div style="display:flex; gap:6px;">
+                          <input type="text" class="input loc-detail" placeholder="路/街/號" style="flex:1; font-size:13px;" oninput="onAddressInput(this, 0)" />
+                          <button class="btn ghost sm" onclick="geocodeManual(0, this)" style="flex-shrink:0; font-size:12px; white-space:nowrap;">查詢座標</button>
+                        </div>
+                      </div>
                     </div>
+                    <!-- 經緯度 -->
                     <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
                       <div>
                         <div style="font-size:11px; color:var(--text-muted); margin-bottom:3px;">緯度（自動帶入）</div>
@@ -6121,6 +6165,18 @@
                       <div>
                         <div style="font-size:11px; color:var(--text-muted); margin-bottom:3px;">經度（自動帶入）</div>
                         <input type="text" class="input loc-lng" id="loc-lng-0" placeholder="121.564472" readonly style="background:var(--bg); color:var(--text-secondary); font-size:12px;" />
+                      </div>
+                    </div>
+                    <!-- 地圖容器（查詢後顯示） -->
+                    <div id="loc-map-wrap-0" style="display:none; margin-top:4px;">
+                      <div id="loc-map-hint-0" style="display:none; padding:8px 12px; background:#fefce8; border:1px solid #fbbf24; border-radius:var(--radius-sm); font-size:12px; color:#92400e; margin-bottom:6px; display:flex; gap:8px; align-items:flex-start;">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="2" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                        <span>找不到確切門牌，已跳至路段中心點。請在地圖上點擊您的辦公室正確位置以完成定位。</span>
+                      </div>
+                      <div id="loc-map-0" style="height:260px; border-radius:var(--radius-sm); border:1px solid var(--border); overflow:hidden;"></div>
+                      <div style="display:flex; align-items:center; justify-content:space-between; margin-top:6px;">
+                        <span style="font-size:11px; color:var(--text-muted);" id="loc-map-status-0">點擊地圖可微調位置</span>
+                        <button class="btn primary sm" onclick="saveLocFromMap(0)" style="font-size:12px;">✓ 確認此位置</button>
                       </div>
                     </div>
                   </div>
@@ -6132,14 +6188,53 @@
                     <div style="display:flex; align-items:center; gap:8px; flex:1;">
                       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
                       <input type="text" value="位置2" class="loc-name-input" style="border:none; background:transparent; font-size:12px; font-weight:600; color:var(--text); outline:none; width:120px; cursor:text;" placeholder="位置名稱" />
-                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2" style="opacity:0.4;flex-shrink:0;"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2" style="cursor:pointer;flex-shrink:0;" title="點擊編輯名稱" onclick="this.previousElementSibling.focus();this.previousElementSibling.select();"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>
                     </div>
                     <button onclick="this.closest('.checkin-loc-item').remove();" style="border:none;background:none;cursor:pointer;color:var(--text-muted);font-size:16px;padding:2px 4px;line-height:1;" title="移除此地址">×</button>
                   </div>
                   <div style="padding:12px 14px; display:flex; flex-direction:column; gap:8px;">
-                    <div style="display:flex; gap:8px;">
-                      <input type="text" class="input" placeholder="輸入地址，例：新北市板橋區縣民大道二段7號" style="flex:1;" oninput="geocodeAddress(this, 1)" />
-                      <button class="btn ghost sm" onclick="geocodeManual(1, this)" style="flex-shrink:0; font-size:12px;">查詢座標</button>
+                    <div style="display:grid; grid-template-columns:140px 160px 1fr; gap:8px; align-items:end;">
+                      <div>
+                        <div style="font-size:11px; color:var(--text-muted); margin-bottom:3px;">縣市 <span style="color:var(--danger);">*</span></div>
+                        <select class="input" onchange="onCityChange(this, 1)" style="font-size:13px;">
+                          <option value="">— 選擇縣市 —</option>
+                          <option value="台北市">台北市</option>
+                          <option value="新北市">新北市</option>
+                          <option value="桃園市">桃園市</option>
+                          <option value="台中市">台中市</option>
+                          <option value="台南市">台南市</option>
+                          <option value="高雄市">高雄市</option>
+                          <option value="新竹市">新竹市</option>
+                          <option value="新竹縣">新竹縣</option>
+                          <option value="基隆市">基隆市</option>
+                          <option value="苗栗縣">苗栗縣</option>
+                          <option value="彰化縣">彰化縣</option>
+                          <option value="南投縣">南投縣</option>
+                          <option value="雲林縣">雲林縣</option>
+                          <option value="嘉義市">嘉義市</option>
+                          <option value="嘉義縣">嘉義縣</option>
+                          <option value="屏東縣">屏東縣</option>
+                          <option value="宜蘭縣">宜蘭縣</option>
+                          <option value="花蓮縣">花蓮縣</option>
+                          <option value="台東縣">台東縣</option>
+                          <option value="澎湖縣">澎湖縣</option>
+                          <option value="金門縣">金門縣</option>
+                          <option value="連江縣">連江縣</option>
+                        </select>
+                      </div>
+                      <div>
+                        <div style="font-size:11px; color:var(--text-muted); margin-bottom:3px;">區域 <span style="color:var(--danger);">*</span></div>
+                        <select class="input loc-district" id="loc-dist-1" onchange="onDistrictChange(this, 1)" style="font-size:13px;">
+                          <option value="">— 先選縣市 —</option>
+                        </select>
+                      </div>
+                      <div>
+                        <div style="font-size:11px; color:var(--text-muted); margin-bottom:3px;">詳細地址</div>
+                        <div style="display:flex; gap:6px;">
+                          <input type="text" class="input loc-detail" placeholder="路/街/號" style="flex:1; font-size:13px;" oninput="onAddressInput(this, 1)" />
+                          <button class="btn ghost sm" onclick="geocodeManual(1, this)" style="flex-shrink:0; font-size:12px; white-space:nowrap;">查詢座標</button>
+                        </div>
+                      </div>
                     </div>
                     <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
                       <div>
@@ -6149,6 +6244,18 @@
                       <div>
                         <div style="font-size:11px; color:var(--text-muted); margin-bottom:3px;">經度（自動帶入）</div>
                         <input type="text" class="input loc-lng" id="loc-lng-1" placeholder="121.468508" readonly style="background:var(--bg); color:var(--text-secondary); font-size:12px;" />
+                      </div>
+                    </div>
+                    <!-- 地圖容器 -->
+                    <div id="loc-map-wrap-1" style="display:none; margin-top:4px;">
+                      <div id="loc-map-hint-1" style="display:none; padding:8px 12px; background:#fefce8; border:1px solid #fbbf24; border-radius:var(--radius-sm); font-size:12px; color:#92400e; margin-bottom:6px; display:flex; gap:8px; align-items:flex-start;">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="2" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                        <span>找不到確切門牌，已跳至路段中心點。請在地圖上點擊您的辦公室正確位置以完成定位。</span>
+                      </div>
+                      <div id="loc-map-1" style="height:260px; border-radius:var(--radius-sm); border:1px solid var(--border); overflow:hidden;"></div>
+                      <div style="display:flex; align-items:center; justify-content:space-between; margin-top:6px;">
+                        <span style="font-size:11px; color:var(--text-muted);" id="loc-map-status-1">點擊地圖可微調位置</span>
+                        <button class="btn primary sm" onclick="saveLocFromMap(1)" style="font-size:12px;">✓ 確認此位置</button>
                       </div>
                     </div>
                   </div>
@@ -6204,9 +6311,9 @@
               <div class="schedule-group-item" style="border:1px solid var(--border); border-radius:var(--radius); overflow:hidden;">
                 <!-- 班別 header -->
                 <div style="padding:10px 16px; background:var(--bg); border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between;">
-                  <div style="display:flex; align-items:center; gap:8px;">
-                    <input type="text" value="一般班" class="schedule-name-input" style="border:none;background:transparent;font-size:13px;font-weight:700;color:var(--text);outline:none;width:100px;cursor:text;" placeholder="班別名稱" />
-                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2" style="opacity:0.4;"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>
+                  <div style="display:flex; align-items:center; gap:6px;">
+                    <input type="text" value="班別1" class="schedule-name-input" style="border:none;background:transparent;font-size:13px;font-weight:700;color:var(--text);outline:none;width:80px;cursor:text;" placeholder="班別名稱" />
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2" style="cursor:pointer;flex-shrink:0;" title="點擊編輯名稱" onclick="this.previousElementSibling.focus();this.previousElementSibling.select();"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>
                   </div>
                   <button onclick="this.closest('.schedule-group-item').remove()" style="border:none;background:none;cursor:pointer;color:var(--text-muted);font-size:16px;padding:2px 4px;line-height:1;" title="刪除此班別">×</button>
                 </div>
@@ -6214,100 +6321,109 @@
                 <!-- 班別內容 -->
                 <div style="padding:14px 16px; display:flex; flex-direction:column; gap:12px;">
 
-                  <!-- 適用成員（Dropdown Tree Select） -->
+                  <!-- 適用人員（Dropdown Tree Select 多選） -->
                   <div>
-                    <div style="font-size:12px; font-weight:600; margin-bottom:6px;">適用成員</div>
+                    <div style="font-size:12px; font-weight:600; margin-bottom:6px;">適用人員</div>
                     <div class="tree-dropdown" id="sched-0-member-wrap">
                       <div class="tree-dropdown-trigger" onclick="toggleTreeDropdown('sched-0-member')">
                         <div class="tree-dropdown-tags" id="sched-0-member-tags">
-                          <span style="color:var(--text-secondary); font-size:13px; display:flex; align-items:center; gap:5px;">
+                          <span class="tree-all-label" style="color:var(--text-secondary); font-size:13px; display:flex; align-items:center; gap:5px;">
                             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                            全部成員
+                            全部人員
                           </span>
                         </div>
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
                       </div>
                       <div class="tree-dropdown-panel" id="sched-0-member-panel" style="display:none;">
                         <div style="padding:8px 10px; border-bottom:1px solid var(--border);">
-                          <input class="input full" placeholder="搜尋部門或成員…" style="font-size:12px;" oninput="filterTreeDropdown('sched-0-member',this.value)" />
+                          <input class="input full" placeholder="搜尋部門或人員…" style="font-size:12px;" oninput="filterTreeDropdown('sched-0-member',this.value)" />
                         </div>
                         <div style="max-height:220px; overflow-y:auto;">
-                          <!-- 全部成員 選項 -->
+                          <!-- 全部人員 -->
                           <label class="tree-member-row" style="font-weight:600; background:var(--primary-soft); color:var(--primary);">
-                            <input type="checkbox" checked style="accent-color:var(--primary);" onchange="toggleAllScheduleMembers('sched-0-member',this)" />
+                            <input type="checkbox" id="sched-0-all" checked style="accent-color:var(--primary);" onchange="toggleAllTreeMembers('sched-0-member',this)" />
                             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                            全部成員
+                            全部人員
                           </label>
                           <!-- 研發部 -->
                           <div class="tree-dept-row open" onclick="toggleTreeDept(this)">
                             <svg class="tree-dept-chev" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                            <input type="checkbox" class="tree-dept-cb" onclick="event.stopPropagation();toggleDeptMembers(this,'sched-0-member')" style="accent-color:var(--primary);margin:0 2px 0 4px;" />
                             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
                             研發部
                           </div>
                           <div class="tree-dept-children" style="display:block;">
-                            <label class="tree-member-row"><input type="checkbox" style="accent-color:var(--primary);" /><div class="avatar" style="width:18px;height:18px;font-size:9px;flex-shrink:0;">陳</div>陳小明<span class="text-sec" style="font-size:10px;margin-left:4px;">工程師</span></label>
-                            <label class="tree-member-row"><input type="checkbox" style="accent-color:var(--primary);" /><div class="avatar" style="width:18px;height:18px;font-size:9px;flex-shrink:0;">吳</div>吳建宏<span class="text-sec" style="font-size:10px;margin-left:4px;">前端工程師</span></label>
-                            <label class="tree-member-row"><input type="checkbox" style="accent-color:var(--primary);" /><div class="avatar" style="width:18px;height:18px;font-size:9px;flex-shrink:0;">黃</div>黃宗翰<span class="text-sec" style="font-size:10px;margin-left:4px;">後端工程師</span></label>
+                            <label class="tree-member-row"><input type="checkbox" class="tree-member-cb" style="accent-color:var(--primary);" onchange="onTreeMemberChange('sched-0-member',this,'陳小明')" /><div class="avatar" style="width:18px;height:18px;font-size:9px;flex-shrink:0;">陳</div>陳小明<span class="text-sec" style="font-size:10px;margin-left:4px;">工程師</span></label>
+                            <label class="tree-member-row"><input type="checkbox" class="tree-member-cb" style="accent-color:var(--primary);" onchange="onTreeMemberChange('sched-0-member',this,'吳建宏')" /><div class="avatar" style="width:18px;height:18px;font-size:9px;flex-shrink:0;">吳</div>吳建宏<span class="text-sec" style="font-size:10px;margin-left:4px;">前端工程師</span></label>
+                            <label class="tree-member-row"><input type="checkbox" class="tree-member-cb" style="accent-color:var(--primary);" onchange="onTreeMemberChange('sched-0-member',this,'黃宗翰')" /><div class="avatar" style="width:18px;height:18px;font-size:9px;flex-shrink:0;">黃</div>黃宗翰<span class="text-sec" style="font-size:10px;margin-left:4px;">後端工程師</span></label>
                           </div>
                           <!-- HR部門 -->
                           <div class="tree-dept-row" onclick="toggleTreeDept(this)">
                             <svg class="tree-dept-chev" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                            <input type="checkbox" class="tree-dept-cb" onclick="event.stopPropagation();toggleDeptMembers(this,'sched-0-member')" style="accent-color:var(--primary);margin:0 2px 0 4px;" />
                             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
                             HR 部門
                           </div>
                           <div class="tree-dept-children">
-                            <label class="tree-member-row"><input type="checkbox" style="accent-color:var(--primary);" /><div class="avatar" style="width:18px;height:18px;font-size:9px;flex-shrink:0;">林</div>林曉華<span class="text-sec" style="font-size:10px;margin-left:4px;">HR主管</span></label>
+                            <label class="tree-member-row"><input type="checkbox" class="tree-member-cb" style="accent-color:var(--primary);" onchange="onTreeMemberChange('sched-0-member',this,'林曉華')" /><div class="avatar" style="width:18px;height:18px;font-size:9px;flex-shrink:0;">林</div>林曉華<span class="text-sec" style="font-size:10px;margin-left:4px;">HR主管</span></label>
                           </div>
                           <!-- 行銷部 -->
                           <div class="tree-dept-row" onclick="toggleTreeDept(this)">
                             <svg class="tree-dept-chev" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                            <input type="checkbox" class="tree-dept-cb" onclick="event.stopPropagation();toggleDeptMembers(this,'sched-0-member')" style="accent-color:var(--primary);margin:0 2px 0 4px;" />
                             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
                             行銷部
                           </div>
                           <div class="tree-dept-children">
-                            <label class="tree-member-row"><input type="checkbox" style="accent-color:var(--primary);" /><div class="avatar" style="width:18px;height:18px;font-size:9px;flex-shrink:0;">李</div>李怡君<span class="text-sec" style="font-size:10px;margin-left:4px;">行銷專員</span></label>
-                            <label class="tree-member-row"><input type="checkbox" style="accent-color:var(--primary);" /><div class="avatar" style="width:18px;height:18px;font-size:9px;flex-shrink:0;">王</div>王大偉<span class="text-sec" style="font-size:10px;margin-left:4px;">業務經理</span></label>
+                            <label class="tree-member-row"><input type="checkbox" class="tree-member-cb" style="accent-color:var(--primary);" onchange="onTreeMemberChange('sched-0-member',this,'李怡君')" /><div class="avatar" style="width:18px;height:18px;font-size:9px;flex-shrink:0;">李</div>李怡君<span class="text-sec" style="font-size:10px;margin-left:4px;">行銷專員</span></label>
+                            <label class="tree-member-row"><input type="checkbox" class="tree-member-cb" style="accent-color:var(--primary);" onchange="onTreeMemberChange('sched-0-member',this,'王大偉')" /><div class="avatar" style="width:18px;height:18px;font-size:9px;flex-shrink:0;">王</div>王大偉<span class="text-sec" style="font-size:10px;margin-left:4px;">業務經理</span></label>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
 
-                  <!-- 上下班時間 + 提醒閾值 -->
+                  <!-- 上下班時間 -->
                   <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
                     <!-- 上班時間 -->
                     <div>
-                      <div style="font-size:12px; font-weight:600; margin-bottom:6px;">上班時間</div>
-                      <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
-                        <input class="input" type="time" value="09:00" style="width:110px;" />
-                        <span style="font-size:12px; color:var(--text-muted);">超過</span>
-                        <select class="input" style="width:80px; font-size:12px;">
-                          <option>10 分鐘</option>
-                          <option>15 分鐘</option>
-                          <option>20 分鐘</option>
-                          <option selected>30 分鐘</option>
-                          <option>45 分鐘</option>
-                          <option>60 分鐘</option>
-                        </select>
-                        <span style="font-size:12px; color:var(--text-muted);">提醒主管</span>
+                      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:6px;">
+                        <div style="font-size:12px; font-weight:600;">上班時間</div>
+                        <label style="display:flex;align-items:center;gap:4px;font-size:11px;color:var(--text-muted);cursor:pointer;">
+                          <input type="checkbox" style="accent-color:var(--primary);" onchange="toggleFlexTime(this,'flex-in-0')" /> 彈性工時
+                        </label>
                       </div>
+                      <div id="flex-in-0-single" style="display:flex;align-items:center;gap:6px;">
+                        <input class="input" type="time" value="09:00" style="width:110px;" />
+                      </div>
+                      <div id="flex-in-0-range" style="display:none;align-items:center;gap:6px;">
+                        <input class="input" type="time" value="08:00" style="width:96px;" />
+                        <span style="font-size:12px;color:var(--text-muted);">～</span>
+                        <input class="input" type="time" value="10:00" style="width:96px;" />
+                      </div>
+                      <label style="display:flex;align-items:center;gap:6px;margin-top:8px;font-size:12px;color:var(--text-secondary);cursor:pointer;">
+                        <input type="checkbox" style="accent-color:var(--primary);" /> 超過 30 分鐘提醒主管
+                      </label>
                     </div>
                     <!-- 下班時間 -->
                     <div>
-                      <div style="font-size:12px; font-weight:600; margin-bottom:6px;">下班時間</div>
-                      <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
-                        <input class="input" type="time" value="18:00" style="width:110px;" />
-                        <span style="font-size:12px; color:var(--text-muted);">超過</span>
-                        <select class="input" style="width:80px; font-size:12px;">
-                          <option>10 分鐘</option>
-                          <option>15 分鐘</option>
-                          <option>20 分鐘</option>
-                          <option selected>30 分鐘</option>
-                          <option>45 分鐘</option>
-                          <option>60 分鐘</option>
-                        </select>
-                        <span style="font-size:12px; color:var(--text-muted);">提醒主管</span>
+                      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:6px;">
+                        <div style="font-size:12px; font-weight:600;">下班時間</div>
+                        <label style="display:flex;align-items:center;gap:4px;font-size:11px;color:var(--text-muted);cursor:pointer;">
+                          <input type="checkbox" style="accent-color:var(--primary);" onchange="toggleFlexTime(this,'flex-out-0')" /> 彈性工時
+                        </label>
                       </div>
+                      <div id="flex-out-0-single" style="display:flex;align-items:center;gap:6px;">
+                        <input class="input" type="time" value="18:00" style="width:110px;" />
+                      </div>
+                      <div id="flex-out-0-range" style="display:none;align-items:center;gap:6px;">
+                        <input class="input" type="time" value="17:00" style="width:96px;" />
+                        <span style="font-size:12px;color:var(--text-muted);">～</span>
+                        <input class="input" type="time" value="20:00" style="width:96px;" />
+                      </div>
+                      <label style="display:flex;align-items:center;gap:6px;margin-top:8px;font-size:12px;color:var(--text-secondary);cursor:pointer;">
+                        <input type="checkbox" style="accent-color:var(--primary);" /> 超過 30 分鐘提醒主管
+                      </label>
                     </div>
                   </div>
 
@@ -14774,39 +14890,61 @@ function orgLangAccToggle() {
     var item = document.createElement('div');
     item.className = 'schedule-group-item';
     item.style.cssText = 'border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;';
+    var inId  = sid + '-in';
+    var outId = sid + '-out';
     item.innerHTML =
       '<div style="padding:10px 16px;background:var(--bg);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">' +
-        '<div style="display:flex;align-items:center;gap:8px;">' +
-          '<input type="text" value="班別' + (n+1) + '" class="schedule-name-input" style="border:none;background:transparent;font-size:13px;font-weight:700;color:var(--text);outline:none;width:100px;cursor:text;" placeholder="班別名稱" />' +
-          '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2" style="opacity:0.4;"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>' +
+        '<div style="display:flex;align-items:center;gap:6px;">' +
+          '<input type="text" value="班別' + (n+1) + '" class="schedule-name-input" style="border:none;background:transparent;font-size:13px;font-weight:700;color:var(--text);outline:none;width:80px;cursor:text;" placeholder="班別名稱" />' +
+          '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2" style="cursor:pointer;flex-shrink:0;" title="點擊編輯名稱" onclick="this.previousElementSibling.focus();this.previousElementSibling.select();"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>' +
         '</div>' +
         '<button onclick="this.closest(\'.schedule-group-item\').remove()" style="border:none;background:none;cursor:pointer;color:var(--text-muted);font-size:16px;padding:2px 4px;line-height:1;" title="刪除此班別">×</button>' +
       '</div>' +
       '<div style="padding:14px 16px;display:flex;flex-direction:column;gap:12px;">' +
+        /* 適用人員 tree-select */
         '<div>' +
-          '<div style="font-size:12px;font-weight:600;margin-bottom:6px;">適用成員</div>' +
+          '<div style="font-size:12px;font-weight:600;margin-bottom:6px;">適用人員</div>' +
           '<div class="tree-dropdown" id="' + sid + '-member-wrap">' +
             '<div class="tree-dropdown-trigger" onclick="toggleTreeDropdown(\'' + sid + '-member\')">' +
               '<div class="tree-dropdown-tags" id="' + sid + '-member-tags">' +
-                '<span style="color:var(--text-secondary);font-size:13px;display:flex;align-items:center;gap:5px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>全部成員</span>' +
+                '<span class="tree-all-label" style="color:var(--text-secondary);font-size:13px;display:flex;align-items:center;gap:5px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>全部人員</span>' +
               '</div>' +
               '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>' +
             '</div>' +
             '<div class="tree-dropdown-panel" id="' + sid + '-member-panel" style="display:none;">' +
-              '<div style="padding:8px 10px;border-bottom:1px solid var(--border);"><input class="input full" placeholder="搜尋部門或成員…" style="font-size:12px;" oninput="filterTreeDropdown(\'' + sid + '-member\',this.value)" /></div>' +
+              '<div style="padding:8px 10px;border-bottom:1px solid var(--border);"><input class="input full" placeholder="搜尋部門或人員…" style="font-size:12px;" oninput="filterTreeDropdown(\'' + sid + '-member\',this.value)" /></div>' +
               '<div style="max-height:200px;overflow-y:auto;">' +
-                '<label class="tree-member-row" style="font-weight:600;background:var(--primary-soft);color:var(--primary);"><input type="checkbox" checked style="accent-color:var(--primary);" /><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>全部成員</label>' +
-                '<div class="tree-dept-row" onclick="toggleTreeDept(this)"><svg class="tree-dept-chev" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>研發部</div>' +
-                '<div class="tree-dept-children"><label class="tree-member-row"><input type="checkbox" style="accent-color:var(--primary);" /><div class="avatar" style="width:18px;height:18px;font-size:9px;">陳</div>陳小明</label><label class="tree-member-row"><input type="checkbox" style="accent-color:var(--primary);" /><div class="avatar" style="width:18px;height:18px;font-size:9px;">吳</div>吳建宏</label></div>' +
-                '<div class="tree-dept-row" onclick="toggleTreeDept(this)"><svg class="tree-dept-chev" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>行銷部</div>' +
-                '<div class="tree-dept-children"><label class="tree-member-row"><input type="checkbox" style="accent-color:var(--primary);" /><div class="avatar" style="width:18px;height:18px;font-size:9px;">李</div>李怡君</label><label class="tree-member-row"><input type="checkbox" style="accent-color:var(--primary);" /><div class="avatar" style="width:18px;height:18px;font-size:9px;">王</div>王大偉</label></div>' +
+                '<label class="tree-member-row" style="font-weight:600;background:var(--primary-soft);color:var(--primary);"><input type="checkbox" checked class="tree-all-cb" style="accent-color:var(--primary);" onchange="toggleAllTreeMembers(\'' + sid + '-member\',this)" /><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>全部人員</label>' +
+                '<div class="tree-dept-row" onclick="toggleTreeDept(this)"><svg class="tree-dept-chev" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg><input type="checkbox" class="tree-dept-cb" onclick="event.stopPropagation();toggleDeptMembers(this,\'' + sid + '-member\')" style="accent-color:var(--primary);margin:0 2px 0 4px;" /><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>研發部</div>' +
+                '<div class="tree-dept-children"><label class="tree-member-row"><input type="checkbox" class="tree-member-cb" style="accent-color:var(--primary);" onchange="onTreeMemberChange(\'' + sid + '-member\',this,\'陳小明\')" /><div class="avatar" style="width:18px;height:18px;font-size:9px;">陳</div>陳小明</label><label class="tree-member-row"><input type="checkbox" class="tree-member-cb" style="accent-color:var(--primary);" onchange="onTreeMemberChange(\'' + sid + '-member\',this,\'吳建宏\')" /><div class="avatar" style="width:18px;height:18px;font-size:9px;">吳</div>吳建宏</label></div>' +
+                '<div class="tree-dept-row" onclick="toggleTreeDept(this)"><svg class="tree-dept-chev" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg><input type="checkbox" class="tree-dept-cb" onclick="event.stopPropagation();toggleDeptMembers(this,\'' + sid + '-member\')" style="accent-color:var(--primary);margin:0 2px 0 4px;" /><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>行銷部</div>' +
+                '<div class="tree-dept-children"><label class="tree-member-row"><input type="checkbox" class="tree-member-cb" style="accent-color:var(--primary);" onchange="onTreeMemberChange(\'' + sid + '-member\',this,\'李怡君\')" /><div class="avatar" style="width:18px;height:18px;font-size:9px;">李</div>李怡君</label><label class="tree-member-row"><input type="checkbox" class="tree-member-cb" style="accent-color:var(--primary);" onchange="onTreeMemberChange(\'' + sid + '-member\',this,\'王大偉\')" /><div class="avatar" style="width:18px;height:18px;font-size:9px;">王</div>王大偉</label></div>' +
               '</div>' +
             '</div>' +
           '</div>' +
         '</div>' +
+        /* 上下班時間 */
         '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">' +
-          '<div><div style="font-size:12px;font-weight:600;margin-bottom:6px;">上班時間</div><div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;"><input class="input" type="time" value="09:00" style="width:110px;" /><span style="font-size:12px;color:var(--text-muted);">超過</span><select class="input" style="width:80px;font-size:12px;"><option>10 分鐘</option><option>15 分鐘</option><option>20 分鐘</option><option selected>30 分鐘</option><option>45 分鐘</option><option>60 分鐘</option></select><span style="font-size:12px;color:var(--text-muted);">提醒主管</span></div></div>' +
-          '<div><div style="font-size:12px;font-weight:600;margin-bottom:6px;">下班時間</div><div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;"><input class="input" type="time" value="18:00" style="width:110px;" /><span style="font-size:12px;color:var(--text-muted);">超過</span><select class="input" style="width:80px;font-size:12px;"><option>10 分鐘</option><option>15 分鐘</option><option>20 分鐘</option><option selected>30 分鐘</option><option>45 分鐘</option><option>60 分鐘</option></select><span style="font-size:12px;color:var(--text-muted);">提醒主管</span></div></div>' +
+          /* 上班 */
+          '<div>' +
+            '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">' +
+              '<div style="font-size:12px;font-weight:600;">上班時間</div>' +
+              '<label style="display:flex;align-items:center;gap:4px;font-size:11px;color:var(--text-muted);cursor:pointer;"><input type="checkbox" style="accent-color:var(--primary);" onchange="toggleFlexTime(this,\'' + inId + '\')" /> 彈性工時</label>' +
+            '</div>' +
+            '<div id="' + inId + '-single" style="display:flex;align-items:center;gap:6px;"><input class="input" type="time" value="09:00" style="width:110px;" /></div>' +
+            '<div id="' + inId + '-range" style="display:none;align-items:center;gap:6px;"><input class="input" type="time" value="08:00" style="width:96px;" /><span style="font-size:12px;color:var(--text-muted);">～</span><input class="input" type="time" value="10:00" style="width:96px;" /></div>' +
+            '<label style="display:flex;align-items:center;gap:6px;margin-top:8px;font-size:12px;color:var(--text-secondary);cursor:pointer;"><input type="checkbox" style="accent-color:var(--primary);" /> 超過 30 分鐘提醒主管</label>' +
+          '</div>' +
+          /* 下班 */
+          '<div>' +
+            '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">' +
+              '<div style="font-size:12px;font-weight:600;">下班時間</div>' +
+              '<label style="display:flex;align-items:center;gap:4px;font-size:11px;color:var(--text-muted);cursor:pointer;"><input type="checkbox" style="accent-color:var(--primary);" onchange="toggleFlexTime(this,\'' + outId + '\')" /> 彈性工時</label>' +
+            '</div>' +
+            '<div id="' + outId + '-single" style="display:flex;align-items:center;gap:6px;"><input class="input" type="time" value="18:00" style="width:110px;" /></div>' +
+            '<div id="' + outId + '-range" style="display:none;align-items:center;gap:6px;"><input class="input" type="time" value="17:00" style="width:96px;" /><span style="font-size:12px;color:var(--text-muted);">～</span><input class="input" type="time" value="20:00" style="width:96px;" /></div>' +
+            '<label style="display:flex;align-items:center;gap:6px;margin-top:8px;font-size:12px;color:var(--text-secondary);cursor:pointer;"><input type="checkbox" style="accent-color:var(--primary);" /> 超過 30 分鐘提醒主管</label>' +
+          '</div>' +
         '</div>' +
       '</div>';
     list.appendChild(item);
@@ -14837,8 +14975,11 @@ function orgLangAccToggle() {
     item.className = 'checkin-loc-item';
     item.style.cssText = 'border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;';
     item.innerHTML =
-      '<div style="padding:10px 14px;background:var(--bg);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">' +
-        '<span style="font-size:12px;font-weight:600;color:var(--text-secondary);">位置 ' + (n + 1) + '</span>' +
+      '<div style="padding:8px 14px;background:var(--bg);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">' +
+        '<div style="display:flex;align-items:center;gap:6px;">' +
+          '<input type="text" value="位置' + (n+1) + '" class="loc-name-input" style="border:none;background:transparent;font-size:12px;font-weight:600;color:var(--text);outline:none;width:80px;cursor:text;" placeholder="位置名稱" />' +
+          '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2" style="cursor:pointer;flex-shrink:0;" title="點擊編輯名稱" onclick="this.previousElementSibling.focus();this.previousElementSibling.select();"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>' +
+        '</div>' +
         '<button onclick="this.closest(\'.checkin-loc-item\').remove();renumberLocations()" style="border:none;background:none;cursor:pointer;color:var(--text-muted);font-size:13px;padding:2px 4px;" title="移除">×</button>' +
       '</div>' +
       '<div style="padding:12px 14px;display:flex;flex-direction:column;gap:8px;">' +
@@ -14865,51 +15006,202 @@ function orgLangAccToggle() {
     });
   }
 
-  /* 模擬地理編碼（實際應接 API；此為展示用 mock） */
-  var MOCK_GEOCODE = {
-    '台北': { lat: '25.047924', lng: '121.531858' },
-    '信義': { lat: '25.033964', lng: '121.564472' },
-    '板橋': { lat: '25.013327', lng: '121.468508' },
-    '新竹': { lat: '24.803992', lng: '120.968515' },
-    '台中': { lat: '24.147924', lng: '120.673648' },
-    '台南': { lat: '22.999302', lng: '120.227026' },
-    '高雄': { lat: '22.627760', lng: '120.301460' }
+  /* ===== 縣市 / 區域下拉 資料 ===== */
+  var DISTRICT_MAP = {
+    '台北市': ['中正區','大同區','中山區','松山區','大安區','萬華區','信義區','士林區','北投區','內湖區','南港區','文山區'],
+    '新北市': ['板橋區','三重區','中和區','永和區','新莊區','新店區','樹林區','鶯歌區','三峽區','淡水區','汐止區','瑞芳區','土城區','蘆洲區','五股區','泰山區','林口區','深坑區','石碇區','坪林區','三芝區','石門區','八里區','平溪區','雙溪區','貢寮區','金山區','萬里區','烏來區'],
+    '桃園市': ['桃園區','中壢區','平鎮區','八德區','楊梅區','蘆竹區','大溪區','龍潭區','龜山區','大園區','觀音區','新屋區','復興區'],
+    '台中市': ['中區','東區','南區','西區','北區','北屯區','西屯區','南屯區','太平區','大里區','霧峰區','烏日區','豐原區','后里區','石岡區','東勢區','和平區','新社區','潭子區','大雅區','神岡區','大肚區','沙鹿區','龍井區','梧棲區','清水區','大甲區','外埔區','大安區'],
+    '台南市': ['中西區','東區','南區','北區','安平區','安南區','永康區','歸仁區','新化區','左鎮區','玉井區','楠西區','南化區','仁德區','關廟區','龍崎區','官田區','麻豆區','佳里區','西港區','七股區','將軍區','學甲區','北門區','新營區','後壁區','白河區','東山區','六甲區','下營區','柳營區','鹽水區','善化區','大內區','山上區','新市區','安定區'],
+    '高雄市': ['楠梓區','左營區','鼓山區','三民區','鹽埕區','前金區','苓雅區','前鎮區','旗津區','小港區','鳳山區','林園區','大寮區','大樹區','大社區','仁武區','鳥松區','岡山區','橋頭區','燕巢區','田寮區','阿蓮區','路竹區','湖內區','茄萣區','永安區','彌陀區','梓官區','旗山區','美濃區','六龜區','甲仙區','杉林區','內門區','茂林區','桃源區','那瑪夏區'],
+    '新竹市': ['東區','北區','香山區'],
+    '新竹縣': ['竹北市','竹東鎮','新埔鎮','關西鎮','湖口鄉','新豐鄉','芎林鄉','橫山鄉','北埔鄉','寶山鄉','峨眉鄉','尖石鄉','五峰鄉'],
+    '基隆市': ['仁愛區','信義區','中正區','中山區','安樂區','暖暖區','七堵區'],
+    '苗栗縣': ['苗栗市','頭份市','竹南鎮','苑裡鎮','通霄鎮','造橋鄉','西湖鄉','頭屋鄉','公館鄉','銅鑼鄉','三義鄉','大湖鄉','泰安鄉','南庄鄉','獅潭鄉','三灣鄉','卓蘭鎮'],
+    '彰化縣': ['彰化市','員林市','和美鎮','鹿港鎮','溪湖鎮','二林鎮','田中鎮','北斗鎮','花壇鄉','芬園鄉','大村鄉','永靖鄉','伸港鄉','線西鄉','福興鄉','秀水鄉','埔鹽鄉','埔心鄉','大城鄉','芳苑鄉','竹塘鄉','社頭鄉','二水鄉','田尾鄉','埤頭鄉','溪州鄉','名間鄉'],
+    '南投縣': ['南投市','埔里鎮','草屯鎮','竹山鎮','集集鎮','名間鄉','鹿谷鄉','中寮鄉','魚池鄉','國姓鄉','水里鄉','信義鄉','仁愛鄉'],
+    '雲林縣': ['斗六市','斗南鎮','虎尾鎮','西螺鎮','土庫鎮','北港鎮','古坑鄉','大埤鄉','莿桐鄉','林內鄉','二崙鄉','崙背鄉','麥寮鄉','東勢鄉','褒忠鄉','臺西鄉','元長鄉','四湖鄉','口湖鄉','水林鄉'],
+    '嘉義市': ['東區','西區'],
+    '嘉義縣': ['太保市','朴子市','布袋鎮','大林鎮','民雄鄉','溪口鄉','新港鄉','六腳鄉','東石鄉','義竹鄉','鹿草鄉','水上鄉','中埔鄉','竹崎鄉','梅山鄉','番路鄉','大埔鄉','阿里山鄉'],
+    '屏東縣': ['屏東市','潮州鎮','東港鎮','恆春鎮','萬丹鄉','長治鄉','麟洛鄉','九如鄉','里港鄉','鹽埔鄉','高樹鄉','萬巒鄉','內埔鄉','竹田鄉','新埤鄉','枋寮鄉','新園鄉','崁頂鄉','林邊鄉','南州鄉','佳冬鄉','琉球鄉','車城鄉','滿州鄉','枋山鄉','三地門鄉','霧台鄉','瑪家鄉','泰武鄉','來義鄉','春日鄉','獅子鄉','牡丹鄉'],
+    '宜蘭縣': ['宜蘭市','羅東鎮','蘇澳鎮','頭城鎮','礁溪鄉','壯圍鄉','員山鄉','冬山鄉','五結鄉','三星鄉','大同鄉','南澳鄉'],
+    '花蓮縣': ['花蓮市','鳳林鎮','玉里鎮','新城鄉','吉安鄉','壽豐鄉','光復鄉','豐濱鄉','瑞穗鄉','富里鄉','秀林鄉','萬榮鄉','卓溪鄉'],
+    '台東縣': ['台東市','成功鎮','關山鎮','長濱鄉','海端鄉','池上鄉','東河鄉','鹿野鄉','延平鄉','卑南鄉','太麻里鄉','金峰鄉','大武鄉','達仁鄉','綠島鄉','蘭嶼鄉'],
+    '澎湖縣': ['馬公市','湖西鄉','白沙鄉','西嶼鄉','望安鄉','七美鄉'],
+    '金門縣': ['金城鎮','金湖鎮','金沙鎮','金寧鄉','烈嶼鄉','烏坵鄉'],
+    '連江縣': ['南竿鄉','北竿鄉','莒光鄉','東引鄉']
   };
+
+  /* 信義路五段（找不到門牌時的 fallback 中心點） */
+  var FALLBACK_CENTER = { lat: 25.033964, lng: 121.564472 };
+
+  /* 每個 loc-item 的 Leaflet map / circle 實例 */
+  var _locMaps = {};   /* idx -> { map, circle, isPending } */
+
+  function onCityChange(sel, idx) {
+    var city = sel.value;
+    var distSel = document.getElementById('loc-dist-' + idx);
+    if (!distSel) return;
+    var districts = DISTRICT_MAP[city] || [];
+    distSel.innerHTML = '<option value="">— 選擇區域 —</option>';
+    districts.forEach(function(d) {
+      distSel.innerHTML += '<option value="' + d + '">' + d + '</option>';
+    });
+  }
+
+  function onDistrictChange(sel, idx) {
+    /* 區域改變時，若詳細地址也有值，不自動觸發查詢 */
+  }
+
+  function onAddressInput(input, idx) {
+    /* 詳細地址輸入 debounce — 不自動查詢，等使用者點「查詢座標」 */
+  }
+
+  /* ===== 組合完整地址 ===== */
+  function _buildAddress(idx) {
+    var container = document.getElementById('loc-lat-' + idx);
+    if (!container) return '';
+    var item = container.closest('.checkin-loc-item');
+    if (!item) return '';
+    var citySel  = item.querySelector('select:not(.loc-district)');
+    var distSel  = item.querySelector('.loc-district');
+    var detailEl = item.querySelector('.loc-detail');
+    var city   = citySel  ? citySel.value   : '';
+    var dist   = distSel  ? distSel.value   : '';
+    var detail = detailEl ? detailEl.value.trim() : '';
+    return city + dist + detail;
+  }
+
+  /* ===== TGOS 免費地理編碼 ===== */
+  function geocodeManual(idx, btnOrAddr) {
+    var addr = (typeof btnOrAddr === 'string') ? btnOrAddr : _buildAddress(idx);
+    if (!addr || !addr.trim()) {
+      alert('請先填寫縣市、區域及詳細地址後再查詢。');
+      return;
+    }
+
+    /* 查詢中狀態 */
+    var btn = (btnOrAddr && typeof btnOrAddr === 'object') ? btnOrAddr : null;
+    if (btn) { btn.disabled = true; btn.textContent = '查詢中…'; }
+
+    var tgosUrl = 'https://addr.tgos.tw/addrserv/wgs/addr?addr=' + encodeURIComponent(addr);
+
+    fetch(tgosUrl)
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        if (btn) { btn.disabled = false; btn.textContent = '查詢座標'; }
+        /* TGOS 回傳格式：{ x: 經度, y: 緯度, ... } */
+        var lng = data && data.x ? parseFloat(data.x) : null;
+        var lat = data && data.y ? parseFloat(data.y) : null;
+        if (lat && lng && lat > 20 && lat < 27) {
+          _renderMap(idx, lat, lng, false);
+        } else {
+          _renderMap(idx, FALLBACK_CENTER.lat, FALLBACK_CENTER.lng, true);
+        }
+      })
+      .catch(function() {
+        if (btn) { btn.disabled = false; btn.textContent = '查詢座標'; }
+        _renderMap(idx, FALLBACK_CENTER.lat, FALLBACK_CENTER.lng, true);
+      });
+  }
+
+  /* ===== 初始化 / 更新 Leaflet 地圖 ===== */
+  function _renderMap(idx, lat, lng, isPending) {
+    var wrapEl   = document.getElementById('loc-map-wrap-' + idx);
+    var mapEl    = document.getElementById('loc-map-' + idx);
+    var hintEl   = document.getElementById('loc-map-hint-' + idx);
+    var statusEl = document.getElementById('loc-map-status-' + idx);
+    var latEl    = document.getElementById('loc-lat-' + idx);
+    var lngEl    = document.getElementById('loc-lng-' + idx);
+    if (!wrapEl || !mapEl) return;
+
+    wrapEl.style.display = '';
+
+    var circleColor = isPending ? '#d97706' : '#2563eb';   /* 黃 / 藍 */
+    var radius = 100;
+
+    /* 顯示 / 隱藏提示列 */
+    if (hintEl) hintEl.style.display = isPending ? 'flex' : 'none';
+    if (statusEl) statusEl.textContent = isPending
+      ? '請用滑鼠在地圖上對準您的辦公室點擊一下以完成定位'
+      : '點擊地圖可微調位置';
+
+    var inst = _locMaps[idx];
+    if (!inst) {
+      /* 首次建立地圖 */
+      var map = L.map(mapEl).setView([lat, lng], 17);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors',
+        maxZoom: 19
+      }).addTo(map);
+      var circle = L.circle([lat, lng], {
+        color: circleColor,
+        fillColor: circleColor,
+        fillOpacity: 0.15,
+        weight: 2,
+        radius: radius
+      }).addTo(map);
+
+      map.on('click', function(e) {
+        var c = e.latlng;
+        circle.setLatLng(c);
+        circle.setStyle({ color: '#2563eb', fillColor: '#2563eb' });
+        if (latEl) latEl.value = c.lat.toFixed(6);
+        if (lngEl) lngEl.value = c.lng.toFixed(6);
+        if (statusEl) statusEl.textContent = '點擊地圖可微調位置';
+        if (hintEl)   hintEl.style.display = 'none';
+        _locMaps[idx].isPending = false;
+      });
+
+      _locMaps[idx] = { map: map, circle: circle, isPending: isPending };
+    } else {
+      /* 重新查詢：更新地圖中心與圓圈 */
+      inst.map.setView([lat, lng], 17);
+      inst.circle.setLatLng([lat, lng]);
+      inst.circle.setStyle({ color: circleColor, fillColor: circleColor });
+      inst.isPending = isPending;
+    }
+
+    /* 非 pending 時直接寫入緯經度 */
+    if (!isPending) {
+      if (latEl) latEl.value = lat.toFixed(6);
+      if (lngEl) lngEl.value = lng.toFixed(6);
+    } else {
+      if (latEl) latEl.value = '';
+      if (lngEl) lngEl.value = '';
+    }
+
+    /* 讓 Leaflet 修正地圖尺寸（面板顯示後才能正確算寬高） */
+    setTimeout(function() {
+      if (_locMaps[idx]) _locMaps[idx].map.invalidateSize();
+    }, 120);
+  }
+
+  /* ===== 確認地圖位置 ===== */
+  function saveLocFromMap(idx) {
+    var inst  = _locMaps[idx];
+    var latEl = document.getElementById('loc-lat-' + idx);
+    var lngEl = document.getElementById('loc-lng-' + idx);
+    if (!inst || !latEl || !lngEl) return;
+    if (inst.isPending) {
+      alert('請先在地圖上點擊您的辦公室正確位置，再按確認。');
+      return;
+    }
+    var c = inst.circle.getLatLng();
+    latEl.value = c.lat.toFixed(6);
+    lngEl.value = c.lng.toFixed(6);
+    /* 視覺回饋 */
+    var wrapEl = document.getElementById('loc-map-wrap-' + idx);
+    if (wrapEl) {
+      wrapEl.style.border = '2px solid var(--primary)';
+      setTimeout(function() { wrapEl.style.border = ''; }, 1200);
+    }
+  }
 
   function geocodeAddress(input, idx) {
     /* Debounce: only run after user stops typing for 600ms */
     if (input._timer) clearTimeout(input._timer);
     input._timer = setTimeout(function() { geocodeManual(idx, input.value); }, 600);
-  }
-
-  function geocodeManual(idx, address) {
-    var addrInput = address;
-    if (!addrInput) {
-      /* find the input in the same loc-item */
-      var latEl = document.getElementById('loc-lat-' + idx);
-      if (latEl) {
-        var container = latEl.closest('.checkin-loc-item');
-        if (container) {
-          var inp = container.querySelector('input[type="text"]:not([readonly])');
-          if (inp) addrInput = inp.value;
-        }
-      }
-    }
-    if (!addrInput || !addrInput.trim()) return;
-    /* Mock lookup */
-    var lat = '', lng = '';
-    for (var key in MOCK_GEOCODE) {
-      if (addrInput.indexOf(key) !== -1) {
-        lat = MOCK_GEOCODE[key].lat;
-        lng = MOCK_GEOCODE[key].lng;
-        break;
-      }
-    }
-    if (!lat) { lat = '25.033964'; lng = '121.564472'; } /* default fallback */
-    var latEl = document.getElementById('loc-lat-' + idx);
-    var lngEl = document.getElementById('loc-lng-' + idx);
-    if (latEl) latEl.value = lat;
-    if (lngEl) lngEl.value = lng;
   }
   /* ===== End 打卡位置設定 JS ===== */
 
@@ -17409,6 +17701,123 @@ function closeEditDrawer() {
   }
 
   /* ===== Tree Dropdown JS ===== */
+  /* ===== 彈性工時切換 ===== */
+  function toggleFlexTime(cb, prefix) {
+    var single = document.getElementById(prefix + '-single');
+    var range  = document.getElementById(prefix + '-range');
+    if (!single || !range) return;
+    if (cb.checked) {
+      single.style.display = 'none';
+      range.style.display  = 'flex';
+    } else {
+      single.style.display = 'flex';
+      range.style.display  = 'none';
+    }
+  }
+
+  /* ===== Tree Select 輔助函數 ===== */
+  /* 全選 / 取消全選 */
+  function toggleAllTreeMembers(dropdownId, allCb) {
+    var panel   = document.getElementById(dropdownId + '-panel');
+    var tagsEl  = document.getElementById(dropdownId + '-tags');
+    if (!panel) return;
+    panel.querySelectorAll('.tree-member-cb,.tree-dept-cb').forEach(function(cb){ cb.checked = allCb.checked; });
+    if (tagsEl) {
+      if (allCb.checked) {
+        tagsEl.innerHTML = '<span class="tree-all-label" style="color:var(--text-secondary);font-size:13px;display:flex;align-items:center;gap:5px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>全部人員</span>';
+      } else {
+        tagsEl.innerHTML = '<span style="color:var(--text-muted);font-size:13px;">— 選擇人員 —</span>';
+      }
+    }
+  }
+
+  /* 部門 checkbox：勾選 / 取消勾選同一部門所有成員 */
+  function toggleDeptMembers(deptCb, dropdownId) {
+    var deptRow  = deptCb.closest('.tree-dept-row');
+    if (!deptRow) return;
+    var children = deptRow.nextElementSibling;
+    if (!children || !children.classList.contains('tree-dept-children')) return;
+    children.querySelectorAll('.tree-member-cb').forEach(function(cb) {
+      cb.checked = deptCb.checked;
+      /* 同步觸發 tag 更新 */
+      var label = cb.closest('label');
+      var name  = label ? label.textContent.trim().replace(/\s+/g,' ').split(' ')[0] : '';
+      /* 取出顯示名稱（avatar 後第一個文字節點） */
+      var nodes = Array.from(label ? label.childNodes : []);
+      var txt   = '';
+      nodes.forEach(function(n){ if(n.nodeType===3 && n.textContent.trim()) txt = n.textContent.trim(); });
+      if (!txt) txt = name;
+      _syncTreeTag(dropdownId, cb, txt);
+    });
+    _checkAllTreeState(dropdownId);
+  }
+
+  /* 單一成員 checkbox 變更 */
+  function onTreeMemberChange(dropdownId, cb, name) {
+    _syncTreeTag(dropdownId, cb, name);
+    _checkAllTreeState(dropdownId);
+  }
+
+  /* 寫入 / 移除 tag */
+  function _syncTreeTag(dropdownId, cb, name) {
+    var tagsEl = document.getElementById(dropdownId + '-tags');
+    if (!tagsEl) return;
+    /* 移除「全部人員」標籤 */
+    var allLabel = tagsEl.querySelector('.tree-all-label');
+    if (allLabel) allLabel.remove();
+    var placeHolder = tagsEl.querySelector('span:not(.tree-sel-tag)');
+    if (placeHolder && placeHolder.textContent.includes('選擇人員')) placeHolder.remove();
+
+    if (cb.checked) {
+      if (!tagsEl.querySelector('[data-name="' + name + '"]')) {
+        var tag = document.createElement('span');
+        tag.className = 'tree-sel-tag';
+        tag.setAttribute('data-name', name);
+        tag.innerHTML = name + ' <span style="cursor:pointer;" onclick="event.stopPropagation();_removeTreeTagByName(\'' + dropdownId + '\',\'' + name + '\')">×</span>';
+        tagsEl.appendChild(tag);
+      }
+    } else {
+      var existing = tagsEl.querySelector('[data-name="' + name + '"]');
+      if (existing) existing.remove();
+    }
+    /* 若 tags 全空，顯示 placeholder */
+    if (tagsEl.querySelectorAll('.tree-sel-tag').length === 0) {
+      tagsEl.innerHTML = '<span style="color:var(--text-muted);font-size:13px;">— 選擇人員 —</span>';
+    }
+  }
+
+  function _removeTreeTagByName(dropdownId, name) {
+    var tagsEl = document.getElementById(dropdownId + '-tags');
+    var panel  = document.getElementById(dropdownId + '-panel');
+    if (tagsEl) { var t = tagsEl.querySelector('[data-name="' + name + '"]'); if (t) t.remove(); }
+    if (panel) {
+      panel.querySelectorAll('.tree-member-cb').forEach(function(cb){
+        var lbl = cb.closest('label');
+        if (lbl && lbl.textContent.replace(/\s/g,'').indexOf(name.replace(/\s/g,'')) !== -1) cb.checked = false;
+      });
+    }
+    if (tagsEl && tagsEl.querySelectorAll('.tree-sel-tag').length === 0) {
+      tagsEl.innerHTML = '<span style="color:var(--text-muted);font-size:13px;">— 選擇人員 —</span>';
+    }
+    _checkAllTreeState(dropdownId);
+  }
+
+  /* 檢查是否全選，同步「全部人員」checkbox 狀態 */
+  function _checkAllTreeState(dropdownId) {
+    var panel = document.getElementById(dropdownId + '-panel');
+    if (!panel) return;
+    var allCbs = panel.querySelectorAll('.tree-member-cb');
+    var allChecked = Array.from(allCbs).every(function(c){ return c.checked; });
+    var allCb = panel.querySelector('.tree-all-cb');
+    if (allCb) allCb.checked = allChecked;
+    if (allChecked) {
+      var tagsEl = document.getElementById(dropdownId + '-tags');
+      if (tagsEl && tagsEl.querySelectorAll('.tree-sel-tag').length > 0) {
+        tagsEl.innerHTML = '<span class="tree-all-label" style="color:var(--text-secondary);font-size:13px;display:flex;align-items:center;gap:5px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>全部人員</span>';
+      }
+    }
+  }
+
   function toggleTreeDropdown(id) {
     var panel = document.getElementById(id + '-panel');
     if (!panel) return;
