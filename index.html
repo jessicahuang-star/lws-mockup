@@ -321,6 +321,11 @@
   .data-table tbody tr:last-child td { border-bottom: none; }
   .data-table .row-checkbox { width: 28px; }
 
+  /* ===== Log note cell ===== */
+  .log-note-cell { min-width:120px; }
+  .log-note-display { display:flex; align-items:center; gap:5px; cursor:pointer; }
+  .log-note-display:hover svg { stroke: var(--primary); }
+
   /* ===== Badges ===== */
   .badge {
     display: inline-flex;
@@ -6687,54 +6692,58 @@
     <!-- ============= 打卡記錄 (Bot 範本專屬) ============= -->
     <section id="page-bot-checkin" class="page-wrap hidden">
 
-      <!-- 頂部返回列 -->
-      <div style="display:flex; align-items:center; gap:12px; margin-bottom:20px;">
-        <button class="btn ghost sm" onclick="goPage('5.1')" style="display:inline-flex;align-items:center;gap:5px;">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
-          返回 Bot 列表
-        </button>
-        <div style="display:flex; align-items:center; gap:10px;">
-          <div class="bot-icon line" style="width:32px;height:32px;font-size:10px;border-radius:8px;background:#059669;flex-shrink:0;">打卡</div>
-          <div>
-            <div style="font-weight:700; font-size:16px;">打卡 Bot — 打卡記錄</div>
-            <div class="text-sec" style="font-size:12px;">查看成員打卡、異常與補打卡紀錄</div>
-          </div>
+      <!-- 頂部標題列 -->
+      <div style="display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:20px;">
+        <div>
+          <div style="font-weight:700; font-size:18px; color:var(--text); margin-bottom:4px;">打卡 Bot - 打卡記錄</div>
+          <div class="text-sec" style="font-size:13px;">查看成員透過bot機器人的打卡、異常與補打卡紀錄</div>
         </div>
-        <button class="btn" style="margin-left:auto; display:inline-flex;align-items:center;gap:5px;" onclick="exportCheckinReport()">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          匯出報表
-        </button>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <button class="btn ghost sm" style="display:inline-flex;align-items:center;gap:5px;" onclick="showSyncToast('已同步主機資料')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/></svg>
+            同步主機
+          </button>
+          <button class="btn sm" style="display:inline-flex;align-items:center;gap:5px;" onclick="exportCheckinReport()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            匯出報表
+          </button>
+        </div>
       </div>
 
-      <!-- ===== 總表數據（4 個統計卡） ===== -->
-      <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:20px;">
+      <!-- ===== 出勤總覽（3 統計卡） ===== -->
+      <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:0; margin-bottom:20px; border:1px solid var(--border); border-radius:var(--radius); overflow:hidden;">
 
-        <!-- 今日應到 -->
-        <div class="card" style="padding:18px 20px; text-align:center;">
-          <div style="font-size:12px; color:var(--text-secondary); margin-bottom:6px; font-weight:500;">今日應到</div>
-          <div style="font-size:36px; font-weight:800; color:var(--text); line-height:1;">128</div>
-          <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">位成員</div>
+        <!-- 出勤總覽 -->
+        <div class="card checkin-stat-card active" id="stat-card-arrived" onclick="switchCheckinTab('arrived',this)"
+             style="padding:20px 22px; cursor:pointer; border:none; border-radius:0; border-right:1px solid var(--border); border:2px solid var(--primary); background:var(--primary-soft);">
+          <div style="font-size:13px; color:var(--primary); font-weight:600; margin-bottom:10px;">出勤總覽</div>
+          <div style="display:flex; align-items:center; justify-content:space-between;">
+            <div style="display:flex; align-items:baseline; gap:6px;">
+              <span style="font-size:36px; font-weight:800; color:var(--text); line-height:1;">60</span>
+              <span style="font-size:12px; color:var(--text-secondary);">(適用打卡成員)</span>
+            </div>
+            <span style="font-size:12px; color:var(--primary); text-decoration:underline; cursor:pointer;">點擊查看紀錄</span>
+          </div>
         </div>
 
-        <!-- 已到（可點擊） -->
-        <div class="card checkin-stat-card active" id="stat-card-arrived" onclick="switchCheckinTab('arrived',this)" style="padding:18px 20px; text-align:center; cursor:pointer; border:2px solid var(--primary); background:var(--primary-soft);">
-          <div style="font-size:12px; color:var(--primary); margin-bottom:6px; font-weight:600;">已到</div>
-          <div style="font-size:36px; font-weight:800; color:var(--primary); line-height:1;">112</div>
-          <div style="font-size:11px; color:var(--primary); margin-top:4px; opacity:0.75;">點擊查看記錄</div>
+        <!-- 打卡異常 -->
+        <div class="card checkin-stat-card" id="stat-card-abnormal" onclick="switchCheckinTab('abnormal',this)"
+             style="padding:20px 22px; cursor:pointer; border-radius:0; border-right:1px solid var(--border);">
+          <div style="font-size:13px; color:var(--text-secondary); font-weight:500; margin-bottom:10px;">打卡異常</div>
+          <div style="display:flex; align-items:center; justify-content:space-between;">
+            <span style="font-size:36px; font-weight:800; color:var(--danger); line-height:1;">3</span>
+            <span style="font-size:12px; color:var(--text-muted); cursor:pointer;">點擊查看紀錄</span>
+          </div>
         </div>
 
-        <!-- 異常（可點擊） -->
-        <div class="card checkin-stat-card" id="stat-card-abnormal" onclick="switchCheckinTab('abnormal',this)" style="padding:18px 20px; text-align:center; cursor:pointer; border:2px solid var(--border);">
-          <div style="font-size:12px; color:var(--text-secondary); margin-bottom:6px; font-weight:500;">異常</div>
-          <div style="font-size:36px; font-weight:800; color:var(--danger); line-height:1;">9</div>
-          <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">點擊查看記錄</div>
-        </div>
-
-        <!-- 補打卡（可點擊） -->
-        <div class="card checkin-stat-card" id="stat-card-makeup" onclick="switchCheckinTab('makeup',this)" style="padding:18px 20px; text-align:center; cursor:pointer; border:2px solid var(--border);">
-          <div style="font-size:12px; color:var(--text-secondary); margin-bottom:6px; font-weight:500;">補打卡</div>
-          <div style="font-size:36px; font-weight:800; color:var(--warning); line-height:1;">7</div>
-          <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">點擊查看記錄</div>
+        <!-- 操作記錄 -->
+        <div class="card checkin-stat-card" id="stat-card-makeup" onclick="switchCheckinTab('makeup',this)"
+             style="padding:20px 22px; cursor:pointer; border-radius:0;">
+          <div style="font-size:13px; color:var(--text-secondary); font-weight:500; margin-bottom:10px;">操作記錄</div>
+          <div style="display:flex; align-items:center; justify-content:space-between;">
+            <span style="font-size:36px; font-weight:800; color:#F59E0B; line-height:1;">2</span>
+            <span style="font-size:12px; color:var(--text-muted); cursor:pointer;">點擊查看紀錄</span>
+          </div>
         </div>
 
       </div>
@@ -6743,27 +6752,29 @@
       <div class="card" style="padding:14px 18px; margin-bottom:16px;">
         <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
           <!-- 搜尋成員 -->
-          <div style="position:relative; flex:0 0 200px;">
+          <div style="position:relative; flex:0 0 220px;">
             <svg style="position:absolute;left:9px;top:50%;transform:translateY(-50%);opacity:0.4;" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
             <input class="input" placeholder="搜尋成員姓名…" style="padding-left:28px; width:100%;" />
           </div>
-          <!-- 類型 -->
-          <select class="input" style="width:150px;">
-            <option value="">全部類型</option>
-            <option value="on">上班打卡</option>
-            <option value="off">下班打卡</option>
-            <option value="out_on">外出上班</option>
-            <option value="out_off">外出下班</option>
+          <!-- 所有狀態（僅全部打卡記錄顯示） -->
+          <select class="input" id="checkin-status-filter" style="width:130px;">
+            <option value="">所有狀態</option>
+            <option value="normal">正常</option>
+            <option value="abnormal">異常</option>
           </select>
           <!-- 時間區間 -->
           <div style="display:flex; align-items:center; gap:6px;">
-            <input type="date" class="input" id="checkin-date-from" style="width:130px;" />
-            <span style="color:var(--text-muted); font-size:12px;">—</span>
-            <input type="date" class="input" id="checkin-date-to" style="width:130px;" />
+            <div style="position:relative;">
+              <input type="date" class="input" id="checkin-date-from" style="width:130px;" />
+            </div>
+            <span style="color:var(--text-muted); font-size:12px;">-</span>
+            <div style="position:relative;">
+              <input type="date" class="input" id="checkin-date-to" style="width:130px;" />
+            </div>
           </div>
-          <!-- 顯示當日 checkbox -->
-          <label style="display:flex; align-items:center; gap:6px; font-size:13px; cursor:pointer; white-space:nowrap;">
-            <input type="checkbox" id="checkin-today-only" checked style="accent-color:var(--primary);" onchange="toggleCheckinToday(this.checked)" />
+          <!-- 只顯示今日 checkbox -->
+          <label style="display:flex; align-items:center; gap:6px; font-size:13px; cursor:pointer; white-space:nowrap; color:var(--text-secondary);">
+            <input type="checkbox" id="checkin-today-only" checked style="accent-color:var(--primary);" />
             只顯示今日
           </label>
           <button class="btn ghost sm" style="margin-left:auto;" onclick="resetCheckinFilters()">重設篩選</button>
@@ -6772,80 +6783,201 @@
 
       <!-- ===== Tab 內容區 ===== -->
 
-      <!-- Tab 1: 全部打卡記錄（已到）-->
+      <!-- Tab 1: 全部打卡記錄 -->
       <div id="checkin-panel-arrived" class="checkin-panel">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; padding:0 2px;">
+          <div style="font-weight:600; font-size:15px; color:var(--text);">全部打卡記錄</div>
+          <div style="font-size:13px; color:var(--text-muted);">共 124 筆</div>
+        </div>
         <div class="card" style="overflow:hidden;">
-          <div style="padding:14px 20px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between;">
-            <div style="font-weight:600; font-size:14px;">全部打卡記錄 <span style="font-size:12px; color:var(--text-muted); font-weight:400;">共 112 筆</span></div>
-          </div>
-          <table class="data-table">
+          <div style="overflow-x:auto;">
+          <table class="data-table" style="min-width:1000px;">
             <thead>
               <tr>
-                <th>成員</th>
-                <th>部門</th>
-                <th>打卡方式</th>
-                <th>打卡時間</th>
-                <th>類型</th>
-                <th>來源</th>
-                <th>狀態</th>
+                <th style="width:180px;">成員</th>
+                <th style="width:100px;">部門</th>
+                <th style="width:130px;">來源</th>
+                <th style="width:150px;">上班 / 下班</th>
+                <th style="width:140px;">打卡日期</th>
+                <th style="width:150px;">狀態 / 當日工時</th>
+                <th>說明</th>
               </tr>
             </thead>
             <tbody>
+              <!-- 正常記錄 -->
               <tr>
-                <td><div class="user-cell"><div class="avatar" style="width:28px;height:28px;font-size:11px;">陳</div>陳小明</div></td>
+                <td>
+                  <div class="user-cell">
+                    <div class="avatar" style="width:32px;height:32px;font-size:12px;">王</div>
+                    <div><div style="font-size:13px;font-weight:500;">王明德</div><div style="font-size:11px;color:var(--text-muted);">ming.wang@lws.com</div></div>
+                  </div>
+                </td>
                 <td class="text-sec">研發部</td>
-                <td><span style="display:inline-flex;align-items:center;gap:4px;font-size:12px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>GPS打卡</span></td>
-                <td class="text-sec" style="font-size:13px;">2026-06-08 08:52</td>
-                <td><span style="display:inline-flex;align-items:center;padding:2px 9px;border-radius:12px;font-size:11px;font-weight:600;background:#111827;color:white;">上班打卡</span></td>
-                <td><span style="font-size:12px; color:var(--text-secondary);">Bot打卡</span></td>
-                <td><span class="badge success dot" style="font-size:11px;">正常</span></td>
+                <td>
+                  <span style="display:inline-flex;align-items:center;gap:4px;font-size:12px;color:var(--text-secondary);">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                    Bot打卡/GPS
+                  </span>
+                </td>
+                <td style="font-size:12px;">
+                  <div style="color:var(--text-secondary);">上班：08:52</div>
+                  <div style="color:var(--text-secondary);">下班：18:00</div>
+                </td>
+                <td style="font-size:12px; color:var(--text-secondary);">2026/06/12 (Fri)</td>
+                <td>
+                  <div style="display:flex;align-items:center;gap:8px;">
+                    <span class="badge success dot" style="font-size:11px;">正常</span>
+                    <span style="font-size:12px;color:var(--text-secondary);">9hr</span>
+                  </div>
+                </td>
+                <td style="font-size:12px;color:var(--text-secondary);">—</td>
               </tr>
               <tr>
-                <td><div class="user-cell"><div class="avatar" style="width:28px;height:28px;font-size:11px;">林</div>林曉華</div></td>
-                <td class="text-sec">產品部</td>
-                <td><span style="display:inline-flex;align-items:center;gap:4px;font-size:12px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>手動打卡</span></td>
-                <td class="text-sec" style="font-size:13px;">2026-06-08 09:01</td>
-                <td><span style="display:inline-flex;align-items:center;padding:2px 9px;border-radius:12px;font-size:11px;font-weight:600;background:#111827;color:white;">上班打卡</span></td>
-                <td><span style="font-size:12px; color:var(--text-secondary);">Bot打卡</span></td>
-                <td><span class="badge success dot" style="font-size:11px;">正常</span></td>
+                <td>
+                  <div class="user-cell">
+                    <div class="avatar" style="width:32px;height:32px;font-size:12px;">陳</div>
+                    <div><div style="font-size:13px;font-weight:500;">陳怡君</div><div style="font-size:11px;color:var(--text-muted);">yj.chen@lws.com</div></div>
+                  </div>
+                </td>
+                <td class="text-sec">業務部</td>
+                <td><span style="display:inline-flex;align-items:center;gap:4px;font-size:12px;color:var(--text-secondary);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Bot打卡/GPS</span></td>
+                <td style="font-size:12px;"><div style="color:var(--text-secondary);">上班：08:52</div><div style="color:var(--text-secondary);">下班：18:00</div></td>
+                <td style="font-size:12px;color:var(--text-secondary);">2026/06/12 (Fri)</td>
+                <td><div style="display:flex;align-items:center;gap:8px;"><span class="badge success dot" style="font-size:11px;">正常</span><span style="font-size:12px;color:var(--text-secondary);">9hr</span></div></td>
+                <td style="font-size:12px;color:var(--text-secondary);">—</td>
               </tr>
               <tr>
-                <td><div class="user-cell"><div class="avatar" style="width:28px;height:28px;font-size:11px;">王</div>王大偉</div></td>
-                <td class="text-sec">工程組</td>
-                <td><span style="display:inline-flex;align-items:center;gap:4px;font-size:12px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>GPS打卡</span></td>
-                <td class="text-sec" style="font-size:13px;">2026-06-08 08:48</td>
-                <td><span style="display:inline-flex;align-items:center;padding:2px 9px;border-radius:12px;font-size:11px;font-weight:600;background:#111827;color:white;">上班打卡</span></td>
-                <td><span style="font-size:12px; color:var(--text-secondary);">Bot打卡</span></td>
-                <td><span class="badge success dot" style="font-size:11px;">正常</span></td>
+                <td>
+                  <div class="user-cell">
+                    <div class="avatar" style="width:32px;height:32px;font-size:12px;">李</div>
+                    <div><div style="font-size:13px;font-weight:500;">李志遠</div><div style="font-size:11px;color:var(--text-muted);">zy.li@lws.com</div></div>
+                  </div>
+                </td>
+                <td class="text-sec">工程部</td>
+                <td><span style="display:inline-flex;align-items:center;gap:4px;font-size:12px;color:var(--text-secondary);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Bot打卡/GPS</span></td>
+                <td style="font-size:12px;"><div style="color:var(--text-secondary);">上班：08:52</div><div style="color:var(--text-secondary);">下班：18:00</div></td>
+                <td style="font-size:12px;color:var(--text-secondary);">2026/06/12 (Fri)</td>
+                <td><div style="display:flex;align-items:center;gap:8px;"><span class="badge success dot" style="font-size:11px;">正常</span><span style="font-size:12px;color:var(--text-secondary);">9hr</span></div></td>
+                <td style="font-size:12px;color:var(--text-secondary);">—</td>
               </tr>
               <tr>
-                <td><div class="user-cell"><div class="avatar" style="width:28px;height:28px;font-size:11px;">吳</div>吳建宏</div></td>
-                <td class="text-sec">研發部</td>
-                <td><span style="display:inline-flex;align-items:center;gap:4px;font-size:12px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>GPS打卡</span></td>
-                <td class="text-sec" style="font-size:13px;">2026-06-08 17:58</td>
-                <td><span style="display:inline-flex;align-items:center;padding:2px 9px;border-radius:12px;font-size:11px;font-weight:600;background:white;color:#374151;border:1.5px solid #d1d5db;">下班打卡</span></td>
-                <td><span style="font-size:12px; color:var(--text-secondary);">Bot打卡</span></td>
-                <td><span class="badge success dot" style="font-size:11px;">正常</span></td>
+                <td>
+                  <div class="user-cell">
+                    <div class="avatar" style="width:32px;height:32px;font-size:12px;">張</div>
+                    <div><div style="font-size:13px;font-weight:500;">張雅雯</div><div style="font-size:11px;color:var(--text-muted);">yw.chang@lws.com</div></div>
+                  </div>
+                </td>
+                <td class="text-sec">專案部</td>
+                <td><span style="display:inline-flex;align-items:center;gap:4px;font-size:12px;color:var(--text-secondary);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Bot打卡/GPS</span></td>
+                <td style="font-size:12px;"><div style="color:var(--text-secondary);">上班：09:00</div><div style="color:var(--text-secondary);">下班：18:05</div></td>
+                <td style="font-size:12px;color:var(--text-secondary);">2026/06/12 (Fri)</td>
+                <td><div style="display:flex;align-items:center;gap:8px;"><span class="badge success dot" style="font-size:11px;">正常</span><span style="font-size:12px;color:var(--text-secondary);">9hr5m</span></div></td>
+                <td style="font-size:12px;color:var(--text-secondary);">—</td>
               </tr>
               <tr>
-                <td><div class="user-cell"><div class="avatar" style="width:28px;height:28px;font-size:11px;">張</div>張雅婷</div></td>
+                <td>
+                  <div class="user-cell">
+                    <div class="avatar" style="width:32px;height:32px;font-size:12px;">林</div>
+                    <div><div style="font-size:13px;font-weight:500;">林家豪</div><div style="font-size:11px;color:var(--text-muted);">jh.lin@lws.com</div></div>
+                  </div>
+                </td>
                 <td class="text-sec">行銷部</td>
-                <td><span style="display:inline-flex;align-items:center;gap:4px;font-size:12px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>手動打卡</span></td>
-                <td class="text-sec" style="font-size:13px;">2026-06-08 09:15</td>
-                <td><span style="display:inline-flex;align-items:center;padding:2px 9px;border-radius:12px;font-size:11px;font-weight:600;background:#111827;color:white;">上班打卡</span></td>
-                <td><span style="font-size:12px; color:#b45309; background:#fef3c7; padding:1px 7px; border-radius:4px; font-weight:500;">HR補登</span></td>
-                <td><span class="badge danger" style="font-size:11px;">異常</span></td>
+                <td><span style="display:inline-flex;align-items:center;gap:4px;font-size:12px;color:var(--text-secondary);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Bot打卡/GPS</span></td>
+                <td style="font-size:12px;"><div style="color:var(--text-secondary);">上班：08:45</div><div style="color:var(--text-secondary);">下班：18:35</div></td>
+                <td style="font-size:12px;color:var(--text-secondary);">2026/06/12 (Fri)</td>
+                <td><div style="display:flex;align-items:center;gap:8px;"><span class="badge success dot" style="font-size:11px;">正常</span><span style="font-size:12px;color:var(--text-secondary);">9hr50m</span></div></td>
+                <td style="font-size:12px;color:var(--text-secondary);">—</td>
+              </tr>
+              <!-- 異常記錄 -->
+              <tr style="background:#fef2f2;">
+                <td>
+                  <div class="user-cell">
+                    <div class="avatar" style="width:32px;height:32px;font-size:12px;">黃</div>
+                    <div><div style="font-size:13px;font-weight:500;">黃詩涵</div><div style="font-size:11px;color:var(--text-muted);">sh.huang@lws.com</div></div>
+                  </div>
+                </td>
+                <td class="text-sec">研發部</td>
+                <td><span style="display:inline-flex;align-items:center;gap:4px;font-size:12px;color:var(--text-secondary);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Bot打卡/GPS</span></td>
+                <td style="font-size:12px;"><div style="color:#dc2626;">上班：09:00</div><div style="color:var(--text-secondary);">下班：18:00</div></td>
+                <td style="font-size:12px;color:var(--text-secondary);">2026/06/12 (Fri)</td>
+                <td><div style="display:flex;align-items:center;gap:8px;"><span class="badge danger dot" style="font-size:11px;">異常</span><span style="font-size:12px;color:var(--text-secondary);">8hr</span></div></td>
+                <td style="font-size:12px;">
+                  <div style="color:var(--text-secondary);">上班打卡時間 09:12，</div>
+                  <div style="color:var(--danger);">超過上班時間 12 分鐘</div>
+                </td>
+              </tr>
+              <tr style="background:#fef2f2;">
+                <td>
+                  <div class="user-cell">
+                    <div class="avatar" style="width:32px;height:32px;font-size:12px;">吳</div>
+                    <div><div style="font-size:13px;font-weight:500;">吳承翰</div><div style="font-size:11px;color:var(--text-muted);">ch.wu@lws.com</div></div>
+                  </div>
+                </td>
+                <td class="text-sec">專案部</td>
+                <td><span style="display:inline-flex;align-items:center;gap:4px;font-size:12px;color:var(--text-secondary);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Bot打卡/GPS</span></td>
+                <td style="font-size:12px;"><div style="color:#dc2626;">上班：-</div><div style="color:var(--text-secondary);">下班：18:00</div></td>
+                <td style="font-size:12px;color:var(--text-secondary);">2026/06/12 (Fri)</td>
+                <td><div style="display:flex;align-items:center;gap:8px;"><span class="badge danger dot" style="font-size:11px;">異常</span><span style="font-size:12px;color:var(--text-secondary);">-</span></div></td>
+                <td style="font-size:12px;color:var(--danger);">上班打卡記錄缺失</td>
+              </tr>
+              <tr style="background:#fef2f2;">
+                <td>
+                  <div class="user-cell">
+                    <div class="avatar" style="width:32px;height:32px;font-size:12px;">蔡</div>
+                    <div><div style="font-size:13px;font-weight:500;">蔡欣怡</div><div style="font-size:11px;color:var(--text-muted);">xy.tsai@lws.com</div></div>
+                  </div>
+                </td>
+                <td class="text-sec">研發部</td>
+                <td><span style="display:inline-flex;align-items:center;gap:4px;font-size:12px;color:var(--text-secondary);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Bot打卡/GPS</span></td>
+                <td style="font-size:12px;"><div style="color:var(--text-secondary);">上班：9:00</div><div style="color:#dc2626;">下班：17:00</div></td>
+                <td style="font-size:12px;color:var(--text-secondary);">2026/06/12 (Fri)</td>
+                <td><div style="display:flex;align-items:center;gap:8px;"><span class="badge danger dot" style="font-size:11px;">異常</span><span style="font-size:12px;color:var(--text-secondary);">8hr</span></div></td>
+                <td style="font-size:12px;">
+                  <div style="color:var(--text-secondary);">下班打卡時間 17:00，</div>
+                  <div style="color:var(--danger);">早於下班時間 60 分鐘</div>
+                </td>
+              </tr>
+              <tr style="background:#fef2f2;">
+                <td>
+                  <div class="user-cell">
+                    <div class="avatar" style="width:32px;height:32px;font-size:12px;">許</div>
+                    <div><div style="font-size:13px;font-weight:500;">許雅婷</div><div style="font-size:11px;color:var(--text-muted);">yt.hsu@lws.com</div></div>
+                  </div>
+                </td>
+                <td class="text-sec">業務部</td>
+                <td><span style="display:inline-flex;align-items:center;gap:4px;font-size:12px;color:var(--text-secondary);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Bot打卡/GPS</span></td>
+                <td style="font-size:12px;"><div style="color:#dc2626;">上班：-</div><div style="color:#dc2626;">下班：-</div></td>
+                <td style="font-size:12px;color:var(--text-secondary);">2026/06/12 (Fri)</td>
+                <td><div style="display:flex;align-items:center;gap:8px;"><span class="badge danger dot" style="font-size:11px;">異常</span><span style="font-size:12px;color:var(--text-secondary);">-</span></div></td>
+                <td style="font-size:12px;color:var(--danger);">當日無上下班打卡記錄</td>
+              </tr>
+              <tr style="background:#fef2f2;">
+                <td>
+                  <div class="user-cell">
+                    <div class="avatar" style="width:32px;height:32px;font-size:12px;">鄭</div>
+                    <div><div style="font-size:13px;font-weight:500;">鄭子翔</div><div style="font-size:11px;color:var(--text-muted);">tx.cheng@lws.com</div></div>
+                  </div>
+                </td>
+                <td class="text-sec">工程部</td>
+                <td><span style="display:inline-flex;align-items:center;gap:4px;font-size:12px;color:var(--text-secondary);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Bot打卡/GPS</span></td>
+                <td style="font-size:12px;"><div style="color:#dc2626;">上班：9:10</div><div style="color:var(--text-secondary);">下班：18:00</div></td>
+                <td style="font-size:12px;color:var(--text-secondary);">2026/06/12 (Fri)</td>
+                <td><div style="display:flex;align-items:center;gap:8px;"><span class="badge danger dot" style="font-size:11px;">異常</span><span style="font-size:12px;color:var(--text-secondary);">8hr50m</span></div></td>
+                <td style="font-size:12px;">
+                  <div style="color:var(--text-secondary);">上班打卡時間 09:10，</div>
+                  <div style="color:var(--danger);">超過上班時間 10 分鐘</div>
+                </td>
               </tr>
             </tbody>
           </table>
+          </div>
           <!-- Pagination -->
           <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 20px; border-top:1px solid var(--border);">
-            <span style="font-size:13px; color:var(--text-secondary);">第 1–5 筆，共 112 筆</span>
+            <span style="font-size:13px; color:var(--text-secondary);">第 1–10 筆，共 124 筆</span>
             <div style="display:flex; gap:4px;">
               <button style="width:30px;height:30px;border:none;background:none;border-radius:6px;cursor:pointer;color:var(--text-muted);">‹</button>
               <button style="width:30px;height:30px;border:1px solid var(--primary);background:var(--primary);border-radius:6px;cursor:pointer;color:white;font-weight:600;font-size:13px;">1</button>
               <button style="width:30px;height:30px;border:none;background:none;border-radius:6px;cursor:pointer;color:var(--text-muted);font-size:13px;">2</button>
-              <button style="width:30px;height:30px;border:none;background:none;border-radius:6px;cursor:pointer;color:var(--text-muted);font-size:13px;">3</button>
               <button style="width:30px;height:30px;border:none;background:none;border-radius:6px;cursor:pointer;color:var(--text-muted);">›</button>
             </div>
           </div>
@@ -6854,192 +6986,487 @@
 
       <!-- Tab 2: 異常打卡記錄 -->
       <div id="checkin-panel-abnormal" class="checkin-panel" style="display:none;">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; padding:0 2px;">
+          <div style="font-weight:600; font-size:15px; color:var(--text);">異常打卡記錄</div>
+          <div style="font-size:13px; color:var(--text-muted);">共 124 筆</div>
+        </div>
         <div class="card" style="overflow:hidden;">
-          <div style="padding:14px 20px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between;">
-            <div style="font-weight:600; font-size:14px;">異常打卡記錄 <span style="font-size:12px; color:var(--text-muted); font-weight:400;">共 9 筆</span></div>
-          </div>
           <table class="data-table">
             <thead>
               <tr>
-                <th>成員</th>
-                <th>部門</th>
-                <th>打卡時間</th>
-                <th>異常類型</th>
+                <th style="width:40px;"><input type="checkbox" style="accent-color:var(--primary);" /></th>
+                <th style="width:180px;">成員</th>
+                <th style="width:90px;">部門</th>
+                <th style="width:130px;">打卡日期</th>
+                <th style="width:130px;">上班時間</th>
+                <th style="width:130px;">當日工時 / 狀態</th>
                 <th>說明</th>
-                <th>備註 <span style="font-size:10px; font-weight:400; color:var(--text-muted);">最多30字</span></th>
-                <th style="width:120px;">操作</th>
+                <th style="width:180px;">操作</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td><div class="user-cell"><div class="avatar" style="width:28px;height:28px;font-size:11px;">張</div>張雅婷</div></td>
-                <td class="text-sec">行銷部</td>
-                <td class="text-sec" style="font-size:13px;">2026-06-08 09:12</td>
-                <td><span class="badge danger" style="font-size:11px;">遲到</span></td>
-                <td style="font-size:12px; color:var(--text-secondary); max-width:200px; line-height:1.5;">上班打卡時間 09:12，<br><span style="color:var(--danger);">超過上班時間 12 分鐘</span></td>
+                <td><input type="checkbox" style="accent-color:var(--primary);" /></td>
                 <td>
-                  <div style="position:relative;">
-                    <input type="text" class="input" placeholder="輸入備註…" maxlength="30" style="font-size:12px; padding:4px 8px;" oninput="updateNoteCount(this)" />
-                    <span style="position:absolute;right:6px;top:50%;transform:translateY(-50%);font-size:10px;color:var(--text-muted);" data-note-count>0/30</span>
+                  <div class="user-cell">
+                    <div class="avatar" style="width:32px;height:32px;font-size:12px;">黃</div>
+                    <div><div style="font-size:13px;font-weight:500;">黃詩涵</div><div style="font-size:11px;color:var(--text-muted);">sh.huang@lws.com</div></div>
                   </div>
                 </td>
+                <td class="text-sec">研發部</td>
+                <td style="font-size:12px;color:var(--text-secondary);">2026/06/12 (Fri)</td>
+                <td style="font-size:12px;"><div style="color:#dc2626;">上班：9:00</div><div style="color:var(--text-secondary);">下班：18:00</div></td>
                 <td>
-                  <div class="btn-group">
-                    <button class="btn ghost sm" style="font-size:11px;" onclick="openMakeupPunchModal('張雅婷','2026-06-08')">補打卡</button>
-                    <button class="btn ghost sm danger-ghost" style="font-size:11px;" onclick="openModal('modal-delete-confirm')">刪除</button>
+                  <div style="display:flex;align-items:center;gap:6px;">
+                    <span class="badge danger dot" style="font-size:11px;">異常</span>
+                    <span style="font-size:12px;color:var(--text-secondary);">8hr</span>
+                  </div>
+                </td>
+                <td style="font-size:12px;">
+                  <div style="color:var(--text-secondary);">上班打卡時間 09:12，</div>
+                  <div style="color:var(--danger);">超過上班時間 12 分鐘</div>
+                </td>
+                <td>
+                  <div style="display:flex; gap:6px; align-items:center;">
+                    <button onclick="openMakeupPunchModal('黃詩涵','2026/06/12','09:00','18:00','on')" style="display:inline-flex;align-items:center;gap:4px;border:none;background:none;cursor:pointer;color:var(--text-secondary);font-size:12px;padding:4px 6px;border-radius:4px;" onmouseover="this.style.background='var(--bg)'" onmouseout="this.style.background='none'">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>補打卡
+                    </button>
+                    <button onclick="openDismissAbnormalModal(this)" style="display:inline-flex;align-items:center;gap:4px;border:none;background:none;cursor:pointer;color:var(--text-secondary);font-size:12px;padding:4px 6px;border-radius:4px;" onmouseover="this.style.background='var(--bg)'" onmouseout="this.style.background='none'">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>排除異常
+                    </button>
                   </div>
                 </td>
               </tr>
               <tr>
-                <td><div class="user-cell"><div class="avatar" style="width:28px;height:28px;font-size:11px;">黃</div>黃宗翰</div></td>
-                <td class="text-sec">研發部</td>
-                <td class="text-sec" style="font-size:13px;">—</td>
-                <td><span class="badge warning" style="font-size:11px;">未打卡</span></td>
-                <td style="font-size:12px; color:var(--text-secondary); max-width:200px; line-height:1.5;">當日無上班打卡記錄，<br><span style="color:var(--danger);">系統自動標記為缺打卡</span></td>
+                <td><input type="checkbox" style="accent-color:var(--primary);" /></td>
                 <td>
-                  <div style="position:relative;">
-                    <input type="text" class="input" placeholder="輸入備註…" maxlength="30" style="font-size:12px; padding:4px 8px;" oninput="updateNoteCount(this)" />
-                    <span style="position:absolute;right:6px;top:50%;transform:translateY(-50%);font-size:10px;color:var(--text-muted);" data-note-count>0/30</span>
+                  <div class="user-cell">
+                    <div class="avatar" style="width:32px;height:32px;font-size:12px;">吳</div>
+                    <div><div style="font-size:13px;font-weight:500;">吳承翰</div><div style="font-size:11px;color:var(--text-muted);">ch.wu@lws.com</div></div>
                   </div>
                 </td>
+                <td class="text-sec">專案部</td>
+                <td style="font-size:12px;color:var(--text-secondary);">2026/06/12 (Fri)</td>
+                <td style="font-size:12px;"><div style="color:#dc2626;">上班：-</div><div style="color:var(--text-secondary);">下班：18:00</div></td>
+                <td><div style="display:flex;align-items:center;gap:6px;"><span class="badge danger dot" style="font-size:11px;">異常</span><span style="font-size:12px;color:var(--text-secondary);">-</span></div></td>
+                <td style="font-size:12px;color:var(--danger);">上班打卡記錄缺失</td>
                 <td>
-                  <div class="btn-group">
-                    <button class="btn ghost sm" style="font-size:11px;" onclick="openMakeupPunchModal('黃宗翰','2026-06-08')">補打卡</button>
-                    <button class="btn ghost sm danger-ghost" style="font-size:11px;" onclick="openModal('modal-delete-confirm')">刪除</button>
+                  <div style="display:flex; gap:6px; align-items:center;">
+                    <button onclick="openMakeupPunchModal('吳承翰','2026/06/12','','18:00','on')" style="display:inline-flex;align-items:center;gap:4px;border:none;background:none;cursor:pointer;color:var(--text-secondary);font-size:12px;padding:4px 6px;border-radius:4px;" onmouseover="this.style.background='var(--bg)'" onmouseout="this.style.background='none'"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>補打卡</button>
+                    <button onclick="openDismissAbnormalModal(this)" style="display:inline-flex;align-items:center;gap:4px;border:none;background:none;cursor:pointer;color:var(--text-secondary);font-size:12px;padding:4px 6px;border-radius:4px;" onmouseover="this.style.background='var(--bg)'" onmouseout="this.style.background='none'"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>排除異常</button>
                   </div>
                 </td>
               </tr>
               <tr>
-                <td><div class="user-cell"><div class="avatar" style="width:28px;height:28px;font-size:11px;">劉</div>劉怡伶</div></td>
-                <td class="text-sec">研發部</td>
-                <td class="text-sec" style="font-size:13px;">2026-06-08 09:22</td>
-                <td><span class="badge danger" style="font-size:11px;">遲到</span></td>
-                <td style="font-size:12px; color:var(--text-secondary); max-width:200px; line-height:1.5;">上班打卡時間 09:22，<br><span style="color:var(--danger);">超過上班時間 22 分鐘</span></td>
+                <td><input type="checkbox" style="accent-color:var(--primary);" /></td>
                 <td>
-                  <div style="position:relative;">
-                    <input type="text" class="input" value="已知會主管，外出會議" maxlength="30" style="font-size:12px; padding:4px 8px;" oninput="updateNoteCount(this)" />
-                    <span style="position:absolute;right:6px;top:50%;transform:translateY(-50%);font-size:10px;color:var(--text-muted);" data-note-count>10/30</span>
+                  <div class="user-cell">
+                    <div class="avatar" style="width:32px;height:32px;font-size:12px;">蔡</div>
+                    <div><div style="font-size:13px;font-weight:500;">蔡欣怡</div><div style="font-size:11px;color:var(--text-muted);">xy.tsai@lws.com</div></div>
                   </div>
                 </td>
+                <td class="text-sec">研發部</td>
+                <td style="font-size:12px;color:var(--text-secondary);">2026/06/12 (Fri)</td>
+                <td style="font-size:12px;"><div style="color:var(--text-secondary);">上班：9:00</div><div style="color:#dc2626;">下班：17:00</div></td>
+                <td><div style="display:flex;align-items:center;gap:6px;"><span class="badge danger dot" style="font-size:11px;">異常</span><span style="font-size:12px;color:var(--text-secondary);">8hr</span></div></td>
+                <td style="font-size:12px;">
+                  <div style="color:var(--text-secondary);">下班打卡時間 17:00，</div>
+                  <div style="color:var(--danger);">早於下班時間 60 分鐘</div>
+                </td>
                 <td>
-                  <div class="btn-group">
-                    <button class="btn ghost sm" style="font-size:11px;" onclick="openMakeupPunchModal('劉怡伶','2026-06-08')">補打卡</button>
-                    <button class="btn ghost sm danger-ghost" style="font-size:11px;" onclick="openModal('modal-delete-confirm')">刪除</button>
+                  <div style="display:flex; gap:6px; align-items:center;">
+                    <button onclick="openMakeupPunchModal('蔡欣怡','2026/06/12','09:00','17:00','off')" style="display:inline-flex;align-items:center;gap:4px;border:none;background:none;cursor:pointer;color:var(--text-secondary);font-size:12px;padding:4px 6px;border-radius:4px;" onmouseover="this.style.background='var(--bg)'" onmouseout="this.style.background='none'"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>補打卡</button>
+                    <button onclick="openDismissAbnormalModal(this)" style="display:inline-flex;align-items:center;gap:4px;border:none;background:none;cursor:pointer;color:var(--text-secondary);font-size:12px;padding:4px 6px;border-radius:4px;" onmouseover="this.style.background='var(--bg)'" onmouseout="this.style.background='none'"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>排除異常</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" style="accent-color:var(--primary);" /></td>
+                <td>
+                  <div class="user-cell">
+                    <div class="avatar" style="width:32px;height:32px;font-size:12px;">許</div>
+                    <div><div style="font-size:13px;font-weight:500;">許雅婷</div><div style="font-size:11px;color:var(--text-muted);">yt.hsu@lws.com</div></div>
+                  </div>
+                </td>
+                <td class="text-sec">業務部</td>
+                <td style="font-size:12px;color:var(--text-secondary);">2026/06/12 (Fri)</td>
+                <td style="font-size:12px;"><div style="color:#dc2626;">上班：-</div><div style="color:#dc2626;">下班：-</div></td>
+                <td><div style="display:flex;align-items:center;gap:6px;"><span class="badge danger dot" style="font-size:11px;">異常</span><span style="font-size:12px;color:var(--text-secondary);">-</span></div></td>
+                <td style="font-size:12px;color:var(--danger);">當日無上下班打卡記錄</td>
+                <td>
+                  <div style="display:flex; gap:6px; align-items:center;">
+                    <button onclick="openMakeupPunchModal('許雅婷','2026/06/12','','','both')" style="display:inline-flex;align-items:center;gap:4px;border:none;background:none;cursor:pointer;color:var(--text-secondary);font-size:12px;padding:4px 6px;border-radius:4px;" onmouseover="this.style.background='var(--bg)'" onmouseout="this.style.background='none'"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>補打卡</button>
+                    <button onclick="openDismissAbnormalModal(this)" style="display:inline-flex;align-items:center;gap:4px;border:none;background:none;cursor:pointer;color:var(--text-secondary);font-size:12px;padding:4px 6px;border-radius:4px;" onmouseover="this.style.background='var(--bg)'" onmouseout="this.style.background='none'"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>排除異常</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" style="accent-color:var(--primary);" /></td>
+                <td>
+                  <div class="user-cell">
+                    <div class="avatar" style="width:32px;height:32px;font-size:12px;">鄭</div>
+                    <div><div style="font-size:13px;font-weight:500;">鄭子翔</div><div style="font-size:11px;color:var(--text-muted);">tx.cheng@lws.com</div></div>
+                  </div>
+                </td>
+                <td class="text-sec">工程部</td>
+                <td style="font-size:12px;color:var(--text-secondary);">2026/06/12 (Fri)</td>
+                <td style="font-size:12px;"><div style="color:#dc2626;">上班：9:10</div><div style="color:var(--text-secondary);">下班：18:00</div></td>
+                <td><div style="display:flex;align-items:center;gap:6px;"><span class="badge danger dot" style="font-size:11px;">異常</span><span style="font-size:12px;color:var(--text-secondary);">8hr50m</span></div></td>
+                <td style="font-size:12px;">
+                  <div style="color:var(--text-secondary);">上班打卡時間 09:10，</div>
+                  <div style="color:var(--danger);">超過上班時間 10 分鐘</div>
+                </td>
+                <td>
+                  <div style="display:flex; gap:6px; align-items:center;">
+                    <button onclick="openMakeupPunchModal('鄭子翔','2026/06/12','09:10','18:00','on')" style="display:inline-flex;align-items:center;gap:4px;border:none;background:none;cursor:pointer;color:var(--text-secondary);font-size:12px;padding:4px 6px;border-radius:4px;" onmouseover="this.style.background='var(--bg)'" onmouseout="this.style.background='none'"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>補打卡</button>
+                    <button onclick="openDismissAbnormalModal(this)" style="display:inline-flex;align-items:center;gap:4px;border:none;background:none;cursor:pointer;color:var(--text-secondary);font-size:12px;padding:4px 6px;border-radius:4px;" onmouseover="this.style.background='var(--bg)'" onmouseout="this.style.background='none'"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>排除異常</button>
                   </div>
                 </td>
               </tr>
             </tbody>
           </table>
+          <!-- Pagination -->
+          <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 20px; border-top:1px solid var(--border);">
+            <span style="font-size:13px; color:var(--text-secondary);">第 1–5 筆，共 124 筆</span>
+            <div style="display:flex; gap:4px;">
+              <button style="width:30px;height:30px;border:none;background:none;border-radius:6px;cursor:pointer;color:var(--text-muted);">‹</button>
+              <button style="width:30px;height:30px;border:1px solid var(--primary);background:var(--primary);border-radius:6px;cursor:pointer;color:white;font-weight:600;font-size:13px;">1</button>
+              <button style="width:30px;height:30px;border:none;background:none;border-radius:6px;cursor:pointer;color:var(--text-muted);font-size:13px;">2</button>
+              <button style="width:30px;height:30px;border:none;background:none;border-radius:6px;cursor:pointer;color:var(--text-muted);">›</button>
+            </div>
+          </div>
         </div>
       </div>
 
-      <!-- Tab 3: 補打卡記錄 -->
+      <!-- Tab 3: 補單記錄 -->
       <div id="checkin-panel-makeup" class="checkin-panel" style="display:none;">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; padding:0 2px;">
+          <div style="font-weight:600; font-size:15px; color:var(--text);">補單記錄</div>
+          <div style="font-size:13px; color:var(--text-muted);">共 124 筆</div>
+        </div>
         <div class="card" style="overflow:hidden;">
-          <div style="padding:14px 20px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between;">
-            <div style="font-weight:600; font-size:14px;">補打卡記錄 <span style="font-size:12px; color:var(--text-muted); font-weight:400;">共 7 筆</span></div>
-          </div>
-          <table class="data-table">
+          <div style="overflow-x:auto;">
+          <table class="data-table" style="min-width:1200px;">
             <thead>
               <tr>
-                <th>成員</th>
-                <th>部門</th>
-                <th>說明</th>
-                <th>補打卡時間</th>
-                <th>補打卡人員</th>
-                <th>備註 <span style="font-size:10px; font-weight:400; color:var(--text-muted);">最多30字</span></th>
+                <th style="width:160px;">成員</th>
+                <th style="width:90px;">部門</th>
+                <th style="width:130px;">打卡日期</th>
+                <th style="width:120px;">打卡時間</th>
+                <th style="width:160px;">狀態</th>
+                <th style="width:160px;">操作</th>
+                <th style="width:170px;">操作成員</th>
+                <th style="width:160px;">操作時間</th>
+                <th style="min-width:160px;">備註 <span style="font-size:10px;font-weight:400;color:var(--text-muted);">最多10字</span></th>
               </tr>
             </thead>
             <tbody>
+              <!-- row 1 -->
               <tr>
-                <td><div class="user-cell"><div class="avatar" style="width:28px;height:28px;font-size:11px;">李</div>李怡君</div></td>
-                <td class="text-sec">行銷部</td>
-                <td style="font-size:12px; color:var(--text-secondary); line-height:1.5;">上班打卡時間 09:18，<br><span style="color:var(--danger);">超過上班時間 18 分鐘</span></td>
-                <td class="text-sec" style="font-size:13px;">2026-06-08 10:30</td>
                 <td>
                   <div class="user-cell">
-                    <div class="avatar" style="width:22px;height:22px;font-size:10px;">陳</div>
-                    <span style="font-size:12px;">陳小明（HR）</span>
+                    <div class="avatar" style="width:32px;height:32px;font-size:12px;">黃</div>
+                    <div><div style="font-size:13px;font-weight:500;">黃詩涵</div><div style="font-size:11px;color:var(--text-muted);">sh.huang@lws.com</div></div>
                   </div>
                 </td>
+                <td class="text-sec">研發部</td>
+                <td style="font-size:12px;color:var(--text-secondary);">2026/06/12 (Fri)</td>
+                <td style="font-size:12px;"><div style="color:var(--text-secondary);">上班：9:00</div><div style="color:var(--text-secondary);">下班：18:00</div></td>
                 <td>
-                  <div style="position:relative;">
-                    <input type="text" class="input" value="因客戶緊急電話" maxlength="30" style="font-size:12px; padding:4px 8px;" oninput="updateNoteCount(this)" />
-                    <span style="position:absolute;right:6px;top:50%;transform:translateY(-50%);font-size:10px;color:var(--text-muted);" data-note-count>7/30</span>
+                  <div style="display:inline-flex;align-items:center;gap:4px;">
+                    <span style="display:inline-flex;align-items:center;gap:3px;font-size:11px;padding:2px 7px;border-radius:10px;background:#fee2e2;color:#dc2626;"><span style="width:5px;height:5px;border-radius:50%;background:#dc2626;display:inline-block;"></span>異地</span>
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+                    <span style="display:inline-flex;align-items:center;gap:3px;font-size:11px;padding:2px 7px;border-radius:10px;background:#dcfce7;color:#16a34a;"><span style="width:5px;height:5px;border-radius:50%;background:#16a34a;display:inline-block;"></span>正常</span>
                   </div>
                 </td>
+                <td style="font-size:12px;color:var(--text-secondary);">執行：消除異常</td>
+                <td>
+                  <div class="user-cell">
+                    <div class="avatar" style="width:26px;height:26px;font-size:11px;">張</div>
+                    <div><div style="font-size:12px;font-weight:500;">張雅雯</div><div style="font-size:11px;color:var(--text-muted);">yw.chang@lws.com</div></div>
+                  </div>
+                </td>
+                <td style="font-size:12px;color:var(--text-secondary);">2026-05-05 10:18:02</td>
+                <td><div class="log-note-cell" data-value="因客戶緊急電話" data-max="10">
+                  <div class="log-note-display" onclick="editLogNote(this)">
+                    <span style="font-size:12px;color:var(--text-secondary);">因客戶緊急電話</span>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2" style="flex-shrink:0;cursor:pointer;"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>
+                    <span style="font-size:11px;color:var(--text-muted);">7/10</span>
+                  </div>
+                  <div class="log-note-edit" style="display:none; position:relative;">
+                    <input type="text" class="input" value="因客戶緊急電話" maxlength="10"
+                           style="font-size:12px;padding:4px 36px 4px 8px;width:100%;"
+                           oninput="this.nextElementSibling.textContent=this.value.length+'/10'"
+                           onblur="saveLogNote(this)" onkeydown="if(event.key==='Enter')this.blur()" />
+                    <span style="position:absolute;right:6px;top:50%;transform:translateY(-50%);font-size:10px;color:var(--text-muted);pointer-events:none;">7/10</span>
+                  </div>
+                </div></td>
               </tr>
+              <!-- row 2 -->
               <tr>
-                <td><div class="user-cell"><div class="avatar" style="width:28px;height:28px;font-size:11px;">王</div>王大偉</div></td>
-                <td class="text-sec">工程組</td>
-                <td style="font-size:12px; color:var(--text-secondary); line-height:1.5;">當日無下班打卡記錄，<br><span style="color:var(--danger);">系統自動標記為缺打卡</span></td>
-                <td class="text-sec" style="font-size:13px;">2026-06-07 19:15</td>
                 <td>
                   <div class="user-cell">
-                    <div class="avatar" style="width:22px;height:22px;font-size:10px;">林</div>
-                    <span style="font-size:12px;">林曉華（HR）</span>
+                    <div class="avatar" style="width:32px;height:32px;font-size:12px;">吳</div>
+                    <div><div style="font-size:13px;font-weight:500;">吳承翰</div><div style="font-size:11px;color:var(--text-muted);">ch.wu@lws.com</div></div>
                   </div>
                 </td>
+                <td class="text-sec">研發部</td>
+                <td style="font-size:12px;color:var(--text-secondary);">2026/06/12 (Fri)</td>
+                <td style="font-size:12px;"><div style="color:var(--text-secondary);">上班：9:00</div><div style="color:var(--text-secondary);">下班：18:00</div></td>
                 <td>
-                  <div style="position:relative;">
-                    <input type="text" class="input" placeholder="輸入備註…" maxlength="30" style="font-size:12px; padding:4px 8px;" oninput="updateNoteCount(this)" />
-                    <span style="position:absolute;right:6px;top:50%;transform:translateY(-50%);font-size:10px;color:var(--text-muted);" data-note-count>0/30</span>
+                  <div style="display:inline-flex;align-items:center;gap:4px;">
+                    <span style="display:inline-flex;align-items:center;gap:3px;font-size:11px;padding:2px 7px;border-radius:10px;background:#fee2e2;color:#dc2626;"><span style="width:5px;height:5px;border-radius:50%;background:#dc2626;display:inline-block;"></span>缺卡</span>
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+                    <span style="display:inline-flex;align-items:center;gap:3px;font-size:11px;padding:2px 7px;border-radius:10px;background:#dcfce7;color:#16a34a;"><span style="width:5px;height:5px;border-radius:50%;background:#16a34a;display:inline-block;"></span>正常</span>
                   </div>
                 </td>
+                <td style="font-size:12px;color:var(--text-secondary);"><div>執行：補打卡</div><div style="color:var(--text-muted);">上班 9:00</div></td>
+                <td>
+                  <div class="user-cell">
+                    <div class="avatar" style="width:26px;height:26px;font-size:11px;">張</div>
+                    <div><div style="font-size:12px;font-weight:500;">張雅雯</div><div style="font-size:11px;color:var(--text-muted);">yw.chang@lws.com</div></div>
+                  </div>
+                </td>
+                <td style="font-size:12px;color:var(--text-secondary);">2026-05-05 10:18:02</td>
+                <td><div class="log-note-cell" data-value="" data-max="10">
+                  <div class="log-note-display" onclick="editLogNote(this)">
+                    <span style="font-size:12px;color:var(--text-muted);">點擊新增備註</span>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2" style="flex-shrink:0;cursor:pointer;"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>
+                    <span style="font-size:11px;color:var(--text-muted);">0/10</span>
+                  </div>
+                  <div class="log-note-edit" style="display:none; position:relative;">
+                    <input type="text" class="input" value="" maxlength="10"
+                           style="font-size:12px;padding:4px 36px 4px 8px;width:100%;" placeholder="填寫備註"
+                           oninput="this.nextElementSibling.textContent=this.value.length+'/10'"
+                           onblur="saveLogNote(this)" onkeydown="if(event.key==='Enter')this.blur()" />
+                    <span style="position:absolute;right:6px;top:50%;transform:translateY(-50%);font-size:10px;color:var(--text-muted);pointer-events:none;">0/10</span>
+                  </div>
+                </div></td>
+              </tr>
+              <!-- row 3 -->
+              <tr>
+                <td>
+                  <div class="user-cell">
+                    <div class="avatar" style="width:32px;height:32px;font-size:12px;">蔡</div>
+                    <div><div style="font-size:13px;font-weight:500;">蔡欣怡</div><div style="font-size:11px;color:var(--text-muted);">xy.tsai@lws.com</div></div>
+                  </div>
+                </td>
+                <td class="text-sec">研發部</td>
+                <td style="font-size:12px;color:var(--text-secondary);">2026/06/12 (Fri)</td>
+                <td style="font-size:12px;"><div style="color:var(--text-secondary);">上班：9:00</div><div style="color:var(--text-secondary);">下班：17:00</div></td>
+                <td>
+                  <div style="display:inline-flex;align-items:center;gap:4px;">
+                    <span style="display:inline-flex;align-items:center;gap:3px;font-size:11px;padding:2px 7px;border-radius:10px;background:#fef3c7;color:#b45309;"><span style="width:5px;height:5px;border-radius:50%;background:#b45309;display:inline-block;"></span>早退</span>
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+                    <span style="display:inline-flex;align-items:center;gap:3px;font-size:11px;padding:2px 7px;border-radius:10px;background:#dcfce7;color:#16a34a;"><span style="width:5px;height:5px;border-radius:50%;background:#16a34a;display:inline-block;"></span>正常</span>
+                  </div>
+                </td>
+                <td style="font-size:12px;color:var(--text-secondary);">執行：消除異常</td>
+                <td>
+                  <div class="user-cell">
+                    <div class="avatar" style="width:26px;height:26px;font-size:11px;">張</div>
+                    <div><div style="font-size:12px;font-weight:500;">張雅雯</div><div style="font-size:11px;color:var(--text-muted);">yw.chang@lws.com</div></div>
+                  </div>
+                </td>
+                <td style="font-size:12px;color:var(--text-secondary);">2026-05-05 10:18:02</td>
+                <td><div class="log-note-cell" data-value="因客戶緊急電話" data-max="10">
+                  <div class="log-note-display" onclick="editLogNote(this)">
+                    <span style="font-size:12px;color:var(--text-secondary);">因客戶緊急電話</span>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2" style="flex-shrink:0;cursor:pointer;"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>
+                    <span style="font-size:11px;color:var(--text-muted);">7/10</span>
+                  </div>
+                  <div class="log-note-edit" style="display:none; position:relative;">
+                    <input type="text" class="input" value="因客戶緊急電話" maxlength="10"
+                           style="font-size:12px;padding:4px 36px 4px 8px;width:100%;"
+                           oninput="this.nextElementSibling.textContent=this.value.length+'/10'"
+                           onblur="saveLogNote(this)" onkeydown="if(event.key==='Enter')this.blur()" />
+                    <span style="position:absolute;right:6px;top:50%;transform:translateY(-50%);font-size:10px;color:var(--text-muted);pointer-events:none;">7/10</span>
+                  </div>
+                </div></td>
+              </tr>
+              <!-- row 4 -->
+              <tr>
+                <td>
+                  <div class="user-cell">
+                    <div class="avatar" style="width:32px;height:32px;font-size:12px;">許</div>
+                    <div><div style="font-size:13px;font-weight:500;">許雅婷</div><div style="font-size:11px;color:var(--text-muted);">yt.hsu@lws.com</div></div>
+                  </div>
+                </td>
+                <td class="text-sec">研發部</td>
+                <td style="font-size:12px;color:var(--text-secondary);">2026/06/12 (Fri)</td>
+                <td style="font-size:12px;"><div style="color:var(--text-secondary);">上班：-</div><div style="color:var(--text-secondary);">下班：-</div></td>
+                <td>
+                  <div style="display:inline-flex;align-items:center;gap:4px;">
+                    <span style="display:inline-flex;align-items:center;gap:3px;font-size:11px;padding:2px 7px;border-radius:10px;background:#fee2e2;color:#dc2626;"><span style="width:5px;height:5px;border-radius:50%;background:#dc2626;display:inline-block;"></span>曠職</span>
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+                    <span style="display:inline-flex;align-items:center;gap:3px;font-size:11px;padding:2px 7px;border-radius:10px;background:#dcfce7;color:#16a34a;"><span style="width:5px;height:5px;border-radius:50%;background:#16a34a;display:inline-block;"></span>正常</span>
+                  </div>
+                </td>
+                <td style="font-size:12px;color:var(--text-secondary);">執行：消除異常</td>
+                <td>
+                  <div class="user-cell">
+                    <div class="avatar" style="width:26px;height:26px;font-size:11px;">張</div>
+                    <div><div style="font-size:12px;font-weight:500;">張雅雯</div><div style="font-size:11px;color:var(--text-muted);">yw.chang@lws.com</div></div>
+                  </div>
+                </td>
+                <td style="font-size:12px;color:var(--text-secondary);">2026-05-05 10:18:02</td>
+                <td><div class="log-note-cell" data-value="因客戶緊急電話" data-max="10">
+                  <div class="log-note-display" onclick="editLogNote(this)">
+                    <span style="font-size:12px;color:var(--text-secondary);">因客戶緊急電話</span>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2" style="flex-shrink:0;cursor:pointer;"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>
+                    <span style="font-size:11px;color:var(--text-muted);">6/10</span>
+                  </div>
+                  <div class="log-note-edit" style="display:none; position:relative;">
+                    <input type="text" class="input" value="因客戶緊急電話" maxlength="10"
+                           style="font-size:12px;padding:4px 36px 4px 8px;width:100%;"
+                           oninput="this.nextElementSibling.textContent=this.value.length+'/10'"
+                           onblur="saveLogNote(this)" onkeydown="if(event.key==='Enter')this.blur()" />
+                    <span style="position:absolute;right:6px;top:50%;transform:translateY(-50%);font-size:10px;color:var(--text-muted);pointer-events:none;">6/10</span>
+                  </div>
+                </div></td>
               </tr>
             </tbody>
           </table>
+          </div>
+          <!-- Pagination -->
+          <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 20px; border-top:1px solid var(--border);">
+            <span style="font-size:13px; color:var(--text-secondary);">第 1–4 筆，共 124 筆</span>
+            <div style="display:flex; gap:4px;">
+              <button style="width:30px;height:30px;border:none;background:none;border-radius:6px;cursor:pointer;color:var(--text-muted);">‹</button>
+              <button style="width:30px;height:30px;border:1px solid var(--primary);background:var(--primary);border-radius:6px;cursor:pointer;color:white;font-weight:600;font-size:13px;">1</button>
+              <button style="width:30px;height:30px;border:none;background:none;border-radius:6px;cursor:pointer;color:var(--text-muted);font-size:13px;">2</button>
+              <button style="width:30px;height:30px;border:none;background:none;border-radius:6px;cursor:pointer;color:var(--text-muted);">›</button>
+            </div>
+          </div>
         </div>
       </div>
 
     </section>
 
+    <!-- ============= Modal：匯出打卡報表 ============= -->
+    <div class="modal-overlay" id="modal-checkin-export" onclick="closeModalIfBackdrop(event,'modal-checkin-export')">
+      <div class="modal" style="width:360px;">
+        <div class="modal-head">
+          <h3 class="modal-title">匯出報表</h3>
+          <button class="icon-btn" onclick="closeModal('modal-checkin-export')">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+          </button>
+        </div>
+        <div class="modal-body" style="padding-top:4px;">
+          <p style="font-size:13px; color:var(--text-secondary); margin-bottom:16px;">請選擇匯出格式：</p>
+          <div style="display:flex; flex-direction:column; gap:10px;">
+            <!-- Excel -->
+            <button onclick="closeModal('modal-checkin-export'); showSyncToast('Excel 報表匯出中…');"
+                    style="display:flex; align-items:center; gap:14px; padding:14px 16px; border:1px solid var(--border); border-radius:var(--radius); background:white; cursor:pointer; text-align:left; width:100%;"
+                    onmouseover="this.style.borderColor='var(--primary)'; this.style.background='var(--primary-soft)'"
+                    onmouseout="this.style.borderColor='var(--border)'; this.style.background='white'">
+              <div style="width:36px; height:36px; border-radius:8px; background:#dcfce7; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+              </div>
+              <div>
+                <div style="font-size:13px; font-weight:600; color:var(--text); margin-bottom:2px;">匯出為 Excel (.xlsx)</div>
+                <div style="font-size:12px; color:var(--text-muted);">包含部門階層、成員數量等完整欄位</div>
+              </div>
+            </button>
+            <!-- CSV -->
+            <button onclick="closeModal('modal-checkin-export'); showSyncToast('CSV 報表匯出中…');"
+                    style="display:flex; align-items:center; gap:14px; padding:14px 16px; border:1px solid var(--border); border-radius:var(--radius); background:white; cursor:pointer; text-align:left; width:100%;"
+                    onmouseover="this.style.borderColor='var(--primary)'; this.style.background='var(--primary-soft)'"
+                    onmouseout="this.style.borderColor='var(--border)'; this.style.background='white'">
+              <div style="width:36px; height:36px; border-radius:8px; background:#dbeafe; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+              </div>
+              <div>
+                <div style="font-size:13px; font-weight:600; color:var(--text); margin-bottom:2px;">匯出為 CSV (.csv)</div>
+                <div style="font-size:12px; color:var(--text-muted);">輕量格式，適合其他系統匯入使用</div>
+              </div>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- ============= Modal：補打卡 ============= -->
+    <!-- ============= Modal：成員補打卡 ============= -->
     <div class="modal-overlay" id="modal-makeup-punch" onclick="closeModalIfBackdrop(event,'modal-makeup-punch')">
-      <div class="modal" style="width:480px;">
+      <div class="modal" style="width:446px;">
         <div class="modal-head">
           <div>
-            <h3 class="modal-title">補打卡</h3>
-            <div class="text-sec" style="font-size:12px; margin-top:2px;" id="makeup-member-label">張雅婷・2026-06-08</div>
+            <h3 class="modal-title">成員補打卡</h3>
+            <div class="text-sec" style="font-size:12px; margin-top:2px;" id="makeup-member-label"></div>
           </div>
-          <button class="icon-btn" onclick="closeModal('modal-makeup-punch')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+          <button class="icon-btn" onclick="closeModal('modal-makeup-punch')">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+          </button>
         </div>
         <div class="modal-body">
-          <div class="form-row">
-            <label>補打卡類型 <span class="req">*</span></label>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
-              <label class="card" style="padding:10px 14px; cursor:pointer; display:flex; align-items:center; gap:8px; border:2px solid var(--primary); background:var(--primary-soft);">
-                <input type="radio" name="makeup-type" value="on" checked style="accent-color:var(--primary);" />
-                <span style="font-size:13px; font-weight:600; color:var(--primary);">上班打卡</span>
-              </label>
-              <label class="card" style="padding:10px 14px; cursor:pointer; display:flex; align-items:center; gap:8px;">
-                <input type="radio" name="makeup-type" value="off" style="accent-color:var(--primary);" />
-                <span style="font-size:13px; font-weight:600;">下班打卡</span>
-              </label>
+          <p style="font-size:13px; color:var(--text-secondary); margin-bottom:20px; line-height:1.6;">
+            儲存送出後，將會清除該成員的異常打卡狀態。
+          </p>
+          <!-- 上班 / 下班 時間 -->
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:20px;" id="makeup-time-grid">
+            <div id="makeup-on-section">
+              <label style="font-size:13px; font-weight:500; display:block; margin-bottom:6px;" id="makeup-on-label">上班時間</label>
+              <div style="position:relative;">
+                <input type="time" class="input full" id="makeup-time-on" />
+                <svg style="position:absolute;right:10px;top:50%;transform:translateY(-50%);pointer-events:none;opacity:0.4;" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              </div>
+              <div id="makeup-on-hint" style="font-size:11px; color:var(--text-muted); margin-top:4px; display:none;">系統已帶入現有打卡時間</div>
+            </div>
+            <div id="makeup-off-section">
+              <label style="font-size:13px; font-weight:500; display:block; margin-bottom:6px;" id="makeup-off-label">下班時間</label>
+              <div style="position:relative;">
+                <input type="time" class="input full" id="makeup-time-off" />
+                <svg style="position:absolute;right:10px;top:50%;transform:translateY(-50%);pointer-events:none;opacity:0.4;" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              </div>
+              <div id="makeup-off-hint" style="font-size:11px; color:var(--text-muted); margin-top:4px; display:none;">系統已帶入現有打卡時間</div>
             </div>
           </div>
-          <div class="form-row">
-            <label>補打卡時間 <span class="req">*</span></label>
-            <div style="display:grid; grid-template-columns:1fr 140px; gap:8px;">
-              <input type="date" class="input full" value="2026-06-08" />
-              <input type="time" class="input full" value="09:00" />
-            </div>
-          </div>
-          <div class="form-row">
-            <label>補打卡原因 <span class="req">*</span></label>
-            <textarea class="input full" rows="2" placeholder="請說明補打卡原因…" maxlength="100"></textarea>
-          </div>
-          <div class="form-row" style="margin-bottom:0;">
-            <label>備註</label>
+          <!-- 備註 -->
+          <div>
+            <label style="font-size:13px; font-weight:500; display:block; margin-bottom:6px;">備註</label>
             <div style="position:relative;">
-              <input type="text" class="input full" placeholder="輸入備註…" maxlength="30" oninput="this.nextElementSibling.textContent=this.value.length+'/30'" />
+              <input type="text" class="input full" placeholder="填寫備註" id="makeup-note" maxlength="30"
+                     oninput="this.nextElementSibling.textContent=this.value.length+'/30'" />
               <span style="position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:11px;color:var(--text-muted);">0/30</span>
             </div>
           </div>
         </div>
         <div class="modal-foot">
           <button class="btn" onclick="closeModal('modal-makeup-punch')">取消</button>
-          <button class="btn primary" onclick="closeModal('modal-makeup-punch'); showSyncToast('補打卡已提交');">確認補打卡</button>
+          <button class="btn primary" onclick="submitMakeupPunch()">儲存</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============= Modal：排除異常確認 ============= -->
+    <div class="modal-overlay" id="modal-dismiss-abnormal" onclick="closeModalIfBackdrop(event,'modal-dismiss-abnormal')">
+      <div class="modal" style="width:420px;">
+        <div class="modal-head" style="border-bottom:none; padding-bottom:0;">
+          <div></div>
+          <button class="icon-btn" onclick="closeModal('modal-dismiss-abnormal')">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+          </button>
+        </div>
+        <div class="modal-body" style="padding-top:8px;">
+          <div id="dismiss-member-label" style="font-size:12px; color:var(--text-muted); margin-bottom:12px;"></div>
+          <h3 style="font-size:16px; font-weight:700; color:var(--text); margin-bottom:12px;">是否進行消除異常</h3>
+          <p style="font-size:13px; color:var(--text-secondary); line-height:1.65; margin-bottom:20px;">
+            點擊將會消除該成員的異常狀態，但維持打卡時間不顯示。<br>請確認是否進行消除異常。
+          </p>
+          <!-- 備註 -->
+          <div>
+            <label style="font-size:13px; font-weight:500; display:block; margin-bottom:6px;">備註</label>
+            <div style="position:relative;">
+              <input type="text" class="input full" placeholder="填寫備註" id="dismiss-note" maxlength="30"
+                     oninput="this.nextElementSibling.textContent=this.value.length+'/30'" />
+              <span style="position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:11px;color:var(--text-muted);">0/30</span>
+            </div>
+          </div>
+        </div>
+        <div class="modal-foot">
+          <button class="btn" onclick="closeModal('modal-dismiss-abnormal')">取消</button>
+          <button class="btn primary" onclick="submitDismissAbnormal()">消除異常</button>
         </div>
       </div>
     </div>
@@ -14935,28 +15362,24 @@ function orgLangAccToggle() {
   function switchCheckinTab(tab, card) {
     /* 更新統計卡片 active 狀態 */
     document.querySelectorAll('.checkin-stat-card').forEach(function(c) {
-      c.style.border = '2px solid var(--border)';
+      c.style.border = '1px solid transparent';
       c.style.background = '';
-      /* 重設文字顏色 */
-      var label = c.querySelector('div:first-child');
-      var num   = c.querySelector('div:nth-child(2)');
-      var hint  = c.querySelector('div:nth-child(3)');
-      if (label) label.style.color = '';
-      if (num)   num.style.color = '';
-      if (hint)  hint.style.color = '';
+      var lbl = c.querySelector('div:first-child');
+      if (lbl) lbl.style.color = '';
     });
     if (card) {
       card.style.border = '2px solid var(--primary)';
       card.style.background = 'var(--primary-soft)';
-      var label = card.querySelector('div:first-child');
-      var hint  = card.querySelector('div:nth-child(3)');
-      if (label) label.style.color = 'var(--primary)';
-      if (hint)  hint.style.color = 'var(--primary)';
+      var lbl = card.querySelector('div:first-child');
+      if (lbl) lbl.style.color = 'var(--primary)';
     }
     /* 顯示對應 panel */
     document.querySelectorAll('.checkin-panel').forEach(function(p) { p.style.display = 'none'; });
     var target = document.getElementById('checkin-panel-' + tab);
     if (target) target.style.display = '';
+    /* 所有狀態 下拉 只在全部打卡記錄顯示 */
+    var statusFilter = document.getElementById('checkin-status-filter');
+    if (statusFilter) statusFilter.style.display = (tab === 'arrived') ? '' : 'none';
   }
 
   function updateNoteCount(input) {
@@ -14967,10 +15390,86 @@ function orgLangAccToggle() {
     else input.style.color = '';
   }
 
-  function openMakeupPunchModal(name, date) {
-    var label = document.getElementById('makeup-member-label');
-    if (label) label.textContent = name + '・' + date;
+  function openMakeupPunchModal(name, date, onTime, offTime, abnormalSide) {
+    /* 標題列 */
+    var memberLabel = document.getElementById('makeup-member-label');
+    if (memberLabel) memberLabel.textContent = name + '・' + date;
+
+    /* 重設備註 */
+    var note = document.getElementById('makeup-note');
+    if (note) { note.value = ''; note.nextElementSibling.textContent = '0/30'; }
+
+    var missingOn  = !onTime  || onTime  === '-';
+    var missingOff = !offTime || offTime === '-';
+
+    var inputOn  = document.getElementById('makeup-time-on');
+    var inputOff = document.getElementById('makeup-time-off');
+    var hintOn   = document.getElementById('makeup-on-hint');
+    var hintOff  = document.getElementById('makeup-off-hint');
+    var labelOn  = document.getElementById('makeup-on-label');
+    var labelOff = document.getElementById('makeup-off-label');
+
+    /* 缺上班卡：上班欄 editable(空)，下班欄 disabled(帶值) */
+    /* 缺下班卡：下班欄 editable(空)，上班欄 disabled(帶值) */
+    /* 兩者皆缺：兩欄皆 editable */
+    /* 兩者皆有：兩欄皆 editable(可修正) */
+
+    /* 判斷哪側需顯示紅色：空值 or 被標記為異常 */
+    var redOn  = missingOn  || abnormalSide === 'on'  || abnormalSide === 'both';
+    var redOff = missingOff || abnormalSide === 'off' || abnormalSide === 'both';
+
+    /* 上班時間欄 */
+    var onDisabled = !missingOn && missingOff;   /* 有值但對側缺卡 → 帶入 disabled */
+    if (inputOn) {
+      inputOn.value    = missingOn ? '' : onTime;
+      inputOn.disabled = onDisabled;
+      inputOn.style.background   = onDisabled ? '#f3f4f6' : '';
+      inputOn.style.color        = onDisabled ? 'var(--text-muted)' : (redOn ? '#dc2626' : '');
+      inputOn.style.borderColor  = (!onDisabled && redOn) ? '#dc2626' : '';
+    }
+    if (hintOn)  hintOn.style.display = onDisabled ? '' : 'none';
+    if (labelOn) labelOn.style.color  = onDisabled ? 'var(--text-muted)' : (redOn ? '#dc2626' : '');
+
+    /* 下班時間欄 */
+    var offDisabled = !missingOff && missingOn;
+    if (inputOff) {
+      inputOff.value    = missingOff ? '' : offTime;
+      inputOff.disabled = offDisabled;
+      inputOff.style.background  = offDisabled ? '#f3f4f6' : '';
+      inputOff.style.color       = offDisabled ? 'var(--text-muted)' : (redOff ? '#dc2626' : '');
+      inputOff.style.borderColor = (!offDisabled && redOff) ? '#dc2626' : '';
+    }
+    if (hintOff)  hintOff.style.display = offDisabled ? '' : 'none';
+    if (labelOff) labelOff.style.color  = offDisabled ? 'var(--text-muted)' : (redOff ? '#dc2626' : '');
+
     openModal('modal-makeup-punch');
+  }
+
+  function submitMakeupPunch() {
+    closeModal('modal-makeup-punch');
+    showSyncToast('補打卡已送出，異常狀態已清除');
+  }
+
+  function openDismissAbnormalModal(btn) {
+    /* 從按鈕往上找到 tr，取得成員名稱與日期 */
+    var row = btn.closest('tr');
+    var name = '', date = '';
+    if (row) {
+      var nameEl = row.querySelector('.user-cell div div:first-child');
+      if (nameEl) name = nameEl.textContent.trim();
+      var cells = row.querySelectorAll('td');
+      if (cells[3]) date = cells[3].textContent.trim();
+    }
+    var label = document.getElementById('dismiss-member-label');
+    if (label) label.textContent = (name ? name + '・' : '') + date;
+    var note = document.getElementById('dismiss-note');
+    if (note) note.value = '';
+    openModal('modal-dismiss-abnormal');
+  }
+
+  function submitDismissAbnormal() {
+    closeModal('modal-dismiss-abnormal');
+    showSyncToast('異常已排除，記錄已更新至操作記錄');
   }
 
   function toggleCheckinToday(checked) {
@@ -14991,7 +15490,37 @@ function orgLangAccToggle() {
   }
 
   function exportCheckinReport() {
-    showSyncToast('報表匯出中…');
+    openModal('modal-checkin-export');
+  }
+
+  function editLogNote(displayEl) {
+    var cell = displayEl.closest('.log-note-cell');
+    displayEl.style.display = 'none';
+    var editEl = cell.querySelector('.log-note-edit');
+    editEl.style.display = '';
+    var input = editEl.querySelector('input');
+    input.focus();
+    input.select();
+  }
+
+  function saveLogNote(input) {
+    var cell = input.closest('.log-note-cell');
+    var val = input.value.trim();
+    var max = parseInt(cell.dataset.max) || 10;
+    var editEl = cell.querySelector('.log-note-edit');
+    var displayEl = cell.querySelector('.log-note-display');
+    var textSpan = displayEl.querySelector('span:first-child');
+    var countSpan = displayEl.querySelector('span:last-child');
+    if (val) {
+      textSpan.textContent = val;
+      textSpan.style.color = 'var(--text-secondary)';
+    } else {
+      textSpan.textContent = '點擊新增備註';
+      textSpan.style.color = 'var(--text-muted)';
+    }
+    if (countSpan) countSpan.textContent = val.length + '/' + max;
+    editEl.style.display = 'none';
+    displayEl.style.display = '';
   }
 
   /* ===== page map 新增 bot-checkin ===== */
