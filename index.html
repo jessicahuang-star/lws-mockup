@@ -6711,36 +6711,36 @@
       </div>
 
       <!-- ===== 出勤總覽（3 統計卡） ===== -->
-      <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:0; margin-bottom:20px; border:1px solid var(--border); border-radius:var(--radius); overflow:hidden;">
+      <div style="display:flex; gap:16px; margin-bottom:20px;">
 
         <!-- 出勤總覽 -->
-        <div class="card checkin-stat-card active" id="stat-card-arrived" onclick="switchCheckinTab('arrived',this)"
-             style="padding:20px 22px; cursor:pointer; border:none; border-radius:0; border-right:1px solid var(--border); border:2px solid var(--primary); background:var(--primary-soft);">
-          <div style="font-size:13px; color:var(--primary); font-weight:600; margin-bottom:10px;">出勤總覽</div>
-          <div style="display:flex; align-items:center; justify-content:space-between;">
+        <div class="checkin-stat-card active" id="stat-card-arrived" onclick="switchCheckinTab('arrived',this)"
+             style="width:281px; flex-shrink:0; padding:18px 20px; display:flex; flex-direction:column; align-items:flex-start; border-radius:8px; border:2px solid #4F46E5; background:#EEF2FF; box-shadow:0 1px 2px 0 rgba(0,0,0,0.04); cursor:pointer;">
+          <div style="font-size:13px; color:#4F46E5; font-weight:600; margin-bottom:10px;">出勤總覽</div>
+          <div style="display:flex; align-items:center; justify-content:space-between; width:100%;">
             <div style="display:flex; align-items:baseline; gap:6px;">
               <span style="font-size:36px; font-weight:800; color:var(--text); line-height:1;">60</span>
               <span style="font-size:12px; color:var(--text-secondary);">(適用打卡成員)</span>
             </div>
-            <span style="font-size:12px; color:var(--primary); text-decoration:underline; cursor:pointer;">點擊查看紀錄</span>
+            <span style="font-size:12px; color:#4F46E5; text-decoration:underline; cursor:pointer;">點擊查看紀錄</span>
           </div>
         </div>
 
         <!-- 打卡異常 -->
-        <div class="card checkin-stat-card" id="stat-card-abnormal" onclick="switchCheckinTab('abnormal',this)"
-             style="padding:20px 22px; cursor:pointer; border-radius:0; border-right:1px solid var(--border);">
+        <div class="checkin-stat-card" id="stat-card-abnormal" onclick="switchCheckinTab('abnormal',this)"
+             style="width:281px; flex-shrink:0; padding:18px 20px; display:flex; flex-direction:column; align-items:flex-start; border-radius:8px; border:2px solid #E5E7EB; background:white; box-shadow:0 1px 2px 0 rgba(0,0,0,0.04); cursor:pointer;">
           <div style="font-size:13px; color:var(--text-secondary); font-weight:500; margin-bottom:10px;">打卡異常</div>
-          <div style="display:flex; align-items:center; justify-content:space-between;">
+          <div style="display:flex; align-items:center; justify-content:space-between; width:100%;">
             <span style="font-size:36px; font-weight:800; color:var(--danger); line-height:1;">3</span>
             <span style="font-size:12px; color:var(--text-muted); cursor:pointer;">點擊查看紀錄</span>
           </div>
         </div>
 
         <!-- 操作記錄 -->
-        <div class="card checkin-stat-card" id="stat-card-makeup" onclick="switchCheckinTab('makeup',this)"
-             style="padding:20px 22px; cursor:pointer; border-radius:0;">
+        <div class="checkin-stat-card" id="stat-card-makeup" onclick="switchCheckinTab('makeup',this)"
+             style="width:281px; flex-shrink:0; padding:18px 20px; display:flex; flex-direction:column; align-items:flex-start; border-radius:8px; border:2px solid #E5E7EB; background:white; box-shadow:0 1px 2px 0 rgba(0,0,0,0.04); cursor:pointer;">
           <div style="font-size:13px; color:var(--text-secondary); font-weight:500; margin-bottom:10px;">操作記錄</div>
-          <div style="display:flex; align-items:center; justify-content:space-between;">
+          <div style="display:flex; align-items:center; justify-content:space-between; width:100%;">
             <span style="font-size:36px; font-weight:800; color:#F59E0B; line-height:1;">2</span>
             <span style="font-size:12px; color:var(--text-muted); cursor:pointer;">點擊查看紀錄</span>
           </div>
@@ -6990,11 +6990,24 @@
           <div style="font-weight:600; font-size:15px; color:var(--text);">異常打卡記錄</div>
           <div style="font-size:13px; color:var(--text-muted);">共 124 筆</div>
         </div>
+        <!-- 批量操作列 -->
+        <div id="checkin-bulk-bar" style="display:none; align-items:center; justify-content:space-between; padding:10px 20px; background:#f0f4ff; border:1px solid var(--primary-soft); border-radius:8px; margin-bottom:8px;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <span id="checkin-bulk-count" style="font-size:13px; font-weight:600; color:var(--text);">已選 0 筆</span>
+            <button onclick="bulkMakeupPunch()" style="display:inline-flex;align-items:center;gap:5px;border:1px solid var(--border);background:white;cursor:pointer;color:var(--text-secondary);font-size:12px;padding:4px 10px;border-radius:6px;font-weight:500;" onmouseover="this.style.background='var(--bg)'" onmouseout="this.style.background='white'">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>補打卡
+            </button>
+            <button onclick="bulkDismissAbnormal()" style="display:inline-flex;align-items:center;gap:5px;border:1px solid var(--border);background:white;cursor:pointer;color:var(--text-secondary);font-size:12px;padding:4px 10px;border-radius:6px;font-weight:500;" onmouseover="this.style.background='var(--bg)'" onmouseout="this.style.background='white'">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>消除異常
+            </button>
+          </div>
+          <button onclick="clearAbnormalSelection()" style="display:inline-flex;align-items:center;border:1px solid var(--border);background:white;cursor:pointer;color:var(--text-secondary);font-size:12px;padding:4px 10px;border-radius:6px;font-weight:500;" onmouseover="this.style.background='var(--bg)'" onmouseout="this.style.background='white'">取消選取</button>
+        </div>
         <div class="card" style="overflow:hidden;">
           <table class="data-table">
             <thead>
               <tr>
-                <th style="width:40px;"><input type="checkbox" style="accent-color:var(--primary);" /></th>
+                <th style="width:40px;"><input type="checkbox" id="checkin-select-all" style="accent-color:var(--primary);" onchange="toggleAllAbnormal(this)" /></th>
                 <th style="width:180px;">成員</th>
                 <th style="width:90px;">部門</th>
                 <th style="width:130px;">打卡日期</th>
@@ -7006,7 +7019,7 @@
             </thead>
             <tbody>
               <tr>
-                <td><input type="checkbox" style="accent-color:var(--primary);" /></td>
+                <td><input type="checkbox" class="abnormal-row-check" style="accent-color:var(--primary);" onchange="updateAbnormalBulkBar()" /></td>
                 <td>
                   <div class="user-cell">
                     <div class="avatar" style="width:32px;height:32px;font-size:12px;">黃</div>
@@ -7038,7 +7051,7 @@
                 </td>
               </tr>
               <tr>
-                <td><input type="checkbox" style="accent-color:var(--primary);" /></td>
+                <td><input type="checkbox" class="abnormal-row-check" style="accent-color:var(--primary);" onchange="updateAbnormalBulkBar()" /></td>
                 <td>
                   <div class="user-cell">
                     <div class="avatar" style="width:32px;height:32px;font-size:12px;">吳</div>
@@ -7058,7 +7071,7 @@
                 </td>
               </tr>
               <tr>
-                <td><input type="checkbox" style="accent-color:var(--primary);" /></td>
+                <td><input type="checkbox" class="abnormal-row-check" style="accent-color:var(--primary);" onchange="updateAbnormalBulkBar()" /></td>
                 <td>
                   <div class="user-cell">
                     <div class="avatar" style="width:32px;height:32px;font-size:12px;">蔡</div>
@@ -7081,7 +7094,7 @@
                 </td>
               </tr>
               <tr>
-                <td><input type="checkbox" style="accent-color:var(--primary);" /></td>
+                <td><input type="checkbox" class="abnormal-row-check" style="accent-color:var(--primary);" onchange="updateAbnormalBulkBar()" /></td>
                 <td>
                   <div class="user-cell">
                     <div class="avatar" style="width:32px;height:32px;font-size:12px;">許</div>
@@ -7101,7 +7114,7 @@
                 </td>
               </tr>
               <tr>
-                <td><input type="checkbox" style="accent-color:var(--primary);" /></td>
+                <td><input type="checkbox" class="abnormal-row-check" style="accent-color:var(--primary);" onchange="updateAbnormalBulkBar()" /></td>
                 <td>
                   <div class="user-cell">
                     <div class="avatar" style="width:32px;height:32px;font-size:12px;">鄭</div>
@@ -7409,7 +7422,6 @@
               <label style="font-size:13px; font-weight:500; display:block; margin-bottom:6px;" id="makeup-on-label">上班時間</label>
               <div style="position:relative;">
                 <input type="time" class="input full" id="makeup-time-on" />
-                <svg style="position:absolute;right:10px;top:50%;transform:translateY(-50%);pointer-events:none;opacity:0.4;" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
               </div>
               <div id="makeup-on-hint" style="font-size:11px; color:var(--text-muted); margin-top:4px; display:none;">系統已帶入現有打卡時間</div>
             </div>
@@ -7417,7 +7429,6 @@
               <label style="font-size:13px; font-weight:500; display:block; margin-bottom:6px;" id="makeup-off-label">下班時間</label>
               <div style="position:relative;">
                 <input type="time" class="input full" id="makeup-time-off" />
-                <svg style="position:absolute;right:10px;top:50%;transform:translateY(-50%);pointer-events:none;opacity:0.4;" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
               </div>
               <div id="makeup-off-hint" style="font-size:11px; color:var(--text-muted); margin-top:4px; display:none;">系統已帶入現有打卡時間</div>
             </div>
@@ -15362,16 +15373,17 @@ function orgLangAccToggle() {
   function switchCheckinTab(tab, card) {
     /* 更新統計卡片 active 狀態 */
     document.querySelectorAll('.checkin-stat-card').forEach(function(c) {
-      c.style.border = '1px solid transparent';
-      c.style.background = '';
+      c.style.border = '2px solid #E5E7EB';
+      c.style.background = 'white';
+      c.style.boxShadow = '0 1px 2px 0 rgba(0,0,0,0.04)';
       var lbl = c.querySelector('div:first-child');
       if (lbl) lbl.style.color = '';
     });
     if (card) {
-      card.style.border = '2px solid var(--primary)';
-      card.style.background = 'var(--primary-soft)';
+      card.style.border = '2px solid #4F46E5';
+      card.style.background = '#EEF2FF';
       var lbl = card.querySelector('div:first-child');
-      if (lbl) lbl.style.color = 'var(--primary)';
+      if (lbl) lbl.style.color = '#4F46E5';
     }
     /* 顯示對應 panel */
     document.querySelectorAll('.checkin-panel').forEach(function(p) { p.style.display = 'none'; });
@@ -15448,6 +15460,73 @@ function orgLangAccToggle() {
   function submitMakeupPunch() {
     closeModal('modal-makeup-punch');
     showSyncToast('補打卡已送出，異常狀態已清除');
+    clearAbnormalSelection();
+  }
+
+  function updateAbnormalBulkBar() {
+    var checks = document.querySelectorAll('.abnormal-row-check');
+    var checked = Array.from(checks).filter(function(c) { return c.checked; });
+    var bar = document.getElementById('checkin-bulk-bar');
+    var countEl = document.getElementById('checkin-bulk-count');
+    var selectAll = document.getElementById('checkin-select-all');
+    if (checked.length > 0) {
+      bar.style.display = 'flex';
+      countEl.textContent = '已選 ' + checked.length + ' 筆';
+    } else {
+      bar.style.display = 'none';
+    }
+    if (selectAll) {
+      selectAll.checked = checked.length === checks.length;
+      selectAll.indeterminate = checked.length > 0 && checked.length < checks.length;
+    }
+  }
+
+  function toggleAllAbnormal(selectAllEl) {
+    document.querySelectorAll('.abnormal-row-check').forEach(function(c) {
+      c.checked = selectAllEl.checked;
+    });
+    updateAbnormalBulkBar();
+  }
+
+  function clearAbnormalSelection() {
+    document.querySelectorAll('.abnormal-row-check').forEach(function(c) { c.checked = false; });
+    var selectAll = document.getElementById('checkin-select-all');
+    if (selectAll) { selectAll.checked = false; selectAll.indeterminate = false; }
+    var bar = document.getElementById('checkin-bulk-bar');
+    if (bar) bar.style.display = 'none';
+  }
+
+  function bulkMakeupPunch() {
+    var checked = document.querySelectorAll('.abnormal-row-check:checked');
+    var count = checked.length;
+    // 開補打卡 modal，多筆模式：兩欄皆可填寫，不自動帶入、不停用
+    var memberLabel = document.getElementById('makeup-member-label');
+    if (memberLabel) memberLabel.textContent = '已選 ' + count + ' 筆成員';
+    var note = document.getElementById('makeup-note');
+    if (note) { note.value = ''; note.nextElementSibling.textContent = '0/30'; }
+    var inputOn  = document.getElementById('makeup-time-on');
+    var inputOff = document.getElementById('makeup-time-off');
+    var hintOn   = document.getElementById('makeup-on-hint');
+    var hintOff  = document.getElementById('makeup-off-hint');
+    var labelOn  = document.getElementById('makeup-on-label');
+    var labelOff = document.getElementById('makeup-off-label');
+    if (inputOn)  { inputOn.value = ''; inputOn.disabled = false; inputOn.style.background = ''; inputOn.style.color = ''; inputOn.style.borderColor = ''; }
+    if (inputOff) { inputOff.value = ''; inputOff.disabled = false; inputOff.style.background = ''; inputOff.style.color = ''; inputOff.style.borderColor = ''; }
+    if (hintOn)  hintOn.style.display  = 'none';
+    if (hintOff) hintOff.style.display = 'none';
+    if (labelOn)  labelOn.style.color  = '';
+    if (labelOff) labelOff.style.color = '';
+    openModal('modal-makeup-punch');
+  }
+
+  function bulkDismissAbnormal() {
+    var checked = document.querySelectorAll('.abnormal-row-check:checked');
+    var count = checked.length;
+    var label = document.getElementById('dismiss-member-label');
+    if (label) label.textContent = '已選 ' + count + ' 筆成員';
+    var note = document.getElementById('dismiss-note');
+    if (note) note.value = '';
+    openModal('modal-dismiss-abnormal');
   }
 
   function openDismissAbnormalModal(btn) {
@@ -15470,6 +15549,7 @@ function orgLangAccToggle() {
   function submitDismissAbnormal() {
     closeModal('modal-dismiss-abnormal');
     showSyncToast('異常已排除，記錄已更新至操作記錄');
+    clearAbnormalSelection();
   }
 
   function toggleCheckinToday(checked) {
