@@ -9,36 +9,39 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV/XN/WLcE=" crossorigin=""></script>
 <style>
   :root {
-    --bg: #f7f8fa;
-    --surface: #ffffff;
-    --border: #e5e7eb;
-    --border-strong: #d1d5db;
-    --text: #111827;
-    --text-secondary: #6b7280;
-    --text-muted: #9ca3af;
-    --primary: #4f46e5;
-    --primary-hover: #4338ca;
-    --primary-soft: #eef2ff;
-    --success: #10b981;
-    --success-soft: #ecfdf5;
-    --warning: #f59e0b;
-    --warning-soft: #fffbeb;
-    --danger: #ef4444;
-    --danger-soft: #fef2f2;
-    --info: #3b82f6;
-    --hover: #f3f4f6;
+    /* ===== [修改開始] 全站套用 Coolbe DS tokens(lws-saas-tokens.css 2026-07-01)===== */
+    --bg: #F6F7F9;                        /* color/app/shellBg */
+    --surface: #FFFFFF;                   /* color/app/surface */
+    --border: #E5E7EB;                    /* color/app/border */
+    --border-strong: #E0E0E6;             /* color/ui/borderDefault(input/select) */
+    --text: #111827;                      /* color/app/textPrimary */
+    --text-secondary: #4B5563;            /* color/app/textSecondary */
+    --text-muted: #9CA3AF;                /* color/app/textMuted */
+    --primary: #007BFF;                   /* color/app/accent */
+    --primary-hover: #0056B8;
+    --primary-soft: #E8F2FF;
+    --success: #18A058;                   /* color/state/success */
+    --success-soft: rgba(24,160,88,0.10);
+    --warning: #F59E0B;
+    --warning-soft: #FFFBEB;
+    --danger: #DC2626;                    /* color/state/danger */
+    --danger-soft: rgba(220,38,38,0.08);
+    --info: #2080F0;                      /* color/state/info */
+    --info-soft: rgba(32,128,240,0.10);
+    --hover: #F3F4F6;
     --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
     --shadow-md: 0 4px 12px rgba(0,0,0,0.06);
-    --shadow-lg: 0 12px 32px rgba(0,0,0,0.10);
-    --radius-sm: 6px;
-    --radius: 8px;
-    --radius-lg: 12px;
+    --shadow-lg: 0px 1px 2px -2px rgba(0,0,0,0.08), 0px 3px 6px 0px rgba(0,0,0,0.06), 0px 5px 12px 4px rgba(0,0,0,0.04); /* shadow/modal */
+    --radius-sm: 3px;                     /* radius/sm(button・input) */
+    --radius: 8px;                        /* radius/xl(panel) */
+    --radius-lg: 12px;                    /* radius/card */
+    /* ===== [修改結束] ===== */
   }
 
   * { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; }
   body {
-    font-family: "Inter", "Noto Sans TC", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    font-family: -apple-system, system-ui, "Segoe UI", "Noto Sans TC", sans-serif; /* font/family/sans(DS token) */
     background: var(--bg);
     color: var(--text);
     font-size: 14px;
@@ -77,7 +80,7 @@
     width: 28px;
     height: 28px;
     border-radius: 8px;
-    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    background: var(--primary); /* DS accent */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -221,14 +224,16 @@
   .btn {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 6px;
-    padding: 7px 14px;
+    height: 34px;               /* component/button/medium-height(DS) */
+    padding: 0 14px;            /* component/button/medium-padding-x */
     border-radius: var(--radius-sm);
     border: 1px solid var(--border-strong);
     background: var(--surface);
     color: var(--text);
     font-weight: 500;
-    font-size: 13px;
+    font-size: 14px;
     transition: all 0.15s;
   }
   .btn:hover { background: var(--hover); }
@@ -248,7 +253,7 @@
     color: var(--text-secondary);
   }
   .btn.ghost:hover { background: var(--hover); color: var(--text); }
-  .btn.sm { padding: 4px 10px; font-size: 12px; }
+  .btn.sm { height: 28px; padding: 0 10px; font-size: 12px; } /* component/button/small(DS) */
   .btn-group { display: inline-flex; gap: 8px; }
 
   /* ===== Tabs ===== */
@@ -280,7 +285,8 @@
     flex-wrap: wrap;
   }
   .input {
-    padding: 7px 12px;
+    height: 34px;               /* component/input/height(DS) */
+    padding: 0 12px;
     border: 1px solid var(--border-strong);
     border-radius: var(--radius-sm);
     background: var(--surface);
@@ -309,12 +315,10 @@
     font-size: 13px;
   }
   .data-table thead th {
-    background: #fafbfc;
-    color: var(--text-secondary);
-    font-weight: 600;
-    font-size: 12px;
-    text-transform: uppercase;
-    letter-spacing: 0.03em;
+    background: #FAFAFC;        /* color/ui/tableHeader(DS) */
+    color: #1F2225;             /* color/ui/textStrong */
+    font-weight: 500;
+    font-size: 13px;
     white-space: nowrap;
   }
   .data-table tbody tr:hover { background: #fafbfc; }
@@ -344,10 +348,10 @@
     background: currentColor;
     flex-shrink: 0;
   }
-  .badge.success { color: #047857; background: var(--success-soft); }
-  .badge.warning { color: #b45309; background: var(--warning-soft); }
-  .badge.danger { color: #b91c1c; background: var(--danger-soft); }
-  .badge.info { color: #1d4ed8; background: #eff6ff; }
+  .badge.success { color: var(--success); background: var(--success-soft); border: 1px solid rgba(24,160,88,0.30); }   /* Status tag / success(DS) */
+  .badge.warning { color: #b45309; background: var(--warning-soft); border: 1px solid rgba(180,83,9,0.25); }
+  .badge.danger { color: var(--danger); background: var(--danger-soft); border: 1px solid rgba(220,38,38,0.23); }      /* Status tag / danger(DS) */
+  .badge.info { color: var(--info); background: var(--info-soft); border: 1px solid rgba(32,128,240,0.30); }           /* Status tag / info(DS) */
   .badge.neutral { color: #4b5563; background: #f3f4f6; }
   .badge.purple { color: #6b21a8; background: #faf5ff; }
 
@@ -364,7 +368,7 @@
     font-size: 12px;
     flex-shrink: 0;
   }
-  .user-avatar.c1 { background: linear-gradient(135deg, #4f46e5, #7c3aed); }
+  .user-avatar.c1 { background: linear-gradient(135deg, #007BFF, #7c3aed); }
   .user-avatar.c2 { background: linear-gradient(135deg, #f97316, #ec4899); }
   .user-avatar.c3 { background: linear-gradient(135deg, #10b981, #14b8a6); }
   .user-avatar.c4 { background: linear-gradient(135deg, #3b82f6, #06b6d4); }
@@ -499,7 +503,7 @@
   .form-row .help { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
   .form-row .req { color: var(--danger); margin-left: 2px; }
   .input.full { width: 100%; }
-  textarea.input { resize: vertical; min-height: 72px; font-family: inherit; }
+  textarea.input { resize: vertical; height: auto; min-height: 72px; padding: 8px 12px; font-family: inherit; }
 
   .form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
   .form-grid-2 .form-row { margin-bottom: 0; }
@@ -2113,7 +2117,7 @@
   .bip-goto:hover { text-decoration: underline; }
   /* Rich Menu preview (快速選單) */
   .bip-richmenu {
-    background: #4f46e5;
+    background: #007BFF;
     border-radius: 8px;
     overflow: hidden;
     display: grid;
@@ -3047,10 +3051,11 @@
         <svg class="chev" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
       </div>
       <div class="nav-children">
+        <!-- ===== [修改開始] 行事曆管理改為三頁架構 ===== -->
         <div class="nav-item" data-page="6.1" onclick="goPage('6.1')">6.1 公司行事曆</div>
         <div class="nav-item" data-page="6.2" onclick="goPage('6.2')">6.2 資源管理</div>
-        <div class="nav-item" data-page="6.3" onclick="goPage('6.3')">6.3 Google 行事曆同步</div>
-        <div class="nav-item" data-page="6.4" onclick="goPage('6.4')">6.4 一般設定</div>
+        <div class="nav-item" data-page="6.3" onclick="goPage('6.3')">6.3 日曆設定</div>
+        <!-- ===== [修改結束] ===== -->
       </div>
     </div>
     <div class="nav-group" id="group-board">
@@ -5382,7 +5387,7 @@
                 <div class="bip-cols">
                   <div class="bip-col">
                     <div class="bip-col-head"><span class="bip-col-label">快速選單</span><a class="bip-goto" onclick="goBotEditInteraction(_currentPreviewBot,'menu')">前往設定<svg width="10" height="10" viewBox="0 0 24 24" fill="none" style="margin-left:2px;"><path d="M8 5l7 7-7 7" stroke="currentColor" stroke-width="2.5"/></svg></a></div>
-                    <div class="bip-richmenu"><div class="bip-rm-cell" style="background:#6366f1;">🏠 首頁</div><div class="bip-rm-cell" style="background:#8b5cf6;">📰 消息</div><div class="bip-rm-cell" style="background:#4f46e5;">📞 客服</div><div class="bip-rm-cell" style="background:#db2777;">👤 會員</div></div>
+                    <div class="bip-richmenu"><div class="bip-rm-cell" style="background:#6366f1;">🏠 首頁</div><div class="bip-rm-cell" style="background:#8b5cf6;">📰 消息</div><div class="bip-rm-cell" style="background:#007BFF;">📞 客服</div><div class="bip-rm-cell" style="background:#db2777;">👤 會員</div></div>
                   </div>
                   <div class="bip-col">
                     <div class="bip-col-head"><span class="bip-col-label">關鍵字觸發</span><a class="bip-goto" onclick="goBotEditInteraction(_currentPreviewBot,'keyword')">前往設定<svg width="10" height="10" viewBox="0 0 24 24" fill="none" style="margin-left:2px;"><path d="M8 5l7 7-7 7" stroke="currentColor" stroke-width="2.5"/></svg></a></div>
@@ -5492,8 +5497,8 @@
           <!-- ===== 行銷活動 Bot - 啟用中, indigo gradient, 選單未設定警告 ===== -->
           <div class="bot-list-card" id="bot-row-00126">
             <div class="bot-card-inner">
-              <div class="bot-card-accent" style="background:linear-gradient(to bottom,#4f46e5,#7c3aed);"></div>
-              <div class="bot-card-icon" style="background:#4f46e5;">行</div>
+              <div class="bot-card-accent" style="background:linear-gradient(to bottom,#007BFF,#7c3aed);"></div>
+              <div class="bot-card-icon" style="background:#007BFF;">行</div>
               <div class="bot-card-info">
                 <div class="bot-card-name-row">
                   <span class="bot-card-name">行銷活動 Bot</span>
@@ -5697,13 +5702,13 @@
               <div style="font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:14px;">聊天室政策</div>
               <div style="font-size:13px;font-weight:600;margin-bottom:8px;">聊天室類型</div>
               <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px;">
-                <div id="be-policy-team" style="border:2px solid #4f46e5; border-radius:var(--radius); padding:12px 14px 12px 38px; background:#eef2ff; cursor:pointer; position:relative;" onclick="selectBeChatPolicy('team')">
-                  <input type="radio" name="be-chat-policy" checked style="position:absolute;left:13px;top:50%;transform:translateY(-50%);accent-color:#4f46e5;" />
-                  <div style="font-size:13px;font-weight:600;color:#4f46e5;">可邀請加入團隊 / 群組、1:N聊天室</div>
+                <div id="be-policy-team" style="border:2px solid #007BFF; border-radius:var(--radius); padding:12px 14px 12px 38px; background:#E8F2FF; cursor:pointer; position:relative;" onclick="selectBeChatPolicy('team')">
+                  <input type="radio" name="be-chat-policy" checked style="position:absolute;left:13px;top:50%;transform:translateY(-50%);accent-color:#007BFF;" />
+                  <div style="font-size:13px;font-weight:600;color:#007BFF;">可邀請加入團隊 / 群組、1:N聊天室</div>
                   <div style="font-size:10px;color:#6366f1;margin-top:2px;line-height:1.4;opacity:0.8;">所有成員可與Bot聊天；不可向部分成員賦予權限。</div>
                 </div>
                 <div id="be-policy-one" style="border:2px solid var(--border); border-radius:var(--radius); padding:12px 14px 12px 38px; background:white; cursor:pointer; position:relative;" onclick="selectBeChatPolicy('one')">
-                  <input type="radio" name="be-chat-policy" style="position:absolute;left:13px;top:50%;transform:translateY(-50%);accent-color:#4f46e5;" />
+                  <input type="radio" name="be-chat-policy" style="position:absolute;left:13px;top:50%;transform:translateY(-50%);accent-color:#007BFF;" />
                   <div style="font-size:13px;font-weight:600;color:var(--text);">僅可使用 1:1 聊天</div>
                   <div style="font-size:10px;color:var(--text-muted);margin-top:2px;line-height:1.4;">接收的成員需有可與Bot聊天的權限。</div>
                 </div>
@@ -5907,7 +5912,7 @@
                   <td><strong>主選單</strong><div class="text-sec" style="font-size:11px;">6 個按鈕 · 圖文選單</div></td>
                   <td><span class="type-chip">圖文選單</span></td>
                   <td>
-                    <div style="width:180px;aspect-ratio:2.4;background:#4f46e5;border-radius:6px;overflow:hidden;display:grid;grid-template-columns:1fr 1fr 1fr;grid-template-rows:1fr 1fr;gap:1px;">
+                    <div style="width:180px;aspect-ratio:2.4;background:#007BFF;border-radius:6px;overflow:hidden;display:grid;grid-template-columns:1fr 1fr 1fr;grid-template-rows:1fr 1fr;gap:1px;">
                       <div style="background:#6366f1;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:10px;color:white;gap:1px;">🏠<span style="font-size:8px;">首頁</span></div>
                       <div style="background:#8b5cf6;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:10px;color:white;gap:1px;">📦<span style="font-size:8px;">商品</span></div>
                       <div style="background:#a5b4fc;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:10px;color:white;gap:1px;">🛒<span style="font-size:8px;">購物車</span></div>
@@ -5925,9 +5930,9 @@
                   <td><span class="type-chip">快速選單</span></td>
                   <td>
                     <div style="width:180px;background:#f0f2f5;border-radius:6px;padding:6px;display:flex;flex-direction:column;gap:4px;">
-                      <div style="background:white;border-radius:4px;padding:6px 10px;font-size:9px;font-weight:600;color:#4f46e5;box-shadow:0 1px 2px rgba(0,0,0,.1);">訂單查詢</div>
-                      <div style="background:white;border-radius:4px;padding:6px 10px;font-size:9px;font-weight:600;color:#4f46e5;box-shadow:0 1px 2px rgba(0,0,0,.1);">退貨申請</div>
-                      <div style="background:white;border-radius:4px;padding:6px 10px;font-size:9px;font-weight:600;color:#4f46e5;box-shadow:0 1px 2px rgba(0,0,0,.1);">真人客服</div>
+                      <div style="background:white;border-radius:4px;padding:6px 10px;font-size:9px;font-weight:600;color:#007BFF;box-shadow:0 1px 2px rgba(0,0,0,.1);">訂單查詢</div>
+                      <div style="background:white;border-radius:4px;padding:6px 10px;font-size:9px;font-weight:600;color:#007BFF;box-shadow:0 1px 2px rgba(0,0,0,.1);">退貨申請</div>
+                      <div style="background:white;border-radius:4px;padding:6px 10px;font-size:9px;font-weight:600;color:#007BFF;box-shadow:0 1px 2px rgba(0,0,0,.1);">真人客服</div>
                     </div>
                   </td>
                   <td class="text-sec" style="font-size:13px;">2026-03-25</td>
@@ -6034,7 +6039,7 @@
               <div style="font-size:12px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:10px; text-align:center;">即時預覽</div>
               <div style="background:#1a1a2e; border-radius:28px; padding:12px; box-shadow:0 8px 24px rgba(0,0,0,0.28);">
                 <div style="background:#111; border-radius:16px 16px 0 0; padding:8px 12px; display:flex; align-items:center; gap:8px;">
-                  <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#4f46e5,#7c3aed);display:flex;align-items:center;justify-content:center;font-size:11px;color:white;font-weight:700;">客</div>
+                  <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#007BFF,#7c3aed);display:flex;align-items:center;justify-content:center;font-size:11px;color:white;font-weight:700;">客</div>
                   <div><div style="font-size:11px;font-weight:700;color:white;">客服助手</div><div style="font-size:9px;color:#888;">Bot</div></div>
                 </div>
                 <div style="background:#f0f2f5; border-radius:0 0 16px 16px; padding:12px; min-height:280px;">
@@ -6550,7 +6555,7 @@
                 <span style="font-size:12px; color:var(--text-secondary); margin-left:8px;">2026年 5月 — 每月互動量趨勢</span>
               </div>
               <div style="display:flex; gap:14px; font-size:12px; color:var(--text-secondary);">
-                <span style="display:flex;align-items:center;gap:5px;"><span style="width:12px;height:3px;background:#4f46e5;display:inline-block;border-radius:2px;"></span>推播數</span>
+                <span style="display:flex;align-items:center;gap:5px;"><span style="width:12px;height:3px;background:#007BFF;display:inline-block;border-radius:2px;"></span>推播數</span>
                 <span style="display:flex;align-items:center;gap:5px;"><span style="width:12px;height:3px;background:#f59e0b;display:inline-block;border-radius:2px;stroke-dasharray:4 2;"></span>選單點擊</span>
               </div>
             </div>
@@ -6559,7 +6564,7 @@
             <div style="position:relative; padding-left:32px;">
               <svg id="bat-chart-svg" viewBox="0 0 680 200" style="width:100%; height:200px; overflow:visible;" xmlns="http://www.w3.org/2000/svg">
                 <defs>
-                  <linearGradient id="bat-g1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#4f46e5" stop-opacity="0.18"/><stop offset="100%" stop-color="#4f46e5" stop-opacity="0"/></linearGradient>
+                  <linearGradient id="bat-g1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#007BFF" stop-opacity="0.18"/><stop offset="100%" stop-color="#007BFF" stop-opacity="0"/></linearGradient>
                 </defs>
                 <line x1="0" y1="0" x2="680" y2="0" stroke="#f3f4f6" stroke-width="1"/>
                 <line x1="0" y1="50" x2="680" y2="50" stroke="#f3f4f6" stroke-width="1"/>
@@ -6572,7 +6577,7 @@
                 <text x="-4" y="154" font-size="10" fill="#9ca3af" text-anchor="end">75</text>
                 <!-- 推播數 area + line -->
                 <path id="bat-area1" d="M0,110 L23,100 L46,90 L69,105 L92,75 L115,65 L138,80 L161,55 L184,60 L207,45 L230,50 L253,40 L276,30 L299,35 L322,42 L345,38 L368,28 L391,22 L414,18 L437,25 L460,15 L483,20 L506,18 L529,12 L552,8 L575,10 L598,14 L621,10 L644,12 L667,8 L680,10 L680,190 L0,190 Z" fill="url(#bat-g1)"/>
-                <polyline id="bat-line1" points="0,110 23,100 46,90 69,105 92,75 115,65 138,80 161,55 184,60 207,45 230,50 253,40 276,30 299,35 322,42 345,38 368,28 391,22 414,18 437,25 460,15 483,20 506,18 529,12 552,8 575,10 598,14 621,10 644,12 667,8 680,10" fill="none" stroke="#4f46e5" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+                <polyline id="bat-line1" points="0,110 23,100 46,90 69,105 92,75 115,65 138,80 161,55 184,60 207,45 230,50 253,40 276,30 299,35 322,42 345,38 368,28 391,22 414,18 437,25 460,15 483,20 506,18 529,12 552,8 575,10 598,14 621,10 644,12 667,8 680,10" fill="none" stroke="#007BFF" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
                 <!-- 選單點擊 dashed line -->
                 <polyline id="bat-line2" points="0,155 23,150 46,148 69,155 92,140 115,135 138,142 161,128 184,130 207,118 230,122 253,115 276,108 299,112 322,116 345,114 368,105 391,100 414,98 437,104 460,92 483,96 506,94 529,88 552,84 575,86 598,88 621,85 644,87 667,80 680,82" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="4 2"/>
                 <!-- X labels -->
@@ -6590,7 +6595,7 @@
             <div style="display:flex; gap:24px; padding-top:14px; border-top:1px solid var(--border); margin-top:8px;">
               <div style="text-align:center;">
                 <div style="font-size:11px; color:var(--text-muted); margin-bottom:3px;">推播數</div>
-                <div id="bat-sum-push" style="font-size:18px; font-weight:800; color:#4f46e5;">1,024</div>
+                <div id="bat-sum-push" style="font-size:18px; font-weight:800; color:#007BFF;">1,024</div>
               </div>
               <div style="text-align:center;">
                 <div style="font-size:11px; color:var(--text-muted); margin-bottom:3px;">選單點擊</div>
@@ -6715,14 +6720,14 @@
 
         <!-- 出勤總覽 -->
         <div class="checkin-stat-card active" id="stat-card-arrived" onclick="switchCheckinTab('arrived',this)"
-             style="width:281px; flex-shrink:0; padding:18px 20px; display:flex; flex-direction:column; align-items:flex-start; border-radius:8px; border:2px solid #4F46E5; background:#EEF2FF; box-shadow:0 1px 2px 0 rgba(0,0,0,0.04); cursor:pointer;">
-          <div style="font-size:13px; color:#4F46E5; font-weight:600; margin-bottom:10px;">出勤總覽</div>
+             style="width:281px; flex-shrink:0; padding:18px 20px; display:flex; flex-direction:column; align-items:flex-start; border-radius:8px; border:2px solid #007BFF; background:#E8F2FF; box-shadow:0 1px 2px 0 rgba(0,0,0,0.04); cursor:pointer;">
+          <div style="font-size:13px; color:#007BFF; font-weight:600; margin-bottom:10px;">出勤總覽</div>
           <div style="display:flex; align-items:center; justify-content:space-between; width:100%;">
             <div style="display:flex; align-items:baseline; gap:6px;">
               <span style="font-size:36px; font-weight:800; color:var(--text); line-height:1;">60</span>
               <span style="font-size:12px; color:var(--text-secondary);">(適用打卡成員)</span>
             </div>
-            <span style="font-size:12px; color:#4F46E5; text-decoration:underline; cursor:pointer;">點擊查看紀錄</span>
+            <span style="font-size:12px; color:#007BFF; text-decoration:underline; cursor:pointer;">點擊查看紀錄</span>
           </div>
         </div>
 
@@ -7524,8 +7529,8 @@
                 <td><div class="user-cell"><div class="bot-icon line" style="width:22px;height:22px;font-size:10px;border-radius:6px;">客</div>客服助手</div></td>
                 <td><span class="type-chip">Rich Menu</span></td>
                 <td>
-                  <div style="width:160px; aspect-ratio:5/2.5; background:#4f46e5; border-radius:6px; overflow:hidden; display:grid; grid-template-columns:1fr 1fr 1fr; grid-template-rows:1fr 1fr; gap:1px;">
-                    <div style="background:linear-gradient(135deg,#4f46e5,#6366f1);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:10px;color:white;">🏠<span style="font-size:8px;">首頁</span></div>
+                  <div style="width:160px; aspect-ratio:5/2.5; background:#007BFF; border-radius:6px; overflow:hidden; display:grid; grid-template-columns:1fr 1fr 1fr; grid-template-rows:1fr 1fr; gap:1px;">
+                    <div style="background:linear-gradient(135deg,#007BFF,#6366f1);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:10px;color:white;">🏠<span style="font-size:8px;">首頁</span></div>
                     <div style="background:linear-gradient(135deg,#6366f1,#818cf8);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:10px;color:white;">📦<span style="font-size:8px;">商品</span></div>
                     <div style="background:linear-gradient(135deg,#818cf8,#a5b4fc);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:10px;color:white;">🛒<span style="font-size:8px;">購物車</span></div>
                     <div style="background:linear-gradient(135deg,#7c3aed,#8b5cf6);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:10px;color:white;">📞<span style="font-size:8px;">客服</span></div>
@@ -7546,7 +7551,7 @@
                     <div style="background:linear-gradient(135deg,#6366f1,#8b5cf6);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:10px;color:white;">🎁<span style="font-size:8px;">優惠</span></div>
                     <div style="background:linear-gradient(135deg,#8b5cf6,#a78bfa);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:10px;color:white;">💎<span style="font-size:8px;">會員</span></div>
                     <div style="background:linear-gradient(135deg,#a78bfa,#c4b5fd);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:10px;color:white;">📋<span style="font-size:8px;">訂單</span></div>
-                    <div style="background:linear-gradient(135deg,#c4b5fd,#ddd6fe);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:10px;color:#4f46e5;">⚙️<span style="font-size:8px;">設定</span></div>
+                    <div style="background:linear-gradient(135deg,#c4b5fd,#ddd6fe);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:10px;color:#007BFF;">⚙️<span style="font-size:8px;">設定</span></div>
                   </div>
                 </td>
                 <td><label class="switch"><input type="checkbox" /><span class="slider"></span></label></td>
@@ -7559,10 +7564,10 @@
                 <td><span class="type-chip">快速選單</span></td>
                 <td>
                   <div style="width:160px; background:#f0f2f5; border-radius:6px; padding:6px; display:grid; grid-template-columns:1fr 1fr; gap:4px;">
-                    <div style="background:white;border-radius:4px;padding:5px 4px;text-align:center;font-size:9px;font-weight:600;color:#4f46e5;box-shadow:0 1px 2px rgba(0,0,0,0.1);">訂單查詢</div>
-                    <div style="background:white;border-radius:4px;padding:5px 4px;text-align:center;font-size:9px;font-weight:600;color:#4f46e5;box-shadow:0 1px 2px rgba(0,0,0,0.1);">退換貨</div>
-                    <div style="background:white;border-radius:4px;padding:5px 4px;text-align:center;font-size:9px;font-weight:600;color:#4f46e5;box-shadow:0 1px 2px rgba(0,0,0,0.1);">真人客服</div>
-                    <div style="background:white;border-radius:4px;padding:5px 4px;text-align:center;font-size:9px;font-weight:600;color:#4f46e5;box-shadow:0 1px 2px rgba(0,0,0,0.1);">常見問題</div>
+                    <div style="background:white;border-radius:4px;padding:5px 4px;text-align:center;font-size:9px;font-weight:600;color:#007BFF;box-shadow:0 1px 2px rgba(0,0,0,0.1);">訂單查詢</div>
+                    <div style="background:white;border-radius:4px;padding:5px 4px;text-align:center;font-size:9px;font-weight:600;color:#007BFF;box-shadow:0 1px 2px rgba(0,0,0,0.1);">退換貨</div>
+                    <div style="background:white;border-radius:4px;padding:5px 4px;text-align:center;font-size:9px;font-weight:600;color:#007BFF;box-shadow:0 1px 2px rgba(0,0,0,0.1);">真人客服</div>
+                    <div style="background:white;border-radius:4px;padding:5px 4px;text-align:center;font-size:9px;font-weight:600;color:#007BFF;box-shadow:0 1px 2px rgba(0,0,0,0.1);">常見問題</div>
                   </div>
                 </td>
                 <td><label class="switch"><input type="checkbox" checked /><span class="slider"></span></label></td>
@@ -7575,9 +7580,9 @@
                 <td><span class="type-chip">快速選單</span></td>
                 <td>
                   <div style="width:160px; background:#f0f2f5; border-radius:6px; padding:6px; display:grid; grid-template-columns:1fr 1fr 1fr; gap:4px;">
-                    <div style="background:white;border-radius:4px;padding:5px 4px;text-align:center;font-size:9px;font-weight:600;color:#4f46e5;box-shadow:0 1px 2px rgba(0,0,0,0.1);">訂單</div>
-                    <div style="background:white;border-radius:4px;padding:5px 4px;text-align:center;font-size:9px;font-weight:600;color:#4f46e5;box-shadow:0 1px 2px rgba(0,0,0,0.1);">退貨</div>
-                    <div style="background:white;border-radius:4px;padding:5px 4px;text-align:center;font-size:9px;font-weight:600;color:#4f46e5;box-shadow:0 1px 2px rgba(0,0,0,0.1);">客服</div>
+                    <div style="background:white;border-radius:4px;padding:5px 4px;text-align:center;font-size:9px;font-weight:600;color:#007BFF;box-shadow:0 1px 2px rgba(0,0,0,0.1);">訂單</div>
+                    <div style="background:white;border-radius:4px;padding:5px 4px;text-align:center;font-size:9px;font-weight:600;color:#007BFF;box-shadow:0 1px 2px rgba(0,0,0,0.1);">退貨</div>
+                    <div style="background:white;border-radius:4px;padding:5px 4px;text-align:center;font-size:9px;font-weight:600;color:#007BFF;box-shadow:0 1px 2px rgba(0,0,0,0.1);">客服</div>
                   </div>
                 </td>
                 <td><label class="switch"><input type="checkbox" checked /><span class="slider"></span></label></td>
@@ -7767,7 +7772,7 @@
             <div style="width:240px; background:#1a1a2e; border-radius:32px; padding:14px; box-shadow:0 8px 32px rgba(0,0,0,0.28); flex-shrink:0;">
               <!-- 頂部 Bot 列 -->
               <div style="background:#111; border-radius:18px 18px 0 0; padding:10px 14px; margin-bottom:2px; display:flex; align-items:center; gap:8px;">
-                <div style="width:30px; height:30px; border-radius:50%; background:linear-gradient(135deg,#4f46e5,#7c3aed); display:flex; align-items:center; justify-content:center; font-size:12px; color:white; font-weight:700; flex-shrink:0;">客</div>
+                <div style="width:30px; height:30px; border-radius:50%; background:linear-gradient(135deg,#007BFF,#7c3aed); display:flex; align-items:center; justify-content:center; font-size:12px; color:white; font-weight:700; flex-shrink:0;">客</div>
                 <div>
                   <div style="font-size:12px; font-weight:700; color:white;">客服助手</div>
                   <div style="font-size:9px; color:#888;">Bot · 線上</div>
@@ -7922,82 +7927,184 @@
     </section>
 
     <!-- ============= 6.1 公司行事曆 ============= -->
+    <!-- ===== [修改開始] 行事曆管理模組重構(6.1 公司行事曆 / 6.2 資源管理 / 6.3 日曆設定)===== -->
+    <style>
+    /* ---- 行事曆管理模組(c6-)---- */
+    .c6-layout{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:16px;align-items:start}
+    @media(max-width:1280px){.c6-layout{grid-template-columns:1fr}}
+    .c6-side{display:flex;flex-direction:column;gap:16px}
+    .c6-panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px}
+    .c6-panel h5{margin:0 0 8px;font-size:11px;letter-spacing:.05em;color:var(--text-muted);font-weight:600}
+    .c6-seg{display:inline-flex;border:1px solid var(--border-strong);border-radius:var(--radius-sm);overflow:hidden}
+    .c6-seg button{border:none;background:var(--surface);color:var(--text-secondary);font-weight:500;font-size:13px;padding:0 14px;height:32px;border-right:1px solid var(--border-strong);cursor:pointer}
+    .c6-seg button:last-child{border-right:none}
+    .c6-seg button.on{background:var(--primary);color:#fff}
+    /* 月檢視:行事曆分類色(非 DS token) */
+    .cal-event.blue{background:rgba(76,125,240,.12);color:#2B55C4}
+    .cal-event.teal{background:rgba(33,184,166,.14);color:#0E7D71}
+    .cal-event.green{background:rgba(124,158,46,.16);color:#55701F}
+    .cal-event.cyan{background:rgba(8,145,178,.12);color:#0E7490}
+    .cal-event.google{background:rgba(66,133,244,.12);color:#1A63D8}
+    .c6-gbadge{display:inline-flex;align-items:center;justify-content:center;width:12px;height:12px;border-radius:3px;background:#fff;color:#4285F4;font-weight:800;font-size:8px;border:1px solid #4285F4;margin-right:3px;vertical-align:-2px}
+    .cal-cell{cursor:pointer}
+    .cal-cell:hover{background:#FAFBFD}
+    /* 日期數字:圓形(Radius 100) */
+    .cal-cell .cal-day-num{width:24px;height:24px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;padding:0;margin:0 0 2px;box-sizing:border-box}
+    .cal-cell.sel:not(.today) .cal-day-num{border:2px solid var(--primary);color:var(--primary);font-weight:700}
+    .c6-tdot{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--primary);vertical-align:top;margin:3px 0 0 3px}
+    /* 週 / 日 時間軸 */
+    .c6-tgrid{display:grid;border-top:1px solid var(--border);border-left:1px solid var(--border)}
+    .c6-tgrid .c6-th{background:#FAFAFC;border-right:1px solid var(--border);border-bottom:1px solid var(--border);padding:6px 8px;font-size:12px;font-weight:600;color:var(--text-secondary);text-align:center}
+    .c6-th .dnum{font-size:15px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;color:var(--text);margin-top:2px}
+    .c6-th.today .dnum{background:var(--primary);color:#fff}
+    .c6-allday{border-right:1px solid var(--border);border-bottom:1px solid var(--border);min-height:28px;padding:2px 4px;background:var(--surface)}
+    .c6-timecol{border-right:1px solid var(--border);border-bottom:1px solid var(--border);background:#FAFAFC}
+    .c6-timecol div{height:48px;font-size:10.5px;color:var(--text-muted);text-align:right;padding:2px 6px 0 0;box-sizing:border-box}
+    .c6-daycol{position:relative;border-right:1px solid var(--border);border-bottom:1px solid var(--border);background:var(--surface);height:576px;cursor:pointer;background-image:repeating-linear-gradient(to bottom,transparent 0,transparent 47px,var(--border) 47px,var(--border) 48px)}
+    .c6-block{position:absolute;left:3px;right:3px;border-radius:4px;padding:3px 6px;font-size:11px;line-height:1.3;overflow:hidden;cursor:pointer;border-left:3px solid currentColor}
+    .c6-block b{display:block;font-weight:600}
+    /* 右側:小日曆(圓形日期,同 Google Calendar) */
+    .c6-mini table{width:100%;border-collapse:collapse;text-align:center;font-size:11px}
+    .c6-mini th{color:var(--text-muted);font-weight:600;padding:3px 0}
+    .c6-mini td{padding:2px 0}
+    .c6-mini td .d{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;cursor:pointer;color:var(--text-secondary);font-size:11px;box-sizing:border-box;position:relative}
+    .c6-mini td .d:hover{background:var(--hover)}
+    .c6-mini td.dim .d{color:#C6CCD6}
+    .c6-mini td.today .d{background:var(--primary);color:#fff;font-weight:600}
+    .c6-mini td.sel .d{border:2px solid var(--primary);color:var(--primary);font-weight:600}
+    .c6-mini td.today.sel .d{border:2px solid var(--primary-hover);background:var(--primary);color:#fff}
+    .c6-mini .mh{display:flex;justify-content:space-between;align-items:center;font-weight:600;font-size:13px;margin-bottom:6px}
+    .c6-mini .mh button{background:none;border:none;color:var(--text-muted);font-size:14px;padding:0 6px;cursor:pointer}
+    .c6-mini .mh button:hover{color:var(--primary)}
+    /* 右側:日曆篩選器 */
+    .c6-lay{display:flex;align-items:center;gap:9px;padding:6px 8px;border-radius:6px;cursor:pointer;user-select:none;color:var(--text-secondary);font-size:13px}
+    .c6-lay:hover{background:var(--hover)}
+    .c6-lay .chk{width:15px;height:15px;border-radius:3px;border:2px solid var(--c,#999);display:inline-flex;align-items:center;justify-content:center;flex:none;font-size:10px;color:transparent}
+    .c6-lay.on .chk{background:var(--c);border-color:var(--c);color:#fff}
+    .c6-lay.on{color:var(--text)}
+    .c6-lay .del{display:none;margin-left:auto;border:none;background:none;color:var(--text-muted);font-size:11px;cursor:pointer;padding:0 2px}
+    .c6-lay:hover .del{display:inline}
+    .c6-lay .del:hover{color:var(--danger)}
+    .c6-srch{position:relative;margin:2px 0 8px}
+    .c6-sres{position:absolute;top:38px;left:0;right:0;background:var(--surface);border:1px solid var(--border);border-radius:8px;box-shadow:var(--shadow-lg);z-index:40;overflow:hidden;display:none}
+    .c6-sres.show{display:block}
+    .c6-sres .row{display:flex;align-items:center;gap:8px;padding:7px 10px;font-size:13px;color:var(--text-secondary)}
+    .c6-sres .row:hover{background:var(--hover)}
+    .c6-sres .row .dot{width:8px;height:8px;border-radius:50%;flex:none}
+    .c6-sres .row .typ{font-size:11px;color:var(--text-muted)}
+    .c6-sres .row button{margin-left:auto;width:22px;height:22px;border-radius:50%;border:1px solid var(--primary);background:var(--surface);color:var(--primary);font-size:13px;line-height:1;cursor:pointer;padding:0}
+    .c6-sres .row button:hover{background:var(--primary);color:#fff}
+    /* 事件詳情 popover(Google Calendar 式) */
+    .c6-pop{position:fixed;z-index:120;width:300px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);box-shadow:var(--shadow-lg);padding:14px 16px;display:none}
+    .c6-pop.show{display:block}
+    .c6-pop .bar{height:4px;border-radius:99px;margin-bottom:10px}
+    .c6-pop b.t{font-size:14px;display:block;margin-bottom:6px;color:var(--text);padding-right:16px}
+    .c6-pop .li{display:flex;gap:8px;color:var(--text-secondary);font-size:12.5px;padding:3px 0;align-items:center}
+    .c6-pop .acts{display:flex;gap:8px;margin-top:10px;justify-content:flex-end}
+    .c6-pop .x{position:absolute;top:8px;right:10px;border:none;background:none;color:var(--text-muted);font-size:14px;cursor:pointer}
+    /* 6.2 資料夾樹 */
+    .c6-folder-layout .org-left{flex:0 0 34%;min-width:240px}
+    .c6-folder-layout .org-right-inner{padding:0}
+    .c6-tree{padding:0}
+    .c6-node{font-size:13px}
+    .c6-node .cnt{margin-left:auto;font-size:11px;color:var(--text-muted);white-space:nowrap}
+    .c6-node.selected .cnt{color:var(--primary)}
+    .c6-node.dragging{opacity:.45}
+    .c6-path{font-size:12px;color:var(--text-muted);margin:2px 0 12px}
+    .c6-folder-summary{padding:14px 20px;border-bottom:1px solid var(--border)}
+    .c6-folder-resource{padding:16px 20px 20px}
+    /* 6.3 巢狀設定區塊 */
+    .c6-sub{margin:4px 0 12px;padding:4px 16px;border-left:2px solid var(--border);background:#FAFAFC;border-radius:0 8px 8px 0}
+    .c6-sub .setting-row{border-bottom:1px solid var(--border)}
+    .c6-sub .setting-row:last-child{border-bottom:none}
+    .c6-conn{display:flex;align-items:center;gap:12px;padding:12px;border:1px solid var(--border);border-radius:8px;background:var(--surface);margin:10px 0}
+    .c6-conn .gi{width:34px;height:34px;border-radius:8px;background:#fff;border:1px solid var(--border);display:inline-flex;align-items:center;justify-content:center;color:#4285F4;font-weight:800;font-size:16px;flex:none}
+    .c6-link{font-family:ui-monospace,Menlo,monospace;font-size:11.5px;color:var(--text-secondary);background:var(--hover);border-radius:4px;padding:3px 8px;max-width:280px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:inline-block;vertical-align:middle}
+    /* toast */
+    .c6-toast{position:fixed;bottom:24px;left:50%;transform:translate(-50%,80px);background:#1F2225;color:#fff;padding:10px 20px;border-radius:8px;font-weight:500;font-size:13px;transition:.25s;opacity:0;z-index:200;box-shadow:var(--shadow-lg)}
+    .c6-toast.show{transform:translate(-50%,0);opacity:1}
+    /* 6.2 資源預約時間軸 */
+    .c6-tlmini{cursor:pointer;padding:2px 0}
+    .c6-tlbar{display:flex;gap:2px}
+    .c6-tlslot{flex:1;min-height:34px;background:var(--success-soft);border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:10px;color:#fff;overflow:hidden;padding:0 2px}
+    .c6-tlslot.booked{background:#4C7DF0}
+    .c6-tlslot span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .c6-tlaxis{display:flex;margin-top:3px}
+    .c6-tlaxis span{flex:1;text-align:center;font-size:10px;color:var(--text-muted)}
+    .c6-tlweek{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+    .c6-tlcol{border:1px solid var(--border);border-radius:8px;overflow:hidden;min-height:120px}
+    .c6-tlch{background:#FAFAFC;text-align:center;font-size:11px;color:var(--text-secondary);padding:5px 0;border-bottom:1px solid var(--border)}
+    .c6-tlch.today{background:var(--primary-soft);color:var(--primary)}
+    .c6-tlch b{font-size:14px;color:var(--text)}
+    .c6-tlch.today b{color:var(--primary)}
+    .c6-tlbody{padding:6px 5px;display:flex;flex-direction:column;gap:4px}
+    .c6-tlchip{background:rgba(76,125,240,.14);color:#2B55C4;font-size:11px;padding:3px 6px;border-radius:4px;line-height:1.3}
+    .c6-tlfree{font-size:11px;color:var(--text-muted);text-align:center;padding:8px 0}
+    </style>
+
+
+    <!-- ============= 6.1 公司行事曆 ============= -->
     <section id="page-6.1" class="page-wrap hidden">
       <div class="page-head">
         <div>
           <h1 class="page-title">公司行事曆</h1>
-          <p class="page-desc">統一管理公司事件、會議與請假，可設定個人行事曆權限。</p>
+          <p class="page-desc">日/週/月檢視公司與共享行事曆;點擊日期可選取,點擊事件查看詳情與編輯。</p>
         </div>
         <div class="btn-group">
-          <button class="btn">CSV 匯入</button>
-          <button class="btn primary" onclick="openModal('modal-add-event')">+ 建立事件</button>
+          <button class="btn" onclick="c6Toast('CSV 匯入(示意)')">CSV 匯入</button>
         </div>
       </div>
 
-      <div class="card">
-        <div class="card-head">
-          <div class="row-flex">
-            <button class="btn ghost sm">‹</button>
-            <div class="title" style="margin: 0 12px;">2026 年 5 月</div>
-            <button class="btn ghost sm">›</button>
-            <button class="btn sm" style="margin-left:12px;">今天</button>
+      <div class="c6-layout">
+        <div class="card">
+          <div class="card-head">
+            <div class="row-flex">
+              <button class="btn ghost sm" onclick="c6Nav(-1)">‹</button>
+              <button class="btn ghost sm" onclick="c6Nav(1)">›</button>
+              <div class="title" style="margin:0 8px;" id="c6-label">2026年7月</div>
+            </div>
+            <div class="c6-seg" id="c6-views">
+              <button data-v="day" onclick="c6View('day')">日</button>
+              <button data-v="week" onclick="c6View('week')">週</button>
+              <button data-v="month" class="on" onclick="c6View('month')">月</button>
+            </div>
           </div>
-          <div class="btn-group">
-            <button class="btn sm">月</button>
-            <button class="btn sm primary">週</button>
-            <button class="btn sm">列表</button>
+          <div style="padding:0 20px 20px;">
+            <div id="c6-canvas"></div>
           </div>
         </div>
-        <div style="padding: 0 20px 20px;">
-          <div class="cal-grid">
-            <div class="cal-day-head">日</div>
-            <div class="cal-day-head">一</div>
-            <div class="cal-day-head">二</div>
-            <div class="cal-day-head">三</div>
-            <div class="cal-day-head">四</div>
-            <div class="cal-day-head">五</div>
-            <div class="cal-day-head">六</div>
 
-            <div class="cal-cell muted"><span class="cal-day-num">26</span></div>
-            <div class="cal-cell muted"><span class="cal-day-num">27</span></div>
-            <div class="cal-cell muted"><span class="cal-day-num">28</span><div class="cal-event green">月會 14:00</div></div>
-            <div class="cal-cell muted"><span class="cal-day-num">29</span></div>
-            <div class="cal-cell muted"><span class="cal-day-num">30</span><div class="cal-event">週會 10:00</div></div>
-            <div class="cal-cell"><span class="cal-day-num">1</span><div class="cal-event amber">勞動節</div></div>
-            <div class="cal-cell"><span class="cal-day-num">2</span></div>
-
-            <div class="cal-cell"><span class="cal-day-num">3</span></div>
-            <div class="cal-cell"><span class="cal-day-num">4</span><div class="cal-event">產品 Sync 11:00</div></div>
-            <div class="cal-cell today"><span class="cal-day-num">5</span><div class="cal-event">設計 Review 14:00</div><div class="cal-event green">1on1 16:00</div></div>
-            <div class="cal-cell"><span class="cal-day-num">6</span><div class="cal-event">產品週會 10:00</div><div class="cal-event purple">UX Test 15:00</div></div>
-            <div class="cal-cell"><span class="cal-day-num">7</span><div class="cal-event">UI Review 14:00</div></div>
-            <div class="cal-cell"><span class="cal-day-num">8</span><div class="cal-event pink">Team Lunch 12:00</div></div>
-            <div class="cal-cell"><span class="cal-day-num">9</span></div>
-
-            <div class="cal-cell"><span class="cal-day-num">10</span></div>
-            <div class="cal-cell"><span class="cal-day-num">11</span><div class="cal-event">產品週會 10:00</div></div>
-            <div class="cal-cell"><span class="cal-day-num">12</span><div class="cal-event amber">月度全員會議 09:30</div></div>
-            <div class="cal-cell"><span class="cal-day-num">13</span></div>
-            <div class="cal-cell"><span class="cal-day-num">14</span><div class="cal-event">客戶簡報 14:00</div></div>
-            <div class="cal-cell"><span class="cal-day-num">15</span></div>
-            <div class="cal-cell"><span class="cal-day-num">16</span></div>
-
-            <div class="cal-cell"><span class="cal-day-num">17</span></div>
-            <div class="cal-cell"><span class="cal-day-num">18</span><div class="cal-event">產品週會 10:00</div></div>
-            <div class="cal-cell"><span class="cal-day-num">19</span></div>
-            <div class="cal-cell"><span class="cal-day-num">20</span></div>
-            <div class="cal-cell"><span class="cal-day-num">21</span><div class="cal-event green">季度 OKR 14:00</div></div>
-            <div class="cal-cell"><span class="cal-day-num">22</span></div>
-            <div class="cal-cell"><span class="cal-day-num">23</span></div>
-
-            <div class="cal-cell"><span class="cal-day-num">24</span></div>
-            <div class="cal-cell"><span class="cal-day-num">25</span></div>
-            <div class="cal-cell"><span class="cal-day-num">26</span></div>
-            <div class="cal-cell"><span class="cal-day-num">27</span></div>
-            <div class="cal-cell"><span class="cal-day-num">28</span></div>
-            <div class="cal-cell"><span class="cal-day-num">29</span></div>
-            <div class="cal-cell"><span class="cal-day-num">30</span></div>
+        <aside class="c6-side">
+          <button class="btn primary" style="width:100%;" onclick="c6OpenCreate()">＋ 建立事件</button>
+          <div class="c6-panel c6-mini">
+            <div class="mh"><span id="c6-mini-label">2026.07</span><span><button onclick="c6NavMonth(-1)">‹</button><button onclick="c6NavMonth(1)">›</button></span></div>
+            <table id="c6-mini-table"></table>
           </div>
+          <div class="c6-panel">
+            <h5>公司行事曆</h5>
+            <div class="c6-lay on" id="c6-cal-com" style="--c:#4C7DF0" onclick="c6ToggleCal('com',this)"><span class="chk">✓</span>啟動國際(組織)</div>
+            <div class="c6-lay on" id="c6-cal-task" style="--c:#F5A623" onclick="c6ToggleCal('task',this)"><span class="chk">✓</span>任務</div>
+            <h5 style="margin-top:14px;">日曆篩選器</h5>
+            <div class="c6-srch">
+              <input type="text" class="input" id="c6-cal-search" placeholder="搜尋成員或群組名稱⋯" oninput="c6CalSearch(event)" autocomplete="off" style="width:100%;" />
+              <div class="c6-sres" id="c6-cal-results"></div>
+            </div>
+            <div id="c6-cal-list"></div>
+          </div>
+        </aside>
+      </div>
+
+      <div class="c6-pop" id="c6-pop">
+        <button class="x" onclick="c6PopClose()">✕</button>
+        <div class="bar" id="c6-pop-bar"></div>
+        <b class="t" id="c6-pop-title"></b>
+        <div class="li">🕙 <span id="c6-pop-time"></span></div>
+        <div class="li">📍 <span id="c6-pop-loc"></span></div>
+        <div class="li">🗂 <span id="c6-pop-cal"></span></div>
+        <div class="li">📝 <span id="c6-pop-note"></span></div>
+        <div class="acts">
+          <button class="btn sm" onclick="c6EditEvent()">編輯</button>
+          <button class="btn sm danger" onclick="c6DeleteEvent()">刪除</button>
         </div>
       </div>
     </section>
@@ -8007,163 +8114,114 @@
       <div class="page-head">
         <div>
           <h1 class="page-title">資源管理</h1>
-          <p class="page-desc">管理會議室、設備等可預約資源。</p>
+          <p class="page-desc">以資料夾管理會議室、設備等可預約資源;可調整排序與層級(同 LINE WORKS Admin)。</p>
         </div>
-        <div class="btn-group">
-          <button class="btn">查看預約</button>
-          <button class="btn primary" onclick="openModal('modal-add-resource')">+ 新增資源</button>
-        </div>
-      </div>
-
-      <div class="tabs">
-        <button class="tab active">資源列表</button>
-        <button class="tab">預約管理</button>
-      </div>
-
-      <div class="resource-grid">
-        <div class="resource-card">
-          <div class="res-head">
-            <div class="res-icon">🏢</div>
-            <div style="flex:1;"><div class="user-name">大會議室</div><div class="text-sec" style="font-size:12px;">12 人 · 投影機 · 視訊</div></div>
-            <span class="badge success dot">可用</span>
-          </div>
-          <div class="text-sec" style="font-size:12px;">本月已預約 18 次</div>
-          <div class="btn-group mt-16">
-            <button class="btn sm">查看排程</button>
-            <button class="btn sm" onclick="openEditDrawer('resource',null,'大會議室')">編輯</button>
-          </div>
-        </div>
-        <div class="resource-card">
-          <div class="res-head">
-            <div class="res-icon">💻</div>
-            <div style="flex:1;"><div class="user-name">會議室 A</div><div class="text-sec" style="font-size:12px;">6 人 · 螢幕</div></div>
-            <span class="badge warning dot">使用中</span>
-          </div>
-          <div class="text-sec" style="font-size:12px;">本月已預約 32 次</div>
-          <div class="btn-group mt-16">
-            <button class="btn sm">查看排程</button>
-            <button class="btn sm" onclick="openEditDrawer('resource',null,'會議室 A')">編輯</button>
-          </div>
-        </div>
-        <div class="resource-card">
-          <div class="res-head">
-            <div class="res-icon">☕</div>
-            <div style="flex:1;"><div class="user-name">會議室 B</div><div class="text-sec" style="font-size:12px;">4 人 · 白板</div></div>
-            <span class="badge success dot">可用</span>
-          </div>
-          <div class="text-sec" style="font-size:12px;">本月已預約 24 次</div>
-          <div class="btn-group mt-16">
-            <button class="btn sm">查看排程</button>
-            <button class="btn sm" onclick="openEditDrawer('resource',null,'會議室 B')">編輯</button>
-          </div>
-        </div>
-        <div class="resource-card">
-          <div class="res-head">
-            <div class="res-icon">📹</div>
-            <div style="flex:1;"><div class="user-name">行動投影機 #1</div><div class="text-sec" style="font-size:12px;">設備</div></div>
-            <span class="badge success dot">可用</span>
-          </div>
-          <div class="text-sec" style="font-size:12px;">本月已預約 5 次</div>
-          <div class="btn-group mt-16">
-            <button class="btn sm">查看排程</button>
-            <button class="btn sm" onclick="openEditDrawer('resource',null,'行動投影機 #1')">編輯</button>
-          </div>
-        </div>
-        <div class="resource-card">
-          <div class="res-head">
-            <div class="res-icon">🚗</div>
-            <div style="flex:1;"><div class="user-name">公務車 (TOYOTA)</div><div class="text-sec" style="font-size:12px;">設備</div></div>
-            <span class="badge neutral dot">維修中</span>
-          </div>
-          <div class="text-sec" style="font-size:12px;">本月已預約 0 次</div>
-          <div class="btn-group mt-16">
-            <button class="btn sm">查看排程</button>
-            <button class="btn sm" onclick="openEditDrawer('resource',null,'會議室 C')">編輯</button>
-          </div>
-        </div>
-        <div class="resource-card" style="border-style:dashed; display:flex; align-items:center; justify-content:center; flex-direction:column; color:var(--text-secondary); cursor:pointer;" onclick="openModal('modal-add-resource')">
-          <div style="font-size:28px;">＋</div>
-          <div style="font-weight:600; margin-top:6px;">新增資源</div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ============= 6.3 Google 行事曆同步 ============= -->
-    <section id="page-6.3" class="page-wrap hidden">
-      <div class="page-head">
-        <div>
-          <h1 class="page-title">Google 行事曆同步</h1>
-          <p class="page-desc">將公司行事曆事件同步至成員的 Google 行事曆，可選擇推播提醒。</p>
-        </div>
-        <div class="btn-group">
-          <button class="btn danger">停止連結</button>
-          <button class="btn primary" onclick="openModal('modal-send-default')">立即發送</button>
-        </div>
-      </div>
-
-      <div class="dash-grid">
-        <div class="kpi-card"><div class="kpi-label">已連結成員</div><div class="kpi-value">112</div></div>
-        <div class="kpi-card"><div class="kpi-label">未連結</div><div class="kpi-value text-sec">16</div></div>
-        <div class="kpi-card"><div class="kpi-label">本日同步</div><div class="kpi-value" style="color:var(--success)">96</div></div>
-        <div class="kpi-card"><div class="kpi-label">同步失敗</div><div class="kpi-value" style="color:var(--danger)">2</div></div>
       </div>
 
       <div class="card">
-        <div class="toolbar" style="padding: 16px 20px 0;">
-          <input class="input search-input" placeholder="搜尋成員…" />
-          <select class="input"><option>所有部門</option><option>研發部</option><option>業務部</option></select>
-          <select class="input"><option>所有狀態</option><option>已連結</option><option>未連結</option><option>失敗</option></select>
+        <div class="org-setup-layout c6-folder-layout">
+          <div class="org-left">
+            <div class="org-left-toolbar">
+              <span style="font-size:13px;font-weight:600;color:var(--text-secondary);">資料夾架構</span>
+            </div>
+            <div class="org-hint-bar">拖曳資料夾可調整排序與層級。</div>
+            <div class="org-tree-wrap">
+              <div class="org-tree c6-tree" id="c6-tree"></div>
+            </div>
+          </div>
+
+          <div class="org-splitter">
+            <div class="org-splitter-handle"></div>
+          </div>
+
+          <div class="org-right" id="c6-folder-detail-wrap">
+            <div class="org-right-inner">
+              <div class="org-detail-head">
+                <div class="org-detail-name"><span>📁</span><span id="c6-folder-title">資料夾</span></div>
+                <div class="org-detail-acts">
+                  <button class="btn sm" id="c6-folder-save" onclick="c6SaveFolderDetail()">儲存</button>
+                  <button class="btn sm danger-ghost" id="c6-folder-delete" onclick="c6DeleteFolder(c6Sel)">刪除</button>
+                </div>
+              </div>
+              <div class="c6-folder-summary">
+                <div class="org-field-row">
+                  <div class="org-field-label">資料夾 ID</div>
+                  <div><code id="c6-folder-id" style="font-size:12px;color:var(--text-secondary);"></code></div>
+                </div>
+                <div class="org-field-row">
+                  <div class="org-field-label">資料夾名稱 <span class="req">*</span></div>
+                  <div><input class="input full" id="c6-folder-name" /></div>
+                </div>
+                <div class="org-field-row">
+                  <div class="org-field-label">資源數</div>
+                  <div class="text-sec" id="c6-folder-count" style="font-size:13px;"></div>
+                </div>
+                <div class="c6-path" id="c6-res-path"></div>
+              </div>
+              <div class="c6-folder-resource">
+                <div class="resource-grid" id="c6-res-cards" style="grid-template-columns:repeat(auto-fill,minmax(280px,1fr));"></div>
+              </div>
+            </div>
+          </div>
         </div>
-        <table class="data-table">
-          <thead><tr><th><input type="checkbox"/></th><th>成員</th><th>部門</th><th>連結狀態</th><th>最後同步</th><th>同步進度</th><th></th></tr></thead>
-          <tbody>
-            <tr><td><input type="checkbox"/></td><td><div class="user-cell"><div class="user-avatar c1">王</div>王明德</div></td><td>研發部</td><td><span class="badge success dot">已連結</span></td><td class="text-sec">5 分鐘前</td><td><div class="progress-bar"><span style="width:100%; background:var(--success);"></span></div> <span class="text-sec">12/12</span></td><td><button class="btn ghost sm">立即發送</button></td></tr>
-            <tr><td><input type="checkbox"/></td><td><div class="user-cell"><div class="user-avatar c2">陳</div>陳怡君</div></td><td>研發部 / 前端組</td><td><span class="badge success dot">已連結</span></td><td class="text-sec">12 分鐘前</td><td><div class="progress-bar"><span style="width:100%; background:var(--success);"></span></div> <span class="text-sec">8/8</span></td><td><button class="btn ghost sm">立即發送</button></td></tr>
-            <tr><td><input type="checkbox"/></td><td><div class="user-cell"><div class="user-avatar c3">李</div>李志遠</div></td><td>研發部 / 後端組</td><td><span class="badge warning dot">同步中</span></td><td class="text-sec">同步中…</td><td><div class="progress-bar"><span style="width:60%;"></span></div> <span class="text-sec">6/10</span></td><td><button class="btn ghost sm">立即發送</button></td></tr>
-            <tr><td><input type="checkbox"/></td><td><div class="user-cell"><div class="user-avatar c4">張</div>張雅雯</div></td><td>產品部</td><td><span class="badge danger dot">同步失敗</span></td><td class="text-sec">2 小時前</td><td class="text-sec">—</td><td><button class="btn ghost sm">重試</button></td></tr>
-            <tr><td><input type="checkbox"/></td><td><div class="user-cell"><div class="user-avatar c5">林</div>林家豪</div></td><td>設計部</td><td><span class="badge neutral dot">未連結</span></td><td class="text-sec">—</td><td class="text-sec">—</td><td><button class="btn ghost sm">寄送邀請</button></td></tr>
-          </tbody>
-        </table>
       </div>
     </section>
 
-    <!-- ============= 6.4 一般設定 (行事曆) ============= -->
-    <section id="page-6.4" class="page-wrap hidden">
+    <!-- ============= 6.3 日曆設定 ============= -->
+    <section id="page-6.3" class="page-wrap hidden">
       <div class="page-head">
         <div>
-          <h1 class="page-title">一般設定</h1>
-          <p class="page-desc">行事曆模組的全域設定。</p>
+          <h1 class="page-title">日曆設定</h1>
+          <p class="page-desc">行事曆一般設定(欄位參照 LINE WORKS Admin),含外部共享與 Google Calendar 串接。</p>
         </div>
-        <div class="btn-group"><button class="btn primary">儲存設定</button></div>
+        <div class="btn-group"><button class="btn primary" onclick="c6Toast('設定已儲存 ✓')">儲存設定</button></div>
       </div>
 
-      <div class="card" style="padding: 8px 24px;">
-        <div class="setting-row">
-          <div class="setting-info"><div class="t">預設行事曆檢視</div><div class="d">使用者進入行事曆頁面時的預設模式。</div></div>
-          <div class="setting-control"><select class="input full"><option>月</option><option>週</option><option>列表</option></select></div>
+      <div class="card" style="padding:8px 24px;margin-bottom:16px;">
+        <div style="font-weight:600;font-size:15px;padding:14px 0 4px;">一般</div>
+        <div class="setting-row"><div class="setting-info"><div class="t">事件顯示時間</div><div class="d">成員行事曆「日/週檢視」顯示時間的預設值;變更內容不會套用於現有成員。</div></div><div class="setting-control" style="display:flex;gap:8px;justify-content:flex-end;align-items:center;"><select class="input" onchange="c6Toast('事件顯示開始時間:'+this.value)"><option>07:00</option><option>08:00</option><option selected>09:00</option><option>10:00</option></select><span style="color:var(--text-muted);">–</span><select class="input" onchange="c6Toast('事件顯示結束時間:'+this.value)"><option>17:00</option><option selected>18:00</option><option>19:00</option><option>20:00</option></select></div></div>
+        <div class="setting-row"><div class="setting-info"><div class="t">資源預約</div><div class="d">開啟後,建立事件時可一併預約會議室、設備等資源並建立事件。</div></div><div class="setting-control"><label class="switch"><input type="checkbox" checked onchange="c6Toast(this.checked?'已開啟「資源預約」':'已關閉「資源預約」')" /><span class="slider"></span></label></div></div>
+        <div class="setting-row"><div class="setting-info"><div class="t">公司行事曆</div><div class="d">由管理員建立,僅管理員可以登錄事件,所有成員皆可查看;名稱取自公司資訊管理的企業名稱(啟動國際)。</div></div><div class="setting-control"><label class="switch"><input type="checkbox" checked onchange="c6Toast(this.checked?'已開啟「公司行事曆」':'已關閉「公司行事曆」')" /><span class="slider"></span></label></div></div>
+        <div class="setting-row"><div class="setting-info"><div class="t">查看成員事件</div><div class="d">開啟後,成員可以查看其他成員的事件。</div></div><div class="setting-control"><label class="switch"><input type="checkbox" checked onchange="c6ToggleSub('c6-member-sub',this)" /><span class="slider"></span></label></div></div>
+        <div id="c6-member-sub" class="c6-sub">
+          <div class="setting-row"><div class="setting-info"><div class="t">公司內部成員(同一網域)查詢時</div><div class="d">設定在其他成員的事件中顯示的資訊範圍。「顯示事件詳情」會顯示標題、地點等;「僅顯示事件時間」只顯示時間資訊。</div></div><div class="setting-control"><select class="input full" onchange="c6Toast('公開範圍已改為:'+this.value)"><option selected>顯示事件詳情</option><option>僅顯示事件時間</option></select></div></div>
+          <div class="setting-row"><div class="setting-info"><div class="t">例外管理</div><div class="d">指定不顯示事件詳情的成員或部門。</div></div><div class="setting-control"><button class="btn sm" onclick="c6Toast('例外管理(示意):目前 2 位成員、1 個部門')">管理</button></div></div>
         </div>
-        <div class="setting-row">
-          <div class="setting-info"><div class="t">每週起始日</div><div class="d">行事曆中每週第一天的設定。</div></div>
-          <div class="setting-control"><select class="input full"><option>星期日</option><option>星期一</option></select></div>
-        </div>
-        <div class="setting-row">
-          <div class="setting-info"><div class="t">事件預設時長</div><div class="d">建立事件時的預設長度。</div></div>
-          <div class="setting-control"><select class="input full"><option>30 分鐘</option><option>1 小時</option><option>2 小時</option></select></div>
-        </div>
-        <div class="setting-row">
-          <div class="setting-info"><div class="t">事件提醒</div><div class="d">事件開始前自動發送提醒推播。</div></div>
-          <div class="setting-control"><label class="switch"><input type="checkbox" checked /><span class="slider"></span></label></div>
-        </div>
-        <div class="setting-row">
-          <div class="setting-info"><div class="t">允許跨公司資源預約</div><div class="d">可預約集團內其他公司的共用資源。</div></div>
-          <div class="setting-control"><label class="switch"><input type="checkbox" /><span class="slider"></span></label></div>
-        </div>
-        <div class="setting-row">
-          <div class="setting-info"><div class="t">事件衝突檢查</div><div class="d">建立事件時自動檢查與會者是否有衝突。</div></div>
-          <div class="setting-control"><label class="switch"><input type="checkbox" checked /><span class="slider"></span></label></div>
+        <div class="setting-row"><div class="setting-info"><div class="t">匯出事件</div><div class="d">開啟後,可透過行事曆的匯出功能匯出並備份事件。</div></div><div class="setting-control"><label class="switch"><input type="checkbox" checked onchange="c6Toast(this.checked?'已開啟「匯出事件」':'已關閉「匯出事件」')" /><span class="slider"></span></label></div></div>
+      </div>
+
+      <div class="card" style="padding:8px 24px;">
+        <div style="font-weight:600;font-size:15px;padding:14px 0 4px;">外部共享</div>
+        <div class="setting-row"><div class="setting-info"><div class="t">外部共享</div><div class="d">將行事曆共享給外部 LINE WORKS 用戶或第三方行事曆服務。</div></div><div class="setting-control"><label class="switch"><input type="checkbox" checked onchange="c6ToggleSub('c6-ext-sub',this)" /><span class="slider"></span></label></div></div>
+        <div id="c6-ext-sub" class="c6-sub">
+          <div class="setting-row"><div class="setting-info"><div class="t">Google Calendar 串接</div><div class="d">與 Google Workspace 行事曆雙向串接,行程與資源共用同一份真實來源。</div></div><div class="setting-control"><label class="switch"><input type="checkbox" checked onchange="c6ToggleSub('c6-g-sub',this)" /><span class="slider"></span></label></div></div>
+          <div id="c6-g-sub" class="c6-sub" style="background:var(--surface);">
+            <div class="c6-conn">
+              <span class="gi">G</span>
+              <div style="flex:1;"><b>yourcompany.com</b><br /><small class="text-sec">Google Workspace · 由 IT 管理員授權 · 128 位成員已啟用</small></div>
+              <span class="badge success dot" id="c6-g-badge">已連結</span>
+              <button class="btn sm danger" onclick="c6Unlink(this)">解除連結</button>
+            </div>
+            <div class="setting-row"><div class="setting-info"><div class="t">同步方向</div><div class="d">事件在兩個系統之間的流動方式。</div></div><div class="setting-control" style="width:auto;"><span class="c6-seg"><button class="on" onclick="c6Seg(this)">雙向</button><button onclick="c6Seg(this)">僅匯入</button><button onclick="c6Seg(this)">僅匯出</button></span></div></div>
+            <div class="setting-row"><div class="setting-info"><div class="t">私人事件僅同步「忙碌」狀態</div><div class="d">不同步標題與內容,僅用於空檔計算。</div></div><div class="setting-control"><label class="switch"><input type="checkbox" checked onchange="c6Toast(this.checked?'已開啟':'已關閉')" /><span class="slider"></span></label></div></div>
+            <div class="setting-row"><div class="setting-info"><div class="t">將 Google 行程納入空檔確認</div><div class="d">建立事件的推薦時段會避開 Google 端行程。</div></div><div class="setting-control"><label class="switch"><input type="checkbox" checked onchange="c6Toast(this.checked?'已開啟':'已關閉')" /><span class="slider"></span></label></div></div>
+
+            <div style="font-weight:600;font-size:13px;padding:14px 0 2px;">日曆資源共享連結</div>
+            <div class="text-sec" style="font-size:12px;margin-bottom:8px;">將資源(會議室/設備)行事曆以唯讀連結共享給 Google 端,避免同一資源被重複預約。</div>
+            <table class="data-table" style="margin-bottom:16px;">
+              <thead><tr><th>資源</th><th>共享連結</th><th style="width:170px;"></th></tr></thead>
+              <tbody>
+                <tr><td>🏢 大會議室</td><td><span class="c6-link">ical://cal.lws.coolbe.com/res/meeting-main.ics</span></td><td><button class="btn ghost sm" onclick="c6Copy('大會議室')">複製</button><button class="btn ghost sm" onclick="c6Regen(this)">重新產生</button></td></tr>
+                <tr><td>💻 會議室 A</td><td><span class="c6-link">ical://cal.lws.coolbe.com/res/room-a.ics</span></td><td><button class="btn ghost sm" onclick="c6Copy('會議室 A')">複製</button><button class="btn ghost sm" onclick="c6Regen(this)">重新產生</button></td></tr>
+                <tr><td>☕ 會議室 B</td><td><span class="c6-link">ical://cal.lws.coolbe.com/res/room-b.ics</span></td><td><button class="btn ghost sm" onclick="c6Copy('會議室 B')">複製</button><button class="btn ghost sm" onclick="c6Regen(this)">重新產生</button></td></tr>
+                <tr><td>📞 會議室 C</td><td><span class="c6-link">ical://cal.lws.coolbe.com/res/room-c.ics</span></td><td><button class="btn ghost sm" onclick="c6Copy('會議室 C')">複製</button><button class="btn ghost sm" onclick="c6Regen(this)">重新產生</button></td></tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </section>
+    <!-- ===== [修改結束] 行事曆管理模組重構 ===== -->
 
     <!-- ============= 7.1 看板列表 ============= -->
     <section id="page-7.1" class="page-wrap hidden">
@@ -8629,7 +8687,7 @@
       <div style="font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:8px;">封鎖使用 APP</div>
       <div class="card" style="overflow:hidden;">
         <div class="app-block-row" style="border-bottom:none;align-items:flex-start;gap:12px;padding:14px 16px;">
-          <div style="display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#4f46e5,#7c3aed);flex-shrink:0;">
+          <div style="display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#007BFF,#7c3aed);flex-shrink:0;">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
           </div>
           <div style="flex:1;">
@@ -10101,7 +10159,7 @@
           <tr>
             <td>
               <div class="user-cell">
-                <div class="avatar" style="width:30px;height:30px;font-size:12px;background:linear-gradient(135deg,#7c3aed,#4f46e5);">張</div>
+                <div class="avatar" style="width:30px;height:30px;font-size:12px;background:linear-gradient(135deg,#7c3aed,#007BFF);">張</div>
                 <div>
                   <div style="font-weight:600; font-size:13px; display:flex; align-items:center; gap:6px;">
                     張雅婷
@@ -10787,7 +10845,7 @@
         <!-- 圖文選單 -->
         <div id="menu-type-card-rich" class="card" style="width:200px; padding:16px; cursor:pointer; text-align:center; border:2px solid var(--border); transition:all .15s;" onclick="selectMenuType('rich')">
           <!-- 圖文選單 preview mockup -->
-          <div style="width:160px; height:106px; border-radius:8px; overflow:hidden; background:#4f46e5; display:grid; grid-template-columns:1fr 1fr; grid-template-rows:1fr 1fr; gap:1px; margin:0 auto 14px;">
+          <div style="width:160px; height:106px; border-radius:8px; overflow:hidden; background:#007BFF; display:grid; grid-template-columns:1fr 1fr; grid-template-rows:1fr 1fr; gap:1px; margin:0 auto 14px;">
             <div style="background:#6366f1; display:flex; flex-direction:column; align-items:center; justify-content:center; font-size:12px; color:white; gap:2px;">🏠<span style="font-size:8px;">首頁</span></div>
             <div style="background:#8b5cf6; display:flex; flex-direction:column; align-items:center; justify-content:center; font-size:12px; color:white; gap:2px;">📦<span style="font-size:8px;">商品</span></div>
             <div style="background:#7c3aed; display:flex; flex-direction:column; align-items:center; justify-content:center; font-size:12px; color:white; gap:2px;">📞<span style="font-size:8px;">客服</span></div>
@@ -10800,9 +10858,9 @@
         <div id="menu-type-card-quick" class="card" style="width:200px; padding:16px; cursor:pointer; text-align:center; border:2px solid var(--border); transition:all .15s;" onclick="selectMenuType('quick')">
           <!-- 快速選單 preview mockup -->
           <div style="width:160px; height:106px; border-radius:8px; overflow:hidden; background:#f0f2f5; display:flex; flex-direction:column; gap:4px; padding:10px; margin:0 auto 14px;">
-            <div style="background:white; border-radius:4px; padding:8px 10px; font-size:10px; font-weight:600; color:#4f46e5; box-shadow:0 1px 2px rgba(0,0,0,.08);">🏠 首頁</div>
-            <div style="background:white; border-radius:4px; padding:8px 10px; font-size:10px; font-weight:600; color:#4f46e5; box-shadow:0 1px 2px rgba(0,0,0,.08);">📞 客服</div>
-            <div style="background:white; border-radius:4px; padding:8px 10px; font-size:10px; font-weight:600; color:#4f46e5; box-shadow:0 1px 2px rgba(0,0,0,.08);">👤 會員</div>
+            <div style="background:white; border-radius:4px; padding:8px 10px; font-size:10px; font-weight:600; color:#007BFF; box-shadow:0 1px 2px rgba(0,0,0,.08);">🏠 首頁</div>
+            <div style="background:white; border-radius:4px; padding:8px 10px; font-size:10px; font-weight:600; color:#007BFF; box-shadow:0 1px 2px rgba(0,0,0,.08);">📞 客服</div>
+            <div style="background:white; border-radius:4px; padding:8px 10px; font-size:10px; font-weight:600; color:#007BFF; box-shadow:0 1px 2px rgba(0,0,0,.08);">👤 會員</div>
           </div>
           <div style="font-size:12px; font-weight:600; color:var(--text); margin-bottom:4px;">快速選單</div>
           <div style="font-size:10px; color:var(--text-muted); line-height:1.4;">文字按鈕選單，僅能上下排列。</div>
@@ -11133,7 +11191,7 @@
         <div style="font-size:12px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:12px; align-self:flex-start;">即時預覽</div>
         <div style="width:220px; background:#1a1a2e; border-radius:28px; padding:12px; box-shadow:0 8px 24px rgba(0,0,0,0.28); flex-shrink:0;">
           <div style="background:#111; border-radius:16px 16px 0 0; padding:8px 12px; display:flex; align-items:center; gap:8px;">
-            <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#4f46e5,#7c3aed);display:flex;align-items:center;justify-content:center;font-size:11px;color:white;font-weight:700;">客</div>
+            <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#007BFF,#7c3aed);display:flex;align-items:center;justify-content:center;font-size:11px;color:white;font-weight:700;">客</div>
             <div><div style="font-size:11px;font-weight:700;color:white;">客服助手</div><div style="font-size:9px;color:#888;">Bot</div></div>
           </div>
           <div style="background:#f0f2f5; border-radius:0 0 16px 16px; padding:12px; min-height:340px;">
@@ -11478,7 +11536,7 @@
         <div style="font-size:12px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:12px; align-self:flex-start;">即時預覽</div>
         <div style="width:220px; background:#1a1a2e; border-radius:28px; padding:12px; box-shadow:0 8px 24px rgba(0,0,0,0.28); flex-shrink:0;">
           <div style="background:#111; border-radius:16px 16px 0 0; padding:8px 12px; display:flex; align-items:center; gap:8px;">
-            <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#4f46e5,#7c3aed);display:flex;align-items:center;justify-content:center;font-size:11px;color:white;font-weight:700;">公</div>
+            <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#007BFF,#7c3aed);display:flex;align-items:center;justify-content:center;font-size:11px;color:white;font-weight:700;">公</div>
             <div><div style="font-size:11px;font-weight:700;color:white;">內部公告 Bot</div><div style="font-size:9px;color:#888;">Bot</div></div>
           </div>
           <div style="background:#f0f2f5; border-radius:0 0 16px 16px; padding:12px; min-height:340px;">
@@ -11772,7 +11830,7 @@
             <div style="font-size:12px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:10px; text-align:center;">即時預覽</div>
             <div style="background:#1a1a2e; border-radius:24px; padding:10px; box-shadow:0 6px 20px rgba(0,0,0,.25);">
               <div style="background:#111; border-radius:12px 12px 0 0; padding:8px 10px; display:flex; gap:6px; align-items:center;">
-                <div style="width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,#4f46e5,#7c3aed);display:flex;align-items:center;justify-content:center;font-size:10px;color:white;font-weight:700;">客</div>
+                <div style="width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,#007BFF,#7c3aed);display:flex;align-items:center;justify-content:center;font-size:10px;color:white;font-weight:700;">客</div>
                 <div>
                   <div style="font-size:10px;font-weight:700;color:white;">客服助手</div>
                   <div style="font-size:8px;color:#888;">Bot</div>
@@ -11883,6 +11941,8 @@
   </div>
 </div>
 <!-- ===== [修改結束] 圖片建立 Modal ===== -->
+
+</div><!-- ===== [修改] 補上 modal-add-menu 未關閉的 div(修正後續 Modal 無法開啟) ===== -->
 
 <!-- ============= Modal：新增關鍵字（Figma 849:63385 — 960px 兩欄式） ============= -->
 <div class="modal-overlay" id="modal-add-keyword" onclick="closeModalIfBackdrop(event, 'modal-add-keyword')">
@@ -12018,7 +12078,7 @@
         <div style="font-size:12px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:12px; align-self:flex-start;">即時預覽</div>
         <div style="width:220px; background:#1a1a2e; border-radius:28px; padding:12px; box-shadow:0 8px 24px rgba(0,0,0,0.28); flex-shrink:0;">
           <div style="background:#111; border-radius:16px 16px 0 0; padding:8px 12px; display:flex; align-items:center; gap:8px;">
-            <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#4f46e5,#7c3aed);display:flex;align-items:center;justify-content:center;font-size:11px;color:white;font-weight:700;">客</div>
+            <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#007BFF,#7c3aed);display:flex;align-items:center;justify-content:center;font-size:11px;color:white;font-weight:700;">客</div>
             <div><div style="font-size:11px;font-weight:700;color:white;">客服助手</div><div style="font-size:9px;color:#888;">Bot</div></div>
           </div>
           <div style="background:#f0f2f5; border-radius:0 0 16px 16px; padding:12px; min-height:280px;">
@@ -12169,7 +12229,7 @@
         </div>
         <!-- 已上傳圖片預覽（假資料） -->
         <div id="edit-img-preview" style="position:relative; margin-bottom:10px;">
-          <div style="width:100%; aspect-ratio:5/2.5; background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #db2777 100%); border-radius:var(--radius); display:grid; grid-template-columns:1fr 1fr 1fr; grid-template-rows:1fr 1fr; gap:2px; overflow:hidden; border:1px solid var(--border);">
+          <div style="width:100%; aspect-ratio:5/2.5; background: linear-gradient(135deg, #007BFF 0%, #7c3aed 50%, #db2777 100%); border-radius:var(--radius); display:grid; grid-template-columns:1fr 1fr 1fr; grid-template-rows:1fr 1fr; gap:2px; overflow:hidden; border:1px solid var(--border);">
             <div style="background:rgba(255,255,255,0.15); display:flex; flex-direction:column; align-items:center; justify-content:center; color:white;"><div style="font-size:18px;">🏠</div><div style="font-size:11px;font-weight:600;">首頁</div></div>
             <div style="background:rgba(255,255,255,0.1); display:flex; flex-direction:column; align-items:center; justify-content:center; color:white;"><div style="font-size:18px;">📦</div><div style="font-size:11px;font-weight:600;">商品</div></div>
             <div style="background:rgba(255,255,255,0.15); display:flex; flex-direction:column; align-items:center; justify-content:center; color:white;"><div style="font-size:18px;">🛒</div><div style="font-size:11px;font-weight:600;">購物車</div></div>
@@ -12466,7 +12526,7 @@
         <div style="width:220px; min-height:420px; background:#1a1a2e; border-radius:28px; padding:12px; box-shadow:0 8px 32px rgba(0,0,0,0.3); position:relative; flex-shrink:0;">
           <!-- 手機頂部 -->
           <div style="background:#111; border-radius:16px 16px 0 0; padding:8px 12px; margin-bottom:2px; display:flex; align-items:center; gap:8px;">
-            <div style="width:28px; height:28px; border-radius:50%; background:linear-gradient(135deg,#4f46e5,#7c3aed); display:flex; align-items:center; justify-content:center; font-size:11px; color:white; font-weight:700;">客</div>
+            <div style="width:28px; height:28px; border-radius:50%; background:linear-gradient(135deg,#007BFF,#7c3aed); display:flex; align-items:center; justify-content:center; font-size:11px; color:white; font-weight:700;">客</div>
             <div>
               <div style="font-size:11px; font-weight:700; color:white;">客服助手</div>
               <div style="font-size:9px; color:#888;">Bot</div>
@@ -12497,26 +12557,22 @@
 
 <!-- ============= Modal：建立事件 6.1.P1 ============= -->
 <div class="modal-overlay" id="modal-add-event" onclick="closeModalIfBackdrop(event, 'modal-add-event')">
-  <div class="modal" style="width: 580px;">
-    <div class="modal-head"><h3 class="modal-title">建立事件</h3><button class="icon-btn" onclick="closeModal('modal-add-event')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button></div>
+  <div class="modal" style="width: 520px;">
+    <div class="modal-head"><h3 class="modal-title" id="c6-modal-title">建立事件</h3><button class="icon-btn" onclick="closeModal('modal-add-event')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button></div>
     <div class="modal-body">
-      <div class="form-row"><label>事件名稱<span class="req">*</span></label><input class="input full" placeholder="例：產品週會" /></div>
-      <div class="form-grid-2">
-        <div class="form-row"><label>開始時間<span class="req">*</span></label><input type="datetime-local" class="input full" /></div>
-        <div class="form-row"><label>結束時間<span class="req">*</span></label><input type="datetime-local" class="input full" /></div>
+      <div class="form-row"><label>標題名稱<span class="req">*</span></label><input class="input full" id="c6-f-title" placeholder="輸入事件標題" /></div>
+      <div class="form-row" style="display:flex;align-items:center;justify-content:space-between;"><label style="margin:0;">全天</label><label class="switch"><input type="checkbox" id="c6-f-allday" onchange="c6AllDayToggle(this)" /><span class="slider"></span></label></div>
+      <div class="form-grid-2" style="grid-template-columns:1.2fr 1fr 1fr;margin-bottom:16px;">
+        <div class="form-row"><label>日期</label><input class="input full" id="c6-f-date" value="2026-07-07" /></div>
+        <div class="form-row"><label>開始</label><input class="input full" id="c6-f-start" value="10:00" /></div>
+        <div class="form-row"><label>結束</label><input class="input full" id="c6-f-end" value="11:00" /></div>
       </div>
-      <div class="form-row"><label class="row-flex" style="gap:8px;"><input type="checkbox" />全天事件</label></div>
-      <div class="form-row"><label>地點 / 資源</label><select class="input full"><option>不指定</option><option>大會議室</option><option>會議室 A</option><option>會議室 B</option><option>線上 (Google Meet)</option></select></div>
-      <div class="form-row"><label>邀請對象</label><input class="input full" placeholder="輸入成員名稱或部門" /></div>
-      <div class="form-grid-2">
-        <div class="form-row"><label>重複</label><select class="input full"><option>不重複</option><option>每天</option><option>每週</option><option>每月</option></select></div>
-        <div class="form-row"><label>提醒</label><select class="input full"><option>15 分鐘前</option><option>30 分鐘前</option><option>1 小時前</option><option>1 天前</option></select></div>
-      </div>
-      <div class="form-row"><label>備註</label><textarea class="input full" placeholder="議程或補充說明（選填）"></textarea></div>
+      <div class="form-row"><label>地點(選擇資源)</label><select class="input full" id="c6-f-loc"></select></div>
+      <div class="form-row"><label>備註</label><textarea class="input full" id="c6-f-note" placeholder="議程或補充說明(選填)"></textarea></div>
     </div>
     <div class="modal-foot">
       <button class="btn" onclick="closeModal('modal-add-event')">取消</button>
-      <button class="btn primary" onclick="closeModal('modal-add-event')">建立事件</button>
+      <button class="btn primary" id="c6-f-save" onclick="c6SaveEvent()">建立事件</button>
     </div>
   </div>
 </div>
@@ -12524,27 +12580,58 @@
 <!-- ============= Modal：新增資源 6.2.P1 ============= -->
 <div class="modal-overlay" id="modal-add-resource" onclick="closeModalIfBackdrop(event, 'modal-add-resource')">
   <div class="modal" style="width: 560px;">
-    <div class="modal-head"><h3 class="modal-title">新增資源</h3><button class="icon-btn" onclick="closeModal('modal-add-resource')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button></div>
+    <div class="modal-head"><h3 class="modal-title" id="c6-res-modal-title">新增資源</h3><button class="icon-btn" onclick="closeModal('modal-add-resource')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button></div>
     <div class="modal-body">
-      <div class="form-row"><label>資源名稱<span class="req">*</span></label><input class="input full" placeholder="例：大會議室、行動投影機" /></div>
-      <div class="form-grid-2">
-        <div class="form-row">
-          <label>資源類型<span class="req">*</span></label>
-          <select class="input full"><option>會議室</option><option>設備</option><option>車輛</option><option>其他</option></select>
+      <div class="form-row"><label>圖示顯示</label>
+        <div class="icon-picker-wrap">
+          <span class="icon-trigger" id="c6-res-icon-trigger" onclick="c6ToggleResIconPicker()">🏢</span>
+          <div class="icon-picker-panel" id="c6-res-icon-picker">
+            <div style="font-size:11px;color:var(--text-muted);margin-bottom:7px;">選擇資源圖示</div>
+            <div class="icon-grid"><span class="icon-opt" onclick="c6PickResIcon('🏢')">🏢</span><span class="icon-opt" onclick="c6PickResIcon('💻')">💻</span><span class="icon-opt" onclick="c6PickResIcon('☕')">☕</span><span class="icon-opt" onclick="c6PickResIcon('📞')">📞</span><span class="icon-opt" onclick="c6PickResIcon('📹')">📹</span><span class="icon-opt" onclick="c6PickResIcon('🎥')">🎥</span><span class="icon-opt" onclick="c6PickResIcon('🚗')">🚗</span><span class="icon-opt" onclick="c6PickResIcon('📦')">📦</span><span class="icon-opt" onclick="c6PickResIcon('🖥️')">🖥️</span><span class="icon-opt" onclick="c6PickResIcon('🖨️')">🖨️</span><span class="icon-opt" onclick="c6PickResIcon('🎙️')">🎙️</span><span class="icon-opt" onclick="c6PickResIcon('📱')">📱</span><span class="icon-opt" onclick="c6PickResIcon('🔌')">🔌</span><span class="icon-opt" onclick="c6PickResIcon('🪑')">🪑</span></div>
+          </div>
         </div>
-        <div class="form-row"><label>容量 / 數量</label><input class="input full" placeholder="例：12 人" /></div>
       </div>
-      <div class="form-row"><label>位置</label><input class="input full" placeholder="例：總部 5 樓" /></div>
-      <div class="form-row"><label>設備配置</label><input class="input full" placeholder="投影機、視訊、白板…" /></div>
-      <div class="form-grid-2">
-        <div class="form-row"><label>需要審核</label><select class="input full"><option>無需審核</option><option>主管審核</option><option>資源管理者審核</option></select></div>
-        <div class="form-row"><label>單次預約時長上限</label><select class="input full"><option>不限制</option><option>1 小時</option><option>2 小時</option><option>4 小時</option><option>1 天</option></select></div>
-      </div>
-      <div class="form-row"><label>說明</label><textarea class="input full" placeholder="使用注意事項"></textarea></div>
+      <div class="form-row"><label>資源名稱<span class="req">*</span></label><input class="input full" id="c6-res-name" placeholder="例:大會議室、行動投影機" /></div>
+      <div class="form-row"><label>選擇類別</label><select class="input full" id="c6-res-folder"></select></div>
     </div>
     <div class="modal-foot">
       <button class="btn" onclick="closeModal('modal-add-resource')">取消</button>
-      <button class="btn primary" onclick="closeModal('modal-add-resource')">建立</button>
+      <button class="btn primary" id="c6-res-save" onclick="c6AddResource()">建立</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============= Modal：資源預約時間軸 6.2 ============= -->
+<div class="modal-overlay" id="modal-res-timeline" onclick="closeModalIfBackdrop(event, 'modal-res-timeline')">
+  <div class="modal" style="width: 720px; max-height:92vh; display:flex; flex-direction:column;">
+    <div class="modal-head"><h3 class="modal-title" id="c6-tl-title">預約狀態</h3><button class="icon-btn" onclick="closeModal('modal-res-timeline')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button></div>
+    <div class="modal-body" style="overflow-y:auto;flex:1;">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap;">
+        <div class="c6-seg" id="c6-tl-views">
+          <button data-v="day" onclick="c6TlView('day')">日</button>
+          <button data-v="week" class="on" onclick="c6TlView('week')">週</button>
+          <button data-v="month" onclick="c6TlView('month')">月</button>
+        </div>
+        <button class="btn ghost sm" onclick="c6TlNav(-1)">‹</button>
+        <button class="btn ghost sm" onclick="c6TlNav(1)">›</button>
+        <div style="font-weight:600;" id="c6-tl-label"></div>
+        <div style="margin-left:auto;display:flex;gap:14px;font-size:12px;color:var(--text-secondary);align-items:center;">
+          <span><i style="display:inline-block;width:12px;height:12px;border-radius:3px;background:var(--success-soft);border:1px solid var(--color-state-success-border,rgba(24,160,88,.3));vertical-align:-2px;margin-right:4px;"></i>未預約</span>
+          <span><i style="display:inline-block;width:12px;height:12px;border-radius:3px;background:#4C7DF0;vertical-align:-2px;margin-right:4px;"></i>已預約</span>
+        </div>
+      </div>
+      <div id="c6-tl-canvas" style="margin-bottom:16px;"></div>
+      <div style="font-weight:600;font-size:13px;margin-bottom:8px;display:flex;align-items:center;">預約記錄<span style="flex:1;"></span><button class="btn sm primary" onclick="c6TlAddToggle()">＋ 新增預約</button></div>
+      <div id="c6-tl-addform" style="display:none;background:#FAFAFC;border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:12px;">
+        <div class="form-grid-2" style="grid-template-columns:1.4fr 1fr 1fr;gap:10px;margin-bottom:10px;">
+          <div class="form-row" style="margin:0;"><label>日期</label><input class="input full" id="c6-tl-date" value="2026-07-07" /></div>
+          <div class="form-row" style="margin:0;"><label>開始</label><input class="input full" id="c6-tl-start" value="10:00" /></div>
+          <div class="form-row" style="margin:0;"><label>結束</label><input class="input full" id="c6-tl-end" value="11:00" /></div>
+        </div>
+        <div class="form-row" style="margin:0 0 10px;"><label>用途 / 標題</label><input class="input full" id="c6-tl-btitle" placeholder="例:部門週會" /></div>
+        <div style="display:flex;gap:8px;justify-content:flex-end;"><button class="btn sm" onclick="c6TlAddToggle()">取消</button><button class="btn sm primary" onclick="c6TlAddBooking()">確認新增</button></div>
+      </div>
+      <div id="c6-tl-records"></div>
     </div>
   </div>
 </div>
@@ -13383,8 +13470,7 @@
     'bot-checkin':  { section: 'Bot 管理', name: '打卡記錄',  group: 'group-bot' },
     '6.1': { section: '行事曆管理', name: '公司行事曆', group: 'group-cal' },
     '6.2': { section: '行事曆管理', name: '資源管理', group: 'group-cal' },
-    '6.3': { section: '行事曆管理', name: 'Google 行事曆同步', group: 'group-cal' },
-    '6.4': { section: '行事曆管理', name: '一般設定', group: 'group-cal' },
+    '6.3': { section: '行事曆管理', name: '日曆設定', group: 'group-cal' },
     '7.1': { section: '佈告欄管理', name: '看板列表', group: 'group-board' },
     '7.2': { section: '佈告欄管理', name: '一般設定', group: 'group-board' },
     '8.1': { section: '通訊錄', name: '聯絡人管理', group: 'group-contact' },
@@ -15236,9 +15322,9 @@ function orgLangAccToggle() {
   var MSG_BUBBLES = {
     'text': '<div style="max-width:85%;"><div style="background:white;border-radius:4px 16px 16px 16px;padding:10px 12px;font-size:12px;color:#333;box-shadow:0 1px 3px rgba(0,0,0,0.1);line-height:1.6;">您好，歡迎加入 LWS 官方帳號！🎉<br><br>有任何問題歡迎直接留言，我們的客服團隊將在第一時間協助您。<br><br>感謝您的支持 ❤️</div><div style="font-size:10px;color:#aaa;margin-top:4px;padding-left:4px;">09:31</div></div>',
     'text2': '<div style="max-width:85%;"><div style="background:white;border-radius:4px 16px 16px 16px;padding:10px 12px;font-size:12px;color:#333;box-shadow:0 1px 3px rgba(0,0,0,0.1);line-height:1.6;">感謝您的詢問，很高興能為您服務！😊<br><br>如有其他需要，歡迎隨時聯繫我們。祝您有美好的一天！</div><div style="font-size:10px;color:#aaa;margin-top:4px;padding-left:4px;">09:31</div></div>',
-    'image': '<div style="max-width:90%;"><div style="background:white;border-radius:4px 16px 16px 16px;padding:4px;box-shadow:0 1px 3px rgba(0,0,0,0.1);overflow:hidden;"><div style="width:210px;height:130px;background:linear-gradient(135deg,#fce7f3 0%,#ede9fe 50%,#dbeafe 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:0 12px 12px 0;"><div style="font-size:32px;margin-bottom:6px;">🌸</div><div style="font-size:12px;font-weight:700;color:#9333ea;">母親節限定優惠</div><div style="font-size:10px;color:#6b7280;margin-top:2px;">全館 85 折 · 限時 3 天</div></div><div style="padding:8px 12px;"><div style="font-size:11px;font-weight:700;color:#4f46e5;text-align:center;padding:6px;border:1.5px solid #4f46e5;border-radius:20px;">立即選購 →</div></div></div><div style="font-size:10px;color:#aaa;margin-top:4px;padding-left:4px;">09:31</div></div>',
-    'button': '<div style="max-width:90%;"><div style="background:white;border-radius:4px 16px 16px 16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.1);"><div style="padding:12px 14px;font-size:12px;color:#333;line-height:1.5;">您好！請問需要什麼協助？</div><div style="border-top:1px solid #f0f0f0;"><div style="padding:10px 14px;font-size:12px;font-weight:600;color:#4f46e5;text-align:center;border-bottom:1px solid #f0f0f0;cursor:pointer;">📦 訂單問題</div><div style="padding:10px 14px;font-size:12px;font-weight:600;color:#4f46e5;text-align:center;border-bottom:1px solid #f0f0f0;cursor:pointer;">🔄 退換貨申請</div><div style="padding:10px 14px;font-size:12px;font-weight:600;color:#4f46e5;text-align:center;cursor:pointer;">💬 真人客服</div></div></div><div style="font-size:10px;color:#aaa;margin-top:4px;padding-left:4px;">09:31</div></div>',
-    'carousel': '<div><div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;"><div style="flex-shrink:0;width:150px;background:white;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,0.12);overflow:hidden;"><div style="height:90px;background:linear-gradient(135deg,#dbeafe,#ede9fe);display:flex;align-items:center;justify-content:center;font-size:24px;">👗</div><div style="padding:8px;"><div style="font-size:11px;font-weight:700;color:#333;margin-bottom:2px;">夏日洋裝</div><div style="font-size:10px;color:#888;margin-bottom:6px;">清涼透氣新款</div><div style="font-size:11px;font-weight:600;color:#4f46e5;text-align:center;padding:4px;border:1px solid #4f46e5;border-radius:12px;">立即購買</div></div></div><div style="flex-shrink:0;width:150px;background:white;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,0.12);overflow:hidden;"><div style="height:90px;background:linear-gradient(135deg,#fce7f3,#fef3c7);display:flex;align-items:center;justify-content:center;font-size:24px;">👒</div><div style="padding:8px;"><div style="font-size:11px;font-weight:700;color:#333;margin-bottom:2px;">草帽系列</div><div style="font-size:10px;color:#888;margin-bottom:6px;">防曬必備單品</div><div style="font-size:11px;font-weight:600;color:#4f46e5;text-align:center;padding:4px;border:1px solid #4f46e5;border-radius:12px;">立即購買</div></div></div><div style="flex-shrink:0;width:150px;background:white;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,0.12);overflow:hidden;"><div style="height:90px;background:linear-gradient(135deg,#d1fae5,#dbeafe);display:flex;align-items:center;justify-content:center;font-size:24px;">👜</div><div style="padding:8px;"><div style="font-size:11px;font-weight:700;color:#333;margin-bottom:2px;">編織包款</div><div style="font-size:10px;color:#888;margin-bottom:6px;">海灘風格首選</div><div style="font-size:11px;font-weight:600;color:#4f46e5;text-align:center;padding:4px;border:1px solid #4f46e5;border-radius:12px;">立即購買</div></div></div></div><div style="font-size:10px;color:#aaa;margin-top:6px;padding-left:4px;">09:31</div></div>'
+    'image': '<div style="max-width:90%;"><div style="background:white;border-radius:4px 16px 16px 16px;padding:4px;box-shadow:0 1px 3px rgba(0,0,0,0.1);overflow:hidden;"><div style="width:210px;height:130px;background:linear-gradient(135deg,#fce7f3 0%,#ede9fe 50%,#dbeafe 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:0 12px 12px 0;"><div style="font-size:32px;margin-bottom:6px;">🌸</div><div style="font-size:12px;font-weight:700;color:#9333ea;">母親節限定優惠</div><div style="font-size:10px;color:#6b7280;margin-top:2px;">全館 85 折 · 限時 3 天</div></div><div style="padding:8px 12px;"><div style="font-size:11px;font-weight:700;color:#007BFF;text-align:center;padding:6px;border:1.5px solid #007BFF;border-radius:20px;">立即選購 →</div></div></div><div style="font-size:10px;color:#aaa;margin-top:4px;padding-left:4px;">09:31</div></div>',
+    'button': '<div style="max-width:90%;"><div style="background:white;border-radius:4px 16px 16px 16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.1);"><div style="padding:12px 14px;font-size:12px;color:#333;line-height:1.5;">您好！請問需要什麼協助？</div><div style="border-top:1px solid #f0f0f0;"><div style="padding:10px 14px;font-size:12px;font-weight:600;color:#007BFF;text-align:center;border-bottom:1px solid #f0f0f0;cursor:pointer;">📦 訂單問題</div><div style="padding:10px 14px;font-size:12px;font-weight:600;color:#007BFF;text-align:center;border-bottom:1px solid #f0f0f0;cursor:pointer;">🔄 退換貨申請</div><div style="padding:10px 14px;font-size:12px;font-weight:600;color:#007BFF;text-align:center;cursor:pointer;">💬 真人客服</div></div></div><div style="font-size:10px;color:#aaa;margin-top:4px;padding-left:4px;">09:31</div></div>',
+    'carousel': '<div><div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;"><div style="flex-shrink:0;width:150px;background:white;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,0.12);overflow:hidden;"><div style="height:90px;background:linear-gradient(135deg,#dbeafe,#ede9fe);display:flex;align-items:center;justify-content:center;font-size:24px;">👗</div><div style="padding:8px;"><div style="font-size:11px;font-weight:700;color:#333;margin-bottom:2px;">夏日洋裝</div><div style="font-size:10px;color:#888;margin-bottom:6px;">清涼透氣新款</div><div style="font-size:11px;font-weight:600;color:#007BFF;text-align:center;padding:4px;border:1px solid #007BFF;border-radius:12px;">立即購買</div></div></div><div style="flex-shrink:0;width:150px;background:white;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,0.12);overflow:hidden;"><div style="height:90px;background:linear-gradient(135deg,#fce7f3,#fef3c7);display:flex;align-items:center;justify-content:center;font-size:24px;">👒</div><div style="padding:8px;"><div style="font-size:11px;font-weight:700;color:#333;margin-bottom:2px;">草帽系列</div><div style="font-size:10px;color:#888;margin-bottom:6px;">防曬必備單品</div><div style="font-size:11px;font-weight:600;color:#007BFF;text-align:center;padding:4px;border:1px solid #007BFF;border-radius:12px;">立即購買</div></div></div><div style="flex-shrink:0;width:150px;background:white;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,0.12);overflow:hidden;"><div style="height:90px;background:linear-gradient(135deg,#d1fae5,#dbeafe);display:flex;align-items:center;justify-content:center;font-size:24px;">👜</div><div style="padding:8px;"><div style="font-size:11px;font-weight:700;color:#333;margin-bottom:2px;">編織包款</div><div style="font-size:10px;color:#888;margin-bottom:6px;">海灘風格首選</div><div style="font-size:11px;font-weight:600;color:#007BFF;text-align:center;padding:4px;border:1px solid #007BFF;border-radius:12px;">立即購買</div></div></div></div><div style="font-size:10px;color:#aaa;margin-top:6px;padding-left:4px;">09:31</div></div>'
   };
 
   function showMsgPreview(name, type) {
@@ -15380,10 +15466,10 @@ function orgLangAccToggle() {
       if (lbl) lbl.style.color = '';
     });
     if (card) {
-      card.style.border = '2px solid #4F46E5';
-      card.style.background = '#EEF2FF';
+      card.style.border = '2px solid #007BFF';
+      card.style.background = '#E8F2FF';
       var lbl = card.querySelector('div:first-child');
-      if (lbl) lbl.style.color = '#4F46E5';
+      if (lbl) lbl.style.color = '#007BFF';
     }
     /* 顯示對應 panel */
     document.querySelectorAll('.checkin-panel').forEach(function(p) { p.style.display = 'none'; });
@@ -15986,7 +16072,7 @@ function orgLangAccToggle() {
     grid.style.gridTemplateColumns = 'repeat(' + cols + ', 1fr)';
     var html = '';
     for (var i = 0; i < count; i++) {
-      html += '<div style="background:white; border-radius:8px; padding:14px 8px; text-align:center; font-size:12px; font-weight:600; color:#4f46e5; cursor:pointer; box-shadow:0 1px 4px rgba(0,0,0,0.12); border:1.5px solid #e0e7ff;" id="qm-preview-btn-' + i + '">' + (qmData[i] ? qmData[i].label : '按鈕 ' + (i+1)) + '</div>';
+      html += '<div style="background:white; border-radius:8px; padding:14px 8px; text-align:center; font-size:12px; font-weight:600; color:#007BFF; cursor:pointer; box-shadow:0 1px 4px rgba(0,0,0,0.12); border:1.5px solid #e0e7ff;" id="qm-preview-btn-' + i + '">' + (qmData[i] ? qmData[i].label : '按鈕 ' + (i+1)) + '</div>';
     }
     grid.innerHTML = html;
   }
@@ -16047,14 +16133,14 @@ function orgLangAccToggle() {
       var btns = document.querySelectorAll('#msg-btn-list input');
       var btnHtml = '<div style="background:white; border-radius:4px 16px 16px 16px; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,0.1); max-width:160px;"><div style="padding:10px 12px; font-size:12px; color:#333; border-bottom:1px solid #f0f0f0;">請選擇您的需求</div>';
       btns.forEach(function(b) {
-        if (b.value) btnHtml += '<div style="padding:8px 12px; font-size:12px; color:#4f46e5; font-weight:600; border-bottom:1px solid #f0f0f0; text-align:center;">' + b.value.replace(/</g,'&lt;') + '</div>';
+        if (b.value) btnHtml += '<div style="padding:8px 12px; font-size:12px; color:#007BFF; font-weight:600; border-bottom:1px solid #f0f0f0; text-align:center;">' + b.value.replace(/</g,'&lt;') + '</div>';
       });
       btnHtml += '</div>';
       bubble.innerHTML = btnHtml;
     } else if (msgCurrentFormat === 'carousel') {
       bubble.innerHTML = '<div style="display:flex; gap:6px; overflow:hidden;"><div style="flex-shrink:0; width:130px; background:white; border-radius:12px; box-shadow:0 1px 3px rgba(0,0,0,0.1); overflow:hidden;"><div style="height:70px; background:linear-gradient(135deg,#e0e7ff,#ede9fe); display:flex; align-items:center; justify-content:center; font-size:20px;">🖼️</div><div style="padding:8px; font-size:11px; font-weight:600; color:#333;">輪播標題</div></div><div style="flex-shrink:0; width:130px; background:white; border-radius:12px; box-shadow:0 1px 3px rgba(0,0,0,0.1); overflow:hidden; opacity:0.6;"><div style="height:70px; background:linear-gradient(135deg,#fce7f3,#ede9fe); display:flex; align-items:center; justify-content:center; font-size:20px;">🖼️</div><div style="padding:8px; font-size:11px; font-weight:600; color:#333;">輪播標題</div></div></div>';
     } else if (msgCurrentFormat === 'quickreply') {
-      bubble.innerHTML = '<div><div style="background:white; border-radius:4px 16px 16px 16px; padding:10px 12px; font-size:12px; color:#333; box-shadow:0 1px 3px rgba(0,0,0,0.1); margin-bottom:8px;">請選擇：</div><div style="display:flex; gap:4px; flex-wrap:wrap;"><div style="background:white; border:1.5px solid #4f46e5; color:#4f46e5; border-radius:20px; padding:4px 10px; font-size:11px; font-weight:600;">選項 1</div><div style="background:white; border:1.5px solid #4f46e5; color:#4f46e5; border-radius:20px; padding:4px 10px; font-size:11px; font-weight:600;">選項 2</div></div></div>';
+      bubble.innerHTML = '<div><div style="background:white; border-radius:4px 16px 16px 16px; padding:10px 12px; font-size:12px; color:#333; box-shadow:0 1px 3px rgba(0,0,0,0.1); margin-bottom:8px;">請選擇：</div><div style="display:flex; gap:4px; flex-wrap:wrap;"><div style="background:white; border:1.5px solid #007BFF; color:#007BFF; border-radius:20px; padding:4px 10px; font-size:11px; font-weight:600;">選項 1</div><div style="background:white; border:1.5px solid #007BFF; color:#007BFF; border-radius:20px; padding:4px 10px; font-size:11px; font-weight:600;">選項 2</div></div></div>';
     } else {
       bubble.innerHTML = '<div style="background:white; border-radius:4px 16px 16px 16px; padding:10px 12px; font-size:12px; color:#888; box-shadow:0 1px 3px rgba(0,0,0,0.1);">[' + msgCurrentFormat + ' 格式]</div>';
     }
@@ -16501,7 +16587,7 @@ function orgLangAccToggle() {
   }
 
   var DAU_DATA = [
-    { name:'客服助手', push:1024, open:700, click:3104, rate:'68.4%', color:'#4f46e5' },
+    { name:'客服助手', push:1024, open:700, click:3104, rate:'68.4%', color:'#007BFF' },
     { name:'內部公告 Bot', push:892, open:643, click:876, rate:'72.1%', color:'#10b981' },
     { name:'值班通知', push:756, open:388, click:432, rate:'51.3%', color:'#f59e0b' },
     { name:'行銷活動 Bot', push:532, open:206, click:614, rate:'38.7%', color:'#3b82f6' }
@@ -18335,13 +18421,13 @@ function closeEditDrawer() {
     var oneCard  = document.getElementById('be-policy-one');
     if (!teamCard || !oneCard) return;
     var isTeam = (type === 'team');
-    teamCard.style.borderColor = isTeam ? '#4f46e5' : 'var(--border)';
-    teamCard.style.background  = isTeam ? '#eef2ff' : 'white';
-    teamCard.querySelector('div:nth-child(2)').style.color = isTeam ? '#4f46e5' : 'var(--text)';
+    teamCard.style.borderColor = isTeam ? '#007BFF' : 'var(--border)';
+    teamCard.style.background  = isTeam ? '#E8F2FF' : 'white';
+    teamCard.querySelector('div:nth-child(2)').style.color = isTeam ? '#007BFF' : 'var(--text)';
     teamCard.querySelector('div:nth-child(3)').style.color = isTeam ? '#6366f1' : 'var(--text-muted)';
-    oneCard.style.borderColor = isTeam ? 'var(--border)' : '#4f46e5';
-    oneCard.style.background  = isTeam ? 'white' : '#eef2ff';
-    oneCard.querySelector('div:nth-child(2)').style.color = isTeam ? 'var(--text)' : '#4f46e5';
+    oneCard.style.borderColor = isTeam ? 'var(--border)' : '#007BFF';
+    oneCard.style.background  = isTeam ? 'white' : '#E8F2FF';
+    oneCard.querySelector('div:nth-child(2)').style.color = isTeam ? 'var(--text)' : '#007BFF';
     oneCard.querySelector('div:nth-child(3)').style.color = isTeam ? 'var(--text-muted)' : '#6366f1';
   }
 
@@ -18522,6 +18608,811 @@ function closeEditDrawer() {
 
 </script>
 <!-- ===== [修改結束] ===== -->
+
+<!-- ===== [修改開始] 行事曆管理模組:新增資料夾 Modal + Toast + JS ===== -->
+<div class="modal-overlay" id="modal-add-folder" onclick="closeModalIfBackdrop(event, 'modal-add-folder')">
+  <div class="modal" style="width: 440px;">
+    <div class="modal-head"><h3 class="modal-title">新增資料夾</h3><button class="icon-btn" onclick="closeModal('modal-add-folder')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button></div>
+    <div class="modal-body">
+      <div class="form-row"><label>資料夾名稱<span class="req">*</span></label><input class="input full" id="c6-fld-name" placeholder="例:11F、攝影器材" /></div>
+      <div class="form-row"><label>上層資料夾</label><select class="input full" id="c6-fld-parent"></select></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn" onclick="closeModal('modal-add-folder')">取消</button>
+      <button class="btn primary" onclick="c6AddFolder()">建立</button>
+    </div>
+  </div>
+</div>
+<div class="c6-toast" id="c6-toast">已儲存</div>
+
+<script>
+/* ================= 行事曆管理模組(c6)================= */
+/* ---- 共用 ---- */
+var c6TT;
+function c6Toast(msg){var t=document.getElementById('c6-toast');t.textContent=msg;t.classList.add('show');clearTimeout(c6TT);c6TT=setTimeout(function(){t.classList.remove('show');},2600);}
+
+/* ---- 6.1 日曆註冊表(公司/任務固定,其餘可經篩選器加入)---- */
+var c6Cals={
+  com:{name:'啟動國際(組織)',color:'#4C7DF0',cls:'blue',fixed:true},
+  task:{name:'任務',color:'#F5A623',cls:'amber',fixed:true},
+  team:{name:'設計部',color:'#8B7CF6',cls:'purple',type:'群組'},
+  proj:{name:'品牌再造專案',color:'#EC6A9C',cls:'pink',type:'群組'},
+  mkt:{name:'行銷部',color:'#0891B2',cls:'cyan',type:'群組'},
+  'm-lee':{name:'李佳佳',color:'#21B8A6',cls:'teal',type:'成員'},
+  'm-cheng':{name:'鄭宇翔',color:'#7C9E2E',cls:'green',type:'成員'},
+  'm-wang':{name:'王明德',color:'#DB2777',cls:'pink',type:'成員'}
+};
+var c6Added=['team','proj'];
+var c6On={com:true,task:true,team:true,proj:true};
+
+/* ---- 6.1 事件資料(cal 對應日曆;g:1 = Google 帶入,顯示 logo tag)---- */
+var c6Events=[
+  {id:'jw',d:'2026-06-09',sh:10,eh:11,cal:'team',t:'設計部週會',loc:'大會議室(已預約)'},
+  {id:'js',d:'2026-06-18',all:1,cal:'proj',t:'[品牌再造] 美容研討會',loc:'南港展覽館',note:'兩日展期,第二日自由參加'},
+  {id:'jg',d:'2026-06-23',sh:14,eh:16,cal:'com',g:1,t:'供應商季會',loc:'線上 (Google Meet)'},
+  {id:'w1',d:'2026-07-06',sh:10,eh:11,cal:'team',t:'設計部週會',loc:'大會議室(已預約)'},
+  {id:'kick',d:'2026-07-07',sh:10,eh:11,cal:'com',t:'專案啟動會議',loc:'大會議室(已預約)',note:'議程:目標、時程、分工'},
+  {id:'brief',d:'2026-07-07',sh:14,eh:15,cal:'com',g:1,t:'客戶簡報',loc:'線上 (Google Meet)'},
+  {id:'trip',d:'2026-07-07',all:1,cal:'m-cheng',t:'[出差] 台中',loc:'台中',tm:'7/7–7/9 全天'},
+  {id:'reply',d:'2026-07-08',all:1,cal:'task',t:'回覆需求清單(截止)',loc:'—'},
+  {id:'wk',d:'2026-07-10',sh:9.5,eh:17,cal:'proj',t:'品牌工作坊',loc:'會議室 A(已預約)',note:'全日工作坊,午餐外訂'},
+  {id:'visit',d:'2026-07-13',sh:13,eh:15,cal:'com',t:'顧客拜訪',loc:'客戶辦公室'},
+  {id:'sup',d:'2026-07-14',sh:11,eh:12,cal:'com',g:1,t:'供應商電話會議',loc:'線上 (Google Meet)'},
+  {id:'rev',d:'2026-07-17',sh:14,eh:16,cal:'proj',t:'品牌再造評審',loc:'會議室 A(已預約)'},
+  {id:'ah',d:'2026-07-21',sh:10,eh:11.5,cal:'com',g:1,t:'全公司月會',loc:'大禮堂 + 直播'},
+  {id:'ob',d:'2026-07-22',sh:9.5,eh:12,cal:'team',t:'新人訓練',loc:'會議室 B(已預約)'},
+  {id:'del',d:'2026-07-24',all:1,cal:'task',t:'交付設計稿(截止)',loc:'—'},
+  {id:'oo',d:'2026-07-28',sh:14,eh:14.5,cal:'com',t:'1:1 面談',loc:'會議室 B(已預約)'},
+  {id:'af',d:'2026-08-04',sh:14,eh:16,cal:'proj',t:'品牌再造結案報告',loc:'會議室 A(已預約)'},
+  {id:'aw',d:'2026-08-11',sh:10,eh:11,cal:'team',t:'設計部週會',loc:'大會議室(已預約)'},
+  {id:'ap',d:'2026-08-20',sh:18.5,eh:21,cal:'com',t:'部門聚餐',loc:'信義區'},
+  {id:'lee1',d:'2026-07-09',sh:15,eh:16,cal:'m-lee',t:'面試(UX)',loc:'會議室 B(已預約)'},
+  {id:'lee2',d:'2026-07-16',sh:10,eh:11,cal:'m-lee',t:'設計評圖',loc:'線上 (Google Meet)'},
+  {id:'cheng1',d:'2026-07-15',sh:14,eh:15,cal:'m-cheng',t:'客戶回訪',loc:'台中'},
+  {id:'wang1',d:'2026-07-20',sh:16,eh:17,cal:'m-wang',t:'後端架構討論',loc:'會議室 C'},
+  {id:'mkt1',d:'2026-07-23',sh:10,eh:11.5,cal:'mkt',t:'行銷月會',loc:'大會議室(已預約)'}
+];
+var C6_TODAY=new Date(2026,6,7);
+var c6State={view:'month',anchor:new Date(2026,6,7)};
+var c6Uid=0,c6CurEv=null,c6EditId=null;
+var C6_DOW=['日','一','二','三','四','五','六'];
+
+function c6ISO(dt){return dt.getFullYear()+'-'+String(dt.getMonth()+1).padStart(2,'0')+'-'+String(dt.getDate()).padStart(2,'0');}
+function c6FromISO(s){var p=s.split('-');return new Date(+p[0],+p[1]-1,+p[2]);}
+function c6HH(h){return String(Math.floor(h)).padStart(2,'0')+':'+(h%1?'30':'00');}
+function c6MD(iso){var d=c6FromISO(iso);return (d.getMonth()+1)+'/'+d.getDate()+'(週'+C6_DOW[d.getDay()]+')';}
+function c6InRange(d){return d>=new Date(2026,5,1)&&d<=new Date(2026,7,31,23,59);}
+function c6CalVisible(k){
+  if(!(k in c6Cals))return false;
+  if(c6Cals[k].fixed)return !!c6On[k];
+  return c6Added.indexOf(k)>=0&&!!c6On[k];
+}
+function c6EvsOn(iso){return c6Events.filter(function(e){return e.d===iso&&c6CalVisible(e.cal);});}
+function c6Color(e){return (c6Cals[e.cal]||{}).color||'#4C7DF0';}
+function c6ClsOf(e){return (c6Cals[e.cal]||{}).cls||'blue';}
+function c6TimeStr(e){return e.tm||(e.all?c6MD(e.d)+' 全天':c6MD(e.d)+' '+c6HH(e.sh)+'–'+c6HH(e.eh));}
+
+/* ---- 6.1 渲染 ---- */
+function c6Render(){
+  var v=c6State.view,el=document.getElementById('c6-canvas');
+  document.querySelectorAll('#c6-views button').forEach(function(b){b.classList.toggle('on',b.dataset.v===v);});
+  if(v==='month')el.innerHTML=c6RenderMonth();
+  else el.innerHTML=c6RenderRange(v==='week'?7:1);
+  c6RenderMini();c6Label();
+}
+function c6RenderMonth(){
+  var a=c6State.anchor,y=a.getFullYear(),m=a.getMonth();
+  var first=new Date(y,m,1),start=new Date(y,m,1-first.getDay());
+  var days=new Date(y,m+1,0).getDate();
+  var rows=Math.ceil((first.getDay()+days)/7);
+  var selIso=c6ISO(a),todayIso=c6ISO(C6_TODAY);
+  var h='<div class="cal-grid">';
+  C6_DOW.forEach(function(d){h+='<div class="cal-day-head">'+d+'</div>';});
+  for(var i=0;i<rows*7;i++){
+    var dt=new Date(start);dt.setDate(start.getDate()+i);
+    var iso=c6ISO(dt),dim=dt.getMonth()!==m,today=iso===todayIso,sel=iso===selIso;
+    h+='<div class="cal-cell'+(dim?' muted':'')+(today?' today':'')+(sel?' sel':'')+'" onclick="c6SelectDay(\''+iso+'\')">';
+    h+='<span class="cal-day-num">'+dt.getDate()+'</span>'+(today?'<span class="c6-tdot" title="今天"></span>':'');
+    c6EvsOn(iso).forEach(function(e){
+      h+='<div class="cal-event '+c6ClsOf(e)+'" onclick="event.stopPropagation();c6Pop(event,\''+e.id+'\')">'+(e.g?'<span class="c6-gbadge">G</span>':'')+(e.all?'':c6HH(e.sh)+' ')+e.t+'</div>';
+    });
+    h+='</div>';
+  }
+  return h+'</div>';
+}
+function c6RenderRange(n){
+  var a=new Date(c6State.anchor);
+  var start=n===7?new Date(a.getFullYear(),a.getMonth(),a.getDate()-a.getDay()):a;
+  var h='<div class="c6-tgrid" style="grid-template-columns:56px repeat('+n+',1fr);">';
+  h+='<div class="c6-th"></div>';
+  var dates=[];
+  for(var i=0;i<n;i++){
+    var dt=new Date(start);dt.setDate(start.getDate()+i);dates.push(dt);
+    var today=c6ISO(dt)===c6ISO(C6_TODAY);
+    h+='<div class="c6-th'+(today?' today':'')+'">'+C6_DOW[dt.getDay()]+'<br /><span class="dnum">'+dt.getDate()+'</span></div>';
+  }
+  h+='<div class="c6-th" style="font-size:10px;">全天</div>';
+  dates.forEach(function(dt){
+    var iso=c6ISO(dt);h+='<div class="c6-allday">';
+    c6EvsOn(iso).filter(function(e){return e.all;}).forEach(function(e){
+      h+='<div class="cal-event '+c6ClsOf(e)+'" onclick="c6Pop(event,\''+e.id+'\')">'+(e.g?'<span class="c6-gbadge">G</span>':'')+e.t+'</div>';
+    });
+    h+='</div>';
+  });
+  h+='<div class="c6-timecol">';
+  for(var t=8;t<20;t++)h+='<div>'+String(t).padStart(2,'0')+':00</div>';
+  h+='</div>';
+  dates.forEach(function(dt){
+    var iso=c6ISO(dt);h+='<div class="c6-daycol" onclick="c6SelectDay(\''+iso+'\')">';
+    c6EvsOn(iso).filter(function(e){return !e.all;}).forEach(function(e){
+      var top=(Math.max(e.sh,8)-8)*48,ht=Math.max((Math.min(e.eh,20)-Math.max(e.sh,8))*48-2,20);
+      var col=c6Color(e);
+      h+='<div class="c6-block" style="top:'+top+'px;height:'+ht+'px;background:'+col+'1F;color:'+col+';" onclick="event.stopPropagation();c6Pop(event,\''+e.id+'\')"><b>'+(e.g?'G · ':'')+e.t+'</b>'+c6HH(e.sh)+'–'+c6HH(e.eh)+'</div>';
+    });
+    h+='</div>';
+  });
+  return h+'</div>';
+}
+function c6RenderMini(){
+  var a=c6State.anchor,y=a.getFullYear(),m=a.getMonth();
+  var first=new Date(y,m,1),days=new Date(y,m+1,0).getDate();
+  var start=new Date(y,m,1-first.getDay());
+  var rows=Math.ceil((first.getDay()+days)/7);
+  var selIso=c6ISO(a),todayIso=c6ISO(C6_TODAY);
+  var h='<tr>'+C6_DOW.map(function(d){return '<th>'+d+'</th>';}).join('')+'</tr>';
+  for(var r=0;r<rows;r++){
+    h+='<tr>';
+    for(var i=0;i<7;i++){
+      var dt=new Date(start);dt.setDate(start.getDate()+r*7+i);
+      var iso=c6ISO(dt),cls=[];
+      if(dt.getMonth()!==m)cls.push('dim');
+      if(iso===todayIso)cls.push('today');
+      if(iso===selIso)cls.push('sel');
+      h+='<td class="'+cls.join(' ')+'"><span class="d" onclick="c6SelectDay(\''+iso+'\')">'+dt.getDate()+'</span></td>';
+    }
+    h+='</tr>';
+  }
+  document.getElementById('c6-mini-table').innerHTML=h;
+}
+function c6Label(){
+  var a=c6State.anchor,v=c6State.view,s;
+  if(v==='month')s=a.getFullYear()+'年'+(a.getMonth()+1)+'月';
+  else if(v==='week'){
+    var st=new Date(a.getFullYear(),a.getMonth(),a.getDate()-a.getDay());
+    var en=new Date(st);en.setDate(st.getDate()+6);
+    s=st.getFullYear()+'年'+(st.getMonth()+1)+'月'+st.getDate()+'日 – '+(en.getMonth()+1)+'月'+en.getDate()+'日';
+  }else s=a.getFullYear()+'年'+(a.getMonth()+1)+'月'+a.getDate()+'日(週'+C6_DOW[a.getDay()]+')';
+  document.getElementById('c6-label').textContent=s;
+  document.getElementById('c6-mini-label').textContent=a.getFullYear()+'.'+String(a.getMonth()+1).padStart(2,'0');
+}
+function c6Shift(dt,dir){
+  var v=c6State.view,d=new Date(dt);
+  if(v==='month')d.setMonth(d.getMonth()+dir);
+  else if(v==='week')d.setDate(d.getDate()+7*dir);
+  else d.setDate(d.getDate()+dir);
+  return d;
+}
+function c6Nav(dir){var d=c6Shift(c6State.anchor,dir);if(!c6InRange(d)){c6Toast('示範資料範圍為 2026/06 – 2026/08');return;}c6State.anchor=d;c6Render();}
+function c6NavMonth(dir){var d=new Date(c6State.anchor);d.setMonth(d.getMonth()+dir);if(!c6InRange(d)){c6Toast('示範資料範圍為 2026/06 – 2026/08');return;}c6State.anchor=d;c6Render();}
+function c6View(v){c6State.view=v;c6Render();}
+function c6SelectDay(iso){
+  var d=c6FromISO(iso);
+  if(!c6InRange(d)){c6Toast('示範資料範圍為 2026/06 – 2026/08');return;}
+  c6State.anchor=d;c6Render();
+}
+
+/* ---- 6.1 日曆篩選器 ---- */
+function c6ToggleCal(k,el){
+  c6On[k]=!c6On[k];
+  if(el)el.classList.toggle('on',!!c6On[k]);
+  c6RenderCalList();c6Render();
+}
+function c6RenderCalList(){
+  var host=document.getElementById('c6-cal-list');
+  var h='';
+  c6Added.forEach(function(k){
+    var c=c6Cals[k];
+    h+='<div class="c6-lay'+(c6On[k]?' on':'')+'" style="--c:'+c.color+'" onclick="c6ToggleCal(\''+k+'\')">'
+      +'<span class="chk">✓</span><span>'+c.name+'</span>'
+      +'<button class="del" title="移除此日曆" onclick="event.stopPropagation();c6RemoveCal(\''+k+'\')">✕</button></div>';
+  });
+  host.innerHTML=h||'<div class="text-sec" style="font-size:12px;padding:4px 8px;">尚未加入其他日曆,可由上方搜尋。</div>';
+}
+function c6CalSearch(ev){
+  var q=ev.target.value.trim().toLowerCase();
+  var box=document.getElementById('c6-cal-results');
+  if(!q){box.classList.remove('show');return;}
+  var h='';
+  Object.keys(c6Cals).forEach(function(k){
+    var c=c6Cals[k];
+    if(c.fixed||c6Added.indexOf(k)>=0)return;
+    if(c.name.toLowerCase().indexOf(q)<0)return;
+    h+='<div class="row"><span class="dot" style="background:'+c.color+'"></span>'+c.name+'<span class="typ">'+(c.type||'')+'</span><button title="加入" onclick="c6AddCal(\''+k+'\')">＋</button></div>';
+  });
+  box.innerHTML=h||'<div class="row" style="color:var(--text-muted);">找不到符合的成員或群組</div>';
+  box.classList.add('show');
+}
+function c6AddCal(k){
+  c6Added.push(k);c6On[k]=true;
+  document.getElementById('c6-cal-search').value='';
+  document.getElementById('c6-cal-results').classList.remove('show');
+  c6RenderCalList();c6Render();
+  c6Toast('已加入日曆:'+c6Cals[k].name);
+}
+function c6RemoveCal(k){
+  c6Added=c6Added.filter(function(x){return x!==k;});
+  c6On[k]=false;
+  c6RenderCalList();c6Render();
+  c6Toast('已移除日曆:'+c6Cals[k].name);
+}
+
+/* ---- 6.1 事件詳情 popover ---- */
+function c6Pop(ev,id){
+  ev.stopPropagation();
+  var e=null;c6Events.forEach(function(x){if(x.id===id)e=x;});
+  if(!e)return;
+  c6CurEv=id;
+  document.getElementById('c6-pop-bar').style.background=c6Color(e);
+  document.getElementById('c6-pop-title').innerHTML=(e.g?'<span class="c6-gbadge">G</span>':'')+e.t;
+  document.getElementById('c6-pop-time').textContent=c6TimeStr(e);
+  document.getElementById('c6-pop-loc').textContent=e.loc||'—';
+  document.getElementById('c6-pop-cal').textContent=(c6Cals[e.cal]||{}).name+(e.g?' · 由 Google 帶入':'');
+  document.getElementById('c6-pop-note').textContent=e.note||'—';
+  var pop=document.getElementById('c6-pop');pop.classList.add('show');
+  var host=ev.target.closest('.cal-event')||ev.target.closest('.c6-block');
+  var r=host?host.getBoundingClientRect():{right:ev.clientX,left:ev.clientX,top:ev.clientY};
+  var x=r.right+10,y=r.top;
+  if(x+310>window.innerWidth)x=r.left-310;
+  if(x<10)x=Math.max(10,(window.innerWidth-300)/2);
+  if(y+250>window.innerHeight)y=window.innerHeight-260;
+  pop.style.left=x+'px';pop.style.top=Math.max(60,y)+'px';
+}
+function c6PopClose(){document.getElementById('c6-pop').classList.remove('show');}
+document.addEventListener('click',function(e){
+  if(!e.target.closest('#c6-pop')&&!e.target.closest('.cal-event')&&!e.target.closest('.c6-block'))c6PopClose();
+  if(!e.target.closest('.c6-srch')){var r=document.getElementById('c6-cal-results');if(r)r.classList.remove('show');}
+});
+function c6DeleteEvent(){
+  if(!c6CurEv)return;
+  var e=null;c6Events.forEach(function(x){if(x.id===c6CurEv)e=x;});
+  c6Events=c6Events.filter(function(x){return x.id!==c6CurEv;});
+  c6CurEv=null;c6PopClose();c6Render();
+  c6Toast('已刪除「'+e.t+'」(示意,重新整理即還原)');
+}
+
+/* ---- 6.1 建立/編輯事件 modal ---- */
+function c6LocOptions(sel){
+  var names=['不指定'];
+  c6ResUnder(c6Tree).forEach(function(r){names.push(r.name);});
+  names.push('線上 (Google Meet)');
+  return names.map(function(n){return '<option'+(n===sel?' selected':'')+'>'+n+'</option>';}).join('');
+}
+function c6AllDayToggle(cb){
+  document.getElementById('c6-f-start').disabled=cb.checked;
+  document.getElementById('c6-f-end').disabled=cb.checked;
+}
+function c6OpenCreate(){
+  c6EditId=null;
+  document.getElementById('c6-modal-title').textContent='建立事件';
+  document.getElementById('c6-f-save').textContent='建立事件';
+  document.getElementById('c6-f-title').value='';
+  document.getElementById('c6-f-allday').checked=false;
+  c6AllDayToggle(document.getElementById('c6-f-allday'));
+  document.getElementById('c6-f-date').value=c6ISO(c6State.anchor);
+  document.getElementById('c6-f-start').value='10:00';
+  document.getElementById('c6-f-end').value='11:00';
+  document.getElementById('c6-f-loc').innerHTML=c6LocOptions('不指定');
+  document.getElementById('c6-f-note').value='';
+  openModal('modal-add-event');
+}
+function c6EditEvent(){
+  if(!c6CurEv)return;
+  var e=null;c6Events.forEach(function(x){if(x.id===c6CurEv)e=x;});
+  if(!e)return;
+  c6EditId=e.id;
+  document.getElementById('c6-modal-title').textContent='編輯事件';
+  document.getElementById('c6-f-save').textContent='儲存變更';
+  document.getElementById('c6-f-title').value=e.t;
+  document.getElementById('c6-f-allday').checked=!!e.all;
+  c6AllDayToggle(document.getElementById('c6-f-allday'));
+  document.getElementById('c6-f-date').value=e.d;
+  document.getElementById('c6-f-start').value=e.all?'10:00':c6HH(e.sh);
+  document.getElementById('c6-f-end').value=e.all?'11:00':c6HH(e.eh);
+  var locName=(e.loc||'').replace('(已預約)','');
+  document.getElementById('c6-f-loc').innerHTML=c6LocOptions(locName||'不指定');
+  if(document.getElementById('c6-f-loc').value!==locName)document.getElementById('c6-f-loc').innerHTML=c6LocOptions('不指定');
+  document.getElementById('c6-f-note').value=e.note||'';
+  c6PopClose();
+  openModal('modal-add-event');
+}
+function c6ParseH(s){var m=(s||'').trim().match(/^(\d{1,2}):(\d{2})$/);if(!m)return null;return +m[1]+(+m[2]>=30?0.5:0);}
+function c6SaveEvent(){
+  var t=document.getElementById('c6-f-title').value.trim()||'未命名事件';
+  var dv=document.getElementById('c6-f-date').value.trim();
+  var d=/^\d{4}-\d{2}-\d{2}$/.test(dv)?c6FromISO(dv):null;
+  if(!d||!c6InRange(d)){c6Toast('日期請用 2026-07-07 格式,範圍 2026/06 – 2026/08');return;}
+  var all=document.getElementById('c6-f-allday').checked;
+  var sh=null,eh=null;
+  if(!all){
+    sh=c6ParseH(document.getElementById('c6-f-start').value);if(sh===null)sh=10;
+    eh=c6ParseH(document.getElementById('c6-f-end').value);if(eh===null||eh<=sh)eh=sh+1;
+  }
+  var locSel=document.getElementById('c6-f-loc').value;
+  var loc=locSel==='不指定'?'—':(locSel==='線上 (Google Meet)'?locSel:locSel+'(已預約)');
+  var note=document.getElementById('c6-f-note').value.trim();
+  if(c6EditId){
+    var e=null;c6Events.forEach(function(x){if(x.id===c6EditId)e=x;});
+    if(e){
+      e.t=t;e.d=c6ISO(d);e.loc=loc;e.note=note;
+      if(all){e.all=1;delete e.sh;delete e.eh;e.tm=null;}
+      else{delete e.all;e.sh=sh;e.eh=eh;e.tm=null;}
+    }
+    c6Toast('事件「'+t+'」已更新 ✓');
+    c6EditId=null;
+  }else{
+    c6Events.push({id:'u'+(++c6Uid),d:c6ISO(d),cal:'com',t:t,loc:loc,note:note,
+      all:all?1:undefined,sh:all?undefined:sh,eh:all?undefined:eh});
+    c6Toast('事件已建立 ✓'+(loc!=='—'&&locSel!=='線上 (Google Meet)'?' 已預約 '+locSel:''));
+  }
+  closeModal('modal-add-event');
+  c6State.anchor=d;c6Render();
+}
+
+/* ---- 6.2 資源管理 ---- */
+var c6Tree={id:'root',name:'啟動國際 (集團)',type:'folder',open:true,children:[
+  {id:'f-meet',name:'會議室',type:'folder',open:true,children:[
+    {id:'f-10f',name:'10F',type:'folder',open:true,children:[
+      {id:'r1',type:'res',name:'大會議室',icon:'🏢',cap:12,note:'投影機 · 視訊 · 白板',perm:'公司',st:'可用',used:18,bookings:[
+        {id:'b1',d:'2026-07-07',sh:10,eh:11,title:'專案啟動會議',by:'蕭玉芬'},
+        {id:'b2',d:'2026-07-07',sh:14,eh:15,title:'客戶簡報',by:'李佳佳'},
+        {id:'b3',d:'2026-07-08',sh:9.5,eh:12,title:'季度策略會',by:'王明德'},
+        {id:'b4',d:'2026-07-10',sh:13,eh:15,title:'供應商洽談',by:'採購組'}]},
+      {id:'r2',type:'res',name:'會議室 A',icon:'💻',cap:6,note:'55" 螢幕 · HDMI',perm:'部門',st:'使用中',used:32,bookings:[
+        {id:'b5',d:'2026-07-07',sh:11,eh:12,title:'設計評圖',by:'設計部'},
+        {id:'b6',d:'2026-07-09',sh:15,eh:16,title:'面試(UX)',by:'李佳佳'},
+        {id:'b7',d:'2026-07-10',sh:9.5,eh:17,title:'品牌工作坊',by:'專案組'}]},
+      {id:'r3',type:'res',name:'會議室 B',icon:'☕',cap:4,note:'白板 · 適合小組討論',perm:'部門',st:'可用',used:24,bookings:[
+        {id:'b8',d:'2026-07-08',sh:16,eh:17,title:'1:1 面談',by:'主管'}]}]},
+    {id:'f-11f',name:'11F',type:'folder',open:true,children:[
+      {id:'r4',type:'res',name:'會議室 C',icon:'📞',cap:8,note:'電話會議設備',perm:'公司',st:'停用',used:3,bookings:[]}]}]},
+  {id:'f-eq',name:'設備',type:'folder',open:true,children:[
+    {id:'r5',type:'res',name:'行動投影機 #1',icon:'📹',cap:0,note:'可攜式,借出需登記',perm:'公司',st:'可用',used:5,bookings:[
+        {id:'b9',d:'2026-07-14',sh:10,eh:11.5,title:'全公司月會',by:'行政組'}]},
+    {id:'r6',type:'res',name:'視訊設備組',icon:'🎥',cap:0,note:'含麥克風、攝影機',perm:'部門',st:'使用中',used:9,bookings:[]},
+    {id:'r7',type:'res',name:'公務車 (TOYOTA)',icon:'🚗',cap:5,note:'需駕照 · 加油後歸還',perm:'個人',st:'維修中',used:0,bookings:[]}]}]};
+var c6Sel='root';
+var C6_PERM_BADGE={'公司':'info','部門':'success','個人':'neutral'};
+var c6TlRes=null,c6TlState={view:'week',anchor:new Date(2026,6,7)};
+
+function c6Walk(node,fn,parent,depth){fn(node,parent||null,depth||0);(node.children||[]).forEach(function(k){c6Walk(k,fn,node,(depth||0)+1);});}
+function c6Find(id){var res=null;c6Walk(c6Tree,function(n){if(n.id===id)res=n;});return res;}
+function c6FindParent(id){var res=null;c6Walk(c6Tree,function(n,p){if(n.id===id)res=p;});return res;}
+function c6CountRes(node){var c=0;c6Walk(node,function(n){if(n.type==='res')c++;});return c;}
+function c6ResUnder(node){var arr=[];c6Walk(node,function(n){if(n.type==='res')arr.push(n);});return arr;}
+function c6Esc(v){return String(v==null?'':v).replace(/[&<>"']/g,function(ch){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch];});}
+function c6PathOf(id){
+  var path=[];
+  function go(n,acc){
+    if(n.id===id){path=acc.concat(n.name);return true;}
+    return (n.children||[]).some(function(k){return go(k,acc.concat(n.name));});
+  }
+  go(c6Tree,[]);
+  return path.join(' / ');
+}
+var c6TreeDragId=null;
+function c6IsAncestor(aId,nId){var a=c6Find(aId);return a&&a.id!==nId&&!!c6FindIn(nId,a);}
+function c6FindIn(id,node){if(!node)return null;if(node.id===id)return node;for(var i=0;i<(node.children||[]).length;i++){var r=c6FindIn(id,node.children[i]);if(r)return r;}return null;}
+function c6RenderTree(){
+  var root=document.getElementById('c6-tree');if(!root)return;
+  root.innerHTML='';root.appendChild(c6RenderTreeNode(c6Tree));
+  c6RenderFolderDetail();
+}
+function c6ToggleFold(id){var n=c6Find(id);n.open=!n.open;c6RenderTree();}
+function c6SelectFolder(id){c6Sel=id;c6RenderTree();}
+function c6RenderTreeNode(n){
+  var wrap=document.createElement('div');wrap.className='org-tree-node';wrap.dataset.id=n.id;
+  var kids=(n.children||[]).filter(function(k){return k.type==='folder';});
+  var row=document.createElement('div');
+  row.className='org-tree-row c6-node'+(c6Sel===n.id?' selected':'')+(c6TreeDragId===n.id?' dragging':'');
+  var tog=document.createElement('div');tog.className='org-node-toggle';tog.innerHTML=kids.length?(n.open?'▼':'▶'):'';
+  tog.onclick=function(e){e.stopPropagation();c6ToggleFold(n.id);};
+  var ico=document.createElement('span');ico.className='org-node-ico';ico.textContent='📁';
+  var lbl=document.createElement('span');lbl.className='org-node-label';lbl.textContent=n.name;
+  var cnt=document.createElement('span');cnt.className='cnt';cnt.textContent=c6CountRes(n);
+  var addBtn=document.createElement('button');addBtn.className='org-node-add';addBtn.innerHTML='+';
+  addBtn.title='新增資料夾';
+  addBtn.onclick=function(e){e.stopPropagation();c6AddChildFolder(n.id);};
+  row.append(tog,ico,lbl,cnt,addBtn);
+  row.onclick=function(){c6SelectFolder(n.id);};
+  if(n.id!=='root'){
+    row.draggable=true;
+    row.addEventListener('dragstart',function(e){c6TreeDragId=n.id;e.dataTransfer.effectAllowed='move';});
+    row.addEventListener('dragend',function(){c6TreeDragId=null;c6RenderTree();});
+  }
+  row.addEventListener('dragover',function(e){
+    e.preventDefault();
+    if(!c6TreeDragId||c6TreeDragId===n.id)return;
+    row.classList.remove('drag-hl-ok','drag-hl-bad');
+    row.classList.add(c6IsAncestor(c6TreeDragId,n.id)?'drag-hl-bad':'drag-hl-ok');
+  });
+  row.addEventListener('dragleave',function(){row.classList.remove('drag-hl-ok','drag-hl-bad');});
+  row.addEventListener('drop',function(e){
+    e.preventDefault();row.classList.remove('drag-hl-ok','drag-hl-bad');
+    var did=c6TreeDragId;if(!did||did===n.id)return;
+    c6MoveFolderByDrop(did,n.id);c6TreeDragId=null;
+  });
+  wrap.appendChild(row);
+  if(n.open&&kids.length){
+    var cw=document.createElement('div');cw.className='org-tree-children';
+    kids.forEach(function(k){cw.appendChild(c6RenderTreeNode(k));});
+    wrap.appendChild(cw);
+  }
+  return wrap;
+}
+function c6MoveFolderByDrop(dragId,targetId){
+  if(c6IsAncestor(dragId,targetId)){c6Toast('無法移到自己的下層');c6RenderTree();return;}
+  var dragged=c6Find(dragId),oldParent=c6FindParent(dragId),target=c6Find(targetId);
+  if(!dragged||!oldParent||!target)return;
+  var isSibling=oldParent.id===(c6FindParent(targetId)||{}).id;
+  oldParent.children=oldParent.children.filter(function(k){return k.id!==dragId;});
+  if(isSibling){
+    var arr=oldParent.children,idx=arr.findIndex(function(k){return k.id===targetId;});
+    arr.splice(Math.max(idx,0),0,dragged);
+    c6Toast('已調整「'+dragged.name+'」排序');
+  }else{
+    target.children=target.children||[];target.children.push(dragged);target.open=true;
+    c6Toast('已將「'+dragged.name+'」移至「'+target.name+'」下層');
+  }
+  c6Sel=dragId;c6RenderTree();
+}
+function c6AddChildFolder(parentId){
+  var parent=c6Find(parentId)||c6Tree;
+  var name=prompt('新資料夾名稱：','新資料夾');
+  if(!name)return;
+  name=name.trim();if(!name){c6Toast('請輸入資料夾名稱');return;}
+  parent.children=parent.children||[];parent.open=true;
+  var item={id:'f'+Date.now(),name:name,type:'folder',open:true,children:[]};
+  parent.children.push(item);c6Sel=item.id;c6RenderTree();c6Toast('資料夾「'+name+'」已建立');
+}
+function c6RenderFolderDetail(){
+  var node=c6Find(c6Sel)||c6Tree;c6Sel=node.id;
+  var title=document.getElementById('c6-folder-title'),idEl=document.getElementById('c6-folder-id'),nameEl=document.getElementById('c6-folder-name'),countEl=document.getElementById('c6-folder-count'),saveBtn=document.getElementById('c6-folder-save'),delBtn=document.getElementById('c6-folder-delete');
+  if(title)title.textContent=node.name;
+  if(idEl)idEl.textContent=node.id;
+  if(nameEl){nameEl.value=node.name;nameEl.disabled=node.id==='root';}
+  if(countEl)countEl.textContent=c6CountRes(node)+' 項資源';
+  if(saveBtn){saveBtn.disabled=node.id==='root';saveBtn.title=node.id==='root'?'最上層資料夾不可編輯':'';}
+  if(delBtn){delBtn.disabled=node.id==='root';delBtn.title=node.id==='root'?'根資料夾不可刪除':'';}
+  c6RenderCards();
+}
+function c6SaveFolderDetail(){
+  var node=c6Find(c6Sel);if(!node)return;
+  if(node.id==='root'){c6Toast('最上層資料夾不可編輯');return;}
+  var name=document.getElementById('c6-folder-name').value.trim();
+  if(!name){c6Toast('請輸入資料夾名稱');return;}
+  node.name=name;c6RenderTree();c6Toast('資料夾名稱已更新');
+}
+function c6DeleteFolder(id){
+  var node=c6Find(id),parent=c6FindParent(id);
+  if(!node||!parent||node.id==='root')return;
+  var count=c6CountRes(node);
+  if(count>0){alert('需先移除底下的資源才可刪除');return;}
+  if(!confirm('確定刪除資料夾「'+node.name+'」?'))return;
+  parent.children=parent.children.filter(function(k){return k.id!==id;});
+  c6Sel=parent.id;c6RenderTree();c6Toast('資料夾「'+node.name+'」已刪除');
+}
+function c6RenderCards(){
+  var node=c6Find(c6Sel)||c6Tree;
+  var list=c6ResUnder(node);
+  document.getElementById('c6-res-path').textContent='📁 '+c6PathOf(node.id)+' · 共 '+list.length+' 項資源';
+  var h='';
+  list.forEach(function(r){
+    var capTxt=r.cap?('👤 '+r.cap+' 人'):'📦 設備';
+    var todayCnt=(r.bookings||[]).filter(function(b){return b.d===c6ISO(C6_TODAY);}).length;
+    h+='<div class="resource-card">'
+      +'<div class="res-head"><div class="res-icon">'+r.icon+'</div>'
+      +'<div style="flex:1;"><div class="user-name">'+r.name+'</div><div class="text-sec" style="font-size:12px;">'+capTxt+'</div></div>'
+      +'<button class="icon-btn" title="刪除資源" onclick="event.stopPropagation();c6DeleteRes(\''+r.id+'\')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--danger)" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button></div>'
+      +'<div class="text-sec" style="font-size:12px;margin-bottom:6px;">📝 '+(r.note||'—')+'</div>'
+      +'<div style="display:flex;gap:6px;align-items:center;margin-bottom:10px;"><span class="badge '+(C6_PERM_BADGE[r.perm]||'neutral')+'">'+(r.perm||'公司')+'可用</span><span class="text-sec" style="font-size:12px;">今日 '+todayCnt+' 筆預約</span></div>'
+      +'<div class="c6-tlmini" onclick="c6OpenTimeline(\''+r.id+'\')" title="點擊查看預約時間軸">'+c6MiniBar(r)+'</div>'
+      +'<div class="btn-group mt-16">'
+      +'<button class="btn sm primary" onclick="c6OpenTimeline(\''+r.id+'\')">預約狀態</button>'
+      +'<button class="btn sm" onclick="c6EditRes(\''+r.id+'\')">編輯</button>'
+      +'</div></div>';
+  });
+  h+='<div class="resource-card" style="border-style:dashed;display:flex;align-items:center;justify-content:center;flex-direction:column;color:var(--text-secondary);cursor:pointer;min-height:130px;" onclick="c6OpenResModal()"><div style="font-size:28px;">＋</div><div style="font-weight:600;margin-top:6px;">新增資源</div></div>';
+  document.getElementById('c6-res-cards').innerHTML=h;
+}
+function c6FolderOptions(sel){
+  var h='';
+  c6Walk(c6Tree,function(n,p,depth){
+    if(n.type==='folder'){
+      var pad='';for(var i=0;i<depth;i++)pad+='　';
+      var label=n.id==='root'?'無所屬類別':pad+c6Esc(n.name);
+      h+='<option value="'+n.id+'"'+(n.id===sel?' selected':'')+'>'+label+'</option>';
+    }
+  });
+  return h;
+}
+function c6DeleteRes(id){
+  var r=c6Find(id),parent=c6FindParent(id);
+  if(!r||!parent)return;
+  if(!confirm('將會變更套用此資源的預約顯示，但不影響預約，請確認是否刪除'))return;
+  parent.children=parent.children.filter(function(x){return x.id!==id;});
+  c6RenderTree();
+  c6Toast('資源「'+r.name+'」已刪除');
+}
+var c6ResIcon='🏢',c6ResEditId=null;
+function c6SetResIcon(icon){
+  c6ResIcon=icon||'🏢';
+  var t=document.getElementById('c6-res-icon-trigger');
+  if(t)t.textContent=c6ResIcon;
+}
+function c6ToggleResIconPicker(){
+  var panel=document.getElementById('c6-res-icon-picker');
+  if(!panel)return;
+  var isOpen=panel.classList.contains('open');
+  panel.classList.toggle('open');
+  if(!isOpen){
+    setTimeout(function(){
+      document.addEventListener('click',function closeIt(e){
+        if(!panel.contains(e.target)&&e.target.id!=='c6-res-icon-trigger')panel.classList.remove('open');
+      },{once:true});
+    },10);
+  }
+}
+function c6PickResIcon(icon){
+  c6SetResIcon(icon);
+  var panel=document.getElementById('c6-res-icon-picker');
+  if(panel)panel.classList.remove('open');
+}
+function c6OpenResModal(){
+  c6ResEditId=null;
+  document.getElementById('c6-res-modal-title').textContent='新增資源';
+  document.getElementById('c6-res-save').textContent='建立';
+  document.getElementById('c6-res-name').value='';
+  c6SetResIcon('🏢');
+  var target=c6Sel;
+  document.getElementById('c6-res-folder').innerHTML=c6FolderOptions(target);
+  openModal('modal-add-resource');
+}
+function c6EditRes(id){
+  var r=c6Find(id);if(!r)return;
+  c6ResEditId=id;
+  document.getElementById('c6-res-modal-title').textContent='編輯資源';
+  document.getElementById('c6-res-save').textContent='儲存變更';
+  document.getElementById('c6-res-name').value=r.name;
+  c6SetResIcon(r.icon||'🏢');
+  document.getElementById('c6-res-folder').innerHTML=c6FolderOptions(c6FindParent(id).id);
+  openModal('modal-add-resource');
+}
+function c6AddResource(){
+  var name=document.getElementById('c6-res-name').value.trim();
+  if(!name){c6Toast('請輸入資源名稱');return;}
+  var folder=c6Find(document.getElementById('c6-res-folder').value)||c6Tree;
+  if(c6ResEditId){
+    var r=c6Find(c6ResEditId);
+    var oldParent=c6FindParent(c6ResEditId);
+    r.name=name;r.icon=c6ResIcon;
+    if(oldParent.id!==folder.id){
+      oldParent.children=oldParent.children.filter(function(x){return x.id!==r.id;});
+      folder.children=folder.children||[];folder.children.push(r);
+    }
+    closeModal('modal-add-resource');c6Sel=folder.id;c6RenderTree();
+    c6Toast('資源「'+name+'」已更新');
+    c6ResEditId=null;return;
+  }
+  folder.children=folder.children||[];
+  folder.children.push({id:'r'+Date.now(),type:'res',name:name,icon:c6ResIcon,
+    cap:0,note:'',perm:'公司',st:'可用',used:0,bookings:[]});
+  closeModal('modal-add-resource');
+  c6Sel=folder.id;c6RenderTree();
+  c6Toast('資源「'+name+'」已建立');
+}
+
+/* ---- 6.2 資源預約時間軸 ---- */
+function c6MiniBar(r){
+  /* 卡片上的迷你時間軸:今日 08–20 時,已預約時段填藍 */
+  var iso=c6ISO(C6_TODAY),h='';
+  for(var t=8;t<20;t++){
+    var booked=(r.bookings||[]).some(function(b){return b.d===iso&&b.sh<t+1&&b.eh>t;});
+    h+='<span style="flex:1;height:8px;border-radius:2px;background:'+(booked?'#4C7DF0':'var(--success-soft)')+';"></span>';
+  }
+  return '<div style="display:flex;gap:2px;">'+h+'</div><div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text-muted);margin-top:2px;"><span>08</span><span>12</span><span>16</span><span>20</span></div>';
+}
+function c6OpenTimeline(id){
+  c6TlRes=id;c6TlState={view:'week',anchor:new Date(2026,6,7)};
+  document.querySelectorAll('#c6-tl-views button').forEach(function(b){b.classList.toggle('on',b.dataset.v==='week');});
+  document.getElementById('c6-tl-addform').style.display='none';
+  var r=c6Find(id);
+  document.getElementById('c6-tl-title').textContent=r.name+' · 預約狀態';
+  c6TlRender();
+  openModal('modal-res-timeline');
+}
+function c6TlView(v){c6TlState.view=v;document.querySelectorAll('#c6-tl-views button').forEach(function(b){b.classList.toggle('on',b.dataset.v===v);});c6TlRender();}
+function c6TlNav(dir){
+  var d=new Date(c6TlState.anchor),v=c6TlState.view;
+  if(v==='month')d.setMonth(d.getMonth()+dir);
+  else if(v==='week')d.setDate(d.getDate()+7*dir);
+  else d.setDate(d.getDate()+dir);
+  c6TlState.anchor=d;c6TlRender();
+}
+function c6TlRender(){
+  var r=c6Find(c6TlRes);if(!r)return;
+  var v=c6TlState.view,a=c6TlState.anchor,canvas=document.getElementById('c6-tl-canvas');
+  var label,inRange;
+  if(v==='day'){
+    label=a.getFullYear()+'年'+(a.getMonth()+1)+'月'+a.getDate()+'日(週'+C6_DOW[a.getDay()]+')';
+    inRange=function(b){return b.d===c6ISO(a);};
+    canvas.innerHTML=c6TlDay(r,a);
+  }else if(v==='week'){
+    var st=new Date(a.getFullYear(),a.getMonth(),a.getDate()-a.getDay());
+    var en=new Date(st);en.setDate(st.getDate()+6);
+    label=(st.getMonth()+1)+'/'+st.getDate()+' – '+(en.getMonth()+1)+'/'+en.getDate();
+    inRange=function(b){var bd=c6FromISO(b.d);return bd>=st&&bd<=en;};
+    canvas.innerHTML=c6TlWeek(r,st);
+  }else{
+    label=a.getFullYear()+'年'+(a.getMonth()+1)+'月';
+    inRange=function(b){return b.d.slice(0,7)===c6ISO(a).slice(0,7);};
+    canvas.innerHTML=c6TlMonth(r,a);
+  }
+  document.getElementById('c6-tl-label').textContent=label;
+  c6TlRecords(r,inRange);
+}
+function c6TlDay(r,dt){
+  var iso=c6ISO(dt);
+  var h='<div class="c6-tlbar">';
+  for(var t=8;t<20;t++){
+    var bk=(r.bookings||[]).filter(function(b){return b.d===iso&&b.sh<t+1&&b.eh>t;});
+    var title=bk.length?bk[0].title:'';
+    h+='<div class="c6-tlslot'+(bk.length?' booked':'')+'" title="'+(bk.length?title+' '+c6HH(bk[0].sh)+'–'+c6HH(bk[0].eh):(String(t).padStart(2,"0")+":00 未預約"))+'">'+(bk.length?'<span>'+title+'</span>':'')+'</div>';
+  }
+  h+='</div><div class="c6-tlaxis">';
+  for(var t2=8;t2<20;t2++)h+='<span>'+String(t2).padStart(2,'0')+'</span>';
+  return h+'</div>';
+}
+function c6TlWeek(r,st){
+  var h='<div class="c6-tlweek">';
+  for(var i=0;i<7;i++){
+    var dt=new Date(st);dt.setDate(st.getDate()+i);var iso=c6ISO(dt);
+    var bk=(r.bookings||[]).filter(function(b){return b.d===iso;});
+    var today=iso===c6ISO(C6_TODAY);
+    h+='<div class="c6-tlcol">';
+    h+='<div class="c6-tlch'+(today?' today':'')+'">'+C6_DOW[dt.getDay()]+'<br /><b>'+dt.getDate()+'</b></div>';
+    h+='<div class="c6-tlbody">';
+    if(bk.length){
+      bk.sort(function(a,b){return (a.sh||0)-(b.sh||0);}).forEach(function(b){
+        h+='<div class="c6-tlchip" title="'+b.title+' '+(b.sh?c6HH(b.sh)+'–'+c6HH(b.eh):'全天')+'">'+(b.sh?c6HH(b.sh)+' ':'')+b.title+'</div>';
+      });
+    }else{
+      h+='<div class="c6-tlfree">未預約</div>';
+    }
+    h+='</div></div>';
+  }
+  return h+'</div>';
+}
+function c6TlMonth(r,a){
+  var y=a.getFullYear(),m=a.getMonth();
+  var first=new Date(y,m,1),start=new Date(y,m,1-first.getDay());
+  var days=new Date(y,m+1,0).getDate(),rows=Math.ceil((first.getDay()+days)/7);
+  var h='<div class="cal-grid" style="border-radius:8px;overflow:hidden;">';
+  C6_DOW.forEach(function(d){h+='<div class="cal-day-head">'+d+'</div>';});
+  for(var i=0;i<rows*7;i++){
+    var dt=new Date(start);dt.setDate(start.getDate()+i);
+    var iso=c6ISO(dt),dim=dt.getMonth()!==m,today=iso===c6ISO(C6_TODAY);
+    var bk=(r.bookings||[]).filter(function(b){return b.d===iso;});
+    h+='<div class="cal-cell'+(dim?' muted':'')+(today?' today':'')+'" style="min-height:64px;cursor:default;">';
+    h+='<span class="cal-day-num">'+dt.getDate()+'</span>';
+    bk.slice(0,2).forEach(function(b){h+='<div class="cal-event blue">'+(b.sh?c6HH(b.sh)+' ':'')+b.title+'</div>';});
+    if(bk.length>2)h+='<div class="text-sec" style="font-size:10px;padding-left:4px;">+'+(bk.length-2)+' 筆</div>';
+    h+='</div>';
+  }
+  return h+'</div>';
+}
+function c6TlRecords(r,inRange){
+  var recs=(r.bookings||[]).filter(inRange).sort(function(a,b){return a.d===b.d?(a.sh||0)-(b.sh||0):(a.d<b.d?-1:1);});
+  var h='';
+  if(!recs.length){
+    h='<div class="text-sec" style="font-size:13px;padding:12px;text-align:center;background:#FAFAFC;border-radius:8px;">此區間尚無預約記錄</div>';
+  }else{
+    h='<table class="data-table"><thead><tr><th>日期</th><th>時間</th><th>用途</th><th>預約人</th><th style="width:60px;"></th></tr></thead><tbody>';
+    recs.forEach(function(b){
+      h+='<tr><td>'+b.d.slice(5).replace('-','/')+'</td><td>'+(b.sh?c6HH(b.sh)+'–'+c6HH(b.eh):'全天')+'</td><td>'+b.title+'</td><td class="text-sec">'+(b.by||'—')+'</td><td><button class="btn ghost sm" style="color:var(--danger);" onclick="c6TlDelBooking(\''+b.id+'\')">刪除</button></td></tr>';
+    });
+    h+='</tbody></table>';
+  }
+  document.getElementById('c6-tl-records').innerHTML=h;
+}
+function c6TlAddToggle(){
+  var f=document.getElementById('c6-tl-addform');
+  var show=f.style.display==='none';
+  f.style.display=show?'':'none';
+  if(show)document.getElementById('c6-tl-date').value=c6ISO(c6TlState.anchor);
+}
+function c6TlAddBooking(){
+  var r=c6Find(c6TlRes);if(!r)return;
+  var dv=document.getElementById('c6-tl-date').value.trim();
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(dv)){c6Toast('日期請用 2026-07-07 格式');return;}
+  var sh=c6ParseH(document.getElementById('c6-tl-start').value);if(sh===null)sh=10;
+  var eh=c6ParseH(document.getElementById('c6-tl-end').value);if(eh===null||eh<=sh)eh=sh+1;
+  var title=document.getElementById('c6-tl-btitle').value.trim()||'資源預約';
+  var conflict=(r.bookings||[]).some(function(b){return b.d===dv&&b.sh<eh&&b.eh>sh;});
+  r.bookings=r.bookings||[];
+  r.bookings.push({id:'b'+Date.now(),d:dv,sh:sh,eh:eh,title:title,by:'蕭玉芬(我)'});
+  document.getElementById('c6-tl-btitle').value='';
+  document.getElementById('c6-tl-addform').style.display='none';
+  c6TlState.anchor=c6FromISO(dv);
+  c6TlRender();c6RenderCards();
+  c6Toast(conflict?'已新增預約 ⚠️ 該時段與既有預約重疊':'已新增預約:'+title);
+}
+function c6TlDelBooking(bid){
+  var r=c6Find(c6TlRes);if(!r)return;
+  var b=(r.bookings||[]).filter(function(x){return x.id===bid;})[0];
+  r.bookings=r.bookings.filter(function(x){return x.id!==bid;});
+  c6TlRender();c6RenderCards();
+  c6Toast('已刪除預約「'+(b?b.title:'')+'」');
+}
+function c6OpenFolderModal(){
+  document.getElementById('c6-fld-parent').innerHTML=c6FolderOptions(c6Sel);
+  openModal('modal-add-folder');
+}
+function c6AddFolder(){
+  var name=document.getElementById('c6-fld-name').value.trim();
+  if(!name){c6Toast('請輸入資料夾名稱');return;}
+  var parent=c6Find(document.getElementById('c6-fld-parent').value)||c6Tree;
+  parent.children=parent.children||[];
+  parent.children.unshift({id:'f'+Date.now(),name:name,type:'folder',open:true,children:[]});
+  parent.open=true;
+  closeModal('modal-add-folder');
+  document.getElementById('c6-fld-name').value='';
+  c6RenderTree();c6Toast('資料夾「'+name+'」已建立');
+}
+
+/* ---- 6.3 日曆設定 ---- */
+function c6ToggleSub(id,cb){
+  document.getElementById(id).style.display=cb.checked?'':'none';
+  c6Toast(cb.checked?'已開啟':'已關閉');
+}
+function c6Seg(el){
+  Array.prototype.forEach.call(el.parentNode.children,function(b){b.classList.remove('on');});
+  el.classList.add('on');
+  c6Toast('同步方向已改為:'+el.textContent);
+}
+function c6Copy(t){c6Toast('已複製「'+t+'」的共享連結');}
+function c6Regen(el){c6Toast('已重新產生共享連結(舊連結即刻失效)');}
+function c6SyncNow(btn){
+  btn.disabled=true;btn.textContent='同步中⋯';
+  setTimeout(function(){
+    btn.disabled=false;btn.textContent='立即同步';
+    document.getElementById('c6-last-sync').textContent='上次同步:剛剛 · 成功(增量 3 筆)';
+    c6Toast('手動同步完成:新增 2 筆、更新 1 筆');
+  },1400);
+}
+var c6GLinked=true;
+function c6Unlink(btn){
+  if(c6GLinked){
+    if(!confirm('解除後將停止同步,已同步的事件副本會保留在 LINE WORKS。確定解除 Google 連結?'))return;
+    c6GLinked=false;
+    document.getElementById('c6-g-badge').className='badge neutral dot';
+    document.getElementById('c6-g-badge').textContent='未連結';
+    btn.textContent='重新連結';
+    c6Toast('已解除 Google 連結');
+  }else{
+    c6GLinked=true;
+    document.getElementById('c6-g-badge').className='badge success dot';
+    document.getElementById('c6-g-badge').textContent='已連結';
+    btn.textContent='解除連結';
+    c6Toast('已重新連結 Google Workspace');
+  }
+}
+
+/* init */
+c6RenderCalList();
+c6Render();
+c6RenderTree();
+</script>
+<!-- ===== [修改結束] 行事曆管理模組 ===== -->
 
 </body>
 </html>
