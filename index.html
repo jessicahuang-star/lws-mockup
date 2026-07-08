@@ -8196,27 +8196,31 @@
         <div id="c6-ext-sub" class="c6-sub">
           <div class="setting-row"><div class="setting-info"><div class="t">Google Calendar 串接</div><div class="d">與 Google Workspace 行事曆雙向串接,行程與資源共用同一份真實來源。</div></div><div class="setting-control"><label class="switch"><input type="checkbox" checked onchange="c6ToggleSub('c6-g-sub',this)" /><span class="slider"></span></label></div></div>
           <div id="c6-g-sub" class="c6-sub" style="background:var(--surface);">
-            <div class="c6-conn">
-              <span class="gi">G</span>
-              <div style="flex:1;"><b>yourcompany.com</b><br /><small class="text-sec">Google Workspace · 由 IT 管理員授權 · 128 位成員已啟用</small></div>
-              <span class="badge success dot" id="c6-g-badge">已連結</span>
-              <button class="btn sm danger" onclick="c6Unlink(this)">解除連結</button>
+            <div class="setting-row"><div class="setting-info"><div class="t">啟用 Google Calendar 同步</div></div><div class="setting-control"><label class="switch"><input type="checkbox" checked onchange="c6Toast(this.checked?'已啟用 Google Calendar 同步':'已停用 Google Calendar 同步')" /><span class="slider"></span></label></div></div>
+            <div style="font-weight:600;font-size:13px;padding:14px 0 8px;">連線方式</div>
+            <div style="display:flex;gap:18px;align-items:center;flex-wrap:wrap;margin-bottom:14px;color:var(--text-secondary);font-size:13px;">
+              <label style="display:flex;align-items:center;gap:6px;cursor:pointer;"><input type="radio" name="c6-google-conn" checked style="accent-color:var(--primary);" /> Google Workspace API</label>
+              <label style="display:flex;align-items:center;gap:6px;cursor:pointer;"><input type="radio" name="c6-google-conn" style="accent-color:var(--primary);" /> Calendar 連結</label>
             </div>
-            <div class="setting-row"><div class="setting-info"><div class="t">同步方向</div><div class="d">事件在兩個系統之間的流動方式。</div></div><div class="setting-control" style="width:auto;"><span class="c6-seg"><button class="on" onclick="c6Seg(this)">雙向</button><button onclick="c6Seg(this)">僅匯入</button><button onclick="c6Seg(this)">僅匯出</button></span></div></div>
-            <div class="setting-row"><div class="setting-info"><div class="t">私人事件僅同步「忙碌」狀態</div><div class="d">不同步標題與內容,僅用於空檔計算。</div></div><div class="setting-control"><label class="switch"><input type="checkbox" checked onchange="c6Toast(this.checked?'已開啟':'已關閉')" /><span class="slider"></span></label></div></div>
-            <div class="setting-row"><div class="setting-info"><div class="t">將 Google 行程納入空檔確認</div><div class="d">建立事件的推薦時段會避開 Google 端行程。</div></div><div class="setting-control"><label class="switch"><input type="checkbox" checked onchange="c6Toast(this.checked?'已開啟':'已關閉')" /><span class="slider"></span></label></div></div>
-
-            <div style="font-weight:600;font-size:13px;padding:14px 0 2px;">日曆資源共享連結</div>
-            <div class="text-sec" style="font-size:12px;margin-bottom:8px;">將資源(會議室/設備)行事曆以唯讀連結共享給 Google 端,避免同一資源被重複預約。</div>
-            <table class="data-table" style="margin-bottom:16px;">
-              <thead><tr><th>資源</th><th>共享連結</th><th style="width:170px;"></th></tr></thead>
-              <tbody>
-                <tr><td>🏢 大會議室</td><td><span class="c6-link">ical://cal.lws.coolbe.com/res/meeting-main.ics</span></td><td><button class="btn ghost sm" onclick="c6Copy('大會議室')">複製</button><button class="btn ghost sm" onclick="c6Regen(this)">重新產生</button></td></tr>
-                <tr><td>💻 會議室 A</td><td><span class="c6-link">ical://cal.lws.coolbe.com/res/room-a.ics</span></td><td><button class="btn ghost sm" onclick="c6Copy('會議室 A')">複製</button><button class="btn ghost sm" onclick="c6Regen(this)">重新產生</button></td></tr>
-                <tr><td>☕ 會議室 B</td><td><span class="c6-link">ical://cal.lws.coolbe.com/res/room-b.ics</span></td><td><button class="btn ghost sm" onclick="c6Copy('會議室 B')">複製</button><button class="btn ghost sm" onclick="c6Regen(this)">重新產生</button></td></tr>
-                <tr><td>📞 會議室 C</td><td><span class="c6-link">ical://cal.lws.coolbe.com/res/room-c.ics</span></td><td><button class="btn ghost sm" onclick="c6Copy('會議室 C')">複製</button><button class="btn ghost sm" onclick="c6Regen(this)">重新產生</button></td></tr>
-              </tbody>
-            </table>
+            <div class="form-row"><label>Calendar ID / Email / 連結</label><input class="input full" value="room-calendar@company.com" /></div>
+            <div style="display:flex;align-items:center;gap:10px;margin:8px 0 16px;color:var(--text-secondary);font-size:13px;">
+              <span>狀態：<span class="badge success dot">已連線</span></span>
+              <button class="btn sm" onclick="c6Toast('Google Calendar 測試連線成功')">測試連線</button>
+            </div>
+            <div style="font-weight:600;font-size:13px;padding:14px 0 8px;border-top:1px solid var(--border);">同步範圍</div>
+            <div class="form-row"><label>同步來源</label><select class="input full"><option selected>指定日曆</option><option>全部日曆</option><option>主要日曆</option></select></div>
+            <div class="form-row"><label>Google Calendar ID / Email / 連結</label>
+              <div style="display:flex;flex-direction:column;gap:8px;width:100%;" id="c6-g-cal-list">
+                <input class="input full" value="room-a@resource.calendar.google.com" />
+                <button class="btn sm" type="button" onclick="c6AddGoogleCalendarRow()" style="align-self:flex-start;">+ 新增一筆</button>
+              </div>
+            </div>
+            <div style="font-weight:600;font-size:13px;padding:14px 0 8px;">同步區間</div>
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px;color:var(--text-secondary);font-size:13px;">
+              <span>過去</span><input class="input" type="number" value="30" min="0" style="width:72px;" /><span>天</span>
+              <span style="margin-left:12px;">未來</span><input class="input" type="number" value="180" min="0" style="width:72px;" /><span>天</span>
+            </div>
+            <div class="setting-row"><div class="setting-info"><div class="t">私人事件</div></div><div class="setting-control" style="display:flex;gap:12px;align-items:center;justify-content:flex-end;flex-wrap:wrap;"><select class="input"><option selected>只顯示忙碌</option><option>顯示事件詳情</option><option>不同步私人事件</option></select><label style="display:flex;align-items:center;gap:8px;color:var(--text-secondary);font-size:13px;">保留已取消事件 <span class="switch"><input type="checkbox" checked onchange="c6Toast(this.checked?'已保留已取消事件':'已不保留已取消事件')" /><span class="slider"></span></span></label></div></div>
           </div>
         </div>
       </div>
@@ -19374,37 +19378,14 @@ function c6ToggleSub(id,cb){
   document.getElementById(id).style.display=cb.checked?'':'none';
   c6Toast(cb.checked?'已開啟':'已關閉');
 }
-function c6Seg(el){
-  Array.prototype.forEach.call(el.parentNode.children,function(b){b.classList.remove('on');});
-  el.classList.add('on');
-  c6Toast('同步方向已改為:'+el.textContent);
-}
-function c6Copy(t){c6Toast('已複製「'+t+'」的共享連結');}
-function c6Regen(el){c6Toast('已重新產生共享連結(舊連結即刻失效)');}
-function c6SyncNow(btn){
-  btn.disabled=true;btn.textContent='同步中⋯';
-  setTimeout(function(){
-    btn.disabled=false;btn.textContent='立即同步';
-    document.getElementById('c6-last-sync').textContent='上次同步:剛剛 · 成功(增量 3 筆)';
-    c6Toast('手動同步完成:新增 2 筆、更新 1 筆');
-  },1400);
-}
-var c6GLinked=true;
-function c6Unlink(btn){
-  if(c6GLinked){
-    if(!confirm('解除後將停止同步,已同步的事件副本會保留在 LINE WORKS。確定解除 Google 連結?'))return;
-    c6GLinked=false;
-    document.getElementById('c6-g-badge').className='badge neutral dot';
-    document.getElementById('c6-g-badge').textContent='未連結';
-    btn.textContent='重新連結';
-    c6Toast('已解除 Google 連結');
-  }else{
-    c6GLinked=true;
-    document.getElementById('c6-g-badge').className='badge success dot';
-    document.getElementById('c6-g-badge').textContent='已連結';
-    btn.textContent='解除連結';
-    c6Toast('已重新連結 Google Workspace');
-  }
+function c6AddGoogleCalendarRow(){
+  var list=document.getElementById('c6-g-cal-list');if(!list)return;
+  var btn=list.querySelector('button');
+  var input=document.createElement('input');
+  input.className='input full';
+  input.placeholder='Google Calendar ID / Email / 連結';
+  list.insertBefore(input,btn);
+  c6Toast('已新增一筆 Google Calendar');
 }
 
 /* init */
