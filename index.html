@@ -3064,10 +3064,13 @@
         佈告欄管理
         <svg class="chev" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
       </div>
+      <!-- ===== [修改開始] 佈告欄管理重構:總覽/看板管理/設定與資料 ===== -->
       <div class="nav-children">
-        <div class="nav-item" data-page="7.1" onclick="goPage('7.1')">7.1 看板列表</div>
-        <div class="nav-item" data-page="7.2" onclick="goPage('7.2')">7.2 一般設定</div>
+        <div class="nav-item" data-page="7.1" onclick="goPage('7.1')">7.1 總覽</div>
+        <div class="nav-item" data-page="7.2" onclick="goPage('7.2')">7.2 看板管理</div>
+        <div class="nav-item" data-page="7.3" onclick="goPage('7.3')">7.3 設定與資料</div>
       </div>
+      <!-- ===== [修改結束] ===== -->
     </div>
     <div class="nav-group" id="group-contact">
       <div class="nav-item parent" onclick="toggleGroup('group-contact')">
@@ -8227,117 +8230,352 @@
     </section>
     <!-- ===== [修改結束] 行事曆管理模組重構 ===== -->
 
-    <!-- ============= 7.1 看板列表 ============= -->
+    <!-- ===== [修改開始] 佈告欄管理模組重構(7.1 總覽 / 7.2 看板管理 / 7.3 設定與資料) ===== -->
+    <style>
+    /* ---- 佈告欄管理模組(bm-) ---- */
+    .bm-alert{display:flex;align-items:center;gap:10px;padding:12px 16px;border-radius:var(--radius);margin-bottom:20px;background:var(--warning-soft);border:1px solid rgba(180,83,9,.2);font-size:13px;color:#8a5a00}
+    .bm-alert a{margin-left:auto;color:var(--primary);font-weight:600;white-space:nowrap;cursor:pointer;text-decoration:none}
+    .bm-alert a:hover{text-decoration:underline}
+    .bm-stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:20px}
+    .bm-stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-sm);padding:16px 18px}
+    .bm-stat .l{font-size:12px;color:var(--text-secondary);margin-bottom:6px}
+    .bm-stat .n{font-size:24px;font-weight:700}
+    .bm-stat .n small{font-size:13px;color:var(--text-muted);font-weight:400}
+    .bm-stat .bar{height:6px;background:var(--bg);border-radius:6px;margin-top:8px;overflow:hidden}
+    .bm-stat .bar i{display:block;height:100%;background:var(--primary)}
+    .bm-bar-row{display:flex;align-items:center;gap:12px;padding:6px 0}
+    .bm-bar-row .lbl{width:130px;font-size:13px;flex-shrink:0}
+    .bm-bar-row .track{flex:1;height:14px;background:var(--bg);border-radius:5px;overflow:hidden}
+    .bm-bar-row .track i{display:block;height:100%;background:var(--primary);border-radius:5px}
+    .bm-bar-row .val{width:56px;text-align:right;font-weight:600;font-size:13px;flex-shrink:0}
+
+    .bm-pane{display:none}
+    .bm-pane.active{display:block}
+
+    .bm-tree-wrap{display:grid;grid-template-columns:270px 1fr;gap:16px;align-items:start}
+    .bm-tree-head{padding:12px 14px;border-bottom:1px solid var(--border);font-weight:700;font-size:13px;display:flex;align-items:center;gap:8px}
+    .bm-cnt{margin-left:auto;font-size:11px;color:var(--primary);background:var(--primary-soft);border-radius:20px;padding:1px 9px;font-weight:600;cursor:pointer}
+    .bm-cnt:hover{background:var(--primary);color:#fff}
+    .bm-gcnt{margin-left:auto;font-size:11px;color:var(--text-muted)}
+    .org-tree-row:hover .bm-gcnt{display:none}
+    .bm-node-acts{margin-left:auto;display:none;gap:4px}
+    .org-tree-row:hover .bm-node-acts{display:flex}
+    .bm-node-acts button{border:1px solid var(--border);background:var(--surface);border-radius:5px;font-size:11px;padding:1px 7px;color:var(--text-secondary)}
+    .bm-node-acts button:hover{border-color:var(--primary);color:var(--primary)}
+    .bm-empty-tree{padding:30px 16px;text-align:center;color:var(--text-muted);font-size:12.5px}
+
+    .bm-type-row{display:flex;gap:12px}
+    .bm-type-opt{flex:1;cursor:pointer}
+    .bm-type-opt .ro{display:flex;align-items:center;gap:6px;font-size:13px;margin-bottom:7px;color:var(--text-secondary)}
+    .bm-type-opt .thumb{border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;background:var(--surface);min-height:70px}
+    .bm-type-opt.sel .thumb{border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-soft)}
+    .bm-type-opt.sel .ro{color:var(--primary);font-weight:600}
+    .setting-row .setting-control.bm-radio-control{width:420px;text-align:left}
+    .bm-radio-stack{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+    .bm-radio-opt{display:flex;align-items:flex-start;gap:7px;border:1px solid var(--border);border-radius:8px;background:var(--surface);padding:9px 11px;cursor:pointer;font-size:13px;font-weight:600;color:var(--text);line-height:1.35;min-height:38px;flex:1 1 130px}
+    .bm-radio-opt input{margin-top:1px;accent-color:var(--primary);flex-shrink:0}
+    .bm-radio-opt.sel{border-color:var(--primary);background:var(--primary-soft);box-shadow:0 0 0 2px rgba(32,128,240,.12)}
+    .bm-create-members-wrap{margin-top:10px;text-align:left}
+    .bm-thumb-line{height:6px;background:var(--bg);border-radius:3px;margin:4px 0}
+    .bm-thumb-line.s{width:60%}
+    .bm-thumb-preview{display:flex;gap:6px}
+    .bm-thumb-preview .th{width:38px;height:32px;border-radius:5px;background:linear-gradient(135deg,var(--primary-soft),#c7e0ff)}
+    .bm-thumb-album{display:grid;grid-template-columns:repeat(3,1fr);gap:4px}
+    .bm-thumb-album i{aspect-ratio:1;border-radius:4px;background:linear-gradient(135deg,var(--primary-soft),#c7e0ff);display:block}
+
+    .bm-bulk-bar{display:none;background:var(--primary-soft);align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid var(--border)}
+    .bm-bulk-bar.show{display:flex}
+
+    .bm-diff-row{display:flex;gap:10px;padding:8px 12px;border-bottom:1px solid var(--border);font-size:13px;align-items:baseline}
+    .bm-diff-row:last-child{border-bottom:none}
+    .bm-diff-row .k{width:100px;color:var(--text-secondary);flex-shrink:0}
+    .bm-diff-row .old{color:var(--text-muted);text-decoration:line-through}
+    .bm-diff-row .arrow{color:var(--text-muted)}
+    .bm-diff-row .new{color:var(--primary);font-weight:600}
+    .bm-diff-row.risk .new{color:var(--danger)}
+
+    .bm-lay-wrap{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+    .bm-preview{background:var(--bg);border-radius:var(--radius);padding:16px;position:sticky;top:88px}
+    .bm-preview .lbl{font-size:11px;color:var(--text-muted);text-align:center;margin-bottom:10px}
+    .bm-pv-card{background:var(--surface);border-radius:var(--radius-sm);padding:11px;margin-bottom:9px;box-shadow:var(--shadow-sm)}
+    .bm-pv-card h5{margin:0 0 7px;font-size:12px;display:flex;align-items:center;gap:6px}
+    .bm-sort-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:8px;background:var(--surface);cursor:grab}
+    .bm-sort-item.drag-hl-ok{background:#eff6ff;outline:2px dashed var(--info)}
+    .bm-sort-item .nm{flex:1;font-weight:600;font-size:13px}
+    </style>
+
+    <!-- ============= 7.1 總覽 ============= -->
     <section id="page-7.1" class="page-wrap hidden">
       <div class="page-head">
         <div>
-          <h1 class="page-title">看板列表</h1>
-          <p class="page-desc">公司公告、訊息發布與已讀狀態追蹤。</p>
-        </div>
-        <div class="btn-group">
-          <button class="btn">備份</button>
-          <button class="btn primary">+ 發布文章</button>
+          <h1 class="page-title">總覽</h1>
+          <p class="page-desc">佈告欄的使用量與貼文成效一站看完。需要處理的任務與高風險提醒集中在「設定與資料」，此處只提供前往入口、不重複列出。</p>
         </div>
       </div>
 
-      <div class="card">
-        <div class="board-grid">
-          <div class="board-side">
-            <div class="board-cat active">📌 最近 <span class="count">12</span></div>
-            <div class="board-cat">⭐ 必讀 <span class="count">3</span></div>
-            <div class="board-cat">✏️ 我的文章 <span class="count">8</span></div>
-            <div class="board-cat">🆕 未讀 <span class="count">5</span></div>
-            <div class="board-cat">✅ 已讀</div>
-            <div style="padding: 12px 4px 4px; font-size:11px; color: var(--text-muted); text-transform:uppercase; font-weight:600;">看板分類</div>
-            <div class="board-cat">📢 公告事項 <span class="count">24</span></div>
-            <div class="board-cat">🎉 活動 <span class="count">8</span></div>
-            <div class="board-cat">📚 知識分享 <span class="count">15</span></div>
-            <div class="board-cat">🚨 緊急通知 <span class="count">2</span></div>
-          </div>
-          <div>
-            <div class="post-row unread">
-              <span class="badge danger">必讀</span>
-              <div style="flex:1;">
-                <div class="post-title">【系統公告】5/8 (週六) 凌晨進行系統維護</div>
-                <div class="post-snippet">維護期間 02:00-04:00 將暫停所有服務，造成不便敬請見諒…</div>
-              </div>
-              <div class="post-meta">geer.chen · 2 小時前</div>
-            </div>
-            <div class="post-row unread">
-              <div style="flex:1;">
-                <div class="post-title">📢 母親節活動辦法公告</div>
-                <div class="post-snippet">本月推出母親節限定優惠，歡迎踴躍參與並推廣給客戶…</div>
-              </div>
-              <div class="post-meta">行銷部 · 5 小時前</div>
-            </div>
-            <div class="post-row">
-              <div style="flex:1;">
-                <div class="post-title">📚 新版設計系統 v2.0 上線</div>
-                <div class="post-snippet">設計部已完成設計系統 v2.0，所有元件已推送至 Figma Library…</div>
-              </div>
-              <div class="post-meta">設計部 · 昨天</div>
-            </div>
-            <div class="post-row">
-              <div style="flex:1;">
-                <div class="post-title">🎉 4 月份生日會邀請</div>
-                <div class="post-snippet">下週五 5/9 17:30 在大會議室舉辦生日會，請大家撥冗參加…</div>
-              </div>
-              <div class="post-meta">人資部 · 2 天前</div>
-            </div>
-            <div class="post-row">
-              <div style="flex:1;">
-                <div class="post-title">📚 Q2 OKR 共識會議紀錄</div>
-                <div class="post-snippet">本季重點放在產品穩定度與新客成長…</div>
-              </div>
-              <div class="post-meta">王明德 · 3 天前</div>
-            </div>
-            <div class="post-row">
-              <div style="flex:1;">
-                <div class="post-title">📢 新成員介紹：歡迎黃詩涵加入</div>
-                <div class="post-snippet">業務部本月新成員，請大家多多照顧…</div>
-              </div>
-              <div class="post-meta">人資部 · 1 週前</div>
-            </div>
-          </div>
-        </div>
+      <div class="bm-alert">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        <span>有 <b id="bm-ov-taskcount">2</b> 個待處理任務、<b id="bm-ov-riskcount">3</b> 筆高風險操作待檢視。</span>
+        <a onclick="goPage('7.3')">前往設定與資料 →</a>
+      </div>
+
+      <div class="bm-stat-grid" id="bm-ov-stats"></div>
+
+      <div class="card" style="padding:20px 24px;margin-bottom:16px;">
+        <div style="font-weight:700;margin-bottom:14px;">各看板登錄貼文數</div>
+        <div id="bm-ov-posts"></div>
+      </div>
+      <div class="card" style="padding:20px 24px;">
+        <div style="font-weight:700;margin-bottom:14px;">各看板按讚數&留言數</div>
+        <div id="bm-ov-read"></div>
       </div>
     </section>
 
-    <!-- ============= 7.2 一般設定 (佈告欄) ============= -->
+    <!-- ============= 7.2 看板管理 ============= -->
     <section id="page-7.2" class="page-wrap hidden">
       <div class="page-head">
         <div>
-          <h1 class="page-title">一般設定</h1>
-          <p class="page-desc">佈告欄模組的全域設定。</p>
+          <h1 class="page-title">看板管理</h1>
+          <p class="page-desc">左側分類樹選定看板、右側直接設定，不必在列表與設定頁來回跳。結構：<b>資料夾</b>可放「類別」或「看板」；<b>類別</b>底下只放看板。看板右側數字＝貼文數，點擊可直接查該看板貼文。</p>
         </div>
-        <div class="btn-group"><button class="btn primary">儲存設定</button></div>
       </div>
 
-      <div class="card" style="padding: 8px 24px; margin-bottom: 16px;">
-        <div class="setting-row">
-          <div class="setting-info"><div class="t">主頁佈告欄板位</div><div class="d">設定首頁佈告欄區塊的預設顯示分類。</div></div>
-          <div class="setting-control">
-            <select class="input full"><option>必讀</option><option>最近文章</option><option>我的文章</option></select>
+      <div class="tabs" id="bm-board-tabs">
+        <button class="tab active" onclick="bmTab(this,'#bm-board-tabs','.bm-board-pane','bm-tab-tree')">看板</button>
+        <button class="tab" onclick="bmTab(this,'#bm-board-tabs','.bm-board-pane','bm-tab-posts')">貼文</button>
+        <button class="tab" onclick="bmTab(this,'#bm-board-tabs','.bm-board-pane','bm-tab-trash')">垃圾桶</button>
+        <button class="tab" onclick="bmTab(this,'#bm-board-tabs','.bm-board-pane','bm-tab-layout')">首頁顯示</button>
+      </div>
+
+      <!-- 看板(分類樹＋詳細) -->
+      <div id="bm-tab-tree" class="bm-pane bm-board-pane active" style="padding-top:18px;">
+        <div class="bm-tree-wrap">
+          <div class="card">
+            <div class="bm-tree-head">分類樹<button class="btn sm" style="margin-left:auto;" onclick="bmOpenGroupModal('folder',null)">＋資料夾</button></div>
+            <div class="org-tree-wrap" style="max-height:540px;"><div class="org-tree" id="bm-tree-body"></div></div>
+          </div>
+          <div id="bm-board-detail"></div>
+        </div>
+      </div>
+
+      <!-- 貼文(查詢＋整理合併) -->
+      <div id="bm-tab-posts" class="bm-pane bm-board-pane" style="padding-top:18px;">
+        <div class="card" style="padding:16px 18px;margin-bottom:14px;">
+          <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px;">
+            <div class="form-row" style="margin-bottom:0;"><label>看板</label><select class="input full" id="bm-fltBoard"></select></div>
+            <div class="form-row" style="margin-bottom:0;"><label>關鍵字</label><input class="input full" id="bm-fltKw" placeholder="標題含…" /></div>
+            <div class="form-row" style="margin-bottom:0;"><label>作者</label><input class="input full" id="bm-fltAuthor" placeholder="不限" /></div>
+            <div class="form-row" style="margin-bottom:0;"><label>期間（早於）</label>
+              <select class="input full" id="bm-fltPeriod"><option value="0" selected>全部</option><option value="365">1 年前</option><option value="180">6 個月前</option><option value="90">3 個月前</option></select></div>
+            <div class="form-row" style="margin-bottom:0;"><label>留言數 ≤</label><input class="input full" type="number" min="0" id="bm-fltComment" placeholder="不限" /></div>
+          </div>
+          <div style="margin-top:12px;display:flex;align-items:center;gap:10px;">
+            <button class="btn primary" onclick="bmRenderPostList()">查詢</button>
+            <span style="font-size:12px;color:var(--text-muted);">勾選貼文後，才會出現移動 / 刪除等整理動作</span>
           </div>
         </div>
-        <div class="setting-row">
-          <div class="setting-info"><div class="t">必讀文章未讀提醒</div><div class="d">未讀必讀文章時，每日推播提醒。</div></div>
-          <div class="setting-control"><label class="switch"><input type="checkbox" checked /><span class="slider"></span></label></div>
+        <div class="card">
+          <div class="card-head"><span class="title">貼文</span><span class="text-muted" id="bm-postCount" style="margin-left:8px;font-size:12px;"></span></div>
+          <div id="bm-postResult"></div>
         </div>
-        <div class="setting-row">
-          <div class="setting-info"><div class="t">允許留言</div><div class="d">成員可在文章下方留言互動。</div></div>
-          <div class="setting-control"><label class="switch"><input type="checkbox" checked /><span class="slider"></span></label></div>
+      </div>
+
+      <!-- 垃圾桶 -->
+      <div id="bm-tab-trash" class="bm-pane bm-board-pane" style="padding-top:18px;">
+        <div class="bm-alert" style="background:var(--danger-soft);color:var(--danger);border-color:rgba(220,38,38,.2);">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <span>垃圾桶內貼文依保管期限（目前 <b id="bm-trashDays">30天後自動刪除</b>）處理，可在期限內還原。</span>
         </div>
-        <div class="setting-row">
-          <div class="setting-info"><div class="t">自動備份</div><div class="d">每月自動備份所有文章。</div></div>
-          <div class="setting-control"><label class="switch"><input type="checkbox" checked /><span class="slider"></span></label></div>
+        <div class="card">
+          <table class="data-table">
+            <thead><tr><th>標題</th><th>原看板</th><th>刪除時間</th><th>剩餘保管</th><th style="width:160px;">操作</th></tr></thead>
+            <tbody id="bm-trashRows"></tbody>
+          </table>
         </div>
-        <div class="setting-row">
-          <div class="setting-info"><div class="t">文章保留期限</div><div class="d">超過此天數的文章自動歸檔。</div></div>
-          <div class="setting-control"><select class="input full"><option>不歸檔</option><option>180 天</option><option>365 天</option><option>3 年</option></select></div>
+      </div>
+
+      <!-- 首頁顯示 -->
+      <div id="bm-tab-layout" class="bm-pane bm-board-pane" style="padding-top:18px;">
+        <div class="bm-lay-wrap">
+          <div>
+            <div class="card" style="padding:8px 20px;margin-bottom:14px;" id="bm-blockToggles"></div>
+            <div class="card" style="padding:16px 18px;">
+              <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:10px;">
+                <div style="font-weight:700;font-size:13px;">看板顯示</div>
+                <span class="text-muted" style="font-weight:400;font-size:12px;">預設顯示 1 個，最多可新增至 4 個；拖曳調整顯示順序</span>
+              </div>
+              <div id="bm-homeSlots"></div>
+              <button class="btn sm" id="bm-addSlotBtn" onclick="bmAddHomeSlot()">＋ 新增看板顯示</button>
+            </div>
+          </div>
+          <div class="bm-preview"><div class="lbl">📱 使用者端首頁預覽</div><div id="bm-previewArea"></div></div>
         </div>
       </div>
     </section>
+
+    <!-- ============= 7.3 設定與資料 ============= -->
+    <section id="page-7.3" class="page-wrap hidden">
+      <div class="page-head">
+        <div>
+          <h1 class="page-title">設定與資料</h1>
+          <p class="page-desc">影響所有看板的共用規則、貼文下載備份與操作記錄收在這裡；日常操作在「看板管理」，這裡是偶爾一次的設定與稽核。</p>
+        </div>
+      </div>
+
+      <div class="tabs" id="bm-settings-tabs">
+        <button class="tab active" onclick="bmTab(this,'#bm-settings-tabs','.bm-settings-pane','bm-tab-general')">一般設定</button>
+        <button class="tab" onclick="bmTab(this,'#bm-settings-tabs','.bm-settings-pane','bm-tab-data')">資料管理</button>
+      </div>
+
+      <!-- 一般設定 -->
+      <div id="bm-tab-general" class="bm-pane bm-settings-pane active" style="padding-top:18px;">
+        <div class="card" style="padding:8px 24px;margin-bottom:16px;">
+          <div class="setting-row">
+            <div class="setting-info"><div class="t">單一附件容量上限</div><div class="d">限制每個附加檔案大小，控管共享儲存空間。</div></div>
+            <div class="setting-control"><select class="input full" id="bm-setAttach"><option>10MB</option><option>20MB</option><option>50MB</option><option selected>100MB</option><option>500MB</option><option>1GB</option><option>2GB</option></select></div>
+          </div>
+          <div class="setting-row">
+            <div class="setting-info"><div class="t">垃圾桶保管期限</div><div class="d">刪除的貼文先進垃圾桶，超過此期限後自動永久刪除、無法復原。</div></div>
+            <div class="setting-control"><select class="input full" id="bm-setTrash"><option>無期限</option><option selected>30天後自動刪除</option><option>60天後自動刪除</option><option>90天後自動刪除</option></select></div>
+          </div>
+        </div>
+        <div class="card" style="padding:8px 24px;margin-bottom:16px;">
+          <div class="setting-row">
+            <div class="setting-info"><div class="t">看板 / 類別建立權限</div><div class="d">誰可以新增看板與分類。</div></div>
+            <div class="setting-control bm-radio-control">
+              <input type="hidden" id="bm-permCreate" value="named" />
+              <div class="bm-radio-stack" data-hidden="bm-permCreate">
+                <label class="bm-radio-opt"><input type="radio" name="bm-permCreateRadio" value="system" onchange="bmSetGeneralRadio('bm-permCreate',this.value)" /> 僅管理員</label>
+                <label class="bm-radio-opt"><input type="radio" name="bm-permCreateRadio" value="all" onchange="bmSetGeneralRadio('bm-permCreate',this.value)" /> 所有成員</label>
+                <label class="bm-radio-opt"><input type="radio" name="bm-permCreateRadio" value="named" onchange="bmSetGeneralRadio('bm-permCreate',this.value)" /> 指定成員</label>
+              </div>
+              <div class="bm-create-members-wrap" id="bm-createMembersWrap" style="display:none;">
+                <div class="help" style="margin-bottom:6px;">輸入框 tag Search-Select，可搜尋成員／團隊並加入多位；每位可逐一刪除，至少需保留一位。</div>
+                <div id="bm-createMembersBox"></div>
+              </div>
+            </div>
+          </div>
+          <div class="setting-row">
+            <div class="setting-info"><div class="t">已讀成員查看權限</div><div class="d">誰能查看貼文被哪些人讀過。</div></div>
+            <div class="setting-control bm-radio-control">
+              <input type="hidden" id="bm-permRead" value="limited" />
+              <div class="bm-radio-stack" data-hidden="bm-permRead">
+                <label class="bm-radio-opt"><input type="radio" name="bm-permReadRadio" value="board" onchange="bmSetGeneralRadio('bm-permRead',this.value)" /> 所有成員</label>
+                <label class="bm-radio-opt"><input type="radio" name="bm-permReadRadio" value="limited" onchange="bmSetGeneralRadio('bm-permRead',this.value)" /> 僅貼文建立者&看板負責人&管理員</label>
+              </div>
+            </div>
+          </div>
+          <div class="setting-row">
+            <div class="setting-info"><div class="t">必讀設定權限</div><div class="d">誰能把貼文標記為必讀。</div></div>
+            <div class="setting-control bm-radio-control">
+              <input type="hidden" id="bm-permMust" value="limited" />
+              <div class="bm-radio-stack" data-hidden="bm-permMust">
+                <label class="bm-radio-opt"><input type="radio" name="bm-permMustRadio" value="manager" onchange="bmSetGeneralRadio('bm-permMust',this.value)" /> 僅看板負責人&管理員</label>
+                <label class="bm-radio-opt"><input type="radio" name="bm-permMustRadio" value="limited" onchange="bmSetGeneralRadio('bm-permMust',this.value)" /> 僅貼文建立者&看板負責人&管理員</label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="text-align:right;"><button class="btn primary" onclick="bmSaveGeneral()">儲存設定</button></div>
+      </div>
+
+      <!-- 資料管理 -->
+      <div id="bm-tab-data" class="bm-pane bm-settings-pane" style="padding-top:18px;">
+        <div style="font-weight:700;font-size:13px;margin-bottom:10px;">貼文下載備份</div>
+        <div id="bm-data-backup" style="margin-bottom:22px;">
+          <div class="bm-alert">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            <span>選擇全部看板或特定看板，列表顯示看板底下的貼文。可以勾選個別貼文或全選進行下載備份。</span>
+          </div>
+          <div class="card" style="padding:16px 18px;margin-bottom:16px;">
+            <div style="display:grid;grid-template-columns:260px 1fr auto;gap:12px;align-items:end;">
+              <div class="form-row" style="margin-bottom:0;">
+                <label>看板</label>
+                <select class="input full" id="bm-bkBoard" onchange="bmBackupBoardChanged()"></select>
+              </div>
+              <div class="form-row" style="margin-bottom:0;">
+                <label>貼文</label>
+                <div class="input full" style="display:flex;align-items:center;height:38px;color:var(--text-secondary);background:var(--bg);">已選 <b id="bm-bkSelected" style="margin:0 4px;color:var(--text);">0</b> 篇貼文</div>
+              </div>
+              <button class="btn primary" id="bm-bkDownloadBtn" onclick="bmDownloadSelectedPosts()" disabled>下載備份</button>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-head"><span class="title">貼文列表</span><span class="text-muted" id="bm-bkPostCount" style="font-size:12px;margin-left:8px;"></span></div>
+            <table class="data-table">
+              <thead><tr><th style="width:34px;"><input type="checkbox" id="bm-bkAll" onchange="bmToggleDownloadAll(this)" /></th><th>標題</th><th style="width:140px;">看板</th><th style="width:90px;">作者</th><th style="width:110px;">發布日期</th><th style="width:80px;text-align:right;">留言數</th></tr></thead>
+              <tbody id="bm-backupPostRows"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div style="font-weight:700;font-size:13px;margin-bottom:10px;">操作記錄</div>
+        <div id="bm-data-audit">
+          <div class="toolbar">
+            <input class="input search-input" id="bm-auditQ" placeholder="搜尋操作者 / 動作 / 影響範圍…" oninput="bmRenderAudit()" />
+            <div style="flex:1;"></div>
+            <button class="btn" onclick="bmToast('已產生操作紀錄 CSV（原型示意）')">⭳ 下載紀錄 (CSV)</button>
+          </div>
+          <div class="card">
+            <table class="data-table">
+              <thead><tr><th style="width:140px;">操作時間</th><th style="width:90px;">操作者</th><th>動作</th><th>影響範圍</th><th style="width:180px;">備註</th></tr></thead>
+              <tbody id="bm-auditRows"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============= 佈告欄管理:Modals ============= -->
+    <div class="modal-overlay" id="bm-modal-board" onclick="closeModalIfBackdrop(event,'bm-modal-board')">
+      <div class="modal" style="width:560px;">
+        <div class="modal-head"><h3 class="modal-title" id="bm-boardModalTitle">新增看板</h3>
+          <button class="icon-btn" onclick="closeModal('bm-modal-board')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button></div>
+        <div class="modal-body" id="bm-boardModalBody"></div>
+        <div class="modal-foot"><button class="btn" onclick="closeModal('bm-modal-board')">取消</button><button class="btn primary" id="bm-boardModalSave">建立看板</button></div>
+      </div>
+    </div>
+
+    <div class="modal-overlay" id="bm-modal-group" onclick="closeModalIfBackdrop(event,'bm-modal-group')">
+      <div class="modal" style="width:420px;">
+        <div class="modal-head"><h3 class="modal-title" id="bm-groupModalTitle">新增資料夾</h3>
+          <button class="icon-btn" onclick="closeModal('bm-modal-group')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button></div>
+        <div class="modal-body" id="bm-groupModalBody"></div>
+        <div class="modal-foot"><button class="btn" onclick="closeModal('bm-modal-group')">取消</button><button class="btn primary" id="bm-groupModalSave">新增</button></div>
+      </div>
+    </div>
+
+    <div class="modal-overlay" id="bm-modal-danger" onclick="closeModalIfBackdrop(event,'bm-modal-danger')">
+      <div class="modal" style="width:440px;">
+        <div class="modal-head"><h3 class="modal-title" id="bm-dangerTitle">刪除確認</h3>
+          <button class="icon-btn" onclick="closeModal('bm-modal-danger')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button></div>
+        <div class="modal-body" id="bm-dangerBody"></div>
+        <div class="modal-foot"><button class="btn" onclick="closeModal('bm-modal-danger')">取消</button><button class="btn danger" style="background:var(--danger);color:#fff;border-color:var(--danger);" id="bm-dangerConfirm">確認</button></div>
+      </div>
+    </div>
+
+    <div class="modal-overlay" id="bm-modal-diff" onclick="closeModalIfBackdrop(event,'bm-modal-diff')">
+      <div class="modal" style="width:480px;">
+        <div class="modal-head"><h3 class="modal-title" id="bm-diffTitle">異動摘要</h3>
+          <button class="icon-btn" onclick="closeModal('bm-modal-diff')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button></div>
+        <div class="modal-body">
+          <p style="margin-top:0;color:var(--text-secondary);font-size:13px;">請確認以下變更後再套用：</p>
+          <div id="bm-diffBody" style="border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;"></div>
+          <div id="bm-diffRiskNote" style="display:none;"></div>
+        </div>
+        <div class="modal-foot"><button class="btn" onclick="closeModal('bm-modal-diff')">取消</button><button class="btn primary" id="bm-diffConfirm">確認套用</button></div>
+      </div>
+    </div>
+
+    <div class="modal-overlay" id="bm-modal-template" onclick="closeModalIfBackdrop(event,'bm-modal-template')">
+      <div class="modal" style="width:400px;">
+        <div class="modal-head"><h3 class="modal-title">選擇範本</h3>
+          <button class="icon-btn" onclick="closeModal('bm-modal-template')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button></div>
+        <div class="modal-body" id="bm-templateBody"></div>
+        <div class="modal-foot"><button class="btn" onclick="closeModal('bm-modal-template')">完成</button></div>
+      </div>
+    </div>
+    <!-- ===== [修改結束] 佈告欄管理模組重構 ===== -->
 
     <!-- ============= 8.1 聯絡人管理 ============= -->
     <section id="page-8.1" class="page-wrap hidden">
@@ -13475,8 +13713,9 @@
     '6.1': { section: '行事曆管理', name: '公司行事曆', group: 'group-cal' },
     '6.2': { section: '行事曆管理', name: '資源管理', group: 'group-cal' },
     '6.3': { section: '行事曆管理', name: '日曆設定', group: 'group-cal' },
-    '7.1': { section: '佈告欄管理', name: '看板列表', group: 'group-board' },
-    '7.2': { section: '佈告欄管理', name: '一般設定', group: 'group-board' },
+    '7.1': { section: '佈告欄管理', name: '總覽', group: 'group-board' },
+    '7.2': { section: '佈告欄管理', name: '看板管理', group: 'group-board' },
+    '7.3': { section: '佈告欄管理', name: '設定與資料', group: 'group-board' },
     '8.1': { section: '通訊錄', name: '聯絡人管理', group: 'group-contact' },
     '8.2': { section: '通訊錄', name: '名片欄位設定', group: 'group-contact' },
     '8.3': { section: '通訊錄', name: '一般設定', group: 'group-contact' },
@@ -13499,6 +13738,11 @@
     if (id === '4.1') {
       if (typeof initMemberOrgTree === 'function') initMemberOrgTree();
     }
+    /* ===== [修改開始] 佈告欄管理重構:進頁渲染掛勾 ===== */
+    if (id === '7.1' && typeof bmRenderOverview === 'function') bmRenderOverview();
+    if (id === '7.2' && typeof bmRenderBoardTab === 'function') bmRenderBoardTab();
+    if (id === '7.3' && typeof bmRenderSettingsTab === 'function') bmRenderSettingsTab();
+    /* ===== [修改結束] ===== */
     document.querySelectorAll('.sidebar .nav-item').forEach(el => el.classList.remove('active'));
     const navItem = document.querySelector(`.nav-item[data-page="${id}"]`);
     if (navItem) navItem.classList.add('active');
@@ -19394,6 +19638,863 @@ c6Render();
 c6RenderTree();
 </script>
 <!-- ===== [修改結束] 行事曆管理模組 ===== -->
+
+<!-- ===== [修改開始] 佈告欄管理模組重構:JS(bm-)===== -->
+<script>
+(function(){
+
+  var BM = {
+    groups: [
+      {id:1,name:"公司公告",kind:"folder",parentId:null},
+      {id:2,name:"部門",kind:"folder",parentId:null},
+      {id:3,name:"業務",kind:"category",parentId:2},
+      {id:4,name:"設計",kind:"category",parentId:2},
+      {id:5,name:"社團",kind:"folder",parentId:null},
+    ],
+    boards: [
+      {id:1,name:"全公司公告",groupId:1,scope:"all",managers:["陳美玲"],members:[],posts:128,readRate:92,likeCount:486,commentCount:38,mustRead:true,comments:false,notify:"all",tags:["公告"],type:"board",template:"公告範本",emoji:true},
+      {id:2,name:"人資政策",groupId:1,scope:"members",managers:["王大明"],members:["人資部","全體主管"],posts:64,readRate:78,likeCount:210,commentCount:24,mustRead:true,comments:true,notify:"member",tags:["HR","制度"],type:"board",template:null,emoji:false},
+      {id:3,name:"業務部佈告欄",groupId:3,scope:"members",managers:["林志豪"],members:["業務一部","業務二部"],posts:212,readRate:65,likeCount:632,commentCount:86,mustRead:false,comments:true,notify:"none",tags:["業務"],type:"preview",template:null,emoji:true},
+      {id:4,name:"設計部靈感牆",groupId:4,scope:"members",managers:["黃小鳳","李國華"],members:["設計部"],posts:340,readRate:71,likeCount:918,commentCount:143,mustRead:false,comments:true,notify:"member",tags:["設計"],type:"album",template:"活動範本",emoji:true},
+      {id:5,name:"社團 · 路跑",groupId:5,scope:"all",managers:["張婷"],members:[],posts:57,readRate:40,likeCount:155,commentCount:52,mustRead:false,comments:true,notify:"none",tags:[],type:"board",template:null,emoji:true},
+    ],
+    directory: ["陳美玲","王大明","林志豪","黃小鳳","張婷","李國華","周雅婷","吳建志","蔡佩珊","鄭文彬","人資部","設計部","業務一部","業務二部","全體主管","全體員工"],
+    templates: ["公告範本","活動範本","週報範本"],
+    perm: {create:"named", read:"limited", must:"limited", createMembers:["陳美玲"]},
+    attach: "100MB", trash: "30天後自動刪除",
+    blocks: {latest:true},
+    homeSlots: [1],
+    backups: [{id:1, at:"2026/07/08 14:20", by:"陳美玲", exp:"2026/07/15", size:"1.2 GB", status:"ready"}],
+    backupToday: 1,
+    trashPosts: [
+      {id:91, title:"舊版差旅辦法", board:"人資政策", at:"2026/07/02", left:23},
+      {id:92, title:"過期活動海報", board:"社團 · 路跑", at:"2026/06/28", left:19},
+    ],
+    tasks: [
+      {type:"整理", detail:"業務部佈告欄 · 6 個月前 · 待執行", status:"待確認", at:"2026/07/09 09:12"},
+      {type:"貼文下載備份", detail:"全公司貼文可勾選下載備份", status:"可下載", at:"2026/07/08 14:20"},
+    ],
+    audit: [
+      {at:"2026/07/08 14:20", by:"陳美玲", action:"貼文下載備份", scope:"全公司 5 個看板", risk:"low", note:""},
+      {at:"2026/07/07 17:03", by:"林志豪", action:"永久刪除貼文", scope:"業務部佈告欄 · 12 篇", risk:"high"},
+      {at:"2026/07/06 10:45", by:"王大明", action:"變更看板公開範圍", scope:"人資政策 · 全公司→指定成員", risk:"high"},
+      {at:"2026/07/05 09:20", by:"黃小鳳", action:"移動貼文", scope:"設計部靈感牆 → 業務部佈告欄 · 8 篇", risk:"low"},
+      {at:"2026/07/03 16:10", by:"陳美玲", action:"調整垃圾桶保管期限", scope:"60 天 → 30 天", risk:"high"},
+    ],
+    seq: 100,
+  };
+  var samplePosts = [
+    {id:1, board:3, title:"2023 上半年業績檢討", author:"林志豪", date:"2023/06/30", days:740, comments:2},
+    {id:2, board:3, title:"舊版報價單範本（已停用）", author:"王大明", date:"2023/11/12", days:605, comments:0},
+    {id:3, board:4, title:"2024 春季提案存檔", author:"黃小鳳", date:"2024/03/03", days:493, comments:12},
+    {id:4, board:4, title:"廢棄的 Logo 草稿", author:"黃小鳳", date:"2024/01/18", days:538, comments:1},
+    {id:5, board:1, title:"2022 年終公告", author:"陳美玲", date:"2022/12/28", days:924, comments:0},
+    {id:6, board:1, title:"端午連假公告", author:"陳美玲", date:"2026/07/05", days:4, comments:3},
+    {id:7, board:3, title:"Q3 業績目標說明", author:"林志豪", date:"2026/06/30", days:9, comments:6},
+    {id:8, board:4, title:"新品牌字體提案", author:"黃小鳳", date:"2026/07/02", days:7, comments:21},
+  ];
+  var notifyLabel = {all:"全公司通知", member:"僅看板成員", none:"不通知"};
+  var typeLabels  = {board:"一般", preview:"預覽", album:"相簿"};
+  window._bmSelBoard = null;
+
+  function groupName(id){ var g=BM.groups.find(function(x){return x.id===id;}); return g? g.name : "—"; }
+  function groupPath(id){ var g=BM.groups.find(function(x){return x.id===id;}); if(!g) return "—"; return g.parentId? groupName(g.parentId)+" › "+g.name : g.name; }
+  function groupOptions(sel){
+    var out='';
+    BM.groups.filter(function(g){return g.parentId===null;}).forEach(function(f){
+      out+='<option value="'+f.id+'" '+(sel===f.id?'selected':'')+'>📁 '+f.name+'</option>';
+      BM.groups.filter(function(g){return g.parentId===f.id && g.kind==='category';}).forEach(function(c){
+        out+='<option value="'+c.id+'" '+(sel===c.id?'selected':'')+'>　🗂 '+f.name+' › '+c.name+'</option>';
+      });
+    });
+    return out;
+  }
+
+  /* ===== Toast(獨立,不影響 showSyncToast) ===== */
+  function bmToast(msg, danger){
+    var t = document.getElementById('bm-toast');
+    if(!t){
+      t = document.createElement('div');
+      t.id = 'bm-toast';
+      t.style.cssText = 'position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);background:#1e293b;color:#fff;padding:10px 20px;border-radius:8px;font-size:13px;display:flex;align-items:center;gap:8px;opacity:0;transition:all .3s;pointer-events:none;z-index:9999;';
+      document.body.appendChild(t);
+    }
+    t.innerHTML = '<span style="color:'+(danger?'#f87171':'#34d399')+'">'+(danger?'✕':'✓')+'</span> '+msg;
+    t.style.opacity = '1';
+    t.style.transform = 'translateX(-50%) translateY(0)';
+    clearTimeout(window._bmToastTimer);
+    window._bmToastTimer = setTimeout(function(){
+      t.style.opacity = '0';
+      t.style.transform = 'translateX(-50%) translateY(20px)';
+    }, 2600);
+  }
+  window.bmToast = bmToast;
+
+  /* ===== 通用 Tab 切換 ===== */
+  window.bmTab = function(btn, tabsSel, panesSel, paneId){
+    document.querySelectorAll(tabsSel+' .tab').forEach(function(t){ t.classList.remove('active'); });
+    btn.classList.add('active');
+    document.querySelectorAll(panesSel).forEach(function(p){ p.classList.remove('active'); });
+    var el = document.getElementById(paneId);
+    if(el) el.classList.add('active');
+    if(paneId==='bm-tab-layout'){ bmRenderBlocks(); bmRenderHomeSlots(); bmRenderPreview(); }
+    if(paneId==='bm-tab-posts'){ bmFillBoardSelect('bm-fltBoard'); }
+    if(paneId==='bm-tab-trash'){ bmRenderTrash(); }
+  };
+
+  /* ===== 異動摘要 Modal ===== */
+  window._bmPendingConfirm = null;
+  function bmShowDiff(title, diffs, onConfirm, riskNote){
+    window._bmPendingConfirm = onConfirm;
+    document.getElementById('bm-diffTitle').textContent = title + ' · 異動摘要';
+    document.getElementById('bm-diffBody').innerHTML = diffs.map(function(d){
+      return '<div class="bm-diff-row'+(d[3]==='risk'?' risk':'')+'"><span class="k">'+d[0]+'</span>'
+        +'<span class="old">'+d[1]+'</span><span class="arrow">→</span><span class="new">'+d[2]+'</span></div>';
+    }).join('');
+    var rn = document.getElementById('bm-diffRiskNote');
+    if(riskNote){ rn.style.display='block'; rn.innerHTML = '<div class="bm-alert" style="margin:14px 0 0;">⚠ '+riskNote+'</div>'; }
+    else { rn.style.display='none'; rn.innerHTML=''; }
+    document.getElementById('bm-diffConfirm').onclick = function(){
+      if(window._bmPendingConfirm) window._bmPendingConfirm();
+      closeModal('bm-modal-diff');
+    };
+    openModal('bm-modal-diff');
+  }
+  function bmConfirmDanger(title, bodyHtml, onConfirm){
+    document.getElementById('bm-dangerTitle').textContent = title;
+    document.getElementById('bm-dangerBody').innerHTML = bodyHtml;
+    document.getElementById('bm-dangerConfirm').onclick = function(){ onConfirm(); closeModal('bm-modal-danger'); };
+    openModal('bm-modal-danger');
+  }
+
+  /* ===== 7.1 總覽 ===== */
+  window.bmRenderOverview = function(){
+    var totalPosts = BM.boards.reduce(function(s,b){return s+b.posts;},0);
+    var read = Math.round(BM.boards.reduce(function(s,b){return s+b.posts*b.readRate/100;},0));
+    var rate = totalPosts? Math.round(read/totalPosts*100) : 0;
+    document.getElementById('bm-ov-stats').innerHTML =
+      '<div class="bm-stat"><div class="l">看板數量</div><div class="n">'+BM.boards.length+'</div></div>'
+      +'<div class="bm-stat"><div class="l">登錄貼文數</div><div class="n">'+totalPosts+'</div></div>'
+      +'<div class="bm-stat"><div class="l">整體已讀率</div><div class="n">'+rate+'%</div><div class="bar"><i style="width:'+rate+'%"></i></div></div>'
+      +'<div class="bm-stat"><div class="l">共享儲存用量</div><div class="n">18.6<small> / 50 GB</small></div><div class="bar"><i style="width:37%"></i></div></div>';
+    var maxP = Math.max.apply(null, BM.boards.map(function(b){return b.posts;}));
+    document.getElementById('bm-ov-posts').innerHTML = BM.boards.map(function(b){
+      return '<div class="bm-bar-row"><div class="lbl">'+b.name+'</div><div class="track"><i style="width:'+(b.posts/maxP*100)+'%"></i></div><div class="val">'+b.posts+'</div></div>';
+    }).join('');
+    document.getElementById('bm-ov-read').innerHTML =
+      '<table class="data-table"><thead><tr><th>看板</th><th style="text-align:right;">按讚數</th><th style="text-align:right;">留言數</th></tr></thead><tbody>'
+      + BM.boards.map(function(b){
+        return '<tr><td>'+b.name+'</td><td style="text-align:right;font-weight:600;">'+(b.likeCount||0)+'</td><td style="text-align:right;font-weight:600;">'+(b.commentCount||0)+'</td></tr>';
+      }).join('')
+      + '</tbody></table>';
+    var pending = BM.tasks.length, risks = BM.audit.filter(function(a){return a.risk==='high';}).length;
+    document.getElementById('bm-ov-taskcount').textContent = pending;
+    document.getElementById('bm-ov-riskcount').textContent = risks;
+  };
+
+  /* ===== 7.2 看板管理:入頁初始化 ===== */
+  window.bmRenderBoardTab = function(){
+    bmRenderTree();
+    if(!window._bmSelBoard && BM.boards[0]) bmSelectBoard(BM.boards[0].id);
+    else bmRenderBoardDetail();
+    bmFillBoardSelect('bm-fltBoard');
+    bmRenderTrash();
+    bmRenderBlocks(); bmRenderHomeSlots(); bmRenderPreview();
+  };
+  function bmFillBoardSelect(id){
+    var el = document.getElementById(id);
+    if(el) el.innerHTML = BM.boards.map(function(b){ return '<option value="'+b.id+'">'+b.name+'</option>'; }).join('');
+  }
+
+  /* ===== 分類樹 ===== */
+  function bmBoardRow(b, groupId){
+    return '<div class="org-tree-node"><div class="org-tree-row'+(window._bmSelBoard===b.id?' selected':'')+'" style="padding-left:26px;" draggable="true"'
+      +' ondragstart="bmDragStart(event,\'board\','+b.id+','+groupId+')" ondragover="bmDragOver(event,\'board\','+groupId+')" ondragleave="bmDragLeave(event)" ondrop="bmDrop(event,\'board\','+b.id+','+groupId+')"'
+      +' onclick="bmSelectBoard('+b.id+')">'
+      +'<span class="grip">⠿</span><span class="org-node-ico">📋</span><span class="org-node-label">'+b.name+'</span>'
+      +'<a class="bm-cnt" title="查看此看板貼文（帶入條件）" onclick="event.stopPropagation();bmGoPostsForBoard('+b.id+')">'+b.posts+'</a>'
+      +'</div></div>';
+  }
+  window.bmRenderTree = function(){
+    var body = document.getElementById('bm-tree-body');
+    if(!body) return;
+    var html = '';
+    BM.groups.filter(function(g){return g.parentId===null;}).forEach(function(f){
+      var catIds = BM.groups.filter(function(g){return g.parentId===f.id;}).map(function(g){return g.id;});
+      var cnt = BM.boards.filter(function(b){return b.groupId===f.id || catIds.indexOf(b.groupId)>=0;}).length;
+      html += '<div class="org-tree-node"><div class="org-tree-row" style="font-weight:700;" draggable="true"'
+        +' ondragstart="bmDragStart(event,\'group\','+f.id+',\'root\')" ondragover="bmDragOver(event,\'group\',\'root\')" ondragleave="bmDragLeave(event)" ondrop="bmDrop(event,\'group\','+f.id+',\'root\')">'
+        +'<span class="grip">⠿</span><span class="org-node-ico">📁</span><span class="org-node-label">'+f.name+'</span>'
+        +'<span class="bm-node-acts"><button onclick="event.stopPropagation();bmOpenGroupModal(\'category\','+f.id+')">＋類別</button><button onclick="event.stopPropagation();bmOpenBoardModal('+f.id+')">＋看板</button></span>'
+        +'<span class="bm-gcnt">'+cnt+'</span></div>'
+        +'<div class="org-tree-children">';
+      BM.groups.filter(function(g){return g.parentId===f.id && g.kind==='category';}).forEach(function(c){
+        var ccnt = BM.boards.filter(function(b){return b.groupId===c.id;}).length;
+        html += '<div class="org-tree-node"><div class="org-tree-row" style="font-weight:600;" draggable="true"'
+          +' ondragstart="bmDragStart(event,\'group\','+c.id+','+f.id+')" ondragover="bmDragOver(event,\'group\','+f.id+')" ondragleave="bmDragLeave(event)" ondrop="bmDrop(event,\'group\','+c.id+','+f.id+')">'
+          +'<span class="grip">⠿</span><span class="org-node-ico">🗂</span><span class="org-node-label">'+c.name+'</span>'
+          +'<span class="bm-node-acts"><button onclick="event.stopPropagation();bmOpenBoardModal('+c.id+')">＋看板</button></span>'
+          +'<span class="bm-gcnt">'+ccnt+'</span></div>'
+          +'<div class="org-tree-children">'
+          + BM.boards.filter(function(b){return b.groupId===c.id;}).map(function(b){return bmBoardRow(b,c.id);}).join('')
+          +'</div></div>';
+      });
+      html += BM.boards.filter(function(b){return b.groupId===f.id;}).map(function(b){return bmBoardRow(b,f.id);}).join('');
+      html += '</div></div>';
+    });
+    body.innerHTML = html || '<div class="bm-empty-tree">尚無資料夾，請按右上「＋資料夾」新增。</div>';
+  };
+  window.bmGoPostsForBoard = function(id){
+    var btn = document.querySelector('#bm-board-tabs .tab:nth-child(2)');
+    if(btn) bmTab(btn, '#bm-board-tabs', '.bm-board-pane', 'bm-tab-posts');
+    bmFillBoardSelect('bm-fltBoard');
+    var sel = document.getElementById('bm-fltBoard');
+    if(sel) sel.value = id;
+    bmRenderPostList();
+  };
+  window.bmSelectBoard = function(id){ window._bmSelBoard = id; bmRenderTree(); bmRenderBoardDetail(); };
+
+  /* ===== 分類樹拖移排序 ===== */
+  var bmDragCtx = null;
+  window.bmDragStart = function(e,type,id,parent){ bmDragCtx = {type:type, id:id, parent:String(parent)}; e.dataTransfer.effectAllowed='move'; };
+  window.bmDragOver = function(e,type,parent){
+    if(bmDragCtx && bmDragCtx.type===type && bmDragCtx.parent===String(parent)){ e.preventDefault(); e.currentTarget.classList.add('drag-hl-ok'); }
+  };
+  window.bmDragLeave = function(e){ e.currentTarget.classList.remove('drag-hl-ok'); };
+  window.bmDrop = function(e,type,id,parent){
+    e.preventDefault(); e.currentTarget.classList.remove('drag-hl-ok');
+    if(!bmDragCtx || bmDragCtx.type!==type || bmDragCtx.parent!==String(parent) || bmDragCtx.id===id){ bmDragCtx=null; return; }
+    var arr = type==='board'? BM.boards : BM.groups;
+    var from = arr.findIndex(function(x){return x.id===bmDragCtx.id;});
+    var dragged = arr.splice(from,1)[0];
+    var to = arr.findIndex(function(x){return x.id===id;});
+    arr.splice(to,0,dragged);
+    bmDragCtx=null; bmRenderTree();
+  };
+
+  /* ===== 看板詳細 ===== */
+  var bmTagStores = {};
+  function bmTreeDropdown(key, arr, placeholder){
+    bmTagStores[key] = arr;
+    var tagsHtml = arr.length? arr.map(function(n){ return '<span class="tree-sel-tag" data-name="'+n+'">'+n+' <span onclick="event.stopPropagation();bmRemoveTag(\''+key+'\',\''+n+'\')">×</span></span>'; }).join('')
+      : '<span style="color:var(--text-muted);font-size:13px;">'+placeholder+'</span>';
+    var optsHtml = BM.directory.map(function(n){
+      return '<label class="tree-member-row"><input type="checkbox" '+(arr.indexOf(n)>=0?'checked':'')+' style="accent-color:var(--primary);" onchange="bmUpdateTag(\''+key+'\',this,\''+n+'\')" /> '+n+'</label>';
+    }).join('');
+    return '<div class="tree-dropdown" id="'+key+'-wrap">'
+      +'<div class="tree-dropdown-trigger" onclick="toggleTreeDropdown(\''+key+'\')">'
+      +'<div class="tree-dropdown-tags" id="'+key+'-tags">'+tagsHtml+'</div>'
+      +'<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>'
+      +'</div>'
+      +'<div class="tree-dropdown-panel" id="'+key+'-panel" style="display:none;">'
+      +'<div style="padding:8px 10px;border-bottom:1px solid var(--border);"><input class="input full" placeholder="搜尋成員／團隊…" style="font-size:12px;" oninput="filterTreeDropdown(\''+key+'\',this.value)" /></div>'
+      +'<div style="max-height:220px;overflow-y:auto;">'+optsHtml+'</div>'
+      +'</div></div>';
+  }
+  window.bmUpdateTag = function(key, checkbox, name){
+    var arr = bmTagStores[key]; if(!arr) return;
+    if(checkbox.checked){ if(arr.indexOf(name)<0) arr.push(name); } else { var i=arr.indexOf(name); if(i>=0) arr.splice(i,1); }
+    updateTreeTags(key, checkbox, name);
+  };
+  window.bmRemoveTag = function(key, name){
+    var arr = bmTagStores[key]; if(arr){ var i=arr.indexOf(name); if(i>=0) arr.splice(i,1); }
+    removeTreeTag(key, name);
+  };
+  function bmTypePicker(key, cur){
+    var thumbs = {
+      board:'<div class="bm-thumb-line"></div><div class="bm-thumb-line s"></div><div class="bm-thumb-line"></div>',
+      preview:'<div class="bm-thumb-preview"><div class="th"></div><div style="flex:1;"><div class="bm-thumb-line"></div><div class="bm-thumb-line s"></div></div></div>',
+      album:'<div class="bm-thumb-album"><i></i><i></i><i></i></div>'
+    };
+    return '<div class="bm-type-row">'+['board','preview','album'].map(function(t){
+      return '<label class="bm-type-opt'+(cur===t?' sel':'')+'" onclick="bmPickType(\''+key+'\',\''+t+'\',this)">'
+        +'<span class="ro"><input type="radio" name="'+key+'-type" '+(cur===t?'checked':'')+'> '+typeLabels[t]+'</span>'
+        +'<div class="thumb">'+thumbs[t]+'</div></label>';
+    }).join('')+'</div>';
+  }
+  window.bmPickType = function(key, t, el){
+    window['_bmType_'+key] = t;
+    el.parentElement.querySelectorAll('.bm-type-opt').forEach(function(o){ o.classList.remove('sel'); });
+    el.classList.add('sel'); el.querySelector('input').checked = true;
+  };
+
+  window.bmRenderBoardDetail = function(){
+    var wrap = document.getElementById('bm-board-detail');
+    var b = BM.boards.find(function(x){return x.id===window._bmSelBoard;});
+    if(!b){ wrap.innerHTML = '<div class="card"><div class="empty">請於左側選擇看板</div></div>'; return; }
+    wrap.innerHTML =
+      '<div class="card">'
+      +'<div class="card-head"><span class="title">'+b.name+'</span><span class="text-muted" style="font-size:12px;margin-left:8px;">'+groupPath(b.groupId)+'</span>'
+      +'<button class="btn danger sm" style="margin-left:auto;" onclick="bmConfirmDeleteBoard('+b.id+')">刪除看板</button></div>'
+      +'<div class="card-body">'
+      +'<div class="tabs" id="bm-detail-tabs" style="margin-bottom:16px;">'
+      +'<button class="tab active" onclick="bmTab(this,\'#bm-detail-tabs\',\'.bm-detail-pane\',\'bm-detail-1\')">詳細設定</button>'
+      +'<button class="tab" onclick="bmTab(this,\'#bm-detail-tabs\',\'.bm-detail-pane\',\'bm-detail-2\')">權限總覽</button>'
+      +'<button class="tab" onclick="bmTab(this,\'#bm-detail-tabs\',\'.bm-detail-pane\',\'bm-detail-3\')">標籤</button>'
+      +'</div>'
+      +'<div id="bm-detail-1" class="bm-pane bm-detail-pane active"></div>'
+      +'<div id="bm-detail-2" class="bm-pane bm-detail-pane"></div>'
+      +'<div id="bm-detail-3" class="bm-pane bm-detail-pane"></div>'
+      +'</div></div>';
+    bmRenderDetail1(b); bmRenderDetail2(b); bmRenderDetail3(b);
+  };
+
+  function bmRenderDetail1(b){
+    window['_bmScope']=b.scope; window['_bmType_bm-type']=b.type; window['_bmTemplate']=b.template;
+    var mgrKey='bm-mgr-'+b.id, memKey='bm-mem-'+b.id;
+    document.getElementById('bm-detail-1').innerHTML =
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">'
+      +'<div class="form-row"><label>看板名稱</label><input class="input full" id="bm-e-name" value="'+b.name+'" /></div>'
+      +'<div class="form-row"><label>所屬資料夾 / 類別</label><select class="input full" id="bm-e-group">'+groupOptions(b.groupId)+'</select></div>'
+      +'</div>'
+      +'<div class="form-row"><label>公開範圍</label>'
+      +'<div style="display:flex;gap:10px;">'
+      +'<label style="flex:1;border:1px solid var(--border);border-radius:8px;padding:10px 12px;cursor:pointer;'+(b.scope==='all'?'border-color:var(--primary);background:var(--primary-soft);':'')+'" onclick="bmEScope(this,\'all\')"><b style="display:block;font-size:13px;">全公司</b><span style="font-size:11.5px;color:var(--text-secondary);">所有成員可存取</span></label>'
+      +'<label style="flex:1;border:1px solid var(--border);border-radius:8px;padding:10px 12px;cursor:pointer;'+(b.scope==='members'?'border-color:var(--primary);background:var(--primary-soft);':'')+'" onclick="bmEScope(this,\'members\')"><b style="display:block;font-size:13px;">指定成員</b><span style="font-size:11.5px;color:var(--text-secondary);">依成員/團隊指定</span></label>'
+      +'</div>'
+      +'<div id="bm-e-membersWrap" style="display:'+(b.scope==='members'?'block':'none')+';margin-top:10px;">'
+      +'<div class="help" style="margin-bottom:6px;">指定可存取此看板的成員 / 團隊：</div>'+bmTreeDropdown(memKey, b.members.slice(), '— 尚未指定 —')
+      +'</div></div>'
+      +'<div class="form-row"><label>看板管理員</label><div class="help" style="margin-bottom:6px;">可指定多位；管理員可設定分享範圍、刪改貼文與留言。</div>'+bmTreeDropdown(mgrKey, b.managers.slice(), '— 選擇成員 —')+'</div>'
+      +'<div class="field-row"><div class="field-label">允許留言</div><div class="field-value"><label class="switch"><input type="checkbox" id="bm-e-com" '+(b.comments?'checked':'')+' /><span class="slider"></span></label></div></div>'
+      +'<div class="field-row"><div class="field-label">允許設定必讀</div><div class="field-value"><label class="switch"><input type="checkbox" id="bm-e-must" '+(b.mustRead?'checked':'')+' /><span class="slider"></span></label></div></div>'
+      +'<div class="form-row" style="margin-top:14px;"><label>類型</label><div class="help" style="margin-bottom:8px;">此看板顯示貼文的形式；上首頁時也沿用此形式。</div>'+bmTypePicker('bm-type',b.type)+'</div>'
+      +'<div class="form-row"><label>範本</label><button class="btn sm" onclick="bmOpenTemplatePicker()" id="bm-e-tplBtn">'+(b.template||'選擇範本')+'</button>'
+      +'<div class="help" style="margin-top:6px;">・若修改／刪除範本原文，看板中設定的範本也將會隨之變更。</div></div>'
+      +'<div class="field-row"><div class="field-label">使用貼文表情符號</div><div class="field-value"><label class="switch"><input type="checkbox" id="bm-e-emoji" '+(b.emoji?'checked':'')+' /><span class="slider"></span></label></div></div>'
+      +'<div class="form-row" style="margin-top:10px;"><label>新貼文通知預設 <span class="badge warning" style="margin-left:6px;">建立後不可修改</span></label>'
+      +'<div class="help" style="margin-bottom:6px;">此看板每篇新貼文的預設通知對象。建立後即固定，僅供檢視。</div>'
+      +'<input class="input full" value="'+notifyLabel[b.notify]+'" disabled /></div>'
+      +'<div style="text-align:right;margin-top:8px;"><button class="btn primary" onclick="bmSaveBoardEdit('+b.id+')">儲存變更</button></div>';
+  }
+  window.bmEScope = function(el, v){
+    Array.prototype.forEach.call(el.parentElement.children, function(c){ c.style.borderColor='var(--border)'; c.style.background='var(--surface)'; });
+    el.style.borderColor='var(--primary)'; el.style.background='var(--primary-soft)';
+    window._bmScope = v;
+    var w = document.getElementById('bm-e-membersWrap'); if(w) w.style.display = v==='members'? 'block':'none';
+  };
+  window.bmOpenTemplatePicker = function(){
+    document.getElementById('bm-templateBody').innerHTML = ['（不使用範本）'].concat(BM.templates).map(function(t){
+      var val = t==='（不使用範本）'? '' : t;
+      var on = (window._bmTemplate||'') === val;
+      return '<label style="display:flex;justify-content:space-between;align-items:center;border:1px solid var(--border);border-radius:8px;padding:9px 11px;margin-bottom:7px;cursor:pointer;'+(on?'border-color:var(--primary);background:var(--primary-soft);':'')+'"><span>'+t+'</span><input type="radio" name="bm-tpl" '+(on?'checked':'')+' onclick="bmSetTpl(\''+val+'\')" /></label>';
+    }).join('');
+    openModal('bm-modal-template');
+  };
+  window.bmSetTpl = function(v){
+    window._bmTemplate = v || null;
+    var btn = document.getElementById('bm-e-tplBtn'); if(btn) btn.textContent = v || '選擇範本';
+    closeModal('bm-modal-template');
+  };
+
+  function bmRenderDetail2(b){
+    var mgrs = b.managers.join('、');
+    var canRead = b.scope==='all'? '全公司所有成員' : ('指定成員：'+(b.members.join('、')||'（尚未指定）'));
+    var readList = BM.perm.read==='board'? canRead : '貼文建立者、'+mgrs+'（看板負責人）、管理員';
+    var mustList = BM.perm.must==='manager'? mgrs+'（看板負責人）、管理員' : '貼文建立者、'+mgrs+'（看板負責人）、管理員';
+    document.getElementById('bm-detail-2').innerHTML =
+      '<p style="margin-top:0;color:var(--text-secondary);font-size:12.5px;">依「看板公開範圍」＋「一般設定的權限」計算出的有效結果：</p>'
+      +'<table class="data-table"><thead><tr><th style="width:120px;">能力</th><th>誰可以</th><th style="width:150px;">來源</th></tr></thead><tbody>'
+      +'<tr><td><b>可觀看</b></td><td>'+canRead+'</td><td class="text-sec">看板公開範圍</td></tr>'
+      +'<tr><td><b>可發文/留言</b></td><td>'+canRead+(b.comments?'':'（留言已關閉）')+'</td><td class="text-sec">看板公開範圍</td></tr>'
+      +'<tr><td><b>可管理</b></td><td>'+mgrs+'（看板負責人）、管理員</td><td class="text-sec">看板負責人</td></tr>'
+      +'<tr><td><b>可看已讀</b></td><td>'+readList+'</td><td class="text-sec">一般設定</td></tr>'
+      +'<tr><td><b>可設必讀</b></td><td>'+mustList+(b.mustRead?'':'（此看板未開放必讀）')+'</td><td class="text-sec">一般設定＋看板</td></tr>'
+      +'</tbody></table>'
+      +'<div class="bm-alert" style="background:var(--info-soft);color:#1e40af;border-color:rgba(32,128,240,.25);margin-top:12px;margin-bottom:0;">ℹ 這是「有效結果」檢視：把全域權限與本看板設定合併後，實際生效的對象。</div>';
+  }
+  function bmRenderDetail3(b){
+    document.getElementById('bm-detail-3').innerHTML =
+      '<div class="form-row"><label>標籤</label><div class="help" style="margin-bottom:8px;">用於貼文分類與查詢。</div>'
+      +'<div id="bm-tagBox" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">'
+      + (b.tags.length? b.tags.map(function(t){ return '<span class="chip">'+t+' <span class="x" onclick="bmRemoveBoardTag('+b.id+',\''+t+'\')">×</span></span>'; }).join('') : '<span class="text-muted" style="font-size:12px;">尚無標籤</span>')
+      +'<input class="input" id="bm-newTag" placeholder="新增標籤後 Enter" style="width:160px;height:30px;" onkeydown="if(event.key===\'Enter\')bmAddBoardTag('+b.id+')" />'
+      +'</div></div>';
+  }
+  window.bmAddBoardTag = function(id){
+    var el = document.getElementById('bm-newTag'); var v = (el.value||'').trim(); if(!v) return;
+    var b = BM.boards.find(function(x){return x.id===id;}); if(b.tags.indexOf(v)<0) b.tags.push(v);
+    bmRenderDetail3(b);
+  };
+  window.bmRemoveBoardTag = function(id, t){
+    var b = BM.boards.find(function(x){return x.id===id;}); b.tags = b.tags.filter(function(x){return x!==t;});
+    bmRenderDetail3(b);
+  };
+
+  window.bmSaveBoardEdit = function(id){
+    var b = BM.boards.find(function(x){return x.id===id;});
+    var mgrKey='bm-mgr-'+id, memKey='bm-mem-'+id;
+    var next = {
+      name: document.getElementById('bm-e-name').value.trim(),
+      groupId: +document.getElementById('bm-e-group').value,
+      scope: window._bmScope,
+      managers: (bmTagStores[mgrKey]||[]).slice(),
+      members: (bmTagStores[memKey]||[]).slice(),
+      comments: document.getElementById('bm-e-com').checked,
+      mustRead: document.getElementById('bm-e-must').checked,
+      type: window['_bmType_bm-type'],
+      template: window._bmTemplate,
+      emoji: document.getElementById('bm-e-emoji').checked
+    };
+    if(!next.name){ bmToast('請輸入看板名稱', true); return; }
+    if(!next.managers.length){ bmToast('請至少指定一位看板管理員', true); return; }
+    if(next.scope==='members' && !next.members.length){ bmToast('「指定成員」需至少加入一位成員 / 團隊', true); return; }
+    var L = {board:'一般',preview:'預覽',album:'相簿'};
+    var diffs = [];
+    if(next.name!==b.name) diffs.push(['名稱', b.name, next.name]);
+    if(next.groupId!==b.groupId) diffs.push(['所屬', groupPath(b.groupId), groupPath(next.groupId)]);
+    if(next.scope!==b.scope) diffs.push(['公開範圍', b.scope==='all'?'全公司':'指定成員', next.scope==='all'?'全公司':'指定成員', 'risk']);
+    if(next.managers.join('、')!==b.managers.join('、')) diffs.push(['管理員', b.managers.join('、'), next.managers.join('、')]);
+    if(next.members.join('、')!==b.members.join('、')) diffs.push(['指定成員', b.members.join('、')||'（無）', next.members.join('、')||'（無）', next.scope==='members'?'risk':'']);
+    if(next.comments!==b.comments) diffs.push(['留言', b.comments?'開':'關', next.comments?'開':'關']);
+    if(next.mustRead!==b.mustRead) diffs.push(['必讀', b.mustRead?'開':'關', next.mustRead?'開':'關']);
+    if(next.type!==b.type) diffs.push(['類型', L[b.type], L[next.type]]);
+    if(next.template!==b.template) diffs.push(['範本', b.template||'（未設定）', next.template||'（未設定）']);
+    if(next.emoji!==b.emoji) diffs.push(['表情符號', b.emoji?'開':'關', next.emoji?'開':'關']);
+    if(!diffs.length){ bmToast('沒有變更'); return; }
+    var risk = diffs.some(function(d){return d[3]==='risk';}) ? '變更公開範圍 / 成員會立即影響可存取此看板的對象，並記錄於操作紀錄。' : '';
+    bmShowDiff('儲存看板設定', diffs, function(){
+      Object.assign(b, next);
+      bmToast('看板設定已儲存');
+      bmRenderTree(); bmRenderBoardDetail();
+      bmLogAudit(diffs.some(function(d){return d[3]==='risk';})?'high':'low', '變更看板設定', b.name+' · '+diffs.map(function(d){return d[0];}).join('/'));
+    }, risk);
+  };
+
+  window.bmConfirmDeleteBoard = function(id){
+    var b = BM.boards.find(function(x){return x.id===id;});
+    var onHome = BM.homeSlots.indexOf(id)>=0;
+    bmConfirmDanger('刪除看板',
+      '<p style="margin-top:0;">確定要刪除「<b>'+b.name+'</b>」嗎？</p>'
+      +'<div class="bm-alert" style="background:var(--danger-soft);color:var(--danger);border-color:rgba(220,38,38,.2);margin-bottom:0;">⚠ 影響範圍：此看板的 <b>'+b.posts+'</b> 篇貼文將移入垃圾桶，並依保管期限（'+BM.trash+'）處理；'+(onHome?'並會從首頁顯示中移除；':'')+'此動作無法復原。</div>',
+      function(){
+        BM.boards = BM.boards.filter(function(x){return x.id!==id;});
+        BM.homeSlots = BM.homeSlots.filter(function(x){return x!==id;});
+        window._bmSelBoard = BM.boards[0] && BM.boards[0].id;
+        bmToast('已刪除「'+b.name+'」，貼文已移入垃圾桶');
+        bmLogAudit('high','刪除看板', b.name+' · '+b.posts+' 篇貼文');
+        bmRenderTree(); bmRenderBoardDetail();
+      });
+  };
+
+  window.bmOpenGroupModal = function(kind, parentId){
+    var label = kind==='folder'? '資料夾' : '類別';
+    document.getElementById('bm-groupModalTitle').textContent = '新增'+label;
+    var hint = kind==='category'? ('將建立在資料夾「'+groupName(parentId)+'」底下。類別底下只能放看板。') : '最上層資料夾，可放類別或看板。';
+    document.getElementById('bm-groupModalBody').innerHTML =
+      '<div class="form-row"><label>'+label+'名稱 <span class="req">*</span></label><div class="help" style="margin-bottom:6px;">'+hint+'</div>'
+      +'<input class="input full" id="bm-f-gname" placeholder="例如：'+(kind==='folder'?'部門':'業務')+'" /></div>';
+    document.getElementById('bm-groupModalSave').onclick = function(){ bmCreateGroup(kind, parentId); };
+    openModal('bm-modal-group');
+  };
+  function bmCreateGroup(kind, parentId){
+    var n = document.getElementById('bm-f-gname').value.trim();
+    if(!n){ bmToast('請輸入名稱', true); return; }
+    BM.groups.push({id: ++BM.seq, name:n, kind:kind, parentId: parentId===null? null : parentId});
+    closeModal('bm-modal-group'); bmToast('已新增'+(kind==='folder'?'資料夾':'類別')+'「'+n+'」'); bmRenderTree();
+  }
+
+  window.bmOpenBoardModal = function(presetGroup){
+    if(!BM.groups.length){ bmToast('請先建立資料夾', true); return; }
+    var gsel = presetGroup || BM.groups[0].id;
+    window._bmScope='all'; window['_bmType_bm-f-type']='board';
+    document.getElementById('bm-boardModalTitle').textContent = '新增看板';
+    document.getElementById('bm-boardModalBody').innerHTML =
+      '<div class="form-row"><label>看板名稱 <span class="req">*</span></label><input class="input full" id="bm-f-name" placeholder="例如：全公司公告" /></div>'
+      +'<div class="form-row"><label>所屬資料夾 / 類別 <span class="req">*</span></label><select class="input full" id="bm-f-group">'+groupOptions(gsel)+'</select></div>'
+      +'<div class="form-row"><label>公開範圍 <span class="req">*</span></label>'
+      +'<div style="display:flex;gap:10px;">'
+      +'<label style="flex:1;border:1px solid var(--primary);background:var(--primary-soft);border-radius:8px;padding:10px 12px;cursor:pointer;" onclick="bmFScope(this,\'all\')"><b style="display:block;font-size:13px;">全公司</b><span style="font-size:11.5px;color:var(--text-secondary);">所有成員可存取</span></label>'
+      +'<label style="flex:1;border:1px solid var(--border);border-radius:8px;padding:10px 12px;cursor:pointer;" onclick="bmFScope(this,\'members\')"><b style="display:block;font-size:13px;">指定成員</b><span style="font-size:11.5px;color:var(--text-secondary);">依成員/團隊指定</span></label>'
+      +'</div>'
+      +'<div id="bm-f-membersWrap" style="display:none;margin-top:10px;"><div class="help" style="margin-bottom:6px;">指定可存取此看板的成員 / 團隊：</div>'+bmTreeDropdown('bm-f-mem',[],'— 尚未指定 —')+'</div></div>'
+      +'<div class="form-row"><label>看板管理員 <span class="req">*</span></label><div class="help" style="margin-bottom:6px;">可指定多位。</div>'+bmTreeDropdown('bm-f-mgr',[],'— 選擇成員 —')+'</div>'
+      +'<div class="form-row"><label>類型</label>'+bmTypePicker('bm-f-type','board')+'</div>'
+      +'<div class="field-row"><div class="field-label">使用貼文表情符號</div><div class="field-value"><label class="switch"><input type="checkbox" id="bm-f-emoji" checked /><span class="slider"></span></label></div></div>'
+      +'<div class="form-row"><label>新貼文通知預設 <span class="badge warning" style="margin-left:6px;">建立後不可修改</span></label>'
+      +'<div class="help" style="margin-bottom:6px;">⚠ 此欄位一經建立即固定、之後無法變更，請謹慎選擇。</div>'
+      +'<select class="input full" id="bm-f-notify"><option value="all">全公司通知</option><option value="member" selected>僅看板成員</option><option value="none">不通知</option></select></div>';
+    document.getElementById('bm-boardModalSave').textContent = '建立看板';
+    document.getElementById('bm-boardModalSave').onclick = bmCreateBoard;
+    openModal('bm-modal-board');
+  };
+  window.bmFScope = function(el, v){
+    Array.prototype.forEach.call(el.parentElement.children, function(c){ c.style.borderColor='var(--border)'; c.style.background='var(--surface)'; });
+    el.style.borderColor='var(--primary)'; el.style.background='var(--primary-soft)';
+    window._bmScope = v;
+    var w = document.getElementById('bm-f-membersWrap'); if(w) w.style.display = v==='members'? 'block':'none';
+  };
+  function bmCreateBoard(){
+    var name = document.getElementById('bm-f-name').value.trim();
+    var mgrs = (bmTagStores['bm-f-mgr']||[]).slice();
+    var mems = (bmTagStores['bm-f-mem']||[]).slice();
+    if(!name){ bmToast('請輸入看板名稱', true); return; }
+    if(!mgrs.length){ bmToast('請至少指定一位看板管理員', true); return; }
+    if(window._bmScope==='members' && !mems.length){ bmToast('「指定成員」需至少加入一位成員 / 團隊', true); return; }
+    var b = {
+      id: ++BM.seq, name: name, groupId: +document.getElementById('bm-f-group').value, scope: window._bmScope,
+      managers: mgrs, members: mems, posts:0, readRate:0, likeCount:0, commentCount:0, mustRead:false, comments:true,
+      notify: document.getElementById('bm-f-notify').value, tags:[],
+      type: window['_bmType_bm-f-type']||'board', template:null, emoji: document.getElementById('bm-f-emoji').checked
+    };
+    BM.boards.push(b);
+    closeModal('bm-modal-board'); bmToast('已建立看板「'+name+'」'); bmLogAudit('low','建立看板',name);
+    bmSelectBoard(b.id);
+  }
+
+  /* ===== 貼文(查詢＋整理合併) ===== */
+  var bmPostSel = {};
+  window.bmRenderPostList = function(){
+    var bid = +document.getElementById('bm-fltBoard').value;
+    var kw = document.getElementById('bm-fltKw').value.trim();
+    var au = document.getElementById('bm-fltAuthor').value.trim();
+    var period = +document.getElementById('bm-fltPeriod').value;
+    var maxC = document.getElementById('bm-fltComment').value;
+    var list = samplePosts.filter(function(p){
+      return p.board===bid && (!kw||p.title.indexOf(kw)>=0) && (!au||p.author.indexOf(au)>=0) && p.days>=period && (maxC===''||p.comments<=+maxC);
+    });
+    bmPostSel = {};
+    document.getElementById('bm-postCount').textContent = '共 '+list.length+' 篇';
+    var box = document.getElementById('bm-postResult');
+    if(!list.length){ box.innerHTML = '<div class="empty">沒有符合的貼文。</div>'; return; }
+    box.innerHTML =
+      '<table class="data-table"><thead><tr><th style="width:34px;"><input type="checkbox" onchange="bmPostAll(this)" /></th><th>標題</th><th>作者</th><th>發布日期</th><th style="text-align:right;">留言</th></tr></thead>'
+      +'<tbody>'+list.map(function(p){
+        return '<tr><td><input type="checkbox" data-pid="'+p.id+'" onchange="bmPostTog('+p.id+')" /></td><td>'+p.title+'</td><td>'+p.author+'</td><td>'+p.date+'</td><td style="text-align:right;">'+p.comments+'</td></tr>';
+      }).join('')+'</tbody></table>'
+      +'<div class="bm-bulk-bar" id="bm-postActions">'
+      +'<b id="bm-postSelN"></b><span class="badge info" style="margin-left:4px;">批次整理僅 PC 網頁版可執行</span><div style="flex:1;"></div>'
+      +'<select class="input" id="bm-postMove" style="width:170px;height:32px;">'+BM.boards.map(function(b){return '<option value="'+b.id+'">移到：'+b.name+'</option>';}).join('')+'</select>'
+      +'<button class="btn sm" onclick="bmPostMoveDo()">移動</button>'
+      +'<button class="btn sm danger" onclick="bmPostTrashDo()">移到垃圾桶</button>'
+      +'<button class="btn sm" style="background:var(--danger);color:#fff;border-color:var(--danger);" onclick="bmPostPermaConfirm()">永久刪除</button>'
+      +'</div>';
+  };
+  window.bmPostAll = function(el){
+    document.querySelectorAll('#bm-postResult input[data-pid]').forEach(function(c){
+      c.checked = el.checked; var id = +c.dataset.pid;
+      if(el.checked) bmPostSel[id]=true; else delete bmPostSel[id];
+    });
+    bmPostRefresh();
+  };
+  window.bmPostTog = function(id){ if(bmPostSel[id]) delete bmPostSel[id]; else bmPostSel[id]=true; bmPostRefresh(); };
+  function bmPostRefresh(){
+    var bar = document.getElementById('bm-postActions'); if(!bar) return;
+    var n = Object.keys(bmPostSel).length;
+    bar.classList.toggle('show', n>0);
+    var c = document.getElementById('bm-postSelN'); if(c) c.textContent = '已選 '+n+' 篇';
+  }
+  window.bmPostMoveDo = function(){
+    var t = BM.boards.find(function(b){return b.id==document.getElementById('bm-postMove').value;});
+    var n = Object.keys(bmPostSel).length;
+    bmToast('已將 '+n+' 篇移到「'+t.name+'」'); bmLogAudit('low','移動貼文', t.name+' · '+n+' 篇'); bmPostClear();
+  };
+  window.bmPostTrashDo = function(){
+    var n = Object.keys(bmPostSel).length;
+    bmToast('已將 '+n+' 篇移入垃圾桶（'+BM.trash+'）'); bmLogAudit('low','移入垃圾桶', n+' 篇'); bmPostClear();
+  };
+  window.bmPostPermaConfirm = function(){
+    var n = Object.keys(bmPostSel).length;
+    bmConfirmDanger('永久刪除貼文',
+      '<p style="margin-top:0;">選取 <b>'+n+'</b> 篇貼文。</p><div class="bm-alert" style="background:var(--danger-soft);color:var(--danger);border-color:rgba(220,38,38,.2);margin-bottom:0;">⚠ 影響範圍：永久刪除不經過垃圾桶、無法復原，將立即釋放共享儲存空間。此操作會記錄於操作紀錄。</div>',
+      function(){ bmToast('已永久刪除 '+n+' 篇貼文'); bmLogAudit('high','永久刪除貼文', n+' 篇'); bmPostClear(); });
+  };
+  function bmPostClear(){
+    Object.keys(bmPostSel).forEach(function(id){
+      var i = samplePosts.findIndex(function(p){return p.id===+id;});
+      if(i>=0) samplePosts.splice(i,1);
+    });
+    bmPostSel = {}; bmRenderPostList();
+  }
+
+  /* ===== 垃圾桶 ===== */
+  window.bmRenderTrash = function(){
+    var el = document.getElementById('bm-trashDays'); if(el) el.textContent = BM.trash;
+    var tbody = document.getElementById('bm-trashRows'); if(!tbody) return;
+    if(!BM.trashPosts.length){ tbody.innerHTML = '<tr><td colspan="5"><div class="empty">垃圾桶是空的。</div></td></tr>'; return; }
+    tbody.innerHTML = BM.trashPosts.map(function(p){
+      return '<tr><td>'+p.title+'</td><td>'+p.board+'</td><td>'+p.at+'</td>'
+        +'<td><span class="badge '+(p.left<=7?'danger':'warning')+'">剩 '+p.left+' 天</span></td>'
+        +'<td style="text-align:right;"><button class="btn ghost sm" onclick="bmRestoreTrash('+p.id+')">還原</button> '
+        +'<button class="btn ghost sm danger" onclick="bmPermaTrashConfirm('+p.id+')">永久刪除</button></td></tr>';
+    }).join('');
+  };
+  window.bmRestoreTrash = function(id){
+    var p = BM.trashPosts.find(function(x){return x.id===id;});
+    BM.trashPosts = BM.trashPosts.filter(function(x){return x.id!==id;});
+    bmToast('已還原「'+p.title+'」到「'+p.board+'」'); bmLogAudit('low','還原貼文', p.title); bmRenderTrash();
+  };
+  window.bmPermaTrashConfirm = function(id){
+    var p = BM.trashPosts.find(function(x){return x.id===id;});
+    bmConfirmDanger('永久刪除', '<p style="margin-top:0;">永久刪除「<b>'+p.title+'</b>」？</p><div class="bm-alert" style="background:var(--danger-soft);color:var(--danger);border-color:rgba(220,38,38,.2);margin-bottom:0;">⚠ 無法復原，將立即釋放儲存空間。</div>',
+      function(){ BM.trashPosts = BM.trashPosts.filter(function(x){return x.id!==id;}); bmToast('已永久刪除'); bmLogAudit('high','永久刪除貼文', p.title); bmRenderTrash(); });
+  };
+
+  /* ===== 首頁顯示 ===== */
+  window.bmRenderBlocks = function(){
+    var el = document.getElementById('bm-blockToggles'); if(!el) return;
+    el.innerHTML = '<div class="field-row" style="border-top:none;"><div class="field-label" style="width:auto;flex:1;">顯示「最新貼文」區塊</div>'
+      +'<div class="field-value" style="flex:0;"><label class="switch"><input type="checkbox" '+(BM.blocks.latest?'checked':'')+' onchange="BM_toggleBlock(this)" /><span class="slider"></span></label></div></div>';
+  };
+  window.BM_toggleBlock = function(el){ BM.blocks.latest = el.checked; bmRenderPreview(); };
+
+  function bmBoardOptionsForSlot(curId){
+    return BM.boards.map(function(b){
+      var usedElsewhere = BM.homeSlots.indexOf(b.id)>=0 && b.id!==curId;
+      return '<option value="'+b.id+'" '+(b.id===curId?'selected':'')+' '+(usedElsewhere?'disabled':'')+'>'+b.name+(usedElsewhere?'（已顯示）':'')+'</option>';
+    }).join('');
+  }
+  window.bmRenderHomeSlots = function(){
+    var el = document.getElementById('bm-homeSlots'); if(!el) return;
+    el.innerHTML = BM.homeSlots.map(function(bid,i){
+      var b = BM.boards.find(function(x){return x.id===bid;});
+      return '<div class="bm-sort-item" draggable="true" ondragstart="bmSlotDragStart(event,'+i+')" ondragover="bmSlotDragOver(event,'+i+')" ondragleave="bmSlotDragLeave(event)" ondrop="bmSlotDrop(event,'+i+')">'
+        +'<span class="grip">⠿</span>'
+        +'<select class="input" style="flex:1;height:32px;" onchange="bmSetHomeSlot('+i+',this.value)">'+bmBoardOptionsForSlot(bid)+'</select>'
+        +(b? '<span class="badge neutral" style="margin-left:8px;">'+typeLabels[b.type]+'</span>' : '')
+        +'<button class="btn ghost sm" style="margin-left:8px;" '+(BM.homeSlots.length<=1?'disabled':'')+' onclick="bmRemoveHomeSlot('+i+')">移除</button>'
+        +'</div>';
+    }).join('');
+    var addBtn = document.getElementById('bm-addSlotBtn');
+    if(addBtn) addBtn.disabled = BM.homeSlots.length>=4 || BM.homeSlots.length>=BM.boards.length;
+  };
+  window.bmSetHomeSlot = function(i, boardId){ BM.homeSlots[i] = +boardId; bmRenderHomeSlots(); bmRenderPreview(); };
+  window.bmAddHomeSlot = function(){
+    if(BM.homeSlots.length>=4){ bmToast('首頁顯示最多可新增至 4 個', true); return; }
+    var avail = BM.boards.find(function(b){ return BM.homeSlots.indexOf(b.id)<0; });
+    if(!avail){ bmToast('所有看板都已加入首頁顯示', true); return; }
+    BM.homeSlots.push(avail.id);
+    bmRenderHomeSlots(); bmRenderPreview();
+  };
+  window.bmRemoveHomeSlot = function(i){
+    if(BM.homeSlots.length<=1){ bmToast('至少需保留 1 個看板顯示', true); return; }
+    BM.homeSlots.splice(i,1);
+    bmRenderHomeSlots(); bmRenderPreview();
+  };
+  var bmSlotDragFrom = null;
+  window.bmSlotDragStart = function(e,i){ bmSlotDragFrom = i; e.dataTransfer.effectAllowed='move'; };
+  window.bmSlotDragOver = function(e,i){ e.preventDefault(); e.currentTarget.classList.add('drag-hl-ok'); };
+  window.bmSlotDragLeave = function(e){ e.currentTarget.classList.remove('drag-hl-ok'); };
+  window.bmSlotDrop = function(e,i){
+    e.preventDefault(); e.currentTarget.classList.remove('drag-hl-ok');
+    if(bmSlotDragFrom===null || bmSlotDragFrom===i){ bmSlotDragFrom=null; return; }
+    var moved = BM.homeSlots.splice(bmSlotDragFrom,1)[0];
+    BM.homeSlots.splice(i,0,moved);
+    bmSlotDragFrom = null;
+    bmRenderHomeSlots(); bmRenderPreview();
+  };
+
+  window.bmRenderPreview = function(){
+    var area = document.getElementById('bm-previewArea'); if(!area) return;
+    var html = '';
+    if(BM.blocks.latest){
+      var top = BM.boards.slice().sort(function(a,b){return b.posts-a.posts;}).slice(0,2);
+      var lines = top.map(function(b){ return b.name+' · 最新公告'; }).join('<br>');
+      html += '<div class="bm-pv-card"><h5>🕑 最新貼文</h5><div style="font-size:11px;color:var(--text-secondary);">'+(lines||'尚無看板資料')+'</div></div>';
+    }
+    BM.homeSlots.map(function(bid){ return BM.boards.find(function(x){return x.id===bid;}); }).filter(Boolean).forEach(function(b){
+      var inner = b.type==='board'? '<div class="bm-thumb-line"></div><div class="bm-thumb-line s"></div>'
+        : b.type==='preview'? '<div class="bm-thumb-preview"><div class="th"></div><div style="flex:1;"><div class="bm-thumb-line"></div><div class="bm-thumb-line s"></div></div></div>'
+        : '<div class="bm-thumb-album"><i></i><i></i><i></i></div>';
+      html += '<div class="bm-pv-card"><h5>'+b.name+' <span class="badge neutral">'+typeLabels[b.type]+'</span></h5>'+inner+'</div>';
+    });
+    area.innerHTML = html || '<div class="empty" style="padding:24px;background:var(--surface);border-radius:8px;">首頁目前沒有內容</div>';
+  };
+
+  /* ===== 7.3 一般設定 ===== */
+  window.bmRenderSettingsTab = function(){ bmInitGeneral(); bmRenderData(); };
+  window.bmSetGeneralRadio = function(id, value){
+    var hidden = document.getElementById(id);
+    if(!hidden) return;
+    hidden.value = value;
+    bmRefreshGeneralRadio(id);
+    if(id==='bm-permCreate') bmRenderCreateMembers();
+  };
+  function bmRefreshGeneralRadio(id){
+    var hidden = document.getElementById(id);
+    if(!hidden) return;
+    document.querySelectorAll('[data-hidden="'+id+'"] .bm-radio-opt').forEach(function(opt){
+      var input = opt.querySelector('input[type="radio"]');
+      var on = input && input.value === hidden.value;
+      if(input) input.checked = on;
+      opt.classList.toggle('sel', !!on);
+    });
+  }
+  function bmRenderGeneralRadios(){
+    ['bm-permCreate','bm-permRead','bm-permMust'].forEach(bmRefreshGeneralRadio);
+  }
+  function bmReadCreateMembers(){
+    var tags = document.getElementById('bm-create-members-tags');
+    if(tags){
+      return Array.prototype.map.call(tags.querySelectorAll('.tree-sel-tag'), function(t){
+        return t.getAttribute('data-name') || t.textContent.replace('×','').trim();
+      }).filter(Boolean);
+    }
+    return (BM.perm.createMembers || []).slice();
+  }
+  function bmRenderCreateMembers(){
+    var wrap = document.getElementById('bm-createMembersWrap');
+    var box = document.getElementById('bm-createMembersBox');
+    var mode = document.getElementById('bm-permCreate');
+    if(!wrap || !box || !mode) return;
+    var show = mode.value === 'named';
+    wrap.style.display = show ? 'block' : 'none';
+    if(show){
+      var selected = bmReadCreateMembers();
+      if(!selected.length && BM.perm.createMembers) selected = BM.perm.createMembers.slice();
+      box.innerHTML = bmTreeDropdown('bm-create-members', selected, '— 搜尋並選擇成員 —');
+    }
+  }
+  function bmInitGeneral(){
+    document.getElementById('bm-setAttach').value = BM.attach;
+    document.getElementById('bm-setTrash').value = BM.trash;
+    document.getElementById('bm-permCreate').value = BM.perm.create;
+    document.getElementById('bm-permRead').value = BM.perm.read;
+    document.getElementById('bm-permMust').value = BM.perm.must;
+    bmRenderGeneralRadios();
+    bmRenderCreateMembers();
+  }
+  window.bmSaveGeneral = function(){
+    var createMembers = bmReadCreateMembers();
+    var next = {
+      attach: document.getElementById('bm-setAttach').value, trash: document.getElementById('bm-setTrash').value,
+      perm: { create: document.getElementById('bm-permCreate').value, read: document.getElementById('bm-permRead').value, must: document.getElementById('bm-permMust').value, createMembers: createMembers }
+    };
+    if(next.perm.create==='named' && !next.perm.createMembers.length){ bmToast('指定成員至少要保留一位', true); return; }
+    var L = {system:'僅管理員', all:'所有成員', named:'指定成員', board:'所有成員', limited:'僅貼文建立者&看板負責人&管理員', manager:'僅看板負責人&管理員'};
+    var diffs = [];
+    if(next.attach!==BM.attach) diffs.push(['附件上限', BM.attach, next.attach]);
+    if(next.trash!==BM.trash) diffs.push(['垃圾桶期限', BM.trash, next.trash, 'risk']);
+    if(next.perm.create!==BM.perm.create) diffs.push(['建立權限', L[BM.perm.create], L[next.perm.create]]);
+    if(next.perm.create==='named' && next.perm.createMembers.join('、')!==(BM.perm.createMembers||[]).join('、')) diffs.push(['指定成員', (BM.perm.createMembers||[]).join('、')||'（無）', next.perm.createMembers.join('、')||'（無）']);
+    if(next.perm.read!==BM.perm.read) diffs.push(['已讀查看', L[BM.perm.read], L[next.perm.read]]);
+    if(next.perm.must!==BM.perm.must) diffs.push(['必讀權限', L[BM.perm.must], L[next.perm.must]]);
+    if(!diffs.length){ bmToast('沒有變更'); return; }
+    bmShowDiff('儲存一般設定', diffs, function(){ Object.assign(BM, next); bmToast('一般設定已儲存'); bmInitGeneral(); });
+  };
+
+  /* ===== 7.3 資料管理 ===== */
+  window.bmRenderData = function(){
+    bmRenderBackups();
+    bmRenderAudit();
+  };
+  var bmDownloadSel = {};
+  function bmBoardName(id){ var b = BM.boards.find(function(x){return x.id===id;}); return b? b.name : "—"; }
+  function bmBackupPostList(){
+    var board = document.getElementById('bm-bkBoard');
+    var v = board? board.value : 'all';
+    return samplePosts.filter(function(p){ return v==='all' || p.board===+v; });
+  }
+  window.bmRenderBackups = function(){
+    var sel = document.getElementById('bm-bkBoard');
+    if(!sel) return;
+    var cur = sel.value || 'all';
+    sel.innerHTML = '<option value="all">全部看板</option>' + BM.boards.map(function(b){
+      return '<option value="'+b.id+'">'+b.name+'</option>';
+    }).join('');
+    if(cur==='all' || BM.boards.some(function(b){return String(b.id)===String(cur);})){ sel.value = cur; }
+    else { sel.value = 'all'; }
+    bmRenderDownloadPosts();
+  };
+  window.bmBackupBoardChanged = function(){
+    bmDownloadSel = {};
+    bmRenderDownloadPosts();
+  };
+  window.bmRenderDownloadPosts = function(){
+    var list = bmBackupPostList();
+    var tbody = document.getElementById('bm-backupPostRows');
+    var count = document.getElementById('bm-bkPostCount');
+    if(count) count.textContent = '共 '+list.length+' 篇';
+    if(!tbody) return;
+    if(!list.length){
+      tbody.innerHTML = '<tr><td colspan="6"><div class="empty">此看板目前沒有可下載備份的貼文。</div></td></tr>';
+      bmRefreshDownloadSelection();
+      return;
+    }
+    tbody.innerHTML = list.map(function(p){
+      var checked = bmDownloadSel[p.id]? 'checked' : '';
+      return '<tr style="cursor:pointer;" onclick="bmToggleDownloadPostRow('+p.id+')">'
+        +'<td><input type="checkbox" id="bm-bk-post-'+p.id+'" '+checked+' onclick="event.stopPropagation();" onchange="bmToggleDownloadPost('+p.id+',this.checked)" /></td>'
+        +'<td>'+p.title+'</td><td>'+bmBoardName(p.board)+'</td><td>'+p.author+'</td><td>'+p.date+'</td><td style="text-align:right;">'+p.comments+'</td></tr>';
+    }).join('');
+    bmRefreshDownloadSelection();
+  };
+  window.bmToggleDownloadPost = function(id, checked){
+    if(checked) bmDownloadSel[id] = true;
+    else delete bmDownloadSel[id];
+    bmRefreshDownloadSelection();
+  };
+  window.bmToggleDownloadPostRow = function(id){
+    var cb = document.getElementById('bm-bk-post-'+id);
+    if(!cb) return;
+    cb.checked = !cb.checked;
+    bmToggleDownloadPost(id, cb.checked);
+  };
+  window.bmToggleDownloadAll = function(cb){
+    bmBackupPostList().forEach(function(p){
+      if(cb.checked) bmDownloadSel[p.id] = true;
+      else delete bmDownloadSel[p.id];
+    });
+    bmRenderDownloadPosts();
+  };
+  function bmRefreshDownloadSelection(){
+    var list = bmBackupPostList();
+    var n = Object.keys(bmDownloadSel).length;
+    var selected = document.getElementById('bm-bkSelected');
+    var btn = document.getElementById('bm-bkDownloadBtn');
+    var all = document.getElementById('bm-bkAll');
+    if(selected) selected.textContent = n;
+    if(btn) btn.disabled = n===0;
+    if(all){
+      var visibleSelected = list.filter(function(p){return bmDownloadSel[p.id];}).length;
+      all.checked = list.length>0 && visibleSelected===list.length;
+      all.indeterminate = visibleSelected>0 && visibleSelected<list.length;
+    }
+  }
+  window.bmDownloadSelectedPosts = function(){
+    var ids = Object.keys(bmDownloadSel);
+    if(!ids.length){ bmToast('請先選擇要下載備份的貼文', true); return; }
+    var board = document.getElementById('bm-bkBoard');
+    var scope = board && board.value!=='all'? bmBoardName(+board.value) : '全部看板';
+    bmToast('開始下載 '+ids.length+' 篇貼文下載備份（原型示意）');
+    bmLogAudit('low','貼文下載備份', scope+' · '+ids.length+' 篇');
+  };
+  var bmTaskLogRows = [
+    {at:'2026/07/07 17:03', by:'林志豪', action:'永久刪除', scope:'業務部佈告欄 · 12 篇', note:''},
+    {at:'2026/07/05 09:20', by:'黃小鳳', action:'移動', scope:'設計部靈感牆 · 8 篇', note:''},
+    {at:'2026/06/30 11:00', by:'陳美玲', action:'移入垃圾桶', scope:'全公司公告 · 5 篇', note:''}
+  ];
+  function bmMergedAuditRows(){
+    return BM.audit.map(function(a,i){ return {type:'audit', index:i, row:a}; })
+      .concat(bmTaskLogRows.map(function(a,i){ return {type:'tasklog', index:i, row:a}; }));
+  }
+  window.bmRenderAudit = function(){
+    var q = (document.getElementById('bm-auditQ').value||'').trim();
+    var list = bmMergedAuditRows().filter(function(item){
+      var a = item.row;
+      return !q || a.by.indexOf(q)>=0 || a.action.indexOf(q)>=0 || a.scope.indexOf(q)>=0 || ((a.note||'').indexOf(q)>=0);
+    });
+    document.getElementById('bm-auditRows').innerHTML = list.length? list.map(function(item){
+      var a = item.row;
+      var note = a.note? a.note : '<span style="color:var(--text-muted);">點擊新增備註</span>';
+      return '<tr><td>'+a.at+'</td><td>'+a.by+'</td><td>'+a.action+'</td><td>'+a.scope+'</td>'
+        +'<td><button class="btn ghost sm" style="width:100%;justify-content:flex-start;text-align:left;" onclick="bmEditAuditNote(\''+item.type+'\','+item.index+')">'+note+'</button></td></tr>';
+    }).join('') : '<tr><td colspan="5"><div class="empty">沒有符合的紀錄。</div></td></tr>';
+  };
+  window.bmEditAuditNote = function(type, idx){
+    var a = type==='tasklog'? bmTaskLogRows[idx] : BM.audit[idx];
+    if(!a) return;
+    var note = window.prompt('填寫備註', a.note || '');
+    if(note===null) return;
+    a.note = note.trim();
+    bmRenderAudit();
+    bmToast('備註已更新');
+  };
+  function bmLogAudit(risk, action, scope){ BM.audit.unshift({at:"2026/07/09 剛剛", by:"陳美玲", action:action, scope:scope, risk:risk, note:""}); }
+
+})();
+</script>
+<!-- ===== [修改結束] 佈告欄管理模組重構:JS ===== -->
 
 </body>
 </html>
