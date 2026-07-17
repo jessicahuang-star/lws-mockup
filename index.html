@@ -2969,6 +2969,231 @@
   /* ===== [Figma Sync 結束] ===== */
 
 </style>
+
+<!-- ===== [通訊錄改版 abv2 styles] ===== -->
+<style id="abv2-styles">
+.abv2 { /* ===== Coolbe DS tokens（沿用 lws-mockup index.html）===== */
+    --bg: #F6F7F9;
+    --surface: #FFFFFF;
+    --border: #E5E7EB;
+    --border-strong: #E0E0E6;
+    --text: #111827;
+    --text-secondary: #4B5563;
+    --text-muted: #9CA3AF;
+    --primary: #007BFF;
+    --primary-hover: #0056B8;
+    --primary-soft: #E8F2FF;
+    --success: #18A058;
+    --success-soft: rgba(24,160,88,0.10);
+    --warning: #F59E0B;
+    --warning-soft: #FFFBEB;
+    --danger: #DC2626;
+    --danger-soft: rgba(220,38,38,0.08);
+    --info: #2080F0;
+    --info-soft: rgba(32,128,240,0.10);
+    --hover: #F3F4F6;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.06);
+    --shadow-lg: 0px 1px 2px -2px rgba(0,0,0,0.08), 0px 3px 6px 0px rgba(0,0,0,0.06), 0px 5px 12px 4px rgba(0,0,0,0.04);
+    --radius-sm: 3px;
+    --radius: 8px;
+    --radius-lg: 12px; }
+.abv2 * { box-sizing: border-box; }
+.abv2 { margin: 0; padding: 0; }
+.abv2 { font-family: -apple-system, system-ui, "Segoe UI", "Noto Sans TC", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 14px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased; }
+.abv2 button { font-family: inherit; cursor: pointer; }
+.abv2 input, .abv2 select, .abv2 textarea { font-family: inherit; font-size: 14px; }
+.abv2 .app { display: grid; grid-template-columns: 240px 1fr; min-height: 100vh; }
+.abv2 .sidebar { background: var(--surface);
+    border-right: 1px solid var(--border);
+    padding: 16px 12px;
+    position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+.abv2 .brand { display: flex; align-items: center; gap: 10px;
+    padding: 8px 12px 16px; border-bottom: 1px solid var(--border); margin-bottom: 12px; }
+.abv2 .brand-logo { width: 28px; height: 28px; border-radius: 8px; background: var(--primary);
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-weight: 700; font-size: 13px; }
+.abv2 .brand-name { font-weight: 600; font-size: 15px; }
+.abv2 .brand-sub { font-size: 11px; color: var(--text-muted); }
+.abv2 .nav-section-title { font-size: 11px; text-transform: uppercase; color: var(--text-muted);
+    font-weight: 600; letter-spacing: 0.04em; padding: 12px 12px 6px; }
+.abv2 .nav-item { display: flex; align-items: center; gap: 10px; padding: 7px 12px;
+    border-radius: var(--radius-sm); color: var(--text-secondary);
+    cursor: pointer; user-select: none; font-weight: 500;
+    transition: background 0.15s, color 0.15s; }
+.abv2 .nav-item:hover { background: var(--hover); color: var(--text); }
+.abv2 .nav-item.active { background: var(--primary-soft); color: var(--primary); font-weight: 600; }
+.abv2 .nav-item .ico { width: 16px; height: 16px; opacity: 0.8; flex-shrink: 0; }
+.abv2 .nav-item .nav-badge { margin-left: auto; background: var(--danger); color: #fff;
+    font-size: 11px; font-weight: 700; min-width: 18px; height: 18px;
+    border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; padding: 0 5px; }
+.abv2 .main { display: flex; flex-direction: column; min-width: 0; }
+.abv2 .topbar { background: var(--surface); border-bottom: 1px solid var(--border);
+    padding: 12px 28px; display: flex; align-items: center; gap: 12px; }
+.abv2 .breadcrumb { font-size: 13px; color: var(--text-muted); }
+.abv2 .breadcrumb b { color: var(--text); font-weight: 600; }
+.abv2 .topbar-spacer { flex: 1; }
+.abv2 .topbar-user { width: 32px; height: 32px; border-radius: 50%;
+    background: linear-gradient(135deg, #007BFF, #7c3aed);
+    color: #fff; display: flex; align-items: center; justify-content: center;
+    font-weight: 600; font-size: 13px; }
+.abv2 .content { padding: 24px 28px 60px; max-width: 1180px; }
+.abv2 .page-title { font-size: 22px; font-weight: 700; margin: 0 0 4px; }
+.abv2 .page-desc { color: var(--text-secondary); margin: 0 0 20px; font-size: 13px; }
+.abv2 .card { background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); box-shadow: var(--shadow-sm); margin-bottom: 20px; }
+.abv2 .card-head { padding: 14px 20px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 10px; }
+.abv2 .card-head .title { font-weight: 600; font-size: 15px; white-space: nowrap; flex-shrink: 0; }
+.abv2 .card-head .sub { font-size: 12px; color: var(--text-muted); flex: 1; min-width: 0; }
+.abv2 .card-head .btn { flex-shrink: 0; }
+.abv2 .card-body { padding: 18px 20px; }
+.abv2 .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    height: 34px; padding: 0 14px; border-radius: var(--radius-sm);
+    border: 1px solid var(--border-strong); background: var(--surface);
+    color: var(--text); font-weight: 500; font-size: 14px; transition: all 0.15s; white-space: nowrap; }
+.abv2 .btn:hover { background: var(--hover); }
+.abv2 .btn.primary { background: var(--primary); color: #fff; border-color: var(--primary); }
+.abv2 .btn.primary:hover { background: var(--primary-hover); }
+.abv2 .btn.danger { color: var(--danger); border-color: var(--border); }
+.abv2 .btn.danger:hover { background: var(--danger-soft); }
+.abv2 .btn.ghost { border-color: transparent; color: var(--text-secondary); }
+.abv2 .btn.ghost:hover { background: var(--hover); color: var(--text); }
+.abv2 .btn.sm { height: 28px; padding: 0 10px; font-size: 12px; }
+.abv2 .btn-group { display: inline-flex; gap: 8px; }
+.abv2 .btn .ico { width: 15px; height: 15px; }
+.abv2 .tabs { display: flex; gap: 2px; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
+.abv2 .tab { padding: 11px 18px; background: transparent; border: none;
+    border-bottom: 2px solid transparent; color: var(--text-secondary);
+    font-weight: 500; font-size: 14px; margin-bottom: -1px;
+    display: inline-flex; align-items: center; gap: 8px; }
+.abv2 .tab:hover { color: var(--text); }
+.abv2 .tab.active { color: var(--primary); border-bottom-color: var(--primary); font-weight: 600; }
+.abv2 .tab .tab-num { width: 18px; height: 18px; border-radius: 50%; background: var(--hover);
+    color: var(--text-muted); font-size: 11px; font-weight: 700;
+    display: inline-flex; align-items: center; justify-content: center; }
+.abv2 .tab.active .tab-num { background: var(--primary); color: #fff; }
+.abv2 .tab .tab-badge { background: var(--danger); color: #fff; font-size: 11px; font-weight: 700;
+    min-width: 18px; height: 18px; border-radius: 999px;
+    display: inline-flex; align-items: center; justify-content: center; padding: 0 5px; }
+.abv2 .subtabs { display: inline-flex; background: var(--hover); border-radius: var(--radius); padding: 3px; margin-bottom: 18px; }
+.abv2 .subtab { padding: 6px 16px; border: none; background: transparent; border-radius: 5px;
+    color: var(--text-secondary); font-weight: 500; font-size: 13px;
+    display: inline-flex; align-items: center; gap: 7px; }
+.abv2 .subtab.active { background: var(--surface); color: var(--text); font-weight: 600; box-shadow: var(--shadow-sm); }
+.abv2 .subtab .subtab-badge { background: var(--danger); color: #fff; font-size: 10px; font-weight: 700;
+    min-width: 16px; height: 16px; border-radius: 999px;
+    display: inline-flex; align-items: center; justify-content: center; padding: 0 4px; }
+.abv2 .toolbar { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+.abv2 .toolbar-spacer { flex: 1; }
+.abv2 .input { height: 34px; padding: 0 12px; border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm); background: var(--surface); color: var(--text);
+    outline: none; transition: border 0.15s, box-shadow 0.15s; }
+.abv2 .input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-soft); }
+.abv2 select.input { padding-right: 28px; }
+.abv2 .search-input { height: 34px; padding: 0 12px 0 32px; width: 260px;
+    border: 1px solid var(--border-strong); border-radius: var(--radius-sm);
+    background: var(--surface);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.3-4.3'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: 10px center; outline: none; }
+.abv2 .search-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-soft); }
+.abv2 .field-label { font-size: 12px; color: var(--text-muted); font-weight: 600; }
+.abv2 table.data-table { width: 100%; border-collapse: collapse; }
+.abv2 .data-table th, .abv2 .data-table td { padding: 12px 16px; text-align: left; border-bottom: 1px solid var(--border); font-size: 13px; }
+.abv2 .data-table thead th { background: #FAFAFC; color: #1F2225; font-weight: 500; font-size: 13px; white-space: nowrap; }
+.abv2 .data-table tbody tr:hover { background: #fafbfc; }
+.abv2 .data-table tbody tr:last-child td { border-bottom: none; }
+.abv2 .data-table .col-check { width: 36px; }
+.abv2 .data-table td.actions { white-space: nowrap; text-align: right; }
+.abv2 .badge { display: inline-flex; align-items: center; gap: 5px; padding: 2px 8px;
+    border-radius: 999px; font-size: 12px; font-weight: 500; line-height: 1.6; white-space: nowrap; }
+.abv2 .badge.dot::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
+.abv2 .badge.success { color: var(--success); background: var(--success-soft); border: 1px solid rgba(24,160,88,0.30); }
+.abv2 .badge.warning { color: #b45309; background: var(--warning-soft); border: 1px solid rgba(180,83,9,0.25); }
+.abv2 .badge.danger { color: var(--danger); background: var(--danger-soft); border: 1px solid rgba(220,38,38,0.23); }
+.abv2 .badge.info { color: var(--info); background: var(--info-soft); border: 1px solid rgba(32,128,240,0.30); }
+.abv2 .badge.neutral { color: #4b5563; background: #f3f4f6; }
+.abv2 .badge.purple { color: #6b21a8; background: #faf5ff; }
+.abv2 .badge.line { color: #06C755; background: rgba(6,199,85,0.10); border: 1px solid rgba(6,199,85,0.28); }
+.abv2 .user-cell { display: flex; align-items: center; gap: 10px; }
+.abv2 .user-avatar { width: 32px; height: 32px; border-radius: 50%; display: inline-flex;
+    align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 12px; flex-shrink: 0; }
+.abv2 .user-avatar.c1 { background: linear-gradient(135deg, #007BFF, #7c3aed); }
+.abv2 .user-avatar.c2 { background: linear-gradient(135deg, #f97316, #ec4899); }
+.abv2 .user-avatar.c3 { background: linear-gradient(135deg, #10b981, #06b6d4); }
+.abv2 .user-avatar.c4 { background: linear-gradient(135deg, #f43f5e, #f59e0b); }
+.abv2 .user-avatar.c5 { background: linear-gradient(135deg, #6366f1, #8b5cf6); }
+.abv2 .u-name { font-weight: 600; }
+.abv2 .u-sub { font-size: 12px; color: var(--text-muted); }
+.abv2 .switch { position: relative; display: inline-block; width: 36px; height: 20px; flex-shrink: 0; }
+.abv2 .switch input { opacity: 0; width: 0; height: 0; }
+.abv2 .slider { position: absolute; cursor: pointer; inset: 0; background: #d1d5db; border-radius: 20px; transition: 0.2s; }
+.abv2 .slider::before { content: ""; position: absolute; height: 14px; width: 14px; left: 3px; bottom: 3px;
+    background: white; border-radius: 50%; transition: 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
+.abv2 .switch input:checked + .slider { background: var(--primary); }
+.abv2 .switch input:checked + .slider::before { transform: translateX(16px); }
+.abv2 .switch-form-row { display: flex; align-items: flex-start; justify-content: space-between;
+    gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--border); }
+.abv2 .switch-form-row:last-of-type { border-bottom: none; }
+.abv2 .switch-form-row .switch-info { flex: 1; }
+.abv2 .switch-form-label { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 3px; display: flex; align-items: center; gap: 8px; }
+.abv2 .switch-form-desc { font-size: 12px; color: var(--text-secondary); line-height: 1.5; }
+.abv2 .switch-form-control { flex-shrink: 0; min-width: 220px; display: flex; justify-content: flex-end; align-items: center; gap: 8px; }
+.abv2 .code-tag { font-size: 11px; color: var(--text-muted); background: var(--hover); padding: 1px 6px; border-radius: 4px; font-family: ui-monospace, "SF Mono", Menlo, monospace; }
+.abv2 .gov-banner { display: flex; gap: 12px; align-items: flex-start;
+    background: var(--warning-soft); border: 1px solid rgba(180,83,9,0.25);
+    border-radius: var(--radius); padding: 14px 16px; margin-bottom: 20px; }
+.abv2 .gov-banner .gov-ico { color: #b45309; flex-shrink: 0; margin-top: 1px; }
+.abv2 .gov-banner .gov-title { font-weight: 700; color: #92400e; font-size: 14px; margin-bottom: 2px; }
+.abv2 .gov-banner .gov-text { font-size: 12.5px; color: #92400e; line-height: 1.55; }
+.abv2 .card.gov-card { border-color: rgba(180,83,9,0.35); }
+.abv2 .card.gov-card .card-head { background: var(--warning-soft); border-bottom-color: rgba(180,83,9,0.25); }
+.abv2 .card.gov-card .card-head .title { color: #92400e; }
+.abv2 .risk-pill { font-size: 11px; font-weight: 700; color: #b45309; background: #fff;
+    border: 1px solid rgba(180,83,9,0.4); border-radius: 999px; padding: 1px 8px; }
+.abv2 .info-note { display: flex; gap: 10px; align-items: flex-start;
+    background: var(--info-soft); border: 1px solid rgba(32,128,240,0.22);
+    border-radius: var(--radius); padding: 12px 14px; margin-bottom: 18px;
+    font-size: 12.5px; color: #1e40af; line-height: 1.55; }
+.abv2 .info-note .ico { color: var(--info); flex-shrink: 0; margin-top: 1px; }
+.abv2 .cleanup-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-bottom: 8px; }
+.abv2 .cleanup-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; }
+.abv2 .cleanup-card.selectable { cursor: pointer; transition: border-color 0.15s, background 0.15s, box-shadow 0.15s; }
+.abv2 .cleanup-card.selectable.active { border-color: var(--primary); background: var(--primary-soft); box-shadow: inset 0 0 0 1px rgba(79,70,229,0.14); }
+.abv2 .cleanup-card .cc-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.abv2 .cleanup-card .cc-meta { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; width: 100%; }
+.abv2 .cleanup-card .cc-ico { width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.abv2 .cleanup-card .cc-ico.warn { background: var(--warning-soft); color: #b45309; }
+.abv2 .cleanup-card .cc-ico.info { background: var(--info-soft); color: var(--info); }
+.abv2 .cleanup-card .cc-ico.gray { background: var(--hover); color: var(--text-secondary); }
+.abv2 .cleanup-card .cc-count { font-size: 26px; font-weight: 700; line-height: 1; }
+.abv2 .cleanup-card .cc-label { font-size: 13px; font-weight: 600; }
+.abv2 .cleanup-card .cc-desc { font-size: 12px; color: var(--text-muted); margin: 8px 0 14px; line-height: 1.5; min-height: 34px; }
+.abv2 .contact-bulk-bar { padding: 10px 20px; background: var(--primary-soft); display: flex; align-items: center; gap: 12px; border-top: 1px solid var(--border); }
+.abv2 .contact-bulk-bar.hidden { display: none; }
+.abv2 .cleanup-table-panel { display: none; margin-top: 20px; }
+.abv2 .cleanup-table-panel.active { display: block; }
+.abv2 .empty-hint { text-align: center; color: var(--text-muted); font-size: 13px; padding: 40px 0; }
+.abv2 .seg-radio { display: inline-flex; border: 1px solid var(--border-strong); border-radius: var(--radius-sm); overflow: hidden; }
+.abv2 .seg-radio label { padding: 6px 14px; font-size: 13px; cursor: pointer; color: var(--text-secondary); border-right: 1px solid var(--border-strong); }
+.abv2 .seg-radio label:last-child { border-right: none; }
+.abv2 .seg-radio input { display: none; }
+.abv2 .seg-radio input:checked + label, .abv2 .seg-radio label.active { background: var(--primary-soft); color: var(--primary); font-weight: 600; }
+.abv2 .tag-list { display: flex; flex-wrap: wrap; gap: 6px; }
+.abv2 .tag-chip { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; padding: 3px 9px; border-radius: 999px; background: var(--hover); color: var(--text-secondary); }
+.abv2 .section { display: none; }
+.abv2 .section.active { display: block; }
+.abv2 .sub-panel { display: none; }
+.abv2 .sub-panel.active { display: block; }
+.abv2 .foot-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 20px; }
+.abv2 .muted { color: var(--text-muted); }
+.abv2 .divider-label { font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: .04em; margin: 4px 0 12px; }
+</style>
 </head>
 <body>
 
@@ -3079,9 +3304,8 @@
         <svg class="chev" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
       </div>
       <div class="nav-children">
-        <div class="nav-item" data-page="8.1" onclick="goPage('8.1')">8.1 聯絡人管理</div>
-        <div class="nav-item" data-page="8.2" onclick="goPage('8.2')">8.2 名片欄位設定</div>
-        <div class="nav-item" data-page="8.3" onclick="goPage('8.3')">8.3 一般設定</div>
+        <div class="nav-item" data-page="8.1" onclick="goPage('8.1')">8.1 一般設定</div>
+        <div class="nav-item" data-page="8.2" onclick="goPage('8.2')">8.2 外部聯絡人管理</div>
       </div>
     </div>
     <div class="nav-group" id="group-mail">
@@ -8577,98 +8801,516 @@
     </div>
     <!-- ===== [修改結束] 佈告欄管理模組重構 ===== -->
 
-    <!-- ============= 8.1 聯絡人管理 ============= -->
+    <!-- ============= 8.1 一般設定 (通訊錄) ============= -->
     <section id="page-8.1" class="page-wrap hidden">
       <div class="page-head">
         <div>
-          <h1 class="page-title">聯絡人管理</h1>
-          <p class="page-desc">公司外部聯絡人，可分類並指定負責人與公開對象。</p>
-        </div>
-        <div class="btn-group">
-          <button class="btn">CSV 匯入</button>
-          <button class="btn primary">+ 新增聯絡人</button>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="toolbar" style="padding: 16px 20px 0;">
-          <input class="input search-input" placeholder="搜尋姓名、公司、信箱…" />
-          <select class="input"><option>所有分類</option><option>客戶</option><option>供應商</option><option>合作夥伴</option><option>媒體</option></select>
-          <select class="input"><option>所有負責人</option></select>
-          <select class="input"><option>所有公開對象</option><option>公開</option><option>部門可見</option><option>僅本人</option></select>
-        </div>
-        <table class="data-table">
-          <thead><tr><th><input type="checkbox"/></th><th>聯絡人</th><th>公司 / 職稱</th><th>分類</th><th>負責人</th><th>公開對象</th><th>更新時間</th><th></th></tr></thead>
-          <tbody>
-            <tr><td><input type="checkbox"/></td><td><div class="user-cell"><div class="user-avatar c1">張</div><div><div class="user-name">張總經理</div><div class="user-mail">cm@abc.com</div></div></div></td><td>ABC 科技 · CEO</td><td><span class="badge info">客戶</span></td><td>geer.chen</td><td><span class="badge neutral">部門可見</span></td><td class="text-sec">2026-04-30</td><td><button class="btn ghost sm">⋯</button></td></tr>
-            <tr><td><input type="checkbox"/></td><td><div class="user-cell"><div class="user-avatar c2">陳</div><div><div class="user-name">陳採購</div><div class="user-mail">buy@xyz.com</div></div></div></td><td>XYZ 工業 · 採購主管</td><td><span class="badge purple">供應商</span></td><td>王明德</td><td><span class="badge success">公開</span></td><td class="text-sec">2026-04-28</td><td><button class="btn ghost sm">⋯</button></td></tr>
-            <tr><td><input type="checkbox"/></td><td><div class="user-cell"><div class="user-avatar c3">林</div><div><div class="user-name">林行銷</div><div class="user-mail">marketing@partner.tw</div></div></div></td><td>合作通路 · 行銷協理</td><td><span class="badge warning">合作夥伴</span></td><td>張雅雯</td><td><span class="badge success">公開</span></td><td class="text-sec">2026-04-22</td><td><button class="btn ghost sm">⋯</button></td></tr>
-            <tr><td><input type="checkbox"/></td><td><div class="user-cell"><div class="user-avatar c4">王</div><div><div class="user-name">王記者</div><div class="user-mail">reporter@news.com</div></div></div></td><td>科技新聞 · 主編</td><td><span class="badge neutral">媒體</span></td><td>geer.chen</td><td><span class="badge danger">僅本人</span></td><td class="text-sec">2026-04-15</td><td><button class="btn ghost sm">⋯</button></td></tr>
-            <tr><td><input type="checkbox"/></td><td><div class="user-cell"><div class="user-avatar c5">李</div><div><div class="user-name">李客戶</div><div class="user-mail">customer@company.com</div></div></div></td><td>大型企業 · IT 主管</td><td><span class="badge info">客戶</span></td><td>陳怡君</td><td><span class="badge neutral">部門可見</span></td><td class="text-sec">2026-04-08</td><td><button class="btn ghost sm">⋯</button></td></tr>
-          </tbody>
-        </table>
-        <div class="pagination">
-          <span>第 1–5 筆，共 142 筆</span>
-          <div class="page-nums"><button class="page-num">‹</button><button class="page-num active">1</button><button class="page-num">2</button><button class="page-num">3</button><button class="page-num">›</button></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ============= 8.2 名片欄位設定 ============= -->
-    <section id="page-8.2" class="page-wrap hidden">
-      <div class="page-head">
-        <div>
-          <h1 class="page-title">名片欄位設定</h1>
-          <p class="page-desc">自訂聯絡人名片可儲存的欄位。</p>
-        </div>
-        <div class="btn-group"><button class="btn primary">+ 新增欄位</button></div>
-      </div>
-
-      <div class="card" style="padding: 20px 24px;">
-        <div style="font-weight:600; margin-bottom: 14px;">系統欄位</div>
-        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 24px;">
-          <div class="attr-card" style="margin-bottom:0;"><div class="attr-icon">A</div><div style="flex:1;"><div class="attr-name">姓名</div><div class="attr-meta">必填 · 文字</div></div><span class="type-chip">系統</span></div>
-          <div class="attr-card" style="margin-bottom:0;"><div class="attr-icon">@</div><div style="flex:1;"><div class="attr-name">電子郵件</div><div class="attr-meta">必填 · 信箱</div></div><span class="type-chip">系統</span></div>
-          <div class="attr-card" style="margin-bottom:0;"><div class="attr-icon">📞</div><div style="flex:1;"><div class="attr-name">電話</div><div class="attr-meta">選填 · 電話</div></div><span class="type-chip">系統</span></div>
-          <div class="attr-card" style="margin-bottom:0;"><div class="attr-icon">🏢</div><div style="flex:1;"><div class="attr-name">公司</div><div class="attr-meta">選填 · 文字</div></div><span class="type-chip">系統</span></div>
-        </div>
-
-        <div style="font-weight:600; margin-bottom: 14px;">自訂欄位</div>
-        <div class="attr-card"><span class="grip">⋮⋮</span><div class="attr-icon">💼</div><div style="flex:1;"><div class="attr-name">職稱</div><div class="attr-meta">選填 · 文字</div></div><span class="type-chip">文字</span><button class="btn ghost sm" onclick="openEditDrawer('attr',null,'職稱')">編輯</button><button class="btn ghost sm danger">刪除</button></div>
-        <div class="attr-card"><span class="grip">⋮⋮</span><div class="attr-icon">🌐</div><div style="flex:1;"><div class="attr-name">公司網站</div><div class="attr-meta">選填 · 網址</div></div><span class="type-chip">網址</span><button class="btn ghost sm" onclick="openEditDrawer('attr',null,'公司網站')">編輯</button><button class="btn ghost sm danger">刪除</button></div>
-        <div class="attr-card"><span class="grip">⋮⋮</span><div class="attr-icon">📍</div><div style="flex:1;"><div class="attr-name">地址</div><div class="attr-meta">選填 · 文字</div></div><span class="type-chip">文字</span><button class="btn ghost sm" onclick="openEditDrawer('attr',null,'地址')">編輯</button><button class="btn ghost sm danger">刪除</button></div>
-        <div class="attr-card" style="margin-bottom:0;"><span class="grip">⋮⋮</span><div class="attr-icon">🏷</div><div style="flex:1;"><div class="attr-name">標籤</div><div class="attr-meta">選填 · 多選</div></div><span class="type-chip">多選</span><button class="btn ghost sm" onclick="openEditDrawer('attr',null,'標籤')">編輯</button><button class="btn ghost sm danger">刪除</button></div>
-      </div>
-    </section>
-
-    <!-- ============= 8.3 一般設定 (通訊錄) ============= -->
-    <section id="page-8.3" class="page-wrap hidden">
-      <div class="page-head">
-        <div>
           <h1 class="page-title">一般設定</h1>
-          <p class="page-desc">通訊錄模組的全域設定。</p>
+          <p class="page-desc">依 LINE WORKS Admin 的通訊錄一般設定，管理外部聯絡人、群組與公司成員顯示規則。</p>
         </div>
         <div class="btn-group"><button class="btn primary">儲存設定</button></div>
       </div>
-      <div class="card" style="padding: 8px 24px;">
-        <div class="setting-row">
-          <div class="setting-info"><div class="t">預設公開對象</div><div class="d">新增聯絡人時的預設可見範圍。</div></div>
-          <div class="setting-control"><select class="input full"><option>僅本人</option><option>部門可見</option><option>公開</option></select></div>
+      <div class="abv2">
+        <div class="info-note">
+          <svg class="ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+          <div>本頁集中設定通訊錄服務的一般使用功能。外部聯絡人的標籤、公開範圍、垃圾桶期限與儲存/匯出權限，以及群組建立權限和公司成員顯示設定，皆可在此調整。</div>
         </div>
-        <div class="setting-row">
-          <div class="setting-info"><div class="t">名片掃描 OCR</div><div class="d">使用 OCR 自動辨識名片內容。</div></div>
-          <div class="setting-control"><label class="switch"><input type="checkbox" checked /><span class="slider"></span></label></div>
+
+        <div class="divider-label">外部聯絡人</div>
+
+        <div class="card">
+          <div class="card-head"><span class="title">外部聯絡人一般設定</span><span class="sub">公司標籤、MY 標籤、公開範圍與資料帶出權限</span></div>
+          <div class="card-body">
+            <div class="switch-form-row">
+              <div class="switch-info">
+                <div class="switch-form-label">建立公司標籤權限</div>
+                <div class="switch-form-desc">設定是否也向成員授予管理公司標籤的權限。選擇成員自由建立時，公司內成員可新增、修改或刪除公司標籤。</div>
+              </div>
+              <div class="switch-form-control">
+                <select class="input">
+                  <option>僅限管理員建立</option>
+                  <option selected>成員自由建立</option>
+                </select>
+              </div>
+            </div>
+            <div class="switch-form-row">
+              <div class="switch-info">
+                <div class="switch-form-label">使用 MY 標籤</div>
+                <div class="switch-form-desc">設定是否允許公司成員使用僅自己可見的 MY 標籤。從允許改為不允許時，成員目前使用的 MY 標籤資訊將會全部刪除。</div>
+              </div>
+              <div class="switch-form-control">
+                <label class="switch"><input type="checkbox" checked /><span class="slider"></span></label>
+              </div>
+            </div>
+            <div class="switch-form-row">
+              <div class="switch-info">
+                <div class="switch-form-label">聯絡人預設公開範圍</div>
+                <div class="switch-form-desc">設定新增聯絡人時預設選取的公開範圍選項。</div>
+              </div>
+              <div class="switch-form-control">
+                <select class="input">
+                  <option>僅限自己</option>
+                  <option selected>指定成員 / 群組</option>
+                  <option>全公司</option>
+                </select>
+              </div>
+            </div>
+            <div class="switch-form-row">
+              <div class="switch-info">
+                <div class="switch-form-label">垃圾桶保管期限</div>
+                <div class="switch-form-desc">設定成員刪除的聯絡人在垃圾桶保管的期限。期限內可復原聯絡人。</div>
+              </div>
+              <div class="switch-form-control">
+                <input class="input" type="number" value="30" min="1" max="180" style="width:90px;" />
+                <span class="muted">天</span>
+              </div>
+            </div>
+            <div class="switch-form-row">
+              <div class="switch-info">
+                <div class="switch-form-label">儲存、匯出外部聯絡人的權限</div>
+                <div class="switch-form-desc">在電腦版網站通訊錄中，設定可使用外部聯絡人儲存與匯出功能的對象範圍。</div>
+              </div>
+              <div class="switch-form-control">
+                <select class="input">
+                  <option>禁止所有成員</option>
+                  <option selected>僅限負責人</option>
+                  <option>僅限管理員</option>
+                  <option>所有成員皆可</option>
+                </select>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="setting-row">
-          <div class="setting-info"><div class="t">自動去重</div><div class="d">匯入時自動偵測重複聯絡人。</div></div>
-          <div class="setting-control"><label class="switch"><input type="checkbox" checked /><span class="slider"></span></label></div>
+
+        <div class="divider-label" style="margin-top:24px;">群組</div>
+        <div class="card">
+          <div class="card-head"><span class="title">群組建立權限</span><span class="sub">設定欲授予可建立群組權限的對象</span></div>
+          <div class="card-body">
+            <div class="switch-form-row">
+              <div class="switch-info">
+                <div class="switch-form-label">群組建立權限</div>
+                <div class="switch-form-desc">若欲僅允許管理員建立群組，請選擇僅限管理員建立；若欲允許成員也能建立，請選擇成員自由建立。</div>
+              </div>
+              <div class="switch-form-control">
+                <select class="input">
+                  <option selected>僅限管理員建立</option>
+                  <option>成員自由建立</option>
+                </select>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="setting-row">
-          <div class="setting-info"><div class="t">同步到行動裝置</div><div class="d">允許成員將通訊錄同步至手機聯絡人。</div></div>
-          <div class="setting-control"><label class="switch"><input type="checkbox" /><span class="slider"></span></label></div>
+
+        <div class="divider-label" style="margin-top:24px;">公司成員</div>
+        <div class="card">
+          <div class="card-head"><span class="title">顯示兼任／留職成員人數</span><span class="sub">設定是否在組織圖上方顯示人數</span></div>
+          <div class="card-body">
+            <div class="switch-form-row">
+              <div class="switch-info">
+                <div class="switch-form-label">顯示兼任／留職成員人數</div>
+                <div class="switch-form-desc">設定是否在組織圖上方顯示兼任的成員人數與留職成員人數；搜尋成員時可在組織圖右上角選擇包含下級部門。</div>
+              </div>
+              <div class="switch-form-control">
+                <label class="switch"><input type="checkbox" checked /><span class="slider"></span></label>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
+
+    <!-- ============= 8.2 外部聯絡人管理 (通訊錄) ============= -->
+    <section id="page-8.2" class="page-wrap hidden">
+      <div class="page-head">
+        <div>
+          <h1 class="page-title">外部聯絡人管理</h1>
+          <p class="page-desc">統一管理外部聯絡人的欄位、聯絡人負責人與公開對象，並集中整理沒有負責人與垃圾桶資料。</p>
+        </div>
+        <div class="btn-group">
+          <button class="btn">CSV 匯入</button>
+          <button class="btn primary" onclick="openModal('modal-contact-items')">管理項目</button>
+        </div>
+      </div>
+      <div class="abv2">
+<div class="subtabs">
+          <button class="subtab active" data-sub="list" onclick="abv2Sub('list')">聯絡人列表</button>
+          <button class="subtab" data-sub="cleanup" onclick="abv2Sub('cleanup')">整理聯絡人 <span class="subtab-badge" id="contact-cleanup-total">6</span></button>
+        </div>
+
+        <!-- 子分頁：聯絡人列表（F1） -->
+        <div class="sub-panel active" id="contacts-list">
+          <div class="toolbar">
+            <input class="search-input" placeholder="搜尋聯絡人、公司/所屬、Email…" />
+            <select class="input">
+              <option>全部標籤</option>
+              <option>LINE</option>
+              <option>LINE WORKS APP</option>
+            </select>
+            <select class="input">
+              <option>全部負責人</option>
+              <option>簡均羽</option>
+              <option>陳美華</option>
+              <option>王小明</option>
+            </select>
+          </div>
+
+          <div class="card">
+            <div class="card-head"><span class="title">外部聯絡人列表</span><span class="sub" id="contact-table-subtitle-main">5 筆</span></div>
+            <div id="contact-bulk-bar-main" class="contact-bulk-bar hidden">
+              <span style="color:var(--primary);font-weight:600;">已選 <span id="contact-selected-count-main">0</span> 筆</span>
+              <button class="btn sm danger" onclick="deleteSelectedContacts('main')">刪除</button>
+              <button class="btn ghost sm" style="margin-left:auto;" onclick="clearContactTableSelection('main')">取消選取</button>
+            </div>
+            <table class="data-table" id="contact-table-main">
+              <thead>
+                <tr>
+                  <th class="col-check"><input type="checkbox" id="contact-check-all-main" onchange="toggleContactTableAll('main', this)" /></th>
+                  <th>聯絡人</th>
+                  <th>公司/所屬</th>
+                  <th>聯絡人負責人</th>
+                  <th>公開對象</th>
+                  <th style="text-align:right;">操作</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr data-contact-name="郭文瑜 Charlotte" data-contact-email="無" data-contact-owner="簡均羽 (victoria.chien@coolbe.com.tw)" data-contact-visibility="向指定成員公開">
+                  <td><input type="checkbox" class="contact-row-check" onchange="updateContactTableSelection('main')" /></td>
+                  <td><div class="user-cell"><div class="user-avatar c1">郭</div><div><div class="u-name">郭文瑜 Charlotte</div><div class="u-sub">LINE</div></div></div></td>
+                  <td>CoolBe / 外部合作夥伴</td>
+                  <td>簡均羽</td>
+                  <td><span class="badge neutral dot">向指定成員公開</span></td>
+                  <td class="actions"><button class="btn ghost sm" onclick="openContactInfoFromRow(this)">編輯</button></td>
+                </tr>
+                <tr data-contact-name="Sarah Chen" data-contact-email="sarah@globaltrade.com" data-contact-owner="陳美華 (meihua.chen@coolbe.com.tw)" data-contact-visibility="向所有成員公開">
+                  <td><input type="checkbox" class="contact-row-check" onchange="updateContactTableSelection('main')" /></td>
+                  <td><div class="user-cell"><div class="user-avatar c2">Sa</div><div><div class="u-name">Sarah Chen</div><div class="u-sub">LINE WORKS APP</div></div></div></td>
+                  <td>Global Trade / 業務合作</td>
+                  <td>陳美華</td>
+                  <td><span class="badge success dot">向所有成員公開</span></td>
+                  <td class="actions"><button class="btn ghost sm" onclick="openContactInfoFromRow(this)">編輯</button></td>
+                </tr>
+                <tr data-contact-name="黃建國" data-contact-email="jk.huang@vendor.tw" data-contact-owner="王小明 (ming.wang@coolbe.com.tw)" data-contact-visibility="向指定成員公開">
+                  <td><input type="checkbox" class="contact-row-check" onchange="updateContactTableSelection('main')" /></td>
+                  <td><div class="user-cell"><div class="user-avatar c3">黃</div><div><div class="u-name">黃建國</div><div class="u-sub">LINE</div></div></div></td>
+                  <td>建國物流 / 供應商</td>
+                  <td>王小明</td>
+                  <td><span class="badge neutral dot">向指定成員公開</span></td>
+                  <td class="actions"><button class="btn ghost sm" onclick="openContactInfoFromRow(this)">編輯</button></td>
+                </tr>
+                <tr data-contact-name="吳雅婷" data-contact-email="yating.wu@design.co" data-contact-owner="陳美華 (meihua.chen@coolbe.com.tw)" data-contact-visibility="向指定成員公開">
+                  <td><input type="checkbox" class="contact-row-check" onchange="updateContactTableSelection('main')" /></td>
+                  <td><div class="user-cell"><div class="user-avatar c4">吳</div><div><div class="u-name">吳雅婷</div><div class="u-sub">LINE WORKS APP</div></div></div></td>
+                  <td>雅婷設計 / 設計顧問</td>
+                  <td>陳美華</td>
+                  <td><span class="badge neutral dot">向指定成員公開</span></td>
+                  <td class="actions"><button class="btn ghost sm" onclick="openContactInfoFromRow(this)">編輯</button></td>
+                </tr>
+                <tr data-contact-name="Kerr Wang" data-contact-email="kerr.wang@coolbe.com.tw" data-contact-owner="簡均羽 (victoria.chien@coolbe.com.tw)" data-contact-visibility="向所有成員公開">
+                  <td><input type="checkbox" class="contact-row-check" onchange="updateContactTableSelection('main')" /></td>
+                  <td><div class="user-cell"><div class="user-avatar c5">Ke</div><div><div class="u-name">Kerr Wang</div><div class="u-sub">LINE</div></div></div></td>
+                  <td>CoolBe / 合作窗口</td>
+                  <td>簡均羽</td>
+                  <td><span class="badge success dot">向所有成員公開</span></td>
+                  <td class="actions"><button class="btn ghost sm" onclick="openContactInfoFromRow(this)">編輯</button></td>
+                </tr>
+              </tbody>
+            </table>
+            <div id="contact-table-count-main" style="padding:12px 20px;color:var(--text-muted);font-size:12px;border-top:1px solid var(--border);">目前顯示 5 筆外部聯絡人</div>
+          </div>
+        </div>
+
+        <!-- 子分頁：整理聯絡人（F2） -->
+        <div class="sub-panel" id="contacts-cleanup">
+          <div class="info-note">
+            <svg class="ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            <div>以下為需要優先整理的聯絡人。可先處理沒有負責人的資料，再檢查垃圾桶內容是否需要永久清除。</div>
+          </div>
+
+          <div class="cleanup-grid">
+            <div class="cleanup-card selectable active" id="cleanup-card-orphan" onclick="showContactCleanupPanel('orphan')">
+              <div class="cc-head">
+                <div class="cc-ico warn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 11l-3 3-2-2" opacity=".01"/><path d="M19 8v6M22 11h-6"/></svg></div>
+                <div class="cc-meta"><div><div class="cc-count" id="cleanup-count-orphan">3</div><div class="cc-label">沒有負責人</div></div></div>
+              </div>
+              <div class="cc-desc">聯絡人未指派負責人，可能因原負責人離職而失去管理者。</div>
+            </div>
+
+            <div class="cleanup-card selectable" id="cleanup-card-trash" onclick="showContactCleanupPanel('trash')">
+              <div class="cc-head">
+                <div class="cc-ico gray"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg></div>
+                <div class="cc-meta">
+                  <div><div class="cc-count" id="cleanup-count-trash">3</div><div class="cc-label">垃圾桶</div></div>
+                  <button class="btn sm danger" onclick="event.stopPropagation();clearTrashContacts()">清空垃圾桶</button>
+                </div>
+              </div>
+              <div class="cc-desc">已刪除的聯絡人，超過保管期限將永久刪除（保管期限見「資料安全」）。</div>
+            </div>
+          </div>
+
+          <div class="card cleanup-table-panel active" id="cleanup-panel-orphan">
+            <div class="card-head"><span class="title">沒有負責人的聯絡人</span><span class="sub" id="contact-table-subtitle-orphan">3 筆</span></div>
+            <div id="contact-bulk-bar-orphan" class="contact-bulk-bar hidden">
+              <span style="color:var(--primary);font-weight:600;">已選 <span id="contact-selected-count-orphan">0</span> 筆</span>
+              <button class="btn sm danger" onclick="deleteSelectedContacts('orphan')">刪除</button>
+              <button class="btn ghost sm" style="margin-left:auto;" onclick="clearContactTableSelection('orphan')">取消選取</button>
+            </div>
+            <table class="data-table" id="contact-table-orphan">
+              <thead><tr><th class="col-check"><input type="checkbox" id="contact-check-all-orphan" onchange="toggleContactTableAll('orphan', this)" /></th><th>聯絡人</th><th>公司/所屬</th><th>聯絡人負責人</th><th>公開對象</th><th style="text-align:right;">操作</th></tr></thead>
+              <tbody>
+                <tr data-contact-name="陳大文" data-contact-email="dawen@consult.com" data-contact-owner="未指定" data-contact-visibility="向指定成員公開">
+                  <td><input type="checkbox" class="contact-row-check" onchange="updateContactTableSelection('orphan')" /></td>
+                  <td><div class="user-cell"><div class="user-avatar c5">陳</div><div><div class="u-name">陳大文</div><div class="u-sub">LINE</div></div></div></td>
+                  <td>大文顧問 / 顧問</td>
+                  <td>—</td>
+                  <td><span class="badge neutral dot">向指定成員公開</span></td>
+                  <td class="actions"><button class="btn ghost sm" onclick="openContactInfoFromRow(this)">編輯</button></td>
+                </tr>
+                <tr data-contact-name="李佳芬" data-contact-email="jiafen@maker.com" data-contact-owner="未指定" data-contact-visibility="向所有成員公開">
+                  <td><input type="checkbox" class="contact-row-check" onchange="updateContactTableSelection('orphan')" /></td>
+                  <td><div class="user-cell"><div class="user-avatar c1">李</div><div><div class="u-name">李佳芬</div><div class="u-sub">LINE WORKS APP</div></div></div></td>
+                  <td>Maker Studio / 外部顧問</td>
+                  <td>—</td>
+                  <td><span class="badge success dot">向所有成員公開</span></td>
+                  <td class="actions"><button class="btn ghost sm" onclick="openContactInfoFromRow(this)">編輯</button></td>
+                </tr>
+                <tr data-contact-name="周俊宏" data-contact-email="jh.chou@supply.tw" data-contact-owner="未指定" data-contact-visibility="向指定成員公開">
+                  <td><input type="checkbox" class="contact-row-check" onchange="updateContactTableSelection('orphan')" /></td>
+                  <td><div class="user-cell"><div class="user-avatar c3">周</div><div><div class="u-name">周俊宏</div><div class="u-sub">LINE</div></div></div></td>
+                  <td>兆星供應 / 採購窗口</td>
+                  <td>—</td>
+                  <td><span class="badge neutral dot">向指定成員公開</span></td>
+                  <td class="actions"><button class="btn ghost sm" onclick="openContactInfoFromRow(this)">編輯</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="card cleanup-table-panel" id="cleanup-panel-trash">
+            <div class="card-head"><span class="title">垃圾桶聯絡人</span><span class="sub" id="contact-table-subtitle-trash">3 筆</span></div>
+            <div id="contact-bulk-bar-trash" class="contact-bulk-bar hidden">
+              <span style="color:var(--primary);font-weight:600;">已選 <span id="contact-selected-count-trash">0</span> 筆</span>
+              <button class="btn sm danger" onclick="deleteSelectedContacts('trash')">刪除</button>
+              <button class="btn ghost sm" style="margin-left:auto;" onclick="clearContactTableSelection('trash')">取消選取</button>
+            </div>
+            <table class="data-table" id="contact-table-trash">
+              <thead><tr><th class="col-check"><input type="checkbox" id="contact-check-all-trash" onchange="toggleContactTableAll('trash', this)" /></th><th>聯絡人</th><th>公司/所屬</th><th>聯絡人負責人</th><th>公開對象</th><th style="text-align:right;">操作</th></tr></thead>
+              <tbody>
+                <tr data-contact-name="林俊宏" data-contact-email="jh.lin@archi.co" data-contact-owner="王小明 (ming.wang@coolbe.com.tw)" data-contact-visibility="向所有成員公開">
+                  <td><input type="checkbox" class="contact-row-check" onchange="updateContactTableSelection('trash')" /></td>
+                  <td><div class="user-cell"><div class="user-avatar c1">林</div><div><div class="u-name">林俊宏</div><div class="u-sub">LINE</div></div></div></td>
+                  <td>Archi Co / 業務總監</td>
+                  <td>王小明</td>
+                  <td><span class="badge success dot">向所有成員公開</span></td>
+                  <td class="actions"><button class="btn ghost sm" onclick="openContactInfoFromRow(this)">編輯</button></td>
+                </tr>
+                <tr data-contact-name="吳佩蓉" data-contact-email="peirong.wu@market.io" data-contact-owner="陳美華 (meihua.chen@coolbe.com.tw)" data-contact-visibility="向指定成員公開">
+                  <td><input type="checkbox" class="contact-row-check" onchange="updateContactTableSelection('trash')" /></td>
+                  <td><div class="user-cell"><div class="user-avatar c4">吳</div><div><div class="u-name">吳佩蓉</div><div class="u-sub">LINE WORKS APP</div></div></div></td>
+                  <td>Market.io / 行銷夥伴</td>
+                  <td>陳美華</td>
+                  <td><span class="badge neutral dot">向指定成員公開</span></td>
+                  <td class="actions"><button class="btn ghost sm" onclick="openContactInfoFromRow(this)">編輯</button></td>
+                </tr>
+                <tr data-contact-name="許書豪" data-contact-email="sh.hsu@fleet.tw" data-contact-owner="簡均羽 (victoria.chien@coolbe.com.tw)" data-contact-visibility="向指定成員公開">
+                  <td><input type="checkbox" class="contact-row-check" onchange="updateContactTableSelection('trash')" /></td>
+                  <td><div class="user-cell"><div class="user-avatar c2">許</div><div><div class="u-name">許書豪</div><div class="u-sub">LINE</div></div></div></td>
+                  <td>Fleet TW / 物流窗口</td>
+                  <td>簡均羽</td>
+                  <td><span class="badge neutral dot">向指定成員公開</span></td>
+                  <td class="actions"><button class="btn ghost sm" onclick="openContactInfoFromRow(this)">編輯</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="modal-overlay" id="modal-contact-info" onclick="closeModalIfBackdrop(event,'modal-contact-info')">
+      <div class="modal" style="width:860px;max-width:94vw;">
+        <div class="modal-head">
+          <h3 class="modal-title">修改聯絡資訊</h3>
+          <button class="icon-btn" onclick="closeModal('modal-contact-info')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+        </div>
+        <div class="modal-body" style="max-height:70vh;overflow:auto;">
+          <div style="display:grid;grid-template-columns:180px 1fr;gap:28px;align-items:start;">
+            <div>
+              <div style="display:flex;align-items:center;gap:8px;color:var(--primary);font-weight:700;margin-bottom:18px;"><span style="width:8px;height:8px;border-radius:50%;background:var(--primary);display:inline-block;"></span>必填項目</div>
+              <div class="user-avatar c1" id="contact-info-avatar" style="width:118px;height:118px;font-size:32px;margin-left:6px;">聯</div>
+            </div>
+            <div style="display:grid;gap:16px;">
+              <div class="form-row" style="margin:0;">
+                <label>聯絡人姓名</label>
+                <input class="input full" id="contact-info-name" style="background:#f3f4f6;color:var(--text-secondary);cursor:not-allowed;" disabled />
+              </div>
+              <div class="form-row" style="margin:0;">
+                <label>電子郵件地址</label>
+                <input class="input full" id="contact-info-email" style="background:#f3f4f6;color:var(--text-secondary);cursor:not-allowed;" disabled />
+              </div>
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:180px 1fr;gap:28px;margin-top:26px;align-items:start;">
+            <div style="display:flex;align-items:center;gap:8px;font-weight:700;"><span style="width:8px;height:8px;border-radius:50%;background:var(--primary);display:inline-block;"></span>聯絡人負責人</div>
+            <div>
+              <div style="display:flex;gap:10px;align-items:center;">
+                <select class="input" id="contact-info-owner" style="flex:1;">
+                  <option value="簡均羽">簡均羽 · victoria.chien@coolbe.com.tw</option>
+                  <option value="陳美華">陳美華 · meihua.chen@coolbe.com.tw</option>
+                  <option value="王小明">王小明 · ming.wang@coolbe.com.tw</option>
+                  <option value="張雅雯">張雅雯 · yw.chang@lws.com</option>
+                  <option value="林家豪">林家豪 · jh.lin@lws.com</option>
+                </select>
+                <button class="btn" type="button">通訊錄</button>
+              </div>
+              <div class="muted" style="font-size:12px;margin-top:8px;color:var(--danger);">* 聯絡人的負責人僅可指定 1 人。</div>
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:180px 1fr;gap:28px;margin-top:26px;align-items:start;">
+            <div style="display:flex;align-items:center;gap:8px;font-weight:700;"><span style="width:8px;height:8px;border-radius:50%;background:var(--primary);display:inline-block;"></span>公開範圍</div>
+            <div>
+              <label style="display:flex;align-items:center;gap:10px;font-size:15px;margin-bottom:12px;">
+                <input type="radio" name="contact-visibility-mode" value="向所有成員公開" onchange="toggleContactVisibilityMode()" />
+                向所有成員公開
+              </label>
+              <label style="display:flex;align-items:center;gap:10px;font-size:15px;margin-bottom:14px;color:var(--primary);">
+                <input type="radio" name="contact-visibility-mode" value="向指定成員公開" onchange="toggleContactVisibilityMode()" checked />
+                向指定成員公開
+              </label>
+              <div id="contact-specified-wrap">
+                <div style="display:flex;gap:10px;align-items:center;margin-bottom:10px;">
+                  <input class="input" style="flex:1;" placeholder="搜尋成員、組織、群組" />
+                  <button class="btn" type="button">通訊錄</button>
+                </div>
+                <div style="border:1px solid var(--border);border-radius:6px;overflow:hidden;">
+                  <label style="display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid var(--border);cursor:pointer;">
+                    <input type="checkbox" class="contact-public-target" checked />
+                    <div class="user-avatar c2" style="width:42px;height:42px;font-size:15px;flex-shrink:0;">簡</div>
+                    <div style="min-width:0;flex:1;">
+                      <div style="font-weight:700;">簡均羽 <span style="font-weight:500;margin-left:8px;">Victoria Chien</span> <span class="text-sec">[Victoria]</span></div>
+                      <div style="font-size:12px;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"><span style="color:var(--success);font-weight:600;">管理職</span>　商務拓展　酷必資訊股份有限公司　victoria.chien@coolbe.com.tw</div>
+                    </div>
+                  </label>
+                  <label style="display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer;">
+                    <input type="checkbox" class="contact-public-target" />
+                    <div class="user-avatar c4" style="width:42px;height:42px;font-size:15px;flex-shrink:0;">張</div>
+                    <div style="min-width:0;flex:1;">
+                      <div style="font-weight:700;">張雅雯 <span style="font-weight:500;margin-left:8px;">Amy Chang</span></div>
+                      <div style="font-size:12px;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">產品部　產品經理　amy.chang@coolbe.com.tw</div>
+                    </div>
+                  </label>
+                </div>
+                <div class="muted" style="font-size:12px;margin-top:10px;">全 <span style="color:var(--primary);font-weight:700;" id="contact-public-target-count">1</span> 名</div>
+                <div class="muted" style="font-size:12px;margin-top:6px;">・僅限在公開對象新增同公司成員。<br>・新增部門時，不包含下級部門成員。</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-foot">
+          <button class="btn" onclick="closeModal('modal-contact-info')">取消</button>
+          <button class="btn primary" onclick="saveContactInfo()">儲存</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-overlay" id="modal-contact-items" onclick="closeModalIfBackdrop(event,'modal-contact-items')">
+      <div class="modal" style="width:860px;max-width:92vw;">
+        <div class="modal-head">
+          <h3 class="modal-title">管理項目</h3>
+          <button class="icon-btn" onclick="closeModal('modal-contact-items')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+        </div>
+        <div class="modal-body">
+          <div class="info-note" style="margin-bottom:14px;">
+            <svg class="ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            <div>項目最多只可設定 5 筆。新增後，類型、輸入數量與 propertyName 便無法修改。</div>
+          </div>
+          <div class="card" style="margin-bottom:16px;">
+            <div class="card-head">
+              <span class="title">外部聯絡人項目</span>
+              <span class="sub" id="contact-item-count">1 / 5</span>
+            </div>
+            <table class="drag-list" id="contact-item-table">
+              <thead><tr><th>項目名稱</th><th style="width:160px;">管理</th></tr></thead>
+              <tbody id="contact-item-tbody">
+                <tr draggable="true" data-name="統一編號" data-type="文字" data-amount="單一值" data-property="taxId"><td><span class="drag-handle-cell">☰</span><span class="name-col">統一編號</span></td><td><button class="op-btn" onclick="editContactItem(this)">編輯</button><button class="op-btn delete" onclick="deleteContactItem(this)">刪除</button></td></tr>
+              </tbody>
+            </table>
+            <div class="card-body" style="padding-top:12px;">
+              <button class="btn primary" id="contact-item-add-btn" onclick="showContactItemForm()">新增項目</button>
+            </div>
+          </div>
+        </div>
+        <div class="modal-foot">
+          <button class="btn primary" onclick="closeModal('modal-contact-items')">完成</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-overlay" id="modal-contact-item-add" onclick="closeModalIfBackdrop(event,'modal-contact-item-add')">
+      <div class="modal" style="width:720px;max-width:92vw;">
+        <div class="modal-head">
+          <h3 class="modal-title" id="contact-item-form-title">新增項目</h3>
+          <button class="icon-btn" onclick="hideContactItemForm()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+        </div>
+        <div class="modal-body">
+          <div class="org-form-section" style="padding:0;">
+            <div class="org-field-row">
+              <div class="org-field-label">項目名稱 <span class="req">*</span></div>
+              <input class="input" id="contact-item-name" style="width:100%;" maxlength="20" placeholder="輸入項目名稱" />
+            </div>
+            <div class="org-field-row">
+              <div class="org-field-label">多國語言</div>
+              <div style="width:100%;">
+                <div class="lang-acc-trigger" id="contact-item-lang-trigger" onclick="modalLangAccToggle('contact-item-lang-trigger','contact-item-lang-body')">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                  多國語言名稱
+                  <svg class="lang-acc-chev" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+                </div>
+                <div class="lang-acc-body" id="contact-item-lang-body">
+                  <div class="lang-acc-row"><span class="lang-acc-flag">🇹🇼</span><span class="lang-acc-label">繁中</span><input class="input contact-item-name-locale" id="contact-item-name-tw" style="flex:1;" maxlength="20" placeholder="繁體中文名稱"/></div>
+                  <div class="lang-acc-row"><span class="lang-acc-flag">🇨🇳</span><span class="lang-acc-label">簡中</span><input class="input contact-item-name-locale" id="contact-item-name-cn" style="flex:1;" maxlength="20" placeholder="简体中文名称"/></div>
+                  <div class="lang-acc-row"><span class="lang-acc-flag">🇺🇸</span><span class="lang-acc-label">英文</span><input class="input contact-item-name-locale" id="contact-item-name-en" style="flex:1;" maxlength="20" placeholder="English name"/></div>
+                  <div class="lang-acc-row"><span class="lang-acc-flag">🇯🇵</span><span class="lang-acc-label">日文</span><input class="input contact-item-name-locale" id="contact-item-name-ja" style="flex:1;" maxlength="20" placeholder="日本語名称"/></div>
+                  <div class="lang-acc-row"><span class="lang-acc-flag">🇰🇷</span><span class="lang-acc-label">韓文</span><input class="input contact-item-name-locale" id="contact-item-name-ko" style="flex:1;" maxlength="20" placeholder="한국어 이름"/></div>
+                </div>
+              </div>
+            </div>
+            <div class="org-field-row">
+              <div class="org-field-label">類型</div>
+              <div>
+                <div id="contact-item-type" style="display:flex;align-items:center;gap:18px;flex-wrap:wrap;">
+                  <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;"><input type="radio" name="contact-item-type" value="文字" checked onchange="pickContactItemType(this,'text')" />文字</label>
+                  <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;"><input type="radio" name="contact-item-type" value="連結" onchange="pickContactItemType(this,'link')" />連結</label>
+                </div>
+                <div class="muted" id="contact-item-type-help" style="font-size:11px;margin-top:6px;">文字：可以用文字形式顯示聯絡人項目。</div>
+              </div>
+            </div>
+            <div class="org-field-row">
+              <div class="org-field-label">輸入數量</div>
+              <div>
+                <div id="contact-item-amount" style="display:flex;align-items:center;gap:18px;flex-wrap:wrap;">
+                  <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;"><input type="radio" name="contact-item-amount" value="單一值" checked onchange="pickContactItemAmount(this)" />單一值</label>
+                  <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;"><input type="radio" name="contact-item-amount" value="多重值" onchange="pickContactItemAmount(this)" />多重值</label>
+                </div>
+                <div class="muted" style="font-size:11px;margin-top:6px;">多重值項目最多可輸入 10 個值。</div>
+              </div>
+            </div>
+            <div class="org-field-row">
+              <div class="org-field-label">PropertyName</div>
+              <div>
+                <input class="input" id="contact-item-property" style="width:100%;font-family:ui-monospace,Menlo,monospace;" placeholder="未輸入時自動生成" />
+                <div class="muted" style="font-size:11px;margin-top:6px;">外部系統連動時使用的值。</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-foot">
+          <button class="btn" onclick="hideContactItemForm()">取消</button>
+          <button class="btn primary" onclick="saveContactItem()">儲存</button>
+        </div>
+      </div>
+    </div>
 
     <!-- ============= 9.1 Gmail 郵件同步 ============= -->
     <section id="page-9.1" class="page-wrap hidden">
@@ -9332,19 +9974,24 @@
 <!-- ============= 同步成功 Toast ============= -->
 <div id="sync-toast" style="position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);background:#1e293b;color:#fff;padding:10px 20px;border-radius:var(--radius);font-size:13px;display:flex;align-items:center;gap:8px;opacity:0;transition:all 0.3s;pointer-events:none;z-index:9999;">
   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-  已成功同步 Admin 後端資料庫
+  <span>已成功同步 Admin 後端資料庫</span>
 </div>
 
 <script>
   /* ===== 同步 Toast ===== */
-  function showSyncToast() {
+  function showSyncToast(message) {
     var t = document.getElementById('sync-toast');
     if (!t) return;
+    var msgEl = t.querySelector('span') || t;
+    if (!t.dataset.defaultMessage) t.dataset.defaultMessage = msgEl.textContent.trim();
+    if (message) msgEl.textContent = message;
     t.style.opacity = '1';
     t.style.transform = 'translateX(-50%) translateY(0)';
-    setTimeout(function() {
+    if (window._syncToastTimer) clearTimeout(window._syncToastTimer);
+    window._syncToastTimer = setTimeout(function() {
       t.style.opacity = '0';
       t.style.transform = 'translateX(-50%) translateY(20px)';
+      msgEl.textContent = t.dataset.defaultMessage || '已成功同步 Admin 後端資料庫';
     }, 2500);
   }
 
@@ -13716,9 +14363,8 @@
     '7.1': { section: '佈告欄管理', name: '總覽', group: 'group-board' },
     '7.2': { section: '佈告欄管理', name: '看板管理', group: 'group-board' },
     '7.3': { section: '佈告欄管理', name: '設定與資料', group: 'group-board' },
-    '8.1': { section: '通訊錄', name: '聯絡人管理', group: 'group-contact' },
-    '8.2': { section: '通訊錄', name: '名片欄位設定', group: 'group-contact' },
-    '8.3': { section: '通訊錄', name: '一般設定', group: 'group-contact' },
+    '8.1': { section: '通訊錄', name: '一般設定', group: 'group-contact' },
+    '8.2': { section: '通訊錄', name: '外部聯絡人管理', group: 'group-contact' },
     '9.1': { section: '郵件管理', name: 'Gmail 郵件同步', group: 'group-mail' },
     '9.2': { section: '郵件管理', name: '一般設定', group: 'group-mail' },
   };
@@ -13923,6 +14569,396 @@
   function closeModalIfBackdrop(e, id) {
     if (e.target === document.getElementById(id)) closeModal(id);
   }
+
+  var _activeContactRow = null;
+
+  function contactRows(tableId) {
+    return Array.from(document.querySelectorAll('#contact-table-' + tableId + ' tbody tr[data-contact-name]'));
+  }
+
+  function toggleContactTableAll(tableId, headerCb) {
+    contactRows(tableId).forEach(function(row) {
+      var cb = row.querySelector('.contact-row-check');
+      if (cb) cb.checked = headerCb.checked;
+    });
+    updateContactTableSelection(tableId);
+  }
+
+  function updateContactTableSelection(tableId) {
+    var rows = contactRows(tableId);
+    var checked = rows.filter(function(row) {
+      var cb = row.querySelector('.contact-row-check');
+      return cb && cb.checked;
+    });
+    var bar = document.getElementById('contact-bulk-bar-' + tableId);
+    var countEl = document.getElementById('contact-selected-count-' + tableId);
+    var allCb = document.getElementById('contact-check-all-' + tableId);
+    if (countEl) countEl.textContent = checked.length;
+    if (bar) bar.classList.toggle('hidden', checked.length === 0);
+    if (allCb) {
+      allCb.checked = rows.length > 0 && checked.length === rows.length;
+      allCb.indeterminate = checked.length > 0 && checked.length < rows.length;
+    }
+  }
+
+  function clearContactTableSelection(tableId) {
+    contactRows(tableId).forEach(function(row) {
+      var cb = row.querySelector('.contact-row-check');
+      if (cb) cb.checked = false;
+    });
+    var allCb = document.getElementById('contact-check-all-' + tableId);
+    if (allCb) { allCb.checked = false; allCb.indeterminate = false; }
+    updateContactTableSelection(tableId);
+  }
+
+  function refreshContactTableMeta(tableId) {
+    var rows = contactRows(tableId);
+    var count = rows.length;
+    var subtitle = document.getElementById('contact-table-subtitle-' + tableId);
+    if (subtitle) subtitle.textContent = count + ' 筆';
+    if (tableId === 'main') {
+      var countEl = document.getElementById('contact-table-count-main');
+      if (countEl) countEl.textContent = '目前顯示 ' + count + ' 筆外部聯絡人';
+    }
+    if (tableId === 'orphan') {
+      var orphanCount = document.getElementById('cleanup-count-orphan');
+      if (orphanCount) orphanCount.textContent = count;
+    }
+    if (tableId === 'trash') {
+      var trashCount = document.getElementById('cleanup-count-trash');
+      if (trashCount) trashCount.textContent = count;
+    }
+    var totalBadge = document.getElementById('contact-cleanup-total');
+    if (totalBadge) {
+      var orphanRows = contactRows('orphan').length;
+      var trashRows = contactRows('trash').length;
+      totalBadge.textContent = orphanRows + trashRows;
+    }
+    var tbody = document.querySelector('#contact-table-' + tableId + ' tbody');
+    if (tbody && count === 0) {
+      tbody.innerHTML = '<tr><td colspan="6" class="empty-hint">目前沒有聯絡人</td></tr>';
+    }
+    updateContactTableSelection(tableId);
+  }
+
+  function deleteSelectedContacts(tableId) {
+    var rows = contactRows(tableId).filter(function(row) {
+      var cb = row.querySelector('.contact-row-check');
+      return cb && cb.checked;
+    });
+    if (!rows.length) return;
+    rows.forEach(function(row) { row.remove(); });
+    clearContactTableSelection(tableId);
+    refreshContactTableMeta(tableId);
+    showSyncToast('已刪除 ' + rows.length + ' 筆聯絡人');
+  }
+
+  function openContactInfoFromRow(btn) {
+    var row = btn && btn.closest ? btn.closest('tr') : null;
+    if (!row) return;
+    _activeContactRow = row;
+    var avatar = row.querySelector('.user-avatar');
+    var avatarEl = document.getElementById('contact-info-avatar');
+    if (avatarEl && avatar) {
+      avatarEl.className = avatar.className;
+      avatarEl.style.width = '118px';
+      avatarEl.style.height = '118px';
+      avatarEl.style.fontSize = '32px';
+      avatarEl.style.marginLeft = '6px';
+      avatarEl.textContent = avatar.textContent.trim() || '聯';
+    }
+    var nameEl = document.getElementById('contact-info-name');
+    var emailEl = document.getElementById('contact-info-email');
+    var ownerEl = document.getElementById('contact-info-owner');
+    if (nameEl) nameEl.value = row.dataset.contactName || '';
+    if (emailEl) emailEl.value = row.dataset.contactEmail || '無';
+    if (ownerEl) {
+      var ownerName = (row.dataset.contactOwner || '').split(' ')[0] || '簡均羽';
+      ownerEl.value = ownerName === '未指定' ? '簡均羽' : ownerName;
+    }
+    setContactVisibilityMode(normalizeContactVisibility(row.dataset.contactVisibility));
+    updateContactPublicTargetCount();
+    openModal('modal-contact-info');
+  }
+
+  function normalizeContactVisibility(value) {
+    return value === '向所有成員公開' ? '向所有成員公開' : '向指定成員公開';
+  }
+
+  function setContactVisibilityMode(value) {
+    var normalized = normalizeContactVisibility(value);
+    document.querySelectorAll('input[name="contact-visibility-mode"]').forEach(function(radio) {
+      radio.checked = radio.value === normalized;
+    });
+    toggleContactVisibilityMode();
+  }
+
+  function toggleContactVisibilityMode() {
+    var checked = document.querySelector('input[name="contact-visibility-mode"]:checked');
+    var wrap = document.getElementById('contact-specified-wrap');
+    var isSpecified = !checked || checked.value === '向指定成員公開';
+    if (wrap) wrap.style.display = isSpecified ? 'block' : 'none';
+  }
+
+  function updateContactPublicTargetCount() {
+    var count = document.querySelectorAll('.contact-public-target:checked').length;
+    var countEl = document.getElementById('contact-public-target-count');
+    if (countEl) countEl.textContent = String(count);
+  }
+
+  document.querySelectorAll('.contact-public-target').forEach(function(cb) {
+    cb.addEventListener('change', updateContactPublicTargetCount);
+  });
+
+  function deleteCurrentContact() {
+    if (!_activeContactRow) {
+      closeModal('modal-contact-info');
+      return;
+    }
+    var row = _activeContactRow;
+    var name = row.dataset.contactName || '聯絡人';
+    var tableId = (row.closest('table') || {}).id ? row.closest('table').id.replace('contact-table-', '') : '';
+    row.remove();
+    _activeContactRow = null;
+    closeModal('modal-contact-info');
+    if (tableId) {
+      clearContactTableSelection(tableId);
+      refreshContactTableMeta(tableId);
+    }
+    showSyncToast('已刪除聯絡人「' + name + '」');
+  }
+
+  function editCurrentContact() {
+    var name = _activeContactRow ? (_activeContactRow.dataset.contactName || '聯絡人') : '聯絡人';
+    closeModal('modal-contact-info');
+    showSyncToast('已開啟聯絡人「' + name + '」的修改畫面');
+  }
+
+  function saveContactInfo() {
+    if (!_activeContactRow) {
+      closeModal('modal-contact-info');
+      return;
+    }
+    var ownerEl = document.getElementById('contact-info-owner');
+    var checkedVisibility = document.querySelector('input[name="contact-visibility-mode"]:checked');
+    var owner = ownerEl ? ownerEl.value : '簡均羽';
+    var visibility = checkedVisibility ? checkedVisibility.value : '向指定成員公開';
+    _activeContactRow.dataset.contactOwner = owner;
+    _activeContactRow.dataset.contactVisibility = visibility;
+    var ownerCell = _activeContactRow.children[3];
+    var visibilityCell = _activeContactRow.children[4];
+    if (ownerCell) ownerCell.textContent = owner;
+    if (visibilityCell) {
+      visibilityCell.innerHTML = '<span class="badge ' + (visibility === '向所有成員公開' ? 'success' : 'neutral') + ' dot">' + visibility + '</span>';
+    }
+    closeModal('modal-contact-info');
+    showSyncToast('已儲存聯絡資訊');
+  }
+
+  function showContactCleanupPanel(type) {
+    ['orphan', 'trash'].forEach(function(key) {
+      var card = document.getElementById('cleanup-card-' + key);
+      var panel = document.getElementById('cleanup-panel-' + key);
+      if (card) card.classList.toggle('active', key === type);
+      if (panel) panel.classList.toggle('active', key === type);
+    });
+  }
+
+  function clearTrashContacts() {
+    var rows = contactRows('trash');
+    if (!rows.length) {
+      showSyncToast('垃圾桶目前沒有可清除的聯絡人');
+      return;
+    }
+    rows.forEach(function(row) { row.remove(); });
+    clearContactTableSelection('trash');
+    refreshContactTableMeta('trash');
+    showSyncToast('已清空垃圾桶，共刪除 ' + rows.length + ' 筆聯絡人');
+  }
+
+  function contactItemRows() {
+    return Array.from(document.querySelectorAll('#contact-item-tbody tr'));
+  }
+
+  function updateContactItemCount() {
+    var count = contactItemRows().length;
+    var countEl = document.getElementById('contact-item-count');
+    var addBtn = document.getElementById('contact-item-add-btn');
+    if (countEl) countEl.textContent = count + ' / 5';
+    if (addBtn) addBtn.disabled = count >= 5;
+  }
+
+  var _contactItemEditingRow = null;
+  var _contactItemDraggingRow = null;
+
+  function escapeContactItemText(value) {
+    return String(value || '').replace(/[&<>"']/g, function(ch) {
+      return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[ch];
+    });
+  }
+
+  function showContactItemForm() {
+    updateContactItemCount();
+    if (contactItemRows().length >= 5) {
+      showSyncToast('項目最多只可設定 5 筆');
+      return;
+    }
+    _contactItemEditingRow = null;
+    var title = document.getElementById('contact-item-form-title');
+    if (title) title.textContent = '新增項目';
+    resetContactItemForm();
+    openModal('modal-contact-item-add');
+  }
+
+  function hideContactItemForm() {
+    closeModal('modal-contact-item-add');
+    resetContactItemForm();
+    _contactItemEditingRow = null;
+  }
+
+  function resetContactItemForm() {
+    document.querySelectorAll('.contact-item-name-locale').forEach(function(el) { el.value = ''; });
+    ['contact-item-name','contact-item-property'].forEach(function(id) {
+      var el = document.getElementById(id);
+      if (el) el.value = '';
+    });
+    setContactItemRadioValue('contact-item-type', '文字');
+    setContactItemRadioValue('contact-item-amount', '單一值');
+    pickContactItemType(document.querySelector('input[name="contact-item-type"]:checked'), 'text');
+    var langTrigger = document.getElementById('contact-item-lang-trigger');
+    var langBody = document.getElementById('contact-item-lang-body');
+    if (langTrigger) langTrigger.classList.remove('open');
+    if (langBody) langBody.classList.remove('open');
+  }
+
+  function pickContactItemType(el, type) {
+    var help = document.getElementById('contact-item-type-help');
+    var isLink = type === 'link';
+    if (help) help.textContent = isLink ? '連結：可以用外部網站連結顯示聯絡人項目。' : '文字：可以用文字形式顯示聯絡人項目。';
+  }
+
+  function pickContactItemAmount(el) {
+    if (el) el.checked = true;
+  }
+
+  function makeContactPropertyName(name) {
+    var base = (name || '').replace(/[^\w]+/g, '').slice(0, 18);
+    if (!base) base = 'custom';
+    return base + Math.floor(1000 + Math.random() * 9000);
+  }
+
+  function setContactItemRadioValue(groupId, value) {
+    document.querySelectorAll('#' + groupId + ' input[type="radio"]').forEach(function(input) {
+      input.checked = input.value === value;
+    });
+    if (groupId === 'contact-item-type') {
+      var active = document.querySelector('#contact-item-type input[type="radio"]:checked');
+      pickContactItemType(active, value === '連結' ? 'link' : 'text');
+    }
+  }
+
+  function renderContactItemRow(row, data) {
+    if (!row) return;
+    row.draggable = true;
+    row.dataset.name = data.name;
+    row.dataset.type = data.type;
+    row.dataset.amount = data.amount;
+    row.dataset.property = data.property;
+    row.innerHTML = '<td><span class="drag-handle-cell">☰</span><span class="name-col">' + escapeContactItemText(data.name) + '</span></td>'
+      + '<td><button class="op-btn" onclick="editContactItem(this)">編輯</button><button class="op-btn delete" onclick="deleteContactItem(this)">刪除</button></td>';
+    bindContactItemDragRow(row);
+  }
+
+  function bindContactItemDragRow(row) {
+    if (!row || row.dataset.dragReady === 'true') return;
+    row.dataset.dragReady = 'true';
+    row.addEventListener('dragstart', function() {
+      _contactItemDraggingRow = row;
+      setTimeout(function(){ row.classList.add('dragging-row'); }, 0);
+    });
+    row.addEventListener('dragend', function() {
+      row.classList.remove('dragging-row');
+      _contactItemDraggingRow = null;
+      contactItemRows().forEach(function(item){ item.classList.remove('drag-over-row'); });
+    });
+    row.addEventListener('dragover', function(e) {
+      e.preventDefault();
+      if (_contactItemDraggingRow && _contactItemDraggingRow !== row) {
+        contactItemRows().forEach(function(item){ item.classList.remove('drag-over-row'); });
+        row.classList.add('drag-over-row');
+      }
+    });
+    row.addEventListener('drop', function(e) {
+      e.preventDefault();
+      row.classList.remove('drag-over-row');
+      if (_contactItemDraggingRow && _contactItemDraggingRow !== row) {
+        row.parentNode.insertBefore(_contactItemDraggingRow, row);
+        showSyncToast('已調整項目排序');
+      }
+    });
+  }
+
+  function bindContactItemDragRows() {
+    contactItemRows().forEach(bindContactItemDragRow);
+  }
+
+  function editContactItem(btn) {
+    var row = btn ? btn.closest('tr') : null;
+    if (!row) return;
+    _contactItemEditingRow = row;
+    var title = document.getElementById('contact-item-form-title');
+    if (title) title.textContent = '編輯項目';
+    resetContactItemForm();
+    var nameEl = document.getElementById('contact-item-name');
+    var propEl = document.getElementById('contact-item-property');
+    var twEl = document.getElementById('contact-item-name-tw');
+    if (nameEl) nameEl.value = row.dataset.name || '';
+    if (twEl) twEl.value = row.dataset.name || '';
+    if (propEl) propEl.value = row.dataset.property || '';
+    setContactItemRadioValue('contact-item-type', row.dataset.type || '文字');
+    setContactItemRadioValue('contact-item-amount', row.dataset.amount || '單一值');
+    openModal('modal-contact-item-add');
+  }
+
+  function deleteContactItem(btn) {
+    var row = btn ? btn.closest('tr') : null;
+    if (!row) return;
+    var name = row.dataset.name || '此項目';
+    row.remove();
+    updateContactItemCount();
+    showSyncToast('已刪除項目「' + name + '」');
+  }
+
+  function saveContactItem() {
+    if (!_contactItemEditingRow && contactItemRows().length >= 5) {
+      showSyncToast('項目最多只可設定 5 筆');
+      return;
+    }
+    var nameEl = document.getElementById('contact-item-name');
+    var propEl = document.getElementById('contact-item-property');
+    var name = nameEl ? nameEl.value.trim() : '';
+    if (!name) {
+      showSyncToast('請輸入項目名稱');
+      return;
+    }
+    var activeType = document.querySelector('input[name="contact-item-type"]:checked');
+    var activeAmount = document.querySelector('input[name="contact-item-amount"]:checked');
+    var type = activeType ? activeType.value : '文字';
+    var amount = activeAmount ? activeAmount.value : '單一值';
+    var prop = propEl && propEl.value.trim() ? propEl.value.trim() : makeContactPropertyName(name);
+    var tbody = document.getElementById('contact-item-tbody');
+    if (!tbody) return;
+    var wasEditing = !!_contactItemEditingRow;
+    var row = _contactItemEditingRow || document.createElement('tr');
+    renderContactItemRow(row, { name: name, type: type, amount: amount, property: prop });
+    if (!_contactItemEditingRow) tbody.appendChild(row);
+    updateContactItemCount();
+    hideContactItemForm();
+    showSyncToast((wasEditing ? '已更新項目「' : '已建立新項目「') + name + '」');
+  }
+
+  bindContactItemDragRows();
+  updateContactItemCount();
 
   // ===== 4.1 Member list filter tags =====
   var _memberFilters = { dept: '', status: '', hireFrom: '', hireTo: '' };
@@ -20496,5 +21532,21 @@ c6RenderTree();
 </script>
 <!-- ===== [修改結束] 佈告欄管理模組重構:JS ===== -->
 
+<!-- ===== [通訊錄改版 abv2 script] ===== -->
+<script>
+function abv2Sub(sub){
+  var root = document.getElementById('page-8.2'); if(!root) return;
+  root.querySelectorAll('.subtab').forEach(function(t){ t.classList.toggle('active', t.dataset.sub===sub); });
+  root.querySelectorAll('.sub-panel').forEach(function(p){ p.classList.remove('active'); });
+  var panel = root.querySelector('#contacts-'+sub); if(panel) panel.classList.add('active');
+}
+function abv2PickType(el,type){
+  var p=el.parentElement; p.querySelectorAll('label').forEach(function(l){l.classList.remove('active');}); el.classList.add('active');
+  var h=document.getElementById('typeHint'); if(h) h.textContent = (type==='text') ? '文字：最多可輸入 20 字。' : '連結：需輸入 URL 與連結文字。';
+}
+function abv2PickSeg(el){
+  var p=el.parentElement; p.querySelectorAll('label').forEach(function(l){l.classList.remove('active');}); el.classList.add('active');
+}
+</script>
 </body>
 </html>
