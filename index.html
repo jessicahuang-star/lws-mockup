@@ -3268,7 +3268,7 @@
         <div class="nav-item active" data-page="5.1" onclick="goPage('5.1')">5.1 BOT管理設定</div>
         <div class="nav-item" data-page="5.2" onclick="goPage('5.2')">5.2 BOT使用數據</div>
         <!-- ===== [修改開始] 新增 5.3 真人1v1對話紀錄 ===== -->
-        <div class="nav-item" data-page="bot-1v1" onclick="goPage('bot-1v1')">5.3 真人1v1對話紀錄</div>
+        <div class="nav-item" data-page="bot-1v1" onclick="goPage('bot-1v1')">5.3 真人1v1服務</div>
         <!-- ===== [修改結束] ===== -->
       </div>
     </div>
@@ -5927,6 +5927,20 @@
               </div>
             </div>
 
+            <!-- ===== [修改開始] 真人服務開關 + 快速入口(依 Callback 開通後可啟用;暫不綁 callback 連動) ===== -->
+            <div class="card" style="padding:20px 24px;">
+              <div style="font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:14px;">真人服務</div>
+              <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+                <div><span style="font-size:13px; font-weight:600;">啟用真人服務</span><div style="font-size:11px;color:var(--text-muted);margin-top:2px;">開啟後,使用者可在此 Bot 內以關鍵字呼叫真人服務(需先啟用上方 Callback URL)。</div></div>
+                <label class="switch"><input type="checkbox" /><span class="slider"></span></label>
+              </div>
+              <div style="display:flex; align-items:center; justify-content:space-between; border-top:1px solid var(--border); padding-top:12px;">
+                <span style="font-size:12px;color:var(--text-secondary);">關鍵字、服務時間、通知、顯示等細部設定,於真人服務台調整。</span>
+                <button class="btn ghost sm" style="flex:none;" onclick="goPage('bot-1v1'); if(typeof b1vGoTab==='function'){ b1vGoTab('settings'); }">前往真人服務設定 →</button>
+              </div>
+            </div>
+            <!-- ===== [修改結束] 真人服務開關 ===== -->
+
             <!-- 聊天室政策 / 負責人 -->
             <div class="card" style="padding:20px 24px;">
               <div style="font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:14px;">聊天室政策</div>
@@ -7717,7 +7731,7 @@
       </div>
     </div>
 
-    <!-- ===== [修改開始] 5.3 真人1v1對話紀錄(Bot 1v1 真人接手 Prototype,依 Bot1v1_後台Prototype需求.md v1) ===== -->
+    <!-- ===== [修改開始] 5.3 真人1v1對話紀錄(Bot 1v1 真人接手 Prototype v3:Bot 內直接進線、LINE 式工作台兩欄對話、三種結束、移除 WOFF/留言) ===== -->
     <style>
       /* ---- Bot 1v1 Prototype scoped styles (b1v-) ---- */
       #page-bot-1v1 { --b1v-blue:#2F6BE4; --b1v-blue-bg:#EDF3FE; --b1v-border:#E0E0E6; --b1v-red:#D03050; --b1v-yellow-bg:#FFF7E6; --b1v-yellow-bd:#F0C862; --b1v-green:#18A058; }
@@ -7743,28 +7757,7 @@
       .b1v-chip.ok { background:#E8F7EF; color:var(--b1v-green); }
       .b1v-chip.gray { background:#F0F0F3; color:#666; }
       .b1v-chip.amber { background:var(--b1v-yellow-bg); color:#B8860B; }
-      /* workbench 3-col */
-      .b1v-wb { display:grid; grid-template-columns:280px minmax(0,1fr) 300px; gap:14px; height:640px; }
-      .b1v-col { background:#fff; border:1px solid var(--b1v-border); border-radius:4px; display:flex; flex-direction:column; min-height:0; }
-      .b1v-qtabs { display:flex; border-bottom:1px solid var(--b1v-border); }
-      .b1v-qtab { flex:1; text-align:center; padding:9px 0; font-size:12px; cursor:pointer; color:#555; border-bottom:2px solid transparent; }
-      .b1v-qtab.active { color:var(--b1v-blue); border-bottom-color:var(--b1v-blue); font-weight:600; }
-      .b1v-qlist { overflow-y:auto; flex:1; padding:8px; }
-      .b1v-qcard { border:1px solid var(--b1v-border); border-radius:4px; padding:10px; margin-bottom:8px; cursor:pointer; background:#fff; }
-      .b1v-qcard:hover { border-color:var(--b1v-blue); }
-      .b1v-qcard.selected { border-color:var(--b1v-blue); box-shadow:0 0 0 1px var(--b1v-blue) inset; }
-      .b1v-qcard .row1 { display:flex; align-items:center; gap:6px; margin-bottom:6px; }
-      .b1v-qcard .name { font-size:13px; font-weight:600; color:#222; }
-      .b1v-qcard .dept { font-size:11px; color:#888; }
-      .b1v-qcard .preview { font-size:12px; color:#666; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin:4px 0 8px; }
-      .b1v-timer { font-size:12px; color:#666; font-variant-numeric:tabular-nums; margin-left:auto; }
-      .b1v-timer.late { color:var(--b1v-red); font-weight:700; }
-      .b1v-claim-btn { width:100%; height:28px; border:1px solid var(--b1v-blue); color:var(--b1v-blue); background:#fff; border-radius:4px; font-size:12px; cursor:pointer; }
-      .b1v-claim-btn:hover { background:var(--b1v-blue-bg); }
-      .b1v-timeout-note { font-size:11px; color:var(--b1v-red); margin-top:6px; }
-      /* chat */
-      .b1v-chat-head { display:flex; align-items:center; gap:10px; padding:10px 14px; border-bottom:1px solid var(--b1v-border); }
-      .b1v-chat-body { flex:1; overflow-y:auto; padding:14px; background:#F7F8FA; min-height:0; }
+      /* Bot 前文脈絡 / 對話泡泡(Drawer 內) */
       .b1v-ctx { background:#EFF0F3; border:1px solid var(--b1v-border); border-radius:4px; margin-bottom:12px; }
       .b1v-ctx summary { padding:8px 12px; font-size:12px; color:#666; cursor:pointer; font-weight:600; list-style:none; }
       .b1v-ctx summary::before { content:'▸ '; }
@@ -7777,38 +7770,13 @@
       .b1v-divider::before, .b1v-divider::after { content:''; flex:1; height:1px; background:var(--b1v-border); }
       .b1v-bubble-row { display:flex; margin:8px 0; }
       .b1v-bubble-row.me { justify-content:flex-end; }
-      .b1v-bubble { max-width:70%; padding:8px 12px; border-radius:8px; font-size:13px; line-height:1.5; position:relative; }
+      .b1v-bubble { max-width:75%; padding:8px 12px; border-radius:8px; font-size:13px; line-height:1.5; position:relative; }
       .b1v-bubble-row.user .b1v-bubble { background:#fff; border:1px solid var(--b1v-border); }
       .b1v-bubble-row.me .b1v-bubble { background:var(--b1v-blue); color:#fff; }
       .b1v-bubble .ts { display:block; font-size:10px; opacity:.65; margin-top:3px; }
       .b1v-syspill { text-align:center; margin:10px 0; }
       .b1v-syspill span { display:inline-block; background:#E4E6EA; color:#777; font-size:11px; padding:3px 12px; border-radius:12px; }
-      .b1v-leave-bar { background:var(--b1v-yellow-bg); border-top:1px solid var(--b1v-yellow-bd); color:#8a6d1a; font-size:12px; padding:6px 14px; }
-      .b1v-input-area { border-top:1px solid var(--b1v-border); padding:10px 14px; }
-      .b1v-input-tools { display:flex; align-items:center; gap:8px; margin-bottom:8px; }
-      .b1v-canned { height:28px; font-size:12px; border:1px solid var(--b1v-border); border-radius:4px; max-width:220px; }
-      .b1v-textarea { width:100%; border:1px solid var(--b1v-border); border-radius:4px; padding:8px; font-size:13px; resize:none; height:56px; font-family:inherit; }
-      .b1v-input-foot { display:flex; justify-content:flex-end; margin-top:8px; }
-      .b1v-locked-banner { background:var(--b1v-yellow-bg); border-bottom:1px solid var(--b1v-yellow-bd); color:#8a6d1a; font-size:12px; padding:8px 14px; font-weight:600; }
-      .b1v-empty { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#aaa; font-size:13px; gap:8px; }
-      .b1v-claim-big { height:38px; padding:0 28px; background:var(--b1v-blue); color:#fff; border:none; border-radius:4px; font-size:14px; cursor:pointer; }
-      /* right case panel */
-      .b1v-case { overflow-y:auto; flex:1; padding:14px; }
-      .b1v-case h4 { font-size:12px; color:#999; margin:0 0 8px; font-weight:600; }
-      .b1v-case section { border-bottom:1px solid var(--b1v-border); padding-bottom:12px; margin-bottom:12px; }
-      .b1v-kv { display:flex; font-size:12px; margin:5px 0; }
-      .b1v-kv .k { width:96px; color:#888; flex:none; }
-      .b1v-kv .v { color:#333; }
-      .b1v-hist-toggle { color:var(--b1v-blue); cursor:pointer; }
-      .b1v-form label { display:block; font-size:12px; color:#555; margin:10px 0 4px; }
-      .b1v-form label .req { color:var(--b1v-red); }
-      .b1v-form select, .b1v-form textarea { width:100%; border:1px solid var(--b1v-border); border-radius:4px; font-size:12px; padding:6px; font-family:inherit; }
-      .b1v-form .invalid { border-color:var(--b1v-red) !important; }
-      .b1v-tagpick { display:flex; flex-wrap:wrap; gap:6px; }
-      .b1v-tagpick .tg { border:1px solid var(--b1v-border); border-radius:12px; padding:3px 10px; font-size:11px; cursor:pointer; color:#555; }
-      .b1v-tagpick .tg.on { background:var(--b1v-blue-bg); border-color:var(--b1v-blue); color:var(--b1v-blue); }
-      .b1v-tagpick.invalid .tg { border-color:var(--b1v-red); }
-      .b1v-close-btn { width:100%; height:34px; margin-top:12px; background:var(--b1v-blue); color:#fff; border:none; border-radius:4px; font-size:13px; cursor:pointer; }
+      .b1v-woff-wrap { background:#F7F8FA; border:1px solid var(--b1v-border); border-radius:4px; padding:4px 12px; }
       /* tables */
       .b1v-filter { display:flex; gap:8px; align-items:center; flex-wrap:wrap; padding:12px 14px; }
       .b1v-filter select, .b1v-filter input { height:30px; border:1px solid var(--b1v-border); border-radius:4px; font-size:12px; padding:0 8px; }
@@ -7818,6 +7786,10 @@
       .b1v-table tr.clickable { cursor:pointer; }
       .b1v-table tr.clickable:hover td { background:#F7FAFF; }
       .b1v-link { color:var(--b1v-blue); cursor:pointer; }
+      .b1v-hint { font-size:11px; color:#999; padding:0 14px 10px; }
+      .b1v-kv { display:flex; font-size:12px; margin:5px 0; }
+      .b1v-kv .k { width:96px; color:#888; flex:none; }
+      .b1v-kv .v { color:#333; }
       /* drawer */
       .b1v-drawer-mask { position:fixed; inset:0; background:rgba(0,0,0,.25); z-index:900; display:none; }
       .b1v-drawer { position:fixed; top:0; right:-480px; width:460px; height:100vh; background:#fff; z-index:901; box-shadow:-4px 0 16px rgba(0,0,0,.12); transition:right .2s; display:flex; flex-direction:column; }
@@ -7830,7 +7802,7 @@
       .b1v-invite-preview { border:1px dashed var(--b1v-blue); background:var(--b1v-blue-bg); border-radius:4px; padding:10px 12px; font-size:12px; color:#333; margin-top:10px; }
       .b1v-linkcard { background:#fff; border:1px solid var(--b1v-border); border-radius:4px; padding:8px 10px; margin-top:8px; font-size:12px; display:flex; gap:8px; align-items:center; }
       /* dashboard */
-      .b1v-kpis { display:grid; grid-template-columns:repeat(7,1fr); gap:10px; margin-bottom:14px; }
+      .b1v-kpis { display:grid; grid-template-columns:repeat(6,1fr); gap:10px; margin-bottom:14px; }
       .b1v-kpi { background:#fff; border:1px solid var(--b1v-border); border-radius:4px; padding:12px; }
       .b1v-kpi .lb { font-size:11px; color:#888; margin-bottom:6px; }
       .b1v-kpi .num { font-size:20px; font-weight:700; color:#222; font-variant-numeric:tabular-nums; }
@@ -7859,6 +7831,7 @@
       .b1v-set-row .lb small { display:block; color:#999; font-size:11px; margin-top:2px; font-weight:normal; }
       .b1v-set-row .ct { flex:1; font-size:13px; }
       .b1v-set-row input[type=number], .b1v-set-row input[type=text], .b1v-set-row select, .b1v-set-row input[type=time] { border:1px solid var(--b1v-border); border-radius:4px; height:30px; padding:0 8px; font-size:12px; }
+      .b1v-set-row input[type=time]:disabled { background:#F5F5F7; color:#bbb; border-color:#EDEDF0; }
       .b1v-set-row input[type=number] { width:80px; }
       .b1v-set-row textarea { width:100%; border:1px solid var(--b1v-border); border-radius:4px; padding:8px; font-size:12px; font-family:inherit; height:52px; }
       .b1v-tagsin { display:flex; flex-wrap:wrap; gap:6px; border:1px solid var(--b1v-border); border-radius:4px; padding:6px; min-height:32px; }
@@ -7866,175 +7839,197 @@
       .b1v-tagsin .tag b { cursor:pointer; font-weight:normal; }
       .b1v-tagsin input { border:none; outline:none; font-size:12px; flex:1; min-width:80px; }
       .b1v-varhint { font-size:11px; color:#999; margin-top:4px; }
+      /* 例外日(單天 Datepicker,可增列) */
+      .b1v-holi-row { display:flex; align-items:center; gap:8px; margin-bottom:8px; }
+      .b1v-holi-row input[type=date] { border:1px solid var(--b1v-border); border-radius:4px; height:30px; padding:0 8px; font-size:12px; width:150px; }
+      .b1v-holi-row .b1v-holi-name { border:1px solid var(--b1v-border); border-radius:4px; height:30px; padding:0 8px; font-size:12px; flex:1; max-width:240px; }
+      .b1v-holi-del { border:none; background:none; color:#bbb; font-size:16px; line-height:1; cursor:pointer; padding:4px 6px; border-radius:4px; flex:none; }
+      .b1v-holi-del:hover { color:var(--b1v-red); background:#FDEBEF; }
+      .b1v-holi-add { border:1px dashed var(--b1v-border); background:#fff; color:var(--b1v-blue); border-radius:4px; height:30px; padding:0 12px; font-size:12px; cursor:pointer; display:inline-flex; align-items:center; gap:4px; margin-top:2px; }
+      .b1v-holi-add:hover { background:var(--b1v-blue-bg); border-color:var(--b1v-blue); }
+      .b1v-holi-empty { font-size:12px; color:#bbb; padding:4px 0; }
       .b1v-copy-item { margin-bottom:14px; }
       .b1v-copy-item .t { font-size:12px; font-weight:600; color:#333; margin-bottom:4px; }
       /* toast */
       .b1v-toast { position:fixed; top:70px; left:50%; transform:translateX(-50%); background:#333; color:#fff; padding:8px 18px; border-radius:4px; font-size:13px; z-index:999; opacity:0; transition:opacity .2s; pointer-events:none; }
       .b1v-toast.show { opacity:1; }
       .b1v-audit { font-size:11px; color:#999; }
-      .b1v-count-cell { font-variant-numeric:tabular-nums; }
-      @media (max-width:1200px){ .b1v-kpis{grid-template-columns:repeat(4,1fr);} .b1v-charts{grid-template-columns:1fr 1fr;} .b1v-wb{grid-template-columns:240px minmax(0,1fr) 260px;} }
+      /* ---- 工作台:LINE 式兩欄(左使用者列表 + 右對話內容) ---- */
+      .b1v-wb { display:flex; height:calc(100vh - 300px); min-height:520px; border:1px solid var(--b1v-border); border-radius:6px; overflow:hidden; background:#fff; }
+      .b1v-adminview { height:26px; display:inline-flex; align-items:center; padding:0 10px; border-radius:13px; background:#EEF0F3; color:#555; font-size:12px; font-weight:600; }
+      /* 左側 Bot 欄(三欄式:Bot > 訊息列表 > 內容) */
+      .b1v-wb-bots { width:172px; flex:none; border-right:1px solid var(--b1v-border); overflow-y:auto; background:#FAFAFC; padding:6px 0; }
+      .b1v-bot-grp { font-size:10px; color:#aaa; font-weight:600; padding:10px 12px 4px; letter-spacing:.05em; }
+      .b1v-bot-item { display:flex; align-items:center; gap:8px; padding:9px 10px 9px 12px; cursor:pointer; font-size:13px; color:#444; border-left:2px solid transparent; }
+      .b1v-bot-item:hover { background:#F0F2F5; }
+      .b1v-bot-item.active { background:#fff; color:var(--b1v-blue); font-weight:600; border-left-color:var(--b1v-blue); }
+      .b1v-bot-ic { width:26px; height:26px; border-radius:7px; background:#E3E8EF; color:#5b6472; font-size:11px; display:flex; align-items:center; justify-content:center; flex:none; }
+      .b1v-bot-item.active .b1v-bot-ic { background:var(--b1v-blue-bg); color:var(--b1v-blue); }
+      .b1v-bot-nm { flex:1; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+      .b1v-bot-cnt { min-width:18px; height:18px; padding:0 5px; border-radius:9px; background:var(--b1v-red); color:#fff; font-size:11px; font-weight:600; display:inline-flex; align-items:center; justify-content:center; flex:none; }
+      .b1v-bot-cnt.over { background:var(--b1v-red); }
+      .b1v-wb-list { width:300px; flex:none; border-right:1px solid var(--b1v-border); display:flex; flex-direction:column; }
+      .b1v-wb-listtabs { display:flex; border-bottom:1px solid var(--b1v-border); }
+      .b1v-wb-listtabs div { flex:1; text-align:center; padding:10px 0; font-size:13px; color:#666; cursor:pointer; border-bottom:2px solid transparent; }
+      .b1v-wb-listtabs div.active { color:var(--b1v-blue); font-weight:600; border-bottom-color:var(--b1v-blue); }
+      .b1v-wb-search { padding:8px 10px; border-bottom:1px solid var(--b1v-border); }
+      .b1v-wb-search input { width:100%; height:30px; border:1px solid var(--b1v-border); border-radius:15px; padding:0 12px; font-size:12px; box-sizing:border-box; }
+      .b1v-wb-items { flex:1; overflow-y:auto; }
+      .b1v-li { display:flex; gap:10px; padding:11px 12px; border-bottom:1px solid #F2F2F5; cursor:pointer; align-items:flex-start; }
+      .b1v-li:hover { background:#F7FAFF; }
+      .b1v-li.active { background:var(--b1v-blue-bg); }
+      .b1v-li .av { width:38px; height:38px; border-radius:50%; background:#9CA3AF; color:#fff; display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:600; flex:none; position:relative; }
+      .b1v-li .av.dot::after { content:''; position:absolute; top:-1px; right:-1px; width:10px; height:10px; border-radius:50%; background:var(--b1v-red); border:2px solid #fff; }
+      /* 頭貼彩色(同成員管理);已結案維持預設灰底 */
+      .b1v-li .av.c1 { background:linear-gradient(135deg,#007BFF,#7c3aed); }
+      .b1v-li .av.c2 { background:linear-gradient(135deg,#f97316,#ec4899); }
+      .b1v-li .av.c3 { background:linear-gradient(135deg,#10b981,#14b8a6); }
+      .b1v-li .av.c4 { background:linear-gradient(135deg,#3b82f6,#06b6d4); }
+      .b1v-li .av.c5 { background:linear-gradient(135deg,#ef4444,#f59e0b); }
+      .b1v-li .av.c6 { background:linear-gradient(135deg,#8b5cf6,#ec4899); }
+      .b1v-li .mid { flex:1; min-width:0; }
+      .b1v-li .mid .row1 { display:flex; justify-content:space-between; align-items:baseline; gap:6px; }
+      .b1v-li .mid .nm { font-size:13px; font-weight:600; color:#222; }
+      .b1v-li .mid .tm { font-size:10px; color:#aaa; flex:none; }
+      .b1v-li .mid .dp { font-size:11px; color:#999; display:flex; align-items:center; gap:6px; margin-top:1px; }
+      .b1v-li .mid .pv { font-size:12px; color:#777; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:3px; }
+      .b1v-wb-conv { flex:1; display:flex; flex-direction:column; min-width:0; background:#F7F8FA; }
+      .b1v-conv-head { display:flex; align-items:center; gap:10px; padding:10px 14px; background:#fff; border-bottom:1px solid var(--b1v-border); }
+      .b1v-conv-head .nm { font-size:14px; font-weight:600; }
+      .b1v-conv-head .meta { font-size:11px; color:#999; font-weight:normal; }
+      .b1v-conv-head .spacer { flex:1; }
+      .b1v-conv-body { flex:1; overflow-y:auto; padding:14px 16px; }
+      .b1v-conv-foot { border-top:1px solid var(--b1v-border); background:#fff; padding:10px 12px; }
+      .b1v-conv-empty { flex:1; display:flex; align-items:center; justify-content:center; color:#bbb; font-size:13px; }
+      .b1v-claim-center { text-align:center; padding:24px 0 8px; }
+      .b1v-banner { background:var(--b1v-yellow-bg); border:1px solid var(--b1v-yellow-bd); color:#8a6d1b; font-size:12px; border-radius:4px; padding:8px 12px; margin:12px 0; }
+      .b1v-composer { display:flex; gap:8px; align-items:flex-end; }
+      .b1v-composer textarea { flex:1; border:1px solid var(--b1v-border); border-radius:6px; padding:8px 10px; font-size:13px; font-family:inherit; height:40px; resize:none; box-sizing:border-box; }
+      .b1v-composer select { height:34px; border:1px solid var(--b1v-border); border-radius:4px; font-size:12px; max-width:130px; }
+      .b1v-simbar { display:flex; gap:6px; align-items:center; font-size:11px; color:#aaa; margin-top:8px; flex-wrap:wrap; }
+      .b1v-simbar button { font-size:11px; height:22px; padding:0 8px; border:1px dashed var(--b1v-border); background:#fff; border-radius:4px; color:#888; cursor:pointer; }
+      .b1v-simbar button:hover { border-color:var(--b1v-blue); color:var(--b1v-blue); }
+      .b1v-timer { font-size:11px; color:#666; background:#F0F0F3; border-radius:10px; padding:2px 8px; }
+      /* ---- 數據總覽:月比較卡 / 分段切換 / 排行 ---- */
+      .b1v-cmp-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px; }
+      .b1v-cmp { background:#fff; border:1px solid var(--b1v-border); border-radius:4px; padding:16px 18px; }
+      .b1v-cmp .t { font-size:12px; color:#888; }
+      .b1v-cmp .t small { color:#bbb; }
+      .b1v-cmp .big { font-size:30px; font-weight:700; color:#222; margin:6px 0 2px; font-variant-numeric:tabular-nums; }
+      .b1v-cmp .cmp { font-size:12px; color:#666; }
+      .b1v-cmp .up { color:var(--b1v-green); font-weight:600; }
+      .b1v-cmp .down { color:var(--b1v-red); font-weight:600; }
+      .b1v-card-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
+      .b1v-seg { display:inline-flex; border:1px solid var(--b1v-border); border-radius:4px; overflow:hidden; }
+      .b1v-seg button { border:none; background:#fff; font-size:12px; padding:4px 12px; cursor:pointer; color:#666; border-left:1px solid var(--b1v-border); }
+      .b1v-seg button:first-child { border-left:none; }
+      .b1v-seg button.active { background:var(--b1v-blue); color:#fff; }
+      .b1v-rank-row { display:flex; align-items:center; gap:10px; margin:9px 0; }
+      .b1v-rank-row .rk { width:20px; text-align:center; font-weight:700; color:#999; font-size:13px; }
+      .b1v-rank-row .nm { width:130px; font-size:13px; color:#333; flex:none; }
+      .b1v-rank-row .tr { flex:1; height:10px; background:#F0F0F3; border-radius:5px; overflow:hidden; }
+      .b1v-rank-row .fl { height:100%; background:var(--b1v-blue); border-radius:5px; }
+      .b1v-rank-row .n { width:46px; text-align:right; font-size:12px; color:#333; font-variant-numeric:tabular-nums; }
+      /* ---- 服務紀錄詳情:固定資訊 + 可捲動對話紀錄 ---- */
+      .b1v-info { border:1px solid var(--b1v-border); border-radius:6px; padding:12px 14px; background:#fff; }
+      .b1v-info .b1v-kv { margin:6px 0; }
+      .b1v-reclog { background:#F7F8FA; border:1px solid var(--b1v-border); border-radius:6px; padding:10px 12px; max-height:300px; overflow-y:auto; }
+      /* ---- 等候時長標記(依等候時長分級變色:calm<1h / warn 1~24h / over>=24h) ---- */
+      .b1v-waitbadge { display:inline-block; font-size:10px; font-weight:600; border-radius:9px; padding:1px 7px; white-space:nowrap; font-variant-numeric:tabular-nums; }
+      .b1v-waitbadge.calm { color:var(--b1v-blue); background:var(--b1v-blue-bg); }
+      .b1v-waitbadge.warn { color:#B8860B; background:var(--b1v-yellow-bg); }
+      .b1v-waitbadge.over { color:#fff; background:var(--b1v-red); }
+      .b1v-li.await.over { background:#FFF6F6; }
+      .b1v-li.await.over:hover { background:#FFEFEF; }
+      /* 清單排序切換列 */
+      .b1v-wb-sort { display:flex; align-items:center; gap:6px; padding:6px 10px; font-size:12px; color:#888; border-bottom:1px solid var(--b1v-border); }
+      .b1v-wb-sort select { height:26px; border:1px solid var(--b1v-border); border-radius:4px; font-size:12px; padding:0 6px; background:#fff; color:#333; cursor:pointer; }
+      .b1v-wb-sort .b1v-sort-sp { margin-left:6px; }
+      /* 單一清單:進行中區塊標題 / 服務結束沉底 / 已結束折疊 */
+      .b1v-secttl { font-size:11px; color:#999; font-weight:600; padding:8px 12px 4px; letter-spacing:.03em; }
+      .b1v-li.done { opacity:.62; }
+      .b1v-li-empty { text-align:center; color:#bbb; padding:24px 0; font-size:12px; }
+      .b1v-closed-head { display:flex; align-items:center; gap:6px; font-size:12px; color:#888; font-weight:600; padding:10px 12px; cursor:pointer; border-top:1px solid var(--b1v-border); background:#FAFAFC; user-select:none; }
+      .b1v-closed-head::before { content:'▸'; font-size:10px; }
+      .b1v-closed-head.open::before { content:'▾'; }
+      .b1v-closed-head:hover { color:#555; }
+      @media (max-width:1200px){ .b1v-kpis{grid-template-columns:repeat(3,1fr);} .b1v-charts{grid-template-columns:1fr 1fr;} }
     </style>
 
     <section id="page-bot-1v1" class="page-wrap hidden">
       <div class="page-head">
         <div>
-          <h1 class="page-title">真人1v1對話紀錄</h1>
-          <p class="page-desc">Bot 1v1 真人接手服務台:佇列認領、WOFF 對話、留言管理與服務數據。</p>
+          <h1 class="page-title">真人1v1服務</h1>
+          <p class="page-desc">Bot 1v1 真人接手服務台:使用者在 Bot 內輸入關鍵字進線,專人於後台工作台直接接手、在 Bot 聊天室內服務。此模組僅列出已於 Bot 設定開啟「真人服務」開關的 Bot。</p>
         </div>
         <div class="b1v-topbar">
-          <select class="b1v-bot-switch"><option>🤖 酷必小幫手</option><option>🤖 酷必客服 Bot</option></select>
-          <span style="font-size:12px;color:#666;">上線狀態</span>
-          <div class="b1v-switch on" id="b1v-online" onclick="b1vToggleOnline()"></div>
-          <span class="b1v-badge">併發 <b id="b1v-concurrent">2/3</b></span>
           <div class="b1v-avatar" title="AAA(登入者)">A</div>
         </div>
       </div>
 
       <div class="b1v-tabs">
-        <div class="b1v-tab active" data-tab="wb" onclick="b1vGoTab('wb')">工作台</div>
-        <div class="b1v-tab" data-tab="messages" onclick="b1vGoTab('messages')">留言管理 <span id="b1v-msg-count">(6)</span></div>
-        <div class="b1v-tab" data-tab="records" onclick="b1vGoTab('records')">服務紀錄</div>
+        <div class="b1v-tab active" data-tab="messages" onclick="b1vGoTab('messages')">對話 <span id="b1v-msg-count"></span></div>
         <div class="b1v-tab" data-tab="dash" onclick="b1vGoTab('dash')">數據總覽</div>
         <div class="b1v-tab" data-tab="settings" onclick="b1vGoTab('settings')">設定</div>
       </div>
 
-      <!-- ===== 工作台 ===== -->
-      <div class="b1v-pane active" id="b1v-pane-wb">
+      <!-- ===== 工作台(LINE 式:左使用者列表 + 右對話內容) ===== -->
+      <div class="b1v-pane active" id="b1v-pane-messages">
         <div class="b1v-wb">
-          <!-- 左欄佇列 -->
-          <div class="b1v-col">
-            <div class="b1v-qtabs">
-              <div class="b1v-qtab active" data-qtab="pending" onclick="b1vQTab('pending')">待處理(<span id="b1v-n-pending">3</span>)</div>
-              <div class="b1v-qtab" data-qtab="active" onclick="b1vQTab('active')">處理中(<span id="b1v-n-active">2</span>)</div>
-              <div class="b1v-qtab" data-qtab="memo" onclick="b1vQTab('memo')">留言(<span id="b1v-n-memo">6</span>)</div>
+          <div class="b1v-wb-bots" id="b1v-wb-bots"></div>
+          <div class="b1v-wb-list">
+            <div class="b1v-wb-search"><input type="search" id="b1v-wb-kw" placeholder="搜尋使用者 / 內容" oninput="b1vRenderList()"></div>
+            <div class="b1v-wb-sort" id="b1v-wb-sortbar">
+              <label>篩選</label><select id="b1v-wb-filter" onchange="b1vSetFilter(this.value)"><option value="all">全部</option><option value="pending">待處理</option><option value="unhandled">未處理</option><option value="serving">處理中</option><option value="closed">已結案</option></select>
+              <label class="b1v-sort-sp">排序</label><select id="b1v-wb-sortsel" onchange="b1vSetSort(this.value)"><option value="new">新到舊</option><option value="old">舊到新</option></select>
             </div>
-            <div class="b1v-qlist" id="b1v-qlist"></div>
+            <div class="b1v-wb-items" id="b1v-wb-items"></div>
           </div>
-          <!-- 中欄對話 -->
-          <div class="b1v-col" id="b1v-chat"></div>
-          <!-- 右欄案件資訊 -->
-          <div class="b1v-col"><div class="b1v-case" id="b1v-case"></div></div>
-        </div>
-      </div>
-
-      <!-- ===== 留言管理 ===== -->
-      <div class="b1v-pane" id="b1v-pane-messages">
-        <div class="card" style="padding:0; margin-bottom:14px;">
-          <div class="b1v-filter">
-            <select id="b1v-mf-status" onchange="b1vRenderMsgs()"><option value="">狀態:全部</option><option>待處理</option><option>已認領</option><option>邀請已發送</option><option>服務中</option><option>已結案</option></select>
-            <select id="b1v-mf-src" onchange="b1vRenderMsgs()"><option value="">來源:全部</option><option>非服務時段</option><option>等待逾時留言</option><option>跨時段轉留言</option></select>
-            <input type="date" value="2026-07-14"> <span style="color:#999;">~</span> <input type="date" value="2026-07-20">
-            <input type="search" id="b1v-mf-kw" placeholder="搜尋標題 / 內文" oninput="b1vRenderMsgs()" style="width:180px;">
+          <div class="b1v-wb-conv" id="b1v-wb-conv">
+            <div class="b1v-conv-empty">← 從左側選擇一位使用者,查看對話內容</div>
           </div>
-        </div>
-        <div class="card" style="padding:0; overflow-x:auto;">
-          <table class="b1v-table">
-            <thead><tr><th>留言時間</th><th>使用者</th><th>標題</th><th>內文預覽</th><th>來源</th><th>狀態</th><th>認領人</th><th>操作</th></tr></thead>
-            <tbody id="b1v-msg-tbody"></tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- ===== 服務紀錄 ===== -->
-      <div class="b1v-pane" id="b1v-pane-records">
-        <div class="card" style="padding:0; margin-bottom:14px;">
-          <div class="b1v-filter">
-            <input type="date" value="2026-07-14"> <span style="color:#999;">~</span> <input type="date" value="2026-07-20">
-            <select id="b1v-rf-agent" onchange="b1vRenderRecs()"><option value="">服務人員:全部</option><option>AAA</option><option>BBB</option><option>CCC</option></select>
-            <select id="b1v-rf-end" onchange="b1vRenderRecs()"><option value="">結束方式:全部</option><option>使用者</option><option>管理者</option><option>閒置逾時</option><option>未進入取消</option></select>
-            <select id="b1v-rf-result" onchange="b1vRenderRecs()"><option value="">結果:全部</option><option>已解決</option><option>待追蹤</option><option>轉單</option></select>
-            <span style="flex:1;"></span>
-            <button class="btn" onclick="b1vToast('已匯出 CSV(模擬)')">匯出 CSV</button>
-          </div>
-        </div>
-        <div class="card" style="padding:0; overflow-x:auto;">
-          <table class="b1v-table">
-            <thead><tr><th>對話 ID</th><th>使用者</th><th>服務人員</th><th>來源</th><th>開始 / 結束</th><th>等待</th><th>處理</th><th>結束方式</th><th>結果</th><th>標籤</th></tr></thead>
-            <tbody id="b1v-rec-tbody"></tbody>
-          </table>
         </div>
       </div>
 
       <!-- ===== 數據總覽 ===== -->
       <div class="b1v-pane" id="b1v-pane-dash">
-        <div class="b1v-kpis">
-          <div class="b1v-kpi"><div class="lb">今日進線數</div><div class="num">14</div></div>
-          <div class="b1v-kpi"><div class="lb">今日留言數</div><div class="num">6</div></div>
-          <div class="b1v-kpi"><div class="lb">平均等待時長</div><div class="num">1:42</div></div>
-          <div class="b1v-kpi"><div class="lb">平均處理時長</div><div class="num">9:36</div></div>
-          <div class="b1v-kpi"><div class="lb">逾時取消率</div><div class="num">7%</div></div>
-          <div class="b1v-kpi"><div class="lb">WOFF 連結開啟率</div><div class="num">86%</div></div>
-          <div class="b1v-kpi"><div class="lb">真人解決率</div><div class="num">71%</div></div>
-        </div>
-        <div class="b1v-charts">
-          <div class="b1v-chart-card">
-            <h4>近 7 日進線趨勢</h4>
-            <svg viewBox="0 0 420 140" width="100%" height="150">
-              <polyline points="20,90 82,58 144,74 206,34 268,82 330,122 392,42" fill="none" stroke="#2F6BE4" stroke-width="2"/>
-              <g fill="#2F6BE4">
-                <circle cx="20" cy="90" r="3"/><circle cx="82" cy="58" r="3"/><circle cx="144" cy="74" r="3"/><circle cx="206" cy="34" r="3"/><circle cx="268" cy="82" r="3"/><circle cx="330" cy="122" r="3"/><circle cx="392" cy="42" r="3"/>
-              </g>
-              <g font-size="9" fill="#999" text-anchor="middle">
-                <text x="20" y="136">7/14</text><text x="82" y="136">7/15</text><text x="144" y="136">7/16</text><text x="206" y="136">7/17</text><text x="268" y="136">7/18</text><text x="330" y="136">7/19</text><text x="392" y="136">7/20</text>
-              </g>
-              <g font-size="9" fill="#666" text-anchor="middle">
-                <text x="20" y="82">8</text><text x="82" y="50">12</text><text x="144" y="66">10</text><text x="206" y="26">15</text><text x="268" y="74">9</text><text x="330" y="114">4</text><text x="392" y="34">14</text>
-              </g>
-            </svg>
+        <div class="b1v-cmp-row">
+          <div class="b1v-cmp">
+            <div class="t">進線數 <small>(呼叫真人關鍵字次數)・本月 vs 上月</small></div>
+            <div class="big">320</div>
+            <div class="cmp">上月 268 ・ <span class="up">▲ 19.4%</span></div>
           </div>
-          <div class="b1v-chart-card">
-            <h4>來源占比</h4>
-            <svg viewBox="0 0 120 120" width="110" height="110" style="display:block;margin:0 auto;">
-              <circle cx="60" cy="60" r="46" fill="none" stroke="#EDF3FE" stroke-width="16"/>
-              <circle cx="60" cy="60" r="46" fill="none" stroke="#2F6BE4" stroke-width="16" stroke-dasharray="179 289" transform="rotate(-90 60 60)"/>
-              <circle cx="60" cy="60" r="46" fill="none" stroke="#63A0FA" stroke-width="16" stroke-dasharray="75 289" stroke-dashoffset="-179" transform="rotate(-90 60 60)"/>
-              <circle cx="60" cy="60" r="46" fill="none" stroke="#C4D8FB" stroke-width="16" stroke-dasharray="35 289" stroke-dashoffset="-254" transform="rotate(-90 60 60)"/>
-              <text x="60" y="65" text-anchor="middle" font-size="14" font-weight="700" fill="#333">50 件</text>
-            </svg>
-            <div class="b1v-legend">
-              <span><i style="background:#2F6BE4;"></i>找真人 62%</span>
-              <span><i style="background:#63A0FA;"></i>留言 26%</span>
-              <span><i style="background:#C4D8FB;"></i>跨時段 12%</span>
-            </div>
-          </div>
-          <div class="b1v-chart-card">
-            <h4>結束方式占比</h4>
-            <div class="b1v-hbar"><div class="lb"><span>使用者結束</span><span>48%</span></div><div class="tr"><div class="fl" style="width:48%;"></div></div></div>
-            <div class="b1v-hbar"><div class="lb"><span>管理者結束</span><span>32%</span></div><div class="tr"><div class="fl" style="width:32%;"></div></div></div>
-            <div class="b1v-hbar"><div class="lb"><span>閒置逾時</span><span>14%</span></div><div class="tr"><div class="fl" style="width:14%; background:#F0A020;"></div></div></div>
-            <div class="b1v-hbar"><div class="lb"><span>未進入取消</span><span>6%</span></div><div class="tr"><div class="fl" style="width:6%; background:#D03050;"></div></div></div>
+          <div class="b1v-cmp">
+            <div class="t">處理數 <small>(專人有進線的數量)・本月 vs 上月</small></div>
+            <div class="big">254</div>
+            <div class="cmp">上月 205 ・ <span class="up">▲ 23.9%</span></div>
           </div>
         </div>
-        <div class="b1v-charts" style="grid-template-columns:1fr 1fr;">
-          <div class="b1v-chart-card">
-            <h4>尖峰時段分佈(今日)</h4>
-            <div class="b1v-peak" style="margin-bottom:22px;">
-              <div class="bar" style="height:30%;"><span>9</span></div>
-              <div class="bar hot" style="height:78%;"><span>10</span></div>
-              <div class="bar hot" style="height:92%;"><span>11</span></div>
-              <div class="bar" style="height:40%;"><span>12</span></div>
-              <div class="bar" style="height:52%;"><span>13</span></div>
-              <div class="bar hot" style="height:85%;"><span>14</span></div>
-              <div class="bar" style="height:60%;"><span>15</span></div>
-              <div class="bar" style="height:46%;"><span>16</span></div>
-              <div class="bar" style="height:38%;"><span>17</span></div>
-              <div class="bar" style="height:15%;"><span>18</span></div>
+        <div class="b1v-chart-card" style="margin-bottom:14px;">
+          <div class="b1v-card-head">
+            <h4 style="margin:0;">專人進線趨勢(各 Bot)</h4>
+            <div class="b1v-seg" id="b1v-trend-seg">
+              <button data-g="day" class="active" onclick="b1vTrend('day')">日</button>
+              <button data-g="week" onclick="b1vTrend('week')">週</button>
+              <button data-g="month" onclick="b1vTrend('month')">月</button>
             </div>
           </div>
-          <div class="b1v-chart-card">
-            <h4>「Bot 答不好」排行 Top 5 <span style="font-weight:normal;font-size:11px;color:#999;">(接手前使用者最後問句分類)</span></h4>
-            <table class="b1v-table" id="b1v-kb-table">
-              <thead><tr><th>#</th><th>分類</th><th>次數</th><th></th></tr></thead>
-              <tbody>
-                <tr><td>1</td><td>打卡定位失敗</td><td class="b1v-count-cell">18</td><td><button class="btn" style="height:24px;font-size:11px;" onclick="b1vKb(this)">回補知識庫</button></td></tr>
-                <tr><td>2</td><td>訂單出貨查詢</td><td class="b1v-count-cell">12</td><td><button class="btn" style="height:24px;font-size:11px;" onclick="b1vKb(this)">回補知識庫</button></td></tr>
-                <tr><td>3</td><td>請假規則</td><td class="b1v-count-cell">9</td><td><button class="btn" style="height:24px;font-size:11px;" onclick="b1vKb(this)">回補知識庫</button></td></tr>
-                <tr><td>4</td><td>帳號解鎖</td><td class="b1v-count-cell">7</td><td><button class="btn" style="height:24px;font-size:11px;" onclick="b1vKb(this)">回補知識庫</button></td></tr>
-                <tr><td>5</td><td>薪資單下載</td><td class="b1v-count-cell">5</td><td><button class="btn" style="height:24px;font-size:11px;" onclick="b1vKb(this)">回補知識庫</button></td></tr>
-              </tbody>
-            </table>
+          <div id="b1v-trend-chart"></div>
+          <div class="b1v-legend" style="flex-direction:row; gap:16px; margin-top:6px;">
+            <span><i style="background:#2F6BE4;"></i>酷必小幫手</span>
+            <span><i style="background:#63A0FA;"></i>酷必客服 Bot</span>
           </div>
+        </div>
+        <div class="b1v-chart-card">
+          <div class="b1v-card-head">
+            <h4 style="margin:0;">Bot 進線排行</h4>
+            <div class="b1v-seg" id="b1v-rank-seg">
+              <button data-g="day" class="active" onclick="b1vRank('day')">日</button>
+              <button data-g="week" onclick="b1vRank('week')">週</button>
+              <button data-g="month" onclick="b1vRank('month')">月</button>
+            </div>
+          </div>
+          <div id="b1v-rank-list"></div>
         </div>
       </div>
 
@@ -8042,94 +8037,82 @@
       <div class="b1v-pane" id="b1v-pane-settings">
         <div class="b1v-set-wrap">
           <div class="b1v-set-nav" id="b1v-set-nav">
-            <div class="active" onclick="b1vSetTab(this,'s1')">基本與關鍵字</div>
-            <div onclick="b1vSetTab(this,'s2')">服務時間</div>
-            <div onclick="b1vSetTab(this,'s3')">佇列與逾時</div>
-            <div onclick="b1vSetTab(this,'s4')">對話規則</div>
-            <div onclick="b1vSetTab(this,'s5')">身分與權限</div>
-            <div onclick="b1vSetTab(this,'s6')">通知</div>
-            <div onclick="b1vSetTab(this,'s7')">文案管理</div>
+            <div class="active" onclick="b1vSetTab(this,'s1')">基本設定</div>
+            <div onclick="b1vSetTab(this,'s2')">服務時間設定</div>
           </div>
           <div style="flex:1;">
-            <!-- 7.1 基本與關鍵字 -->
+            <!-- 基本設定:關鍵字 + 佇列/等待 + 對話結束規則(各推播文案就近併入) -->
             <div class="b1v-set-pane active" id="b1v-set-s1">
-              <div class="b1v-set-row"><div class="lb">啟用真人接手</div><div class="ct"><div class="b1v-switch on" onclick="this.classList.toggle('on')"></div></div></div>
-              <div class="b1v-set-row"><div class="lb">觸發關鍵字<small>精準比對,句中夾帶不觸發</small></div><div class="ct"><div class="b1v-tagsin" onclick="this.querySelector('input').focus()"><span class="tag">找真人 <b onclick="this.parentNode.remove()">×</b></span><input placeholder="輸入後按 Enter 新增" onkeydown="b1vAddTag(event,this)"></div></div></div>
-              <div class="b1v-set-row"><div class="lb">結束關鍵字<small>精準比對</small></div><div class="ct"><div class="b1v-tagsin" onclick="this.querySelector('input').focus()"><span class="tag">結束對話 <b onclick="this.parentNode.remove()">×</b></span><input placeholder="輸入後按 Enter 新增" onkeydown="b1vAddTag(event,this)"></div></div></div>
-              <div class="b1v-set-row"><div class="lb">「我的留言」查詢</div><div class="ct"><div class="b1v-switch on" onclick="this.classList.toggle('on')"></div></div></div>
+              <div class="b1v-varhint" style="margin-bottom:10px;">推播文案可用變數:<code>{專人名稱}</code> <code>{等待人數}</code></div>
+              <div class="b1v-set-row"><div class="lb">觸發關鍵字<small>精準比對,句中夾帶不觸發;僅限一組</small></div><div class="ct"><input type="text" value="找真人" style="width:240px;"></div></div>
+              <div class="b1v-set-row"><div class="lb">結束關鍵字<small>精準比對;僅限一組</small></div><div class="ct"><input type="text" value="結束服務" style="width:240px;"></div></div>
+              <div class="b1v-set-row"><div class="lb">↳ 使用者結束通知<small>使用者輸入結束關鍵字後發送</small></div><div class="ct"><textarea>已為您結束本次真人服務,感謝您的使用,歡迎隨時再輸入「找真人」。</textarea></div></div>
+
+              <div class="b1v-set-row" style="border-top:2px solid var(--b1v-border);"><div class="lb" style="font-weight:600;color:#333;">佇列與等待</div><div class="ct"></div></div>
+              <div class="b1v-set-row"><div class="lb">等待逾時<small>無人接手即自動取消進線並發 Bot 通知</small></div><div class="ct"><input type="number" value="5"> 分鐘</div></div>
+              <div class="b1v-set-row"><div class="lb">↳ 進線等待中文案<small>進線排隊等待時發送</small></div><div class="ct"><textarea>已為您通知專人,目前前方尚有 {等待人數} 位等候,請稍候,專人將盡快為您服務。</textarea></div></div>
+              <div class="b1v-set-row"><div class="lb">↳ 專人已接手文案<small>專人接手開始服務時發送</small></div><div class="ct"><textarea id="b1v-cp-join" oninput="b1vDispPreview()">您好,專人 {專人名稱} 已為您服務,請直接在此對話說明您的問題。</textarea></div></div>
+              <div class="b1v-set-row"><div class="lb">↳ 等待逾時取消文案<small>等待逾時無人接手時發送</small></div><div class="ct"><textarea>目前線上忙碌,暫時無法為您接通專人,請稍後再次輸入「找真人」,謝謝您的耐心。</textarea></div></div>
+
+              <div class="b1v-set-row" style="border-top:2px solid var(--b1v-border);"><div class="lb" style="font-weight:600;color:#333;">對話結束規則<small>兩種結束:① 結束關鍵字 ② 使用者未回應逾時(X+Y);專人未動作逾時僅於工作台強烈提示,不自動結束</small></div><div class="ct"></div></div>
+              <div class="b1v-set-row"><div class="lb">使用者閒置提醒(X)</div><div class="ct"><input type="number" value="5"> 分鐘</div></div>
+              <div class="b1v-set-row"><div class="lb">↳ 閒置提醒文案</div><div class="ct"><textarea>您已有一段時間未回覆,若 3 分鐘內仍無回應,本次服務將自動結束。</textarea></div></div>
+              <div class="b1v-set-row"><div class="lb">閒置提醒後自動結束(Y)</div><div class="ct"><input type="number" value="3"> 分鐘</div></div>
+              <div class="b1v-set-row"><div class="lb">↳ 閒置自動結束文案</div><div class="ct"><textarea>由於長時間未回覆,本次真人服務已自動結束,若仍需協助請再次輸入「找真人」。</textarea></div></div>
+              <div class="b1v-set-row"><div class="lb">↳ 使用者未回應逾時結束通知</div><div class="ct"><textarea>因長時間未回覆,本次服務已結束,若需協助請再次輸入「找真人」。</textarea></div></div>
+              <div class="b1v-set-row"><div class="lb">專人未動作提醒(Z)<small>自專人接手起算;逾時於工作台強烈提示,不自動結束、不通知使用者</small></div><div class="ct"><input type="number" value="30"> 分鐘</div></div>
+              <div class="b1v-set-row"><div class="lb">↳ 專人逾時未動作・工作台提示文字<small>僅顯示於工作台,不發送給使用者</small></div><div class="ct"><textarea>⚠️ 此對話已逾時未回覆,使用者仍在等待,請盡快處理(服務未結束)。</textarea></div></div>
+
+              <div class="b1v-set-row" style="border-top:2px solid var(--b1v-border);"><div class="lb" style="font-weight:600;color:#333;">顯示設定</div><div class="ct"></div></div>
+              <div class="b1v-set-row"><div class="lb">服務人員顯示<small>可多選,決定使用者看到的專人稱呼</small></div><div class="ct">
+                <label style="font-size:13px;margin-right:16px;"><input type="checkbox" id="b1v-disp-name" checked onchange="b1vDispPreview()" style="accent-color:var(--b1v-blue);"> 姓名</label>
+                <label style="font-size:13px;"><input type="checkbox" id="b1v-disp-title" checked onchange="b1vDispPreview()" style="accent-color:var(--b1v-blue);"> 職稱</label>
+              </div></div>
+              <div class="b1v-set-row"><div class="lb">預覽<small>「專人已接手文案」實際顯示</small></div><div class="ct">
+                <div id="b1v-disp-preview" style="background:#F7F8FA;border:1px solid var(--b1v-border);border-radius:8px;padding:10px 12px;font-size:13px;line-height:1.6;color:#333;"></div>
+                <div style="font-size:11px;color:#999;margin-top:4px;">範例專人:王小明・客服專員</div>
+              </div></div>
+
               <div style="text-align:right; padding-top:14px;"><button class="btn primary" onclick="b1vToast('設定已儲存(本地暫存)')">儲存</button></div>
             </div>
-            <!-- 7.2 服務時間 -->
+            <!-- 服務時間設定:時段 + 例外日 + 非服務時段行為(非服務時段提示文案就近併入) -->
             <div class="b1v-set-pane" id="b1v-set-s2">
+              <div class="b1v-varhint" style="margin-bottom:10px;">推播文案可用變數:<code>{服務時間}</code></div>
               <div class="b1v-set-row"><div class="lb">每週服務時段</div><div class="ct">
                 <table class="b1v-table" style="max-width:420px;">
                   <tbody>
-                    <tr><td>週一</td><td><input type="checkbox" checked></td><td><input type="time" value="09:00"> ~ <input type="time" value="18:00"></td></tr>
-                    <tr><td>週二</td><td><input type="checkbox" checked></td><td><input type="time" value="09:00"> ~ <input type="time" value="18:00"></td></tr>
-                    <tr><td>週三</td><td><input type="checkbox" checked></td><td><input type="time" value="09:00"> ~ <input type="time" value="18:00"></td></tr>
-                    <tr><td>週四</td><td><input type="checkbox" checked></td><td><input type="time" value="09:00"> ~ <input type="time" value="18:00"></td></tr>
-                    <tr><td>週五</td><td><input type="checkbox" checked></td><td><input type="time" value="09:00"> ~ <input type="time" value="18:00"></td></tr>
-                    <tr><td>週六</td><td><input type="checkbox"></td><td style="color:#bbb;">—</td></tr>
-                    <tr><td>週日</td><td><input type="checkbox"></td><td style="color:#bbb;">—</td></tr>
+                    <tr><td>週一</td><td><input type="checkbox" checked onchange="b1vToggleDay(this)"></td><td><input type="time" value="09:00"> ~ <input type="time" value="18:00"></td></tr>
+                    <tr><td>週二</td><td><input type="checkbox" checked onchange="b1vToggleDay(this)"></td><td><input type="time" value="09:00"> ~ <input type="time" value="18:00"></td></tr>
+                    <tr><td>週三</td><td><input type="checkbox" checked onchange="b1vToggleDay(this)"></td><td><input type="time" value="09:00"> ~ <input type="time" value="18:00"></td></tr>
+                    <tr><td>週四</td><td><input type="checkbox" checked onchange="b1vToggleDay(this)"></td><td><input type="time" value="09:00"> ~ <input type="time" value="18:00"></td></tr>
+                    <tr><td>週五</td><td><input type="checkbox" checked onchange="b1vToggleDay(this)"></td><td><input type="time" value="09:00"> ~ <input type="time" value="18:00"></td></tr>
+                    <tr><td>週六</td><td><input type="checkbox" onchange="b1vToggleDay(this)"></td><td><input type="time" value="09:00" disabled> ~ <input type="time" value="18:00" disabled></td></tr>
+                    <tr><td>週日</td><td><input type="checkbox" onchange="b1vToggleDay(this)"></td><td><input type="time" value="09:00" disabled> ~ <input type="time" value="18:00" disabled></td></tr>
                   </tbody>
                 </table>
               </div></div>
+              <!-- ===== [修改開始] 例外日:改為單天 Datepicker + 可增列(取代原標籤輸入) ===== -->
+              <div class="b1v-set-row"><div class="lb">例外日(國定假日)<small>清單內日期當天不提供真人服務</small></div><div class="ct">
+                <div id="b1v-holi-list">
+                  <div class="b1v-holi-row"><input type="date" value="2026-09-25"><input type="text" class="b1v-holi-name" placeholder="備註(選填,例:中秋節)" value="中秋節"><button type="button" class="b1v-holi-del" onclick="b1vDelHoli(this)" aria-label="刪除此列">×</button></div>
+                  <div class="b1v-holi-row"><input type="date" value="2026-10-10"><input type="text" class="b1v-holi-name" placeholder="備註(選填)" value="國慶日"><button type="button" class="b1v-holi-del" onclick="b1vDelHoli(this)" aria-label="刪除此列">×</button></div>
+                </div>
+                <button type="button" class="b1v-holi-add" onclick="b1vAddHoli()">＋ 新增例外日</button>
+              </div></div>
+              <!-- ===== [修改結束] 例外日 ===== -->
               <div class="b1v-set-row"><div class="lb">非服務時段行為</div><div class="ct">
-                <label style="font-size:13px;margin-right:16px;"><input type="radio" name="b1v-offhour" checked> 引導留言(預設)</label>
-                <label style="font-size:13px;"><input type="radio" name="b1v-offhour"> 僅提示</label>
+                <label style="font-size:13px;margin-right:16px;"><input type="radio" name="b1v-offhour" checked> 僅提示(預設)</label>
+                <label style="font-size:13px;color:#aaa;"><input type="radio" name="b1v-offhour" disabled> 引導留言(Phase 2)</label>
               </div></div>
-              <div class="b1v-set-row"><div class="lb">例外日(國定假日)</div><div class="ct">
-                <div class="b1v-tagsin" onclick="this.querySelector('input').focus()"><span class="tag">2026-09-25 中秋節 <b onclick="this.parentNode.remove()">×</b></span><span class="tag">2026-10-10 國慶日 <b onclick="this.parentNode.remove()">×</b></span><input placeholder="YYYY-MM-DD 按 Enter 新增" onkeydown="b1vAddTag(event,this)"></div>
-              </div></div>
-              <div class="b1v-set-row"><div class="lb">等待中跨入非服務時段自動轉留言</div><div class="ct"><div class="b1v-switch on" onclick="this.classList.toggle('on')"></div></div></div>
+              <div class="b1v-set-row"><div class="lb">↳ 非服務時段提示文案<small>服務時間未到 / 已過時發送</small></div><div class="ct"><textarea>目前非服務時間({服務時間}),請於服務時間內再次輸入「找真人」,將有專人為您服務。</textarea></div></div>
               <div style="text-align:right; padding-top:14px;"><button class="btn primary" onclick="b1vToast('設定已儲存(本地暫存)')">儲存</button></div>
-            </div>
-            <!-- 7.3 佇列與逾時 -->
-            <div class="b1v-set-pane" id="b1v-set-s3">
-              <div class="b1v-set-row"><div class="lb">等待逾時</div><div class="ct"><input type="number" value="3"> 分鐘</div></div>
-              <div class="b1v-set-row"><div class="lb">每人同時服務上限</div><div class="ct"><input type="number" value="3"> 件</div></div>
-              <div class="b1v-set-row"><div class="lb">就緒後未進入・再提醒</div><div class="ct"><input type="number" value="5"> 分鐘</div></div>
-              <div class="b1v-set-row"><div class="lb">就緒後未進入・自動取消</div><div class="ct"><input type="number" value="10"> 分鐘</div></div>
-              <div style="text-align:right; padding-top:14px;"><button class="btn primary" onclick="b1vToast('設定已儲存(本地暫存)')">儲存</button></div>
-            </div>
-            <!-- 7.4 對話規則 -->
-            <div class="b1v-set-pane" id="b1v-set-s4">
-              <div class="b1v-set-row"><div class="lb">閒置提醒(X)</div><div class="ct"><input type="number" value="5"> 分鐘</div></div>
-              <div class="b1v-set-row"><div class="lb">閒置自動結束(提醒後 Y)</div><div class="ct"><input type="number" value="5"> 分鐘</div></div>
-              <div class="b1v-set-row"><div class="lb">留言邀請有效時間</div><div class="ct"><select><option selected>當日內</option><option>24 小時</option><option>48 小時</option></select></div></div>
-              <div class="b1v-set-row"><div class="lb">逾時自動交還(真人無動作)</div><div class="ct"><input type="number" value="15"> 分鐘 <div class="b1v-switch on" style="display:inline-block;vertical-align:middle;margin-left:10px;" onclick="this.classList.toggle('on')"></div></div></div>
-              <div style="text-align:right; padding-top:14px;"><button class="btn primary" onclick="b1vToast('設定已儲存(本地暫存)')">儲存</button></div>
-            </div>
-            <!-- 7.5 身分與權限 -->
-            <div class="b1v-set-pane" id="b1v-set-s5">
-              <div class="b1v-set-row"><div class="lb">服務人員顯示身分</div><div class="ct">
-                <label style="font-size:13px;margin-right:16px;"><input type="radio" name="b1v-identity" checked> 暱稱(預設)</label>
-                <label style="font-size:13px;margin-right:16px;"><input type="radio" name="b1v-identity"> 職稱</label>
-                <label style="font-size:13px;"><input type="radio" name="b1v-identity"> 真名</label>
-              </div></div>
-              <div class="b1v-set-row"><div class="lb">佇列可見範圍</div><div class="ct">
-                <label style="font-size:13px;margin-right:16px;"><input type="radio" name="b1v-scope" checked> 全部(預設)</label>
-                <label style="font-size:13px;"><input type="radio" name="b1v-scope"> 僅自己部門</label>
-              </div></div>
-              <div style="text-align:right; padding-top:14px;"><button class="btn primary" onclick="b1vToast('設定已儲存(本地暫存)')">儲存</button></div>
-            </div>
-            <!-- 7.6 通知 -->
-            <div class="b1v-set-pane" id="b1v-set-s6">
-              <div class="b1v-set-row"><div class="lb">使用者離開 WOFF 時 Bot 通知上限<small>次/對話/日</small></div><div class="ct"><input type="number" value="3"> 次</div></div>
-              <div style="text-align:right; padding-top:14px;"><button class="btn primary" onclick="b1vToast('設定已儲存(本地暫存)')">儲存</button></div>
-            </div>
-            <!-- 7.7 文案管理 -->
-            <div class="b1v-set-pane" id="b1v-set-s7">
-              <div class="b1v-varhint" style="margin-bottom:12px;">可用變數:<code>{專人名稱}</code> <code>{等待人數}</code> <code>{服務時間}</code> <code>{留言標題}</code></div>
-              <div id="b1v-copy-list"></div>
-              <div style="text-align:right; padding-top:14px;"><button class="btn primary" onclick="b1vToast('文案已儲存(本地暫存)')">儲存</button></div>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Bot 1v1 留言/紀錄詳情 Drawer -->
+    <!-- Bot 1v1 詳情 Drawer -->
     <div class="b1v-drawer-mask" id="b1v-drawer-mask" onclick="b1vCloseDrawer()"></div>
     <div class="b1v-drawer" id="b1v-drawer">
       <div class="b1v-drawer-head"><h3 id="b1v-drawer-title">詳情</h3><button class="b1v-x" onclick="b1vCloseDrawer()">✕</button></div>
@@ -8139,396 +8122,422 @@
     <div class="b1v-toast" id="b1v-toast"></div>
 
     <script>
-    /* ============ Bot 1v1 真人接手 Prototype JS ============ */
+    /* ============ Bot 1v1 真人接手 Prototype v2 JS ============ */
     (function(){
       var ME = 'AAA';
-      var fmt = function(s){ var m=Math.floor(s/60), ss=s%60; return m+':'+(ss<10?'0':'')+ss; };
+      var UNHANDLED_HOURS = 24;
       var esc = function(t){ return String(t).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); };
+      var pad = function(n){ return (n<10?'0':'')+n; };
+      var ago = function(min){ return new Date(Date.now() - min*60000); };
+      var fmtDT = function(d){ return d.getFullYear()+'/'+pad(d.getMonth()+1)+'/'+pad(d.getDate())+' '+pad(d.getHours())+':'+pad(d.getMinutes()); };
+      var hhmm = function(d){ return pad(d.getHours())+':'+pad(d.getMinutes()); };
 
-      /* ---------- Mock Data ---------- */
+      /* ---------- Mock Data:所有進入真人服務的對話(新→舊) ---------- */
+      /* state: 'pending'(待處理) | 'done'(已處理);pending 超過 24h 未認領 → 顯示為「未處理」 */
       var S = window.B1V = {
-        inited:false, qtab:'pending', selected:null, timer:null,
-        pending: [
-          { id:'q3', name:'陳柏睿', dept:'資訊部', wait:252, src:'找真人', preview:'帳號被鎖住了,登不進去系統,急!', device:'電腦(PC Web)', email:'boris.chen@coolbe.com.tw', hist:2, inTime:'10:18',
-            ctx:[['bot','您好,我是酷必小幫手,請問需要什麼協助?'],['user','我要登入 LWS 系統'],['bot','請由入口網站右上角「登入」進入,若忘記密碼可點「忘記密碼」重設。'],['user','密碼打錯太多次被鎖了'],['bot','帳號鎖定後 30 分鐘會自動解鎖,或請聯絡系統管理員協助。'],['user','等不了 30 分鐘,帳號被鎖住了,登不進去系統,急!'],['user','找真人']] },
-          { id:'q2', name:'張以恩', dept:'業務部', wait:63, src:'找真人', preview:'想查上週的訂單 #A2035 出貨狀態', device:'手機(iOS)', email:'ian.chang@coolbe.com.tw', hist:0, inTime:'10:21',
-            ctx:[['user','訂單查詢'],['bot','請提供訂單編號,我幫您查詢。'],['user','#A2035'],['bot','查無此訂單資訊,請確認編號是否正確。'],['user','編號是對的,想查上週的訂單 #A2035 出貨狀態'],['user','找真人']] },
-          { id:'q1', name:'林佳蓉', dept:'行政部', wait:20, src:'找真人', preview:'我今天打卡失敗,App 一直顯示定位錯誤', device:'手機(Android)', email:'carol.lin@coolbe.com.tw', hist:1, inTime:'10:22',
-            ctx:[['user','打卡'],['bot','請問您要「查詢打卡紀錄」還是「補打卡申請」呢?'],['user','我今天打卡失敗,App 一直顯示定位錯誤'],['bot','請確認手機定位權限已開啟,並在公司範圍內重新打卡。'],['user','都開了還是不行'],['user','找真人']] }
-        ],
-        active: [
-          { id:'s1', name:'王小美', dept:'人資部', status:'serving', statusLabel:'服務中', svc:504, src:'找真人', device:'手機(iOS)', email:'may.wang@coolbe.com.tw', hist:3, inTime:'10:05', claimAt:'10:07', woffOpen:true, woffSentAt:'10:07', left:false, notifyLeft:2,
-            ctx:[['user','嗨'],['bot','您好,我是酷必小幫手,請問需要什麼協助?'],['user','出差的交通費怎麼報?'],['bot','請至「費用申請」建立交通費單據,附上票根照片。'],['user','高鐵票遺失了怎麼辦'],['bot','很抱歉,我不太確定這個問題的答案。'],['user','找真人']],
-            woff:[['sys','已由 AAA 為您服務'],['user','你好,我高鐵票根弄丟了,交通費還能報嗎?','10:08'],['me','您好,我是專人 AAA。可以的,高鐵票遺失可改附「購票證明」,從高鐵官網或 App 的購買紀錄下載。','10:09'],['user','購買紀錄找到了,但金額跟實際刷卡不一樣','10:11'],['me','若使用早鳥優惠,購買紀錄會顯示原價;報帳請以實際刷卡金額為準,並附上刷卡明細截圖。','10:12']] },
-          { id:'s2', name:'李大文', dept:'財務部', status:'ended', statusLabel:'使用者已結束・待結案', svc:372, src:'留言邀請', device:'電腦(PC Web)', email:'david.lee@coolbe.com.tw', hist:1, inTime:'09:40', claimAt:'09:42', woffOpen:true, woffSentAt:'09:42', left:false,
+        inited:false, curId:null, curTab:'pending', sortDir:'new', filter:'all', showClosed:false,
+        /* state: pending(待處理) | serving(服務中) | ended(已結束・待結案);結案後從清單移除並歸入服務紀錄 */
+        items: [
+          { id:'i1', at:ago(20), name:'林佳蓉', dept:'行政部', title:'打卡定位錯誤', state:'pending', owner:'', device:'手機(Android)', email:'carol.lin@coolbe.com.tw',
+            ctx:[['user','打卡'],['bot','請問您要「查詢打卡紀錄」還是「補打卡申請」呢?'],['user','我今天打卡失敗,App 一直顯示定位錯誤'],['bot','請確認手機定位權限已開啟,並在公司範圍內重新打卡。'],['user','都開了還是不行'],['user','找真人']], talk:[] },
+          { id:'i2', at:ago(63), name:'張以恩', dept:'業務部', title:'訂單出貨狀態查詢', state:'pending', owner:'', device:'手機(iOS)', email:'ian.chang@coolbe.com.tw',
+            ctx:[['user','訂單查詢'],['bot','請提供訂單編號,我幫您查詢。'],['user','#A2035'],['bot','查無此訂單資訊,請確認編號是否正確。'],['user','編號是對的,想查上週的訂單 #A2035 出貨狀態'],['user','找真人']], talk:[] },
+          { id:'i3', at:ago(95), name:'王小美', dept:'人資部', title:'高鐵票遺失報帳', state:'serving', owner:'AAA', claimAt:'10:07', lastUserAt:ago(4), device:'手機(iOS)', email:'may.wang@coolbe.com.tw',
+            ctx:[['user','出差的交通費怎麼報?'],['bot','請至「費用申請」建立交通費單據,附上票根照片。'],['user','高鐵票遺失了怎麼辦'],['bot','很抱歉,我不太確定這個問題的答案。'],['user','找真人']],
+            talk:[['sys','已由 AAA 為您服務(真人接手,Bot 已暫停自動回覆)'],['user','你好,我高鐵票根弄丟了,交通費還能報嗎?','10:08'],['me','您好,我是專人 AAA。可以的,高鐵票遺失可改附「購票證明」,從高鐵官網或 App 的購買紀錄下載。','10:09'],['user','購買紀錄找到了,但金額跟實際刷卡不一樣','10:11'],['me','若使用早鳥優惠,購買紀錄會顯示原價;報帳請以實際刷卡金額為準,並附上刷卡明細截圖。','10:12'],['user','那我需要準備哪些文件呢?','10:14']] },
+          { id:'i4', at:ago(130), name:'吳雅婷', dept:'客服部', title:'打卡補登申請', state:'pending', owner:'', device:'電腦(PC Web)', email:'tina.wu@coolbe.com.tw',
+            ctx:[['user','打卡補登'],['bot','請至「出勤 > 補打卡申請」填寫並附證明。'],['user','找不到這個選單'],['user','找真人']], talk:[] },
+          { id:'i5', at:ago(160), name:'陳柏睿', dept:'資訊部', title:'帳號被鎖定', state:'pending', owner:'', device:'電腦(PC Web)', email:'boris.chen@coolbe.com.tw',
+            ctx:[['user','我要登入 LWS 系統'],['bot','請由入口網站右上角「登入」進入,若忘記密碼可點「忘記密碼」重設。'],['user','密碼打錯太多次被鎖了'],['bot','帳號鎖定後 30 分鐘會自動解鎖,或請聯絡系統管理員協助。'],['user','找真人']], talk:[] },
+          { id:'i6', at:ago(200), name:'李大文', dept:'財務部', title:'薪資單頁面空白', state:'ended', endBy:'使用者關鍵字', owner:'AAA', claimAt:'09:42', device:'電腦(PC Web)', email:'david.lee@coolbe.com.tw',
             ctx:[['user','薪資單在哪裡下載?'],['bot','請至「個人中心 > 薪資單」查看,每月 5 日更新。'],['user','點進去是空白的'],['user','找真人']],
-            woff:[['sys','已由 AAA 為您服務'],['user','薪資單頁面是空白的,試了兩台電腦都一樣','09:43'],['me','您好,幫您查到您的帳號權限缺少「薪資查詢」角色,已通知系統管理員補上,約 10 分鐘後生效。','09:45'],['user','好了可以看了,謝謝!','09:52'],['user','結束對話','09:52'],['sys','使用者已結束對話(輸入「結束對話」)']] }
+            talk:[['sys','已由 AAA 為您服務(真人接手,Bot 已暫停自動回覆)'],['user','薪資單頁面是空白的,試了兩台電腦都一樣','09:43'],['me','您好,幫您查到您的帳號權限缺少「薪資查詢」角色,已通知系統管理員補上,約 10 分鐘後生效。','09:45'],['user','好了可以看了,謝謝!','09:52'],['user','結束服務','09:52'],['sys','使用者輸入「結束服務」,本次真人服務已結束,已交還 Bot']] },
+          { id:'i7', at:ago(3*60+20), name:'黃志明', dept:'製造部', title:'請假規則詢問', state:'pending', owner:'', device:'手機(Android)', email:'jim.huang@coolbe.com.tw',
+            ctx:[['user','特休可以請半天嗎'],['bot','可以,特休最小單位為半日。'],['user','那可以用小時請嗎'],['bot','很抱歉,我不太確定這個問題的答案。'],['user','找真人']], talk:[] },
+          { id:'i8', at:ago(30*60), name:'顏士凱', dept:'資訊部', title:'VPN 連不上', state:'pending', owner:'', device:'電腦(PC Web)', email:'kai.yen@coolbe.com.tw',
+            ctx:[['user','VPN 連不上'],['bot','請確認已安裝最新版憑證,並重新啟動 VPN 用戶端。'],['user','都做過了'],['user','找真人']], talk:[] },
+          { id:'i9', at:ago(52), name:'周孟潔', dept:'業務部', title:'外勤打卡定位失敗', state:'serving', owner:'AAA', claimAt:'10:15', lastUserAt:ago(20), device:'手機(Android)', email:'joanne.chou@coolbe.com.tw',
+            ctx:[['user','外勤打卡'],['bot','請於「出勤 > 外勤打卡」開啟定位後打卡。'],['user','定位一直抓不到公司地址'],['user','找真人']],
+            talk:[['sys','已由 AAA 為您服務(真人接手,Bot 已暫停自動回覆)'],['user','我在客戶端要打卡,定位一直失敗','10:16'],['me','您好,外勤打卡請改用「手動定位」並允許 App 取用精確位置,我把設定步驟傳給您。','10:18']] },
+          { id:'i10', at:ago(140), name:'蕭立群', dept:'製造部', title:'補打卡申請退件', state:'serving', owner:'AAA', claimAt:'09:50', lastUserAt:ago(70), device:'電腦(PC Web)', email:'lc.hsiao@coolbe.com.tw',
+            ctx:[['user','補打卡'],['bot','請至「出勤 > 補打卡申請」填寫並附證明。'],['user','我送出後被主管退件了'],['user','找真人']],
+            talk:[['sys','已由 AAA 為您服務(真人接手,Bot 已暫停自動回覆)'],['user','補打卡被退件,想知道要補什麼證明','09:52'],['me','退件通常是缺少佐證,請附上當日行程或差勤截圖重新送出,我已在系統幫您備註。','09:55']] }
         ],
-        memos: [
-          { id:'m1', time:'07/20 08:12', name:'黃志明', dept:'製造部', title:'請假規則詢問', body:'想確認特休可否以小時為單位申請?需要主管先簽核嗎?', src:'非服務時段', status:'待處理', owner:'—', invited:0,
-            ctx:[['user','特休可以請半天嗎'],['bot','可以,特休最小單位為半日。'],['user','那可以用小時請嗎'],['bot','很抱歉,我不太確定這個問題的答案。']] },
-          { id:'m2', time:'07/20 09:31', name:'吳雅婷', dept:'客服部', title:'打卡補登申請', body:'7/18 外勤忘記打卡,要怎麼補登?附件是外勤單。', src:'等待逾時留言', status:'待處理', owner:'—', invited:0,
-            ctx:[['user','打卡補登'],['bot','請至「出勤 > 補打卡申請」填寫並附證明。'],['user','找不到這個選單'],['user','找真人']] },
-          { id:'m3', time:'07/19 16:47', name:'周建宏', dept:'業務部', title:'訂單發票開立問題', body:'客戶要求三聯式發票,系統只能開二聯式,請協助。', src:'跨時段轉留言', status:'已認領', owner:'BBB', invited:0,
-            ctx:[['user','發票怎麼改三聯式'],['bot','請於結帳時選擇「公司戶」並填寫統編。'],['user','沒有這個選項']] },
-          { id:'m4', time:'07/19 14:20', name:'許家瑜', dept:'行銷部', title:'系統登入異常', body:'登入後一直跳回登入頁,清過快取還是一樣。', src:'非服務時段', status:'邀請已發送', owner:'AAA', invited:1, validUntil:'今日 18:00',
-            ctx:[['user','登入一直失敗'],['bot','請嘗試清除瀏覽器快取後重新登入。'],['user','清過了沒用']] },
-          { id:'m5', time:'07/18 11:03', name:'蔡承翰', dept:'財務部', title:'薪資單下載問題', body:'6 月薪資單下載後打不開,顯示檔案毀損。', src:'等待逾時留言', status:'已結案', owner:'CCC', invited:1,
-            ctx:[['user','薪資單打不開'],['bot','請改用電腦版下載,或更新 PDF 閱讀器。']] },
-          { id:'m6', time:'07/17 18:40', name:'鄭曉芸', dept:'人資部', title:'帳號解鎖需求', body:'新同事報到,帳號開通後第一次登入就被鎖定。', src:'非服務時段', status:'待處理', owner:'—', invited:1, expired:true,
-            ctx:[['user','新人帳號被鎖'],['bot','帳號鎖定後 30 分鐘會自動解鎖。'],['user','解鎖後又被鎖了']] }
-        ],
+        /* 服務紀錄:[ID,使用者,使用者職稱,專員,專員職稱,Bot名稱,開始,結束,等待,處理,結束方式,備註] */
         records: [
-          ['C-0720-014','王小美','AAA','找真人','07/20 10:05 / —','2:10','—','—','—','—'],
-          ['C-0720-013','郭子豪','BBB','找真人','07/20 09:58 / 10:12','1:22','12:40','使用者','已解決','打卡'],
-          ['C-0720-012','李大文','AAA','留言邀請','07/20 09:40 / 09:52','0:48','9:12','使用者','已解決','系統問題'],
-          ['C-0720-011','劉思妤','CCC','找真人','07/20 09:31 / 09:47','2:05','14:03','管理者','待追蹤','訂單'],
-          ['C-0719-010','高偉倫','BBB','跨時段轉留言','07/19 17:22 / 17:40','1:10','16:31','管理者','轉單','帳號'],
-          ['C-0719-009','許家瑜','AAA','找真人','07/19 15:02 / 15:20','0:35','17:44','使用者','已解決','系統問題'],
-          ['C-0719-008','趙立群','CCC','找真人','07/19 14:11 / 14:19','3:00','—','未進入取消','—','—'],
-          ['C-0719-007','孫佩珊','BBB','留言邀請','07/19 11:30 / 11:58','0:52','27:10','使用者','已解決','打卡'],
-          ['C-0719-006','張以恩','AAA','找真人','07/19 10:44 / 11:02','1:48','16:20','閒置逾時','待追蹤','訂單'],
-          ['C-0718-005','蔡承翰','CCC','等待逾時留言','07/18 11:03 / 11:31','—','21:08','管理者','已解決','其他'],
-          ['C-0718-004','林佳蓉','BBB','找真人','07/18 10:19 / 10:33','2:31','12:02','使用者','已解決','打卡'],
-          ['C-0718-003','陳柏睿','AAA','找真人','07/18 09:12 / 09:30','1:15','17:00','管理者','轉單','帳號'],
-          ['C-0717-002','鄭曉芸','CCC','找真人','07/17 16:40 / 16:55','2:44','12:18','使用者','已解決','帳號'],
-          ['C-0717-001','黃志明','BBB','找真人','07/17 14:25 / 14:41','0:58','15:12','閒置逾時','待追蹤','其他'],
-          ['C-0716-020','吳雅婷','AAA','找真人','07/16 15:33 / 15:51','1:36','17:29','使用者','已解決','打卡'],
-          ['C-0716-019','周建宏','CCC','留言邀請','07/16 10:08 / 10:26','0:41','18:05','管理者','已解決','訂單'],
-          ['C-0715-018','王小美','BBB','找真人','07/15 13:47 / 14:02','2:12','14:38','使用者','已解決','系統問題'],
-          ['C-0715-017','郭子豪','AAA','找真人','07/15 11:26 / 11:29','3:00','—','未進入取消','—','—'],
-          ['C-0714-016','劉思妤','CCC','跨時段轉留言','07/14 17:51 / 18:12','1:05','20:16','管理者','待追蹤','訂單'],
-          ['C-0714-015','高偉倫','BBB','找真人','07/14 09:36 / 09:54','1:52','16:44','使用者','已解決','請假']
+          ['C-0720-013','郭子豪','業務專員','BBB','客服專員','酷必小幫手','2026/07/20 09:58','2026/07/20 10:12','1:22','12:40','使用者關鍵字','已協助確認出貨進度,提供物流單號。'],
+          ['C-0720-012','李大文','財務專員','AAA','客服組長','酷必小幫手','2026/07/20 09:40','2026/07/20 09:52','0:48','9:12','使用者關鍵字','薪資查詢權限已補上,10 分鐘後生效。'],
+          ['C-0720-011','劉思妤','訂單專員','CCC','資深客服專員','酷必客服 Bot','2026/07/20 09:31','2026/07/20 09:47','2:05','14:03','使用者關鍵字','發票改開三聯式流程已說明。'],
+          ['C-0719-010','高偉倫','資訊工程師','BBB','客服專員','酷必小幫手','2026/07/19 17:22','2026/07/19 17:40','1:10','16:31','使用者關鍵字','帳號已手動解鎖並重設密碼。'],
+          ['C-0719-009','許家瑜','行銷專員','AAA','客服組長','酷必小幫手','2026/07/19 15:02','2026/07/19 15:28','0:35','25:44','使用者未回應逾時','已提供排除步驟,使用者未再回覆。'],
+          ['C-0719-008','趙立群','產品專員','CCC','資深客服專員','酷必客服 Bot','2026/07/19 14:11','2026/07/19 14:49','1:12','38:00','使用者未回應逾時','使用者未再回覆,逾時自動結束,需追蹤是否已解決。'],
+          ['C-0719-007','孫佩珊','人資專員','BBB','客服專員','酷必小幫手','2026/07/19 11:30','2026/07/19 11:58','0:52','27:10','使用者關鍵字','補打卡申請路徑已引導完成。'],
+          ['C-0719-006','張以恩','業務專員','AAA','客服組長','酷必小幫手','2026/07/19 10:44','2026/07/19 11:02','1:48','16:20','使用者未回應逾時','訂單查詢已回覆,使用者未再回應。'],
+          ['C-0718-005','蔡承翰','財務專員','CCC','資深客服專員','酷必小幫手','2026/07/18 11:03','2026/07/18 11:31','1:20','21:08','使用者關鍵字','薪資單改用電腦版下載已解決。'],
+          ['C-0718-004','林佳蓉','行政專員','BBB','客服專員','酷必客服 Bot','2026/07/18 10:19','2026/07/18 10:33','2:31','12:02','使用者關鍵字','打卡定位問題,已請重新授權定位。'],
+          ['C-0718-003','陳柏睿','系統工程師','AAA','客服組長','酷必小幫手','2026/07/18 09:12','2026/07/18 09:30','1:15','17:00','使用者關鍵字','帳號鎖定已解除。'],
+          ['C-0717-002','鄭曉芸','人資專員','CCC','資深客服專員','酷必小幫手','2026/07/17 16:40','2026/07/17 16:55','2:44','12:18','使用者未回應逾時','新人帳號重複鎖定,已回報 IT。'],
+          ['C-0717-001','黃志明','產線組長','BBB','客服專員','酷必小幫手','2026/07/17 14:25','2026/07/17 15:03','0:58','38:00','使用者未回應逾時','使用者未再回覆,逾時自動結束,待追蹤。'],
+          ['C-0716-020','吳雅婷','客服專員','AAA','客服組長','酷必客服 Bot','2026/07/16 15:33','2026/07/16 15:51','1:36','17:29','使用者關鍵字','外勤補打卡已協助送單。'],
+          ['C-0716-019','周建宏','業務專員','CCC','資深客服專員','酷必小幫手','2026/07/16 10:08','2026/07/16 10:26','0:41','18:05','使用者關鍵字','發票統編填寫已引導。'],
+          ['C-0715-018','王小美','人資專員','BBB','客服專員','酷必小幫手','2026/07/15 13:47','2026/07/15 14:02','2:12','14:38','使用者關鍵字','交通費報帳改附購票證明已說明。'],
+          ['C-0715-017','郭子豪','業務專員','AAA','客服組長','酷必小幫手','2026/07/15 11:26','2026/07/15 11:52','0:33','25:10','使用者未回應逾時','已回覆訂單狀態,使用者未再回應。'],
+          ['C-0714-016','劉思妤','訂單專員','CCC','資深客服專員','酷必客服 Bot','2026/07/14 17:51','2026/07/14 18:12','1:05','20:16','使用者關鍵字','訂單出貨查詢已完成。'],
+          ['C-0714-015','高偉倫','資訊工程師','BBB','客服專員','酷必小幫手','2026/07/14 09:36','2026/07/14 09:54','1:52','16:44','使用者關鍵字','特休以小時申請規則已說明。'],
+          ['C-0714-014','孫佩珊','人資專員','AAA','客服組長','酷必小幫手','2026/07/14 09:02','2026/07/14 09:21','0:44','18:30','使用者關鍵字','帳號問題已排除。'],
+          ['C-0720-014','鍾佳穎','行政專員','AAA','客服組長','打卡 Bot','2026/07/20 08:42','2026/07/20 08:55','0:40','13:12','使用者關鍵字','上班打卡定位偏移,已協助重新綁定裝置。'],
+          ['C-0719-013','范植偉','產線組長','BBB','客服專員','打卡 Bot','2026/07/19 18:05','2026/07/19 18:19','1:02','14:20','使用者關鍵字','外勤打卡權限已開通。'],
+          ['C-0718-006','杜宗翰','業務專員','CCC','資深客服專員','打卡 Bot','2026/07/18 12:30','2026/07/18 12:48','0:55','18:11','使用者未回應逾時','補打卡證明已說明,使用者未再回覆。']
         ],
-        canned: ['您好,我是專人 {專人名稱},很高興為您服務。','請稍等,我幫您查詢一下。','已為您處理完成,請再確認看看。','這個問題需要轉請相關單位協助,我會持續追蹤。','感謝您的等候,若沒有其他問題,我將結束本次服務。'],
         copies: [
-          ['等待中','已為您轉接專人,目前前方尚有 {等待人數} 位等候,請稍候。'],
-          ['專人就緒+連結','專人 {專人名稱} 已就緒!請點擊以下連結進入對話室。'],
-          ['就緒再提醒','提醒您,專人 {專人名稱} 仍在等候您進入對話室,連結有效請儘速點擊。'],
-          ['未進入自動取消','由於您尚未進入對話室,本次真人服務已自動取消,若仍需協助請再次輸入「找真人」。'],
-          ['閒置提醒','您已有一段時間未回覆,若 5 分鐘內無回應,本次對話將自動結束。'],
-          ['閒置自動結束','由於長時間未回覆,本次真人服務已自動結束,感謝您的使用。'],
-          ['結束通知(使用者結束)','已為您結束本次真人服務,感謝您的使用,歡迎隨時再輸入「找真人」。'],
-          ['結束通知(管理者結束)','專人 {專人名稱} 已完成本次服務,感謝您的使用。'],
-          ['結束通知(閒置逾時)','因長時間未回覆,本次服務已結束,若需協助請再次輸入「找真人」。'],
-          ['非服務時段引導','目前非服務時間({服務時間}),您可以留言,專人上線後將主動與您聯繫。'],
-          ['跨時段轉留言','已超過今日服務時間,您的等候已自動轉為留言,專人將於下個服務日主動聯繫您。'],
-          ['留言送出確認','您的留言「{留言標題}」已送出,專人將於服務時間內主動與您聯繫。'],
-          ['留言邀請','專人 {專人名稱} 已看過您的留言:「{留言標題}」,現在為您服務,請點擊連結進入對話室。']
-        ]
-      };
-
-      /* ---------- 佇列 ---------- */
-      function counts(){
-        document.getElementById('b1v-n-pending').textContent = S.pending.length;
-        document.getElementById('b1v-n-active').textContent = S.active.length;
-        document.getElementById('b1v-n-memo').textContent = S.memos.filter(function(m){return m.status!=='已結案';}).length;
-        var serving = S.active.filter(function(a){return a.status==='serving';}).length;
-        document.getElementById('b1v-concurrent').textContent = serving + '/3';
-      }
-      window.b1vQTab = function(t){
-        S.qtab = t;
-        document.querySelectorAll('#page-bot-1v1 .b1v-qtab').forEach(function(el){ el.classList.toggle('active', el.dataset.qtab===t); });
-        renderQueue();
-      };
-      function renderQueue(){
-        var box = document.getElementById('b1v-qlist'); var h='';
-        if (S.qtab==='pending'){
-          var list = S.pending.slice().sort(function(a,b){return b.wait-a.wait;});
-          if(!list.length) h = '<div style="text-align:center;color:#aaa;font-size:12px;padding:30px 0;">目前沒有等待中的使用者 🎉</div>';
-          list.forEach(function(q){
-            var late = q.wait>150, over = q.wait>=180;
-            h += '<div class="b1v-qcard'+(S.selected===q.id?' selected':'')+'" onclick="b1vSelect(\''+q.id+'\')">'
-              + '<div class="row1"><span class="name">'+q.name+'</span><span class="dept">'+q.dept+'</span><span class="b1v-timer'+(late?' late':'')+'" data-qid="'+q.id+'">'+fmt(q.wait)+'</span></div>'
-              + '<div class="row1" style="margin-bottom:0;"><span class="b1v-chip src">'+q.src+'</span>'+(late&&!over?'<span class="b1v-chip warn">快逾時</span>':'')+'</div>'
-              + '<div class="preview">'+esc(q.preview)+'</div>'
-              + '<button class="b1v-claim-btn" onclick="event.stopPropagation(); b1vClaim(\''+q.id+'\')">認領</button>'
-              + (over?'<div class="b1v-timeout-note">⚠ 已觸發逾時選項(已向使用者發送留言引導)</div>':'')
-              + '</div>';
-          });
-        } else if (S.qtab==='active'){
-          S.active.forEach(function(a){
-            var chip = a.status==='serving' ? '<span class="b1v-chip ok">服務中</span>'
-                     : a.status==='invited' ? '<span class="b1v-chip amber">邀請已發送・未進入</span>'
-                     : '<span class="b1v-chip amber">使用者已結束・待結案</span>';
-            h += '<div class="b1v-qcard'+(S.selected===a.id?' selected':'')+'" onclick="b1vSelect(\''+a.id+'\')">'
-              + '<div class="row1"><span class="name">'+a.name+'</span><span class="dept">'+a.dept+'</span><span class="b1v-timer" data-aid="'+a.id+'">'+fmt(a.svc)+'</span></div>'
-              + '<div class="row1" style="margin-bottom:0;">'+chip+'</div>'
-              + '</div>';
-          });
-        } else {
-          S.memos.slice(0,5).forEach(function(m){
-            h += '<div class="b1v-qcard" onclick="b1vGoTab(\'messages\'); b1vOpenMsg(\''+m.id+'\')">'
-              + '<div class="row1"><span class="name">'+m.name+'</span><span class="dept">'+m.dept+'</span><span style="margin-left:auto;font-size:10px;color:#aaa;">'+m.time+'</span></div>'
-              + '<div class="preview" style="font-weight:600;color:#333;">'+esc(m.title)+'</div>'
-              + '<div class="row1" style="margin-bottom:0;"><span class="b1v-chip gray">'+m.src+'</span>'+msgStatusChip(m)+'</div>'
-              + '</div>';
-          });
-          h += '<div class="b1v-loadmore" onclick="b1vGoTab(\'messages\')">查看全部留言 →</div>';
-        }
-        box.innerHTML = h;
-      }
-
-      /* ---------- 中欄對話 ---------- */
-      function ctxHtml(c, showN){
-        var msgs = c.ctx || [], n = showN||10, start = Math.max(0, msgs.length-n), body='';
-        if (start>0) body += '<div class="b1v-loadmore" onclick="b1vLoadMore(this,\''+c.id+'\')">載入更多(還有 '+start+' 則)</div>';
-        msgs.slice(start).forEach(function(m){ body += '<div class="b1v-ctx-msg"><span class="who">'+(m[0]==='bot'?'Bot':c.name)+'</span><span>'+esc(m[1])+'</span></div>'; });
-        return '<details class="b1v-ctx" open><summary>Bot 對話脈絡(唯讀・接手前訊息)</summary><div class="b1v-ctx-msgs">'+body+'</div></details>';
-      }
-      window.b1vLoadMore = function(el, id){
-        var c = findConv(id); if(!c) return;
-        el.closest('.b1v-ctx').outerHTML = ctxHtml(c, 999);
-      };
-      function woffHtml(c){
-        var h='';
-        (c.woff||[]).forEach(function(m){
-          if(m[0]==='sys'){ h += '<div class="b1v-syspill"><span>'+esc(m[1])+'</span></div>'; }
-          else {
-            var me = m[0]==='me';
-            h += '<div class="b1v-bubble-row '+(me?'me':'user')+'"><div class="b1v-bubble">'+esc(m[1])+'<span class="ts">'+(m[2]||'')+'</span></div></div>';
+          ['進線等待中(排隊)','已為您通知專人,目前前方尚有 {等待人數} 位等候,請稍候,專人將盡快為您服務。'],
+          ['專人已接手(開始服務)','您好,專人 {專人名稱} 已為您服務,請直接在此對話說明您的問題。'],
+          ['閒置提醒','您已有一段時間未回覆,若 3 分鐘內仍無回應,本次服務將自動結束。'],
+          ['閒置自動結束','由於長時間未回覆,本次真人服務已自動結束,若仍需協助請再次輸入「找真人」。'],
+          ['結束通知(使用者關鍵字結束)','已為您結束本次真人服務,感謝您的使用,歡迎隨時再輸入「找真人」。'],
+          ['結束通知(使用者未回應逾時)','因長時間未回覆,本次服務已結束,若需協助請再次輸入「找真人」。'],
+          ['結束通知(專人逾時未動作)','很抱歉讓您久候,本次服務已自動結束並交還小幫手,若仍需協助請再次輸入「找真人」。'],
+          ['非服務時段提示','目前非服務時間({服務時間}),請於服務時間內再次輸入「找真人」,將有專人為您服務。'],
+          ['等待逾時(無人接手)取消','目前線上忙碌,暫時無法為您接通專人,請稍後再次輸入「找真人」,謝謝您的耐心。']
+        ],
+        stats: {
+          inbound: { thisMonth:320, lastMonth:268 },
+          handled: { thisMonth:254, lastMonth:205 },
+          trend: {
+            day:   { labels:['7/14','7/15','7/16','7/17','7/18','7/19','7/20'], series:[{name:'酷必小幫手',data:[6,9,7,12,8,5,11]},{name:'酷必客服 Bot',data:[3,4,5,6,4,2,7]}] },
+            week:  { labels:['W24','W25','W26','W27','W28','W29'], series:[{name:'酷必小幫手',data:[42,50,47,55,60,58]},{name:'酷必客服 Bot',data:[20,24,26,30,28,33]}] },
+            month: { labels:['2月','3月','4月','5月','6月','7月'], series:[{name:'酷必小幫手',data:[110,125,135,150,150,160]},{name:'酷必客服 Bot',data:[48,58,66,72,55,94]}] }
+          },
+          rank: {
+            day:   [{name:'酷必小幫手',n:8},{name:'酷必客服 Bot',n:4},{name:'酷必訂單 Bot',n:1},{name:'酷必 HR Bot',n:1}],
+            week:  [{name:'酷必小幫手',n:44},{name:'酷必客服 Bot',n:22},{name:'酷必訂單 Bot',n:7},{name:'酷必 HR Bot',n:4}],
+            month: [{name:'酷必小幫手',n:186},{name:'酷必客服 Bot',n:92},{name:'酷必訂單 Bot',n:28},{name:'酷必 HR Bot',n:14}]
           }
+        }
+      };
+
+      /* ---------- 工具 ---------- */
+      /* ===== Bot 清單(順序遵照 5.1 BOT管理設定:範本置頂 → 個人建立)===== */
+      var BOTS = [
+        { name:'打卡 Bot', group:'範本', icon:'打卡' },
+        { name:'客服助手', group:'個人建立', icon:'客服' },
+        { name:'內部公告 Bot', group:'個人建立', icon:'公告' },
+        { name:'值班通知', group:'個人建立', icon:'值班' },
+        { name:'行銷活動 Bot', group:'個人建立', icon:'行銷' },
+        { name:'會議提醒 Bot', group:'個人建立', icon:'會議' }
+      ];
+      /* 對話歸屬到 Bot(依情境;推播型 Bot 無真人對話) */
+      (function(){
+        var map={ i1:'打卡 Bot', i2:'客服助手', i3:'客服助手', i4:'打卡 Bot', i5:'客服助手', i6:'客服助手', i7:'客服助手', i8:'客服助手', i9:'打卡 Bot', i10:'打卡 Bot' };
+        S.items.forEach(function(it){ it.bot = map[it.id] || '客服助手'; });
+      })();
+      /* 歷史紀錄舊 Bot 名稱 → 對應 5.1 Bot */
+      var REC_BOT_ALIAS = { '酷必小幫手':'客服助手', '酷必客服 Bot':'客服助手' };
+      function recBot(r){ return REC_BOT_ALIAS[r[5]] || r[5]; }
+      if(!S.curBot) S.curBot = BOTS[0].name;
+      function findItem(id){ return S.items.find(function(x){ return x.id===id; }) || null; }
+      function isOverdue(it){ return it.state==='pending' && (Date.now()-it.at.getTime())/3600000 > 24; }
+      function stName(it){ if(it.state==='serving') return '處理中'; if(it.state==='ended') return '已結案'; return isOverdue(it) ? '未處理' : '待處理'; }
+      function stChip(it){ var n=stName(it), cls = n==='處理中'?'ok':(n==='未處理'?'warn':(n==='已結案'?'gray':'amber')); return '<span class="b1v-chip '+cls+'">'+n+'</span>'; }
+      function lastMsg(it){
+        if (it.talk && it.talk.length){ var t=it.talk[it.talk.length-1]; return (t[0]==='me'?'你:':'')+t[1]; }
+        var c=it.ctx[it.ctx.length-1]; return c[1];
+      }
+      /* 待回覆:待處理(等接手)或 服務中但最後一則是使用者(專人未回;已讀不回照樣算) */
+      function needsReply(it){ if(it.state==='pending') return true; if(it.state==='serving'){ var t=it.talk&&it.talk.length?it.talk[it.talk.length-1]:null; return !!t && t[0]==='user'; } return false; }
+      function waitSince(it){ return (it.state==='serving' && it.lastUserAt) ? it.lastUserAt.getTime() : it.at.getTime(); }
+      function fmtElapsed(ms){ var s=Math.max(0,Math.floor(ms/1000)), h=Math.floor(s/3600), m=Math.floor((s%3600)/60), ss=s%60; return h>0 ? (h+'h'+pad(m)+'m') : (pad(m)+':'+pad(ss)); }
+      /* 中文等候時長 + 三級變色(calm<1h / warn 1~24h / over>=24h,over 對齊「未處理」門檻) */
+      function fmtWait(ms){ var s=Math.max(0,Math.floor(ms/1000)); if(s<60) return s+' 秒'; var m=Math.floor(s/60); if(m<60) return m+' 分'; var h=Math.floor(m/60); if(h<24) return h+' 小時'; return Math.floor(h/24)+' 天'; }
+      function waitTier(ms){ var h=ms/3600000; return h>=24 ? 'over' : (h>=1 ? 'warn' : 'calm'); }
+      function waitBadge(since){ var ms=Date.now()-since, tier=waitTier(ms); return { tier:tier, text:'已等候 '+fmtWait(ms) }; }
+      /* 頭貼配色:依姓名決定 c1~c6(同一人固定同色) */
+      function avColor(name){ var s=0, str=String(name); for(var i=0;i<str.length;i++) s+=str.charCodeAt(i); return 'c'+(s%6+1); }
+      /* 進行中對話的顯示用 ID(格式比照結案紀錄 C-MMDD-NNN) */
+      function convId(it){ var d=it.at; return 'C-'+pad(d.getMonth()+1)+pad(d.getDate())+'-'+('00'+String(it.id).replace('i','')).slice(-3); }
+
+      /* ---------- 左側使用者列表(LINE 式) ---------- */
+      window.b1vSetSort = function(v){ S.sortDir=v; b1vRenderList(); };
+      window.b1vSetFilter = function(v){ S.filter=v; b1vRenderList(); };
+
+      /* 單一清單 render:全部=進行中(智慧分層)+ 已結束折疊;或依篩選平鋪單一狀態 */
+      window.b1vRenderList = function(){
+        var kwEl=document.getElementById('b1v-wb-kw'); var kw=(kwEl?kwEl.value:'').trim();
+        var box=document.getElementById('b1v-wb-items'); var h='';
+        var F=S.filter||'all';
+        function kwItem(it){ return it.bot===S.curBot && (!kw || it.name.indexOf(kw)>=0 || it.title.indexOf(kw)>=0); }
+        function kwRec(r){ return recBot(r)===S.curBot && (!kw || String(r[1]).indexOf(kw)>=0); }
+        function byTime(a,b){ return S.sortDir==='old' ? (a.at-b.at) : (b.at-a.at); }
+        function liItem(it){
+          var nr=needsReply(it), since=waitSince(it), wb=nr?waitBadge(since):null;
+          var tm = nr ? '<span class="b1v-waitbadge '+wb.tier+'" data-since="'+since+'">'+wb.text+'</span>' : '<span class="tm">'+hhmm(it.at)+'</span>';
+          return '<div class="b1v-li'+(nr?' await '+wb.tier:'')+(it.id===S.curId?' active':'')+'" onclick="b1vOpenConv(\''+it.id+'\')">'
+            + '<div class="av'+(it.state==='ended'?'':' '+avColor(it.name))+(nr?' dot':'')+'">'+esc(it.name[0])+'</div>'
+            + '<div class="mid"><div class="row1"><span class="nm">'+esc(it.name)+'</span>'+tm+'</div>'
+            + '<div class="dp">'+esc(it.dept)+' ・ '+stChip(it)+'</div>'
+            + '<div class="pv">'+esc(lastMsg(it))+'</div></div></div>';
+        }
+        function liRec(r,i){
+          return '<div class="b1v-li'+(S.curId==='rec:'+i?' active':'')+'" onclick="b1vOpenRec('+i+')">'
+            + '<div class="av">'+esc(r[1][0])+'</div>'
+            + '<div class="mid"><div class="row1"><span class="nm">'+esc(r[1])+'</span><span class="tm">'+esc(String(r[7]).slice(5))+'</span></div>'
+            + '<div class="dp">'+esc(r[2])+' ・ <span class="b1v-chip gray">已結案</span></div>'
+            + '<div class="pv">'+esc(r[11])+'</div></div></div>';
+        }
+
+        if (F!=='all'){
+          if (F==='closed'){
+            S.items.filter(function(it){ return it.state==='ended' && kwItem(it); }).sort(byTime).forEach(function(it){ h+=liItem(it); });
+            S.records.forEach(function(r,i){ if(kwRec(r)) h+=liRec(r,i); });
+          } else {
+            var pred = F==='pending' ? function(it){ return it.state==='pending' && !isOverdue(it); }
+                     : F==='unhandled' ? function(it){ return it.state==='pending' && isOverdue(it); }
+                     : function(it){ return it.state==='serving'; };
+            S.items.filter(function(it){ return pred(it) && kwItem(it); }).sort(byTime).forEach(function(it){ h+=liItem(it); });
+          }
+          box.innerHTML = h || '<div class="b1v-li-empty">此篩選沒有對話</div>';
+        } else {
+          /* 全部:單一連續清單(待我回覆浮頂 → 處理中 → 服務結束 → 已結案沉底);不做進行中/已結束區分,交給篩選 */
+          var grp = function(it){ if(it.state==='ended') return 2; return needsReply(it)?0:1; };
+          S.items.filter(kwItem).sort(function(a,b){ var ga=grp(a),gb=grp(b); return ga!==gb ? ga-gb : byTime(a,b); }).forEach(function(it){ h+=liItem(it); });
+          S.records.forEach(function(r,i){ if(kwRec(r)) h+=liRec(r,i); });
+          box.innerHTML = h || '<div class="b1v-li-empty">目前沒有對話</div>';
+        }
+
+        var mc=document.getElementById('b1v-msg-count'); if(mc) mc.textContent='';
+        b1vRenderBots();
+        b1vStartTick();
+      };
+      /* 左側 Bot 欄:每隻 Bot 帶待回覆數;有未處理(>24h)則數字轉紅 */
+      window.b1vRenderBots = function(){
+        var box=document.getElementById('b1v-wb-bots'); if(!box) return;
+        var h='', lastGrp='';
+        BOTS.forEach(function(b){
+          if(b.group!==lastGrp){ h+='<div class="b1v-bot-grp">'+esc(b.group)+'</div>'; lastGrp=b.group; }
+          var need=S.items.filter(function(it){ return it.bot===b.name && needsReply(it); }).length;
+          var over=S.items.some(function(it){ return it.bot===b.name && isOverdue(it); });
+          var badge = need ? '<span class="b1v-bot-cnt'+(over?' over':'')+'">'+need+'</span>' : '';
+          h+='<div class="b1v-bot-item'+(b.name===S.curBot?' active':'')+'" onclick="b1vSelectBot(\''+b.name+'\')">'
+            + '<span class="b1v-bot-ic">'+esc(b.icon)+'</span><span class="b1v-bot-nm">'+esc(b.name)+'</span>'+badge+'</div>';
+        });
+        box.innerHTML=h;
+      };
+      window.b1vSelectBot = function(name){
+        S.curBot=name; S.curId=null;
+        var kw=document.getElementById('b1v-wb-kw'); if(kw) kw.value='';
+        document.getElementById('b1v-wb-conv').innerHTML='<div class="b1v-conv-empty">← 從左側選擇一位使用者,查看對話內容</div>';
+        b1vRenderList();
+      };
+      function b1vStartTick(){
+        if (S.tick) return;
+        S.tick = setInterval(function(){
+          document.querySelectorAll('#b1v-wb-items .b1v-waitbadge[data-since]').forEach(function(el){
+            var wb=waitBadge(Number(el.dataset.since));
+            el.className='b1v-waitbadge '+wb.tier; el.textContent=wb.text;
+            var li=el.closest('.b1v-li'); if(li){ li.classList.remove('calm','warn','over'); li.classList.add(wb.tier); }
+          });
+        }, 1000);
+      }
+
+      /* ---------- 對話內容 ---------- */
+      function ctxHtml(it){
+        var body='';
+        (it.ctx||[]).forEach(function(m){ body += '<div class="b1v-ctx-msg"><span class="who">'+(m[0]==='bot'?'Bot':esc(it.name))+'</span><span>'+esc(m[1])+'</span></div>'; });
+        return '<details class="b1v-ctx"'+(it.state==='pending'?' open':'')+'><summary>Bot 對話脈絡(唯讀・接手前訊息)</summary><div class="b1v-ctx-msgs">'+body+'</div></details>';
+      }
+      function talkHtml(it){
+        if (!it.talk || !it.talk.length) return '';
+        var h='<div class="b1v-divider">你已接手 '+(it.claimAt||'')+'(此後為真人服務,於 Bot 聊天室內)</div>';
+        it.talk.forEach(function(m){
+          if(m[0]==='sys'){ h += '<div class="b1v-syspill"><span>'+esc(m[1])+'</span></div>'; }
+          else { var me=m[0]==='me'; h += '<div class="b1v-bubble-row '+(me?'me':'user')+'"><div class="b1v-bubble">'+esc(m[1])+'<span class="ts">'+(m[2]||'')+'</span></div></div>'; }
         });
         return h;
       }
-      function renderChat(){
-        var box = document.getElementById('b1v-chat');
-        var c = findConv(S.selected);
-        if(!c){ box.innerHTML = '<div class="b1v-empty"><div style="font-size:32px;">💬</div><div>從左側佇列選擇一筆對話</div></div>'; return; }
-        var isPending = S.pending.indexOf(c)>=0;
-        var h = '<div class="b1v-chat-head"><div class="b1v-avatar gray">'+c.name[0]+'</div>'
-          + '<div><div style="font-size:14px;font-weight:600;">'+c.name+' <span style="font-weight:normal;color:#999;font-size:12px;">'+c.dept+'</span></div>'
-          + '<div style="display:flex;gap:6px;margin-top:2px;"><span class="b1v-chip src">'+c.src+'</span>'
-          + (isPending?'':'<span style="font-size:11px;color:#888;">服務 <span data-svc="'+c.id+'">'+fmt(c.svc)+'</span></span>')+'</div></div>'
-          + '<span style="flex:1;"></span>';
-        if(!isPending && c.status==='serving'){
-          h += '<button class="btn" style="font-size:11px;height:26px;" onclick="b1vSimLeave(\''+c.id+'\')">模擬:使用者離開 WOFF</button>'
-            + '<button class="btn primary" style="height:30px;" onclick="b1vSubmitClose()">結束並交還 Bot</button>';
-        }
-        h += '</div>';
-        if(!isPending && c.status==='ended') h += '<div class="b1v-locked-banner">⚠ 使用者已結束對話,請於右側完成結案表單</div>';
+      window.b1vOpenConv = function(id){
+        var it=findItem(id); if(!it) return;
+        S.curId=id;
+        var head='<div class="b1v-conv-head"><div class="b1v-avatar gray">'+esc(it.name[0])+'</div>'
+          + '<div><div class="nm">'+esc(it.name)+' <span class="meta">'+esc(it.dept)+'</span></div><div class="meta">'+esc(it.email)+' ・ '+esc(it.device)+'</div></div>'
+          + '<span class="spacer"></span><span class="meta">對話 ID:'+convId(it)+'</span>';
+        if (it.state==='serving') head += ' <button class="btn ghost sm" style="flex:none;margin-left:6px;" onclick="b1vReassign(\''+it.id+'\')">退回佇列</button>';
+        head += '</div>';
 
-        h += '<div class="b1v-chat-body" id="b1v-chat-body">' + ctxHtml(c);
-        if (isPending){
-          h += '<div style="text-align:center;padding:36px 0;"><button class="b1v-claim-big" onclick="b1vClaim(\''+c.id+'\')">認領此對話</button>'
-            + '<div style="font-size:11px;color:#999;margin-top:10px;">認領後系統將發送 WOFF 對話室連結給使用者</div></div>';
+        var body='<div class="b1v-conv-body" id="b1v-conv-body">';
+        body += '<div style="border:1px solid var(--b1v-border);background:#fff;border-radius:4px;padding:10px 12px;margin-bottom:12px;font-size:12px;"><b>'+esc(it.title)+'</b><span style="color:#999;margin-left:8px;">進線 '+fmtDT(it.at)+'</span></div>';
+        body += ctxHtml(it);
+        if (it.state==='pending'){
+          body += '<div class="b1v-claim-center"><button class="btn primary" onclick="b1vClaim(\''+it.id+'\')">接手此對話</button><div style="font-size:11px;color:#999;margin-top:8px;">接手後將暫停 Bot 自動回覆,由你在 Bot 聊天室內直接服務</div></div>';
         } else {
-          h += '<div class="b1v-divider">你已認領 '+c.claimAt+'(此後為 WOFF 對話)</div>' + woffHtml(c);
+          body += talkHtml(it);
+          if (it.state==='serving' && needsReply(it)){
+            body += '<div class="b1v-banner" style="background:#FDEBEF;border-color:#F5B5C4;color:#C0294B;">⚠ 使用者訊息尚未回覆,請盡快回覆。</div>';
+          }
+          if (it.state==='serving' && it.agentTimeout){
+            body += '<div class="b1v-banner" style="background:#FDEBEF;border-color:#D03050;color:#C0294B;font-weight:600;">⚠ 專人逾時未動作:此對話已逾時未回覆,使用者仍在等待,請立即處理(服務未結束、不會通知使用者)。</div>';
+          }
+          if (it.state==='ended'){
+            var reason = it.endBy==='使用者關鍵字' ? '使用者輸入「結束服務」' : (it.endBy==='使用者未回應逾時' ? '使用者未回應逾時(5+3 分)' : '專人逾時未動作(自接手逾 30 分)');
+            body += '<div class="b1v-banner">對話已結束(原因:'+reason+'),請完成結案表單。</div>';
+          }
         }
-        h += '</div>';
+        body += '</div>';
 
-        if(!isPending){
-          if(c.left && c.status==='serving') h += '<div class="b1v-leave-bar">⚠ 使用者已離開 WOFF,回覆將透過 Bot 通知(今日剩餘通知 '+c.notifyLeft+' 次)</div>';
-          var locked = c.status!=='serving';
-          h += '<div class="b1v-input-area">'
-            + '<div class="b1v-input-tools"><select class="b1v-canned" '+(locked?'disabled':'')+' onchange="b1vCanned(this)"><option value="">罐頭回覆…</option>'
-            + S.canned.map(function(t,i){return '<option value="'+i+'">'+esc(t.slice(0,18))+'…</option>';}).join('')
-            + '</select><button class="btn" style="height:28px;font-size:12px;" '+(locked?'disabled':'')+'>📎 附件</button></div>'
-            + '<textarea class="b1v-textarea" id="b1v-input" placeholder="'+(locked?'對話已結束,輸入已鎖定':'輸入訊息…(Enter 送出)')+'" '+(locked?'disabled':'')+' onkeydown="if(event.key===\'Enter\'&&!event.shiftKey){event.preventDefault();b1vSend();}"></textarea>'
-            + '<div class="b1v-input-foot"><button class="btn primary" style="height:30px;" '+(locked?'disabled':'')+' onclick="b1vSend()">送出</button></div></div>';
+        var foot='<div class="b1v-conv-foot">';
+        if (it.state==='serving'){
+          foot += '<div class="b1v-composer"><select onchange="b1vCanned(this)"><option value="">罐頭回覆…</option><option>您好,我是專人,正在為您查詢,請稍候。</option><option>方便提供您的員工編號嗎?</option><option>已為您處理完成,還有其他需要協助的嗎?</option><option>建議您重新登入後再試一次。</option><option>感謝您的耐心等候。</option></select>'
+            + '<button class="btn" title="附件" onclick="b1vToast(\'附件(模擬)\')">📎</button>'
+            + '<textarea id="b1v-input" placeholder="輸入訊息…(於 Bot 聊天室內回覆使用者)"></textarea>'
+            + '<button class="btn primary" onclick="b1vSend(\''+it.id+'\')">送出</button></div>'
+            + '<div class="b1v-simbar">模擬:<button onclick="b1vEnd(\''+it.id+'\',\'使用者關鍵字\')">使用者輸入「結束服務」</button><button onclick="b1vEnd(\''+it.id+'\',\'使用者未回應逾時\')">使用者未回應逾時</button><button onclick="b1vAgentTimeout(\''+it.id+'\')">專人逾時未動作(強烈提示)</button></div>';
+        } else if (it.state==='ended'){
+          foot += '<div style="display:flex;justify-content:space-between;align-items:center;"><span class="b1v-audit">🔒 對話已結束,輸入區已鎖定</span><button class="btn primary" onclick="b1vOpenClose(\''+it.id+'\')">完成結案</button></div>';
+        } else {
+          foot += '<span class="b1v-audit">🔒 接手後將於 Bot 聊天室內直接服務;檢視紀錄將寫入稽核 log</span>';
         }
-        box.innerHTML = h;
-        var body = document.getElementById('b1v-chat-body'); if(body) body.scrollTop = body.scrollHeight;
-      }
-      window.b1vCanned = function(sel){
-        if(sel.value==='') return;
-        var t = S.canned[+sel.value].replace('{專人名稱}', ME);
-        var ta = document.getElementById('b1v-input'); if(ta){ ta.value = t; ta.focus(); }
-        sel.value='';
-      };
-      window.b1vSend = function(){
-        var c = findConv(S.selected); if(!c || c.status!=='serving') return;
-        var ta = document.getElementById('b1v-input'); var t = (ta&&ta.value||'').trim(); if(!t) return;
-        var now = new Date(); var ts = ('0'+now.getHours()).slice(-2)+':'+('0'+now.getMinutes()).slice(-2);
-        c.woff.push(['me', t, ts]);
-        renderChat();
-      };
-      window.b1vSimLeave = function(id){
-        var c = findConv(id); if(!c||c.left) return;
-        c.left = true; c.notifyLeft = 2;
-        c.woff.push(['sys','使用者已離開 WOFF']);
-        renderChat();
-      };
+        foot += '</div>';
 
-      /* ---------- 右欄案件資訊 + 結案表單 ---------- */
-      function renderCase(){
-        var box = document.getElementById('b1v-case');
-        var c = findConv(S.selected);
-        if(!c){ box.innerHTML = '<div style="color:#aaa;font-size:12px;text-align:center;padding:40px 0;">選擇對話後顯示案件資訊</div>'; return; }
-        var isPending = S.pending.indexOf(c)>=0;
-        var h = '<section><h4>使用者資訊</h4>'
-          + '<div class="b1v-kv"><span class="k">姓名</span><span class="v">'+c.name+'</span></div>'
-          + '<div class="b1v-kv"><span class="k">部門</span><span class="v">'+c.dept+'</span></div>'
-          + '<div class="b1v-kv"><span class="k">Email</span><span class="v">'+c.email+'</span></div>'
-          + '<div class="b1v-kv"><span class="k">裝置</span><span class="v">'+c.device+'</span></div></section>';
-        h += '<section><h4>本次案件</h4>'
-          + '<div class="b1v-kv"><span class="k">來源</span><span class="v">'+c.src+'</span></div>'
-          + '<div class="b1v-kv"><span class="k">進線時間</span><span class="v">今日 '+c.inTime+'</span></div>'
-          + '<div class="b1v-kv"><span class="k">等待時長</span><span class="v">'+(isPending?fmt(c.wait)+'(等待中)':fmt(c.waitFinal||130))+'</span></div>'
-          + '<div class="b1v-kv"><span class="k">WOFF 連結</span><span class="v">'+(isPending?'尚未發送(認領後發送)':(c.woffOpen?'已開啟('+c.woffSentAt+' 發送)':'未開啟('+c.woffSentAt+' 發送)'))+'</span></div>'
-          + '<div class="b1v-kv"><span class="k">歷史接手</span><span class="v b1v-hist-toggle" onclick="var e=document.getElementById(\'b1v-hist\');e.style.display=e.style.display===\'none\'?\'block\':\'none\';">'+c.hist+' 次 ▾</span></div>'
-          + '<div id="b1v-hist" style="display:none;font-size:11px;color:#888;padding-left:96px;">'
-          + (c.hist? Array.from({length:c.hist}).map(function(_,i){return '<div>・07/'+(10+i)+' 由 '+(i%2?'BBB':'CCC')+' 服務(已解決)</div>';}).join('') : '<div>無紀錄</div>')
-          + '</div></section>';
-        if(!isPending){
-          h += '<section style="border-bottom:none;"><h4>結案表單 <span style="color:#D03050;">*結束前必填</span></h4>'
-            + '<div class="b1v-form">'
-            + '<label>結果 <span class="req">*</span></label>'
-            + '<select id="b1v-cf-result"><option value="">請選擇</option><option>已解決</option><option>待追蹤</option><option>轉單</option></select>'
-            + '<label>分類標籤 <span class="req">*</span>(可複選)</label>'
-            + '<div class="b1v-tagpick" id="b1v-cf-tags">'
-            + ['打卡','訂單','帳號','系統問題','其他'].map(function(t){return '<span class="tg" onclick="this.classList.toggle(\'on\'); this.parentNode.classList.remove(\'invalid\')">'+t+'</span>';}).join('')
-            + '</div>'
-            + '<label>備註</label><textarea id="b1v-cf-note" rows="3" placeholder="補充說明(選填)"></textarea>'
-            + '<button class="b1v-close-btn" onclick="b1vSubmitClose()">結束並交還 Bot</button>'
-            + '<div style="font-size:10px;color:#999;margin-top:8px;">送出後:註銷 WOFF 連結、發送 Bot 結束通知(擇一文案)、寫入稽核 log、對話移至服務紀錄。</div>'
-            + '</div></section>';
-        }
-        box.innerHTML = h;
-      }
-      window.b1vSubmitClose = function(){
-        var c = findConv(S.selected); if(!c || S.pending.indexOf(c)>=0) return;
-        var sel = document.getElementById('b1v-cf-result');
-        var tags = Array.prototype.filter.call(document.querySelectorAll('#b1v-cf-tags .tg.on'), function(){return true;}).map(function(el){return el.textContent;});
-        var ok = true;
-        if(!sel.value){ sel.classList.add('invalid'); ok=false; } else sel.classList.remove('invalid');
-        if(!tags.length){ document.getElementById('b1v-cf-tags').classList.add('invalid'); ok=false; }
-        if(!ok){ b1vToast('請完成結案表單必填欄位'); return; }
-        var endBy = c.status==='ended' ? '使用者' : '管理者';
-        S.records.unshift(['C-0720-0'+(15+S.records.length%10), c.name, ME, c.src, '07/20 '+c.inTime+' / 剛剛', fmt(c.waitFinal||130), fmt(c.svc), endBy, sel.value, tags.join('、')]);
-        S.active = S.active.filter(function(a){return a.id!==c.id;});
-        S.selected = null;
-        counts(); renderQueue(); renderChat(); renderCase(); b1vRenderRecs();
-        b1vToast('已結案:WOFF 連結已註銷,Bot 已發送結束通知('+endBy+'版文案)');
+        document.getElementById('b1v-wb-conv').innerHTML = head + body + foot;
+        var cb=document.getElementById('b1v-conv-body'); if(cb) cb.scrollTop=cb.scrollHeight;
+        b1vRenderList();
       };
-
-      /* ---------- 認領 ---------- */
-      window.b1vSelect = function(id){ S.selected = id; renderQueue(); renderChat(); renderCase(); };
       window.b1vClaim = function(id){
-        var i = S.pending.findIndex(function(q){return q.id===id;}); if(i<0) return;
-        var q = S.pending.splice(i,1)[0];
-        var now = new Date(); var hm = ('0'+now.getHours()).slice(-2)+':'+('0'+now.getMinutes()).slice(-2);
-        q.status='serving'; q.statusLabel='服務中'; q.svc=0; q.claimAt=hm; q.woffOpen=false; q.woffSentAt=hm; q.waitFinal=q.wait;
-        q.woff=[['sys','已由 '+ME+' 為您服務'],['sys','WOFF 連結已發送給使用者']];
-        S.active.push(q); S.selected=q.id; S.qtab='active';
-        document.querySelectorAll('#page-bot-1v1 .b1v-qtab').forEach(function(el){ el.classList.toggle('active', el.dataset.qtab==='active'); });
-        counts(); renderQueue(); renderChat(); renderCase();
-        b1vToast('已認領 '+q.name+' 的對話,WOFF 連結已發送(他人佇列已同步移除)');
+        var it=findItem(id); if(!it) return;
+        it.state='serving'; it.owner=ME; it.claimAt=hhmm(new Date());
+        it.talk=[['sys','已由 '+ME+' 為您服務(真人接手,Bot 已暫停自動回覆)']];
+        b1vToast('已接手,Bot 自動回覆已暫停,可直接在 Bot 內服務');
+        b1vOpenConv(id);
       };
-
-      function findConv(id){
-        return S.pending.find(function(q){return q.id===id;}) || S.active.find(function(a){return a.id===id;}) || null;
-      }
-
-      /* ---------- 留言管理 ---------- */
-      function msgStatusChip(m){
-        var map = {'待處理':'gray','已認領':'amber','邀請已發送':'src','服務中':'ok','已結案':'gray'};
-        var extra = m.expired ? ' <span class="b1v-chip warn">曾邀請 '+m.invited+' 次</span>' : '';
-        var cd = m.status==='邀請已發送' && m.validUntil ? ' <span style="font-size:10px;color:#B8860B;">有效至'+m.validUntil+'</span>' : '';
-        return '<span class="b1v-chip '+map[m.status]+'">'+m.status+'</span>'+extra+cd;
-      }
-      window.b1vRenderMsgs = function(){
-        var st = document.getElementById('b1v-mf-status').value;
-        var src = document.getElementById('b1v-mf-src').value;
-        var kw = document.getElementById('b1v-mf-kw').value.trim();
-        var tb = document.getElementById('b1v-msg-tbody'); var h='';
-        S.memos.forEach(function(m){
-          if(st && m.status!==st) return;
-          if(src && m.src!==src) return;
-          if(kw && m.title.indexOf(kw)<0 && m.body.indexOf(kw)<0) return;
-          h += '<tr class="clickable" onclick="b1vOpenMsg(\''+m.id+'\')">'
-            + '<td>'+m.time+'</td><td>'+m.name+'<br><span style="color:#999;font-size:11px;">'+m.dept+'</span></td>'
-            + '<td style="font-weight:600;">'+esc(m.title)+'</td>'
-            + '<td style="max-width:220px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#777;">'+esc(m.body)+'</td>'
-            + '<td><span class="b1v-chip gray">'+m.src+'</span></td>'
-            + '<td>'+msgStatusChip(m)+'</td><td>'+m.owner+'</td>'
-            + '<td><span class="b1v-link">詳情</span></td></tr>';
-        });
-        tb.innerHTML = h || '<tr><td colspan="8" style="text-align:center;color:#aaa;">沒有符合的留言</td></tr>';
-        document.getElementById('b1v-msg-count').textContent = '('+S.memos.filter(function(m){return m.status!=='已結案';}).length+')';
+      window.b1vCanned = function(sel){ if(!sel.value) return; var ta=document.getElementById('b1v-input'); if(ta){ ta.value=(ta.value?ta.value+'\n':'')+sel.value; } sel.value=''; };
+      window.b1vSend = function(id){
+        var it=findItem(id); if(!it) return;
+        var ta=document.getElementById('b1v-input'); var v=(ta?ta.value:'').trim(); if(!v) return;
+        it.talk.push(['me',v,hhmm(new Date())]); ta.value='';
+        b1vOpenConv(id);
       };
-      window.b1vOpenMsg = function(id){
-        var m = S.memos.find(function(x){return x.id===id;}); if(!m) return;
-        S.drawerMsg = id;
-        document.getElementById('b1v-drawer-title').textContent = '留言詳情';
-        var b = '<div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;"><div class="b1v-avatar gray">'+m.name[0]+'</div>'
-          + '<div><b style="font-size:14px;">'+m.name+'</b> <span style="color:#999;font-size:12px;">'+m.dept+'</span><div style="font-size:11px;color:#aaa;">'+m.time+'・'+m.src+'</div></div>'
-          + '<span style="flex:1;"></span>'+msgStatusChip(m)+'</div>'
-          + '<div style="border:1px solid #E0E0E6;border-radius:4px;padding:12px;margin-bottom:14px;"><b style="font-size:13px;">'+esc(m.title)+'</b><p style="font-size:12px;color:#555;margin:6px 0 0;line-height:1.6;">'+esc(m.body)+'</p></div>'
-          + ctxHtml(m)
-          + '<h4 style="font-size:12px;color:#999;margin:14px 0 6px;">歷史留言</h4>'
-          + '<div style="font-size:12px;color:#777;">'+(m.id==='m6'?'・07/10 帳號開通申請(已結案)':'・無其他留言')+'</div>'
-          + '<div id="b1v-invite-zone"></div>';
-        document.getElementById('b1v-drawer-body').innerHTML = b;
-        var f = '';
-        if(m.status==='待處理') f = '<button class="btn primary" onclick="b1vClaimMsg(\''+m.id+'\')">認領</button>';
-        else if(m.status==='已認領' && m.owner===ME) f = '<button class="btn primary" onclick="b1vInvitePreview(\''+m.id+'\')">發送對話邀請</button>';
-        else if(m.status==='已認領') f = '<span style="font-size:12px;color:#999;align-self:center;">已由 '+m.owner+' 認領</span>';
-        else if(m.status==='邀請已發送') f = '<span style="font-size:12px;color:#B8860B;align-self:center;">邀請已發送・有效至'+m.validUntil+'(過期自動回待處理)</span>';
-        document.getElementById('b1v-drawer-foot').innerHTML = f;
+      window.b1vEnd = function(id, by){
+        var it=findItem(id); if(!it || it.state!=='serving') return;
+        it.state='ended'; it.endBy=by;
+        var pill = by==='使用者關鍵字' ? '使用者輸入「結束服務」,本次真人服務已結束,已交還 Bot'
+                 : '使用者未回應逾時(5+3 分),本次服務已自動結束,已交還 Bot';
+        if (by==='使用者關鍵字') it.talk.push(['user','結束服務',hhmm(new Date())]);
+        it.talk.push(['sys',pill]);
+        b1vToast('對話已結束('+by+'),請完成結案');
+        b1vOpenConv(id);
+      };
+      /* 專人逾時未動作:僅於工作台強烈提示,不結束服務 */
+      window.b1vAgentTimeout = function(id){
+        var it=findItem(id); if(!it || it.state!=='serving') return;
+        it.agentTimeout=true;
+        b1vToast('⚠️ 專人逾時未動作:請盡快回覆,服務未結束');
+        b1vOpenConv(id);
+      };
+      window.b1vOpenClose = function(id){
+        var it=findItem(id); if(!it) return;
+        document.getElementById('b1v-drawer-title').textContent='結案表單 — '+it.name;
+        document.getElementById('b1v-drawer-body').innerHTML =
+          '<div class="b1v-kv"><span class="k">使用者</span><span class="v">'+esc(it.name)+'('+esc(it.dept)+')</span></div>'
+          + '<div class="b1v-kv"><span class="k">結束方式</span><span class="v">'+esc(it.endBy)+'</span></div>'
+          + '<div style="margin:14px 0 6px;font-size:12px;color:#333;">結果</div><select id="b1v-cl-result" style="width:100%;height:32px;border:1px solid var(--b1v-border);border-radius:4px;font-size:13px;padding:0 8px;"><option>已解決</option><option>待追蹤</option><option>轉單</option></select>'
+          + '<div style="margin:14px 0 6px;font-size:12px;color:#333;">分類標籤</div><div class="b1v-tagsin" onclick="this.querySelector(\'input\').focus()"><input placeholder="打卡 / 訂單 / 帳號 / 系統問題…按 Enter 新增" onkeydown="b1vAddTag(event,this)"></div>'
+          + '<div style="margin:14px 0 6px;font-size:12px;color:#333;">備註</div><textarea style="width:100%;height:64px;border:1px solid var(--b1v-border);border-radius:4px;padding:8px;font-size:12px;font-family:inherit;"></textarea>';
+        document.getElementById('b1v-drawer-foot').innerHTML='<button class="btn" onclick="b1vCloseDrawer()">取消</button><button class="btn primary" onclick="b1vDoClose(\''+it.id+'\')">完成結案</button>';
         document.getElementById('b1v-drawer-mask').style.display='block';
         document.getElementById('b1v-drawer').classList.add('open');
       };
-      window.b1vClaimMsg = function(id){
-        var m = S.memos.find(function(x){return x.id===id;}); if(!m) return;
-        m.status='已認領'; m.owner=ME; m.expired=false;
-        b1vRenderMsgs(); renderQueue(); b1vOpenMsg(id);
-        b1vToast('已認領留言,可發送對話邀請');
+      window.b1vDoClose = function(id){
+        var it=findItem(id);
+        var idx=S.items.findIndex(function(x){ return x.id===id; });
+        if(it){
+          var res=(document.getElementById('b1v-cl-result')||{}).value||'已解決';
+          var now=new Date();
+          S.records.unshift(['C-'+hhmm(now).replace(':','')+'-'+(S.records.length+1), it.name, it.dept, it.owner||ME, '客服專員', '酷必小幫手', fmtDT(it.at), fmtDT(now), '—', '—', it.endBy||'使用者關鍵字', '結案結果:'+res]);
+        }
+        if(idx>=0) S.items.splice(idx,1);
+        S.curId=null;
+        b1vCloseDrawer();
+        document.getElementById('b1v-wb-conv').innerHTML='<div class="b1v-conv-empty">← 從左側選擇一位使用者,查看對話內容</div>';
+        b1vRenderList();
+        b1vToast('已完成結案,已移至「已結束」');
       };
-      window.b1vInvitePreview = function(id){
-        var m = S.memos.find(function(x){return x.id===id;}); if(!m) return;
-        document.getElementById('b1v-invite-zone').innerHTML =
-          '<div class="b1v-invite-preview"><b>邀請訊息預覽(將由 Bot 發送)</b><p style="margin:6px 0;">專人 '+ME+' 已看過您的留言:「'+esc(m.title)+'」,現在為您服務,請點擊連結進入對話室。</p>'
-          + '<div class="b1v-linkcard">🔗 <div><b>進入 1:1 對話室</b><div style="color:#999;font-size:11px;">woff.worksmobile.com/…(有效至今日 18:00)</div></div></div>'
-          + '<div style="text-align:right;margin-top:10px;"><button class="btn" onclick="document.getElementById(\'b1v-invite-zone\').innerHTML=\'\'">取消</button> <button class="btn primary" onclick="b1vSendInvite(\''+m.id+'\')">確認發送</button></div></div>';
-      };
-      window.b1vSendInvite = function(id){
-        var m = S.memos.find(function(x){return x.id===id;}); if(!m) return;
-        m.status='邀請已發送'; m.invited=(m.invited||0)+1; m.validUntil='今日 18:00';
-        b1vRenderMsgs(); renderQueue(); b1vOpenMsg(id);
-        b1vToast('邀請已發送,等待使用者進入 WOFF');
+      window.b1vReassign = function(id){
+        var it=findItem(id); if(!it || it.state!=='serving') return;
+        it.state='pending'; it.owner='';
+        S.curId=null;
+        document.getElementById('b1v-wb-conv').innerHTML='<div class="b1v-conv-empty">已退回待處理佇列,可由其他專人接手</div>';
+        b1vRenderList();
+        b1vToast('已退回待處理佇列(重新指派)');
       };
       window.b1vCloseDrawer = function(){
         document.getElementById('b1v-drawer').classList.remove('open');
         document.getElementById('b1v-drawer-mask').style.display='none';
       };
 
-      /* ---------- 服務紀錄 ---------- */
-      window.b1vRenderRecs = function(){
-        var ag = document.getElementById('b1v-rf-agent').value;
-        var en = document.getElementById('b1v-rf-end').value;
-        var re = document.getElementById('b1v-rf-result').value;
-        var tb = document.getElementById('b1v-rec-tbody'); var h='';
-        S.records.forEach(function(r,i){
-          if(ag && r[2]!==ag) return;
-          if(en && r[7]!==en) return;
-          if(re && r[8]!==re) return;
-          h += '<tr class="clickable" onclick="b1vOpenRec('+i+')"><td class="b1v-link">'+r[0]+'</td><td>'+r[1]+'</td><td>'+r[2]+'</td><td>'+r[3]+'</td><td>'+r[4]+'</td><td>'+r[5]+'</td><td>'+r[6]+'</td><td>'+r[7]+'</td><td>'+r[8]+'</td><td>'+r[9]+'</td></tr>';
-        });
-        tb.innerHTML = h || '<tr><td colspan="10" style="text-align:center;color:#aaa;">沒有符合的紀錄</td></tr>';
-      };
+      /* ---------- 已結束對話(唯讀,顯示於右側對話區) ---------- */
       window.b1vOpenRec = function(i){
         var r = S.records[i]; if(!r) return;
-        document.getElementById('b1v-drawer-title').textContent = '服務紀錄 '+r[0];
-        document.getElementById('b1v-drawer-body').innerHTML =
-          '<div class="b1v-audit" style="margin-bottom:12px;">🔒 檢視紀錄將寫入稽核 log(檢視者:'+ME+')</div>'
-          + '<div class="b1v-kv"><span class="k">使用者</span><span class="v">'+r[1]+'</span></div>'
-          + '<div class="b1v-kv"><span class="k">服務人員</span><span class="v">'+r[2]+'</span></div>'
-          + '<div class="b1v-kv"><span class="k">來源</span><span class="v">'+r[3]+'</span></div>'
-          + '<div class="b1v-kv"><span class="k">起訖</span><span class="v">'+r[4]+'</span></div>'
-          + '<div class="b1v-kv"><span class="k">結束方式</span><span class="v">'+r[7]+'</span></div>'
-          + '<div class="b1v-kv"><span class="k">結果 / 標籤</span><span class="v">'+r[8]+' / '+r[9]+'</span></div>'
-          + '<h4 style="font-size:12px;color:#999;margin:16px 0 8px;">雙通道完整時間軸</h4>'
-          + '<div class="b1v-ctx-msg"><span class="who" style="color:#9CA3AF;">Bot</span><span>您好,我是酷必小幫手,請問需要什麼協助?</span></div>'
-          + '<div class="b1v-ctx-msg"><span class="who" style="color:#9CA3AF;">'+r[1]+'</span><span>(Bot 聊天室提問…)</span></div>'
-          + '<div class="b1v-syspill"><span>轉真人・'+r[2]+' 認領</span></div>'
-          + '<div class="b1v-ctx-msg"><span class="who" style="color:#2F6BE4;">'+r[2]+'</span><span>(WOFF 真人對話…)</span></div>'
-          + '<div class="b1v-syspill"><span>對話結束('+r[7]+')・Bot 已發送結束通知</span></div>'
-          + '<h4 style="font-size:12px;color:#999;margin:16px 0 8px;">結案資訊</h4>'
-          + '<div style="border:1px solid #E0E0E6;border-radius:4px;padding:10px;font-size:12px;color:#555;">結果:'+r[8]+'・標籤:'+r[9]+'・備註:—</div>';
-        document.getElementById('b1v-drawer-foot').innerHTML = '<button class="btn" onclick="b1vToast(\'已匯出 CSV(模擬)\')">匯出 CSV</button>';
-        document.getElementById('b1v-drawer-mask').style.display='block';
-        document.getElementById('b1v-drawer').classList.add('open');
+        S.curId='rec:'+i;
+        var endPill = r[10]==='使用者關鍵字' ? '使用者輸入「結束服務」,對話結束並交還 Bot'
+                    : r[10]==='使用者未回應逾時' ? '使用者未回應逾時(5+3 分),自動結束並交還 Bot'
+                    : '專人逾時未動作(自接手逾 30 分),自動結束並交還 Bot';
+        var head = '<div class="b1v-conv-head"><div class="b1v-avatar gray">'+esc(r[1][0])+'</div>'
+          + '<div><div class="nm">'+esc(r[1])+' <span class="meta">'+esc(r[2])+'</span></div><div class="meta">'+esc(r[5])+' ・ 結束 '+esc(r[7])+'</div></div>'
+          + '<span class="spacer"></span><span class="meta">對話 ID:'+esc(r[0])+'</span></div>';
+        var body = '<div class="b1v-conv-body">'
+          + '<div class="b1v-audit" style="margin-bottom:10px;">🔒 檢視紀錄將寫入稽核 log(檢視者:'+ME+')</div>'
+          + '<h4 style="font-size:12px;color:#999;margin:0 0 8px;">固定資訊</h4>'
+          + '<div class="b1v-info">'
+          +   '<div class="b1v-kv"><span class="k">對話 ID</span><span class="v">'+r[0]+'</span></div>'
+          +   '<div class="b1v-kv"><span class="k">使用者</span><span class="v">'+r[1]+'('+r[2]+')</span></div>'
+          +   '<div class="b1v-kv"><span class="k">服務專員</span><span class="v">'+r[3]+'('+r[4]+')</span></div>'
+          +   '<div class="b1v-kv"><span class="k">等待時間</span><span class="v">'+r[8]+'</span></div>'
+          +   '<div class="b1v-kv"><span class="k">處理時間</span><span class="v">'+r[9]+'</span></div>'
+          +   '<div class="b1v-kv"><span class="k">結束方式</span><span class="v">'+r[10]+'</span></div>'
+          +   '<div class="b1v-kv"><span class="k">備註</span><span class="v">'+esc(r[11])+'</span></div>'
+          + '</div>'
+          + '<h4 style="font-size:12px;color:#999;margin:16px 0 8px;">對話紀錄</h4>'
+          + '<div class="b1v-reclog">'
+          +   '<div class="b1v-ctx-msg"><span class="who">Bot</span><span>您好,我是'+r[5]+',請問需要什麼協助?</span></div>'
+          +   '<div class="b1v-ctx-msg"><span class="who">'+r[1]+'</span><span>我這邊遇到問題,想找專人協助。</span></div>'
+          +   '<div class="b1v-ctx-msg"><span class="who">'+r[1]+'</span><span>找真人</span></div>'
+          +   '<div class="b1v-syspill"><span>'+r[3]+' 接手・Bot 自動回覆已暫停</span></div>'
+          +   '<div class="b1v-bubble-row user"><div class="b1v-bubble">麻煩協助我這個問題,謝謝。</div></div>'
+          +   '<div class="b1v-bubble-row me"><div class="b1v-bubble">您好,我是專人 '+r[3]+',已收到您的問題,正在為您處理。</div></div>'
+          +   '<div class="b1v-bubble-row user"><div class="b1v-bubble">好的,麻煩了。</div></div>'
+          +   '<div class="b1v-bubble-row me"><div class="b1v-bubble">已為您處理完成,請確認看看,還有其他需要協助的嗎?</div></div>'
+          +   '<div class="b1v-bubble-row user"><div class="b1v-bubble">可以了,謝謝!</div></div>'
+          +   '<div class="b1v-syspill"><span>'+endPill+'</span></div>'
+          + '</div></div>';
+        var foot = '<div class="b1v-conv-foot"><div style="display:flex;justify-content:space-between;align-items:center;"><span class="b1v-audit">🔒 已結束對話唯讀</span><button class="btn" onclick="b1vToast(\'已匯出 CSV(模擬)\')">匯出 CSV</button></div></div>';
+        document.getElementById('b1v-wb-conv').innerHTML = head + body + foot;
+        b1vRenderList();
+      };
+
+      /* ---------- 數據總覽:趨勢圖 + 排行 ---------- */
+      function b1vLineChart(labels, series, colors){
+        var W=680,H=210,padL=34,padR=14,padT=14,padB=26,plotW=W-padL-padR,plotH=H-padT-padB;
+        var max=0; series.forEach(function(s){ s.data.forEach(function(v){ if(v>max)max=v; }); }); max=Math.ceil(max/10)*10||10;
+        var n=labels.length;
+        var X=function(i){ return padL + (n<=1?plotW/2:plotW*i/(n-1)); };
+        var Y=function(v){ return padT + plotH - plotH*v/max; };
+        var s='<svg viewBox="0 0 '+W+' '+H+'" width="100%" height="220" preserveAspectRatio="xMidYMid meet">';
+        for(var g=0; g<=4; g++){ var gv=max*g/4, gy=Y(gv); s+='<line x1="'+padL+'" y1="'+gy+'" x2="'+(W-padR)+'" y2="'+gy+'" stroke="#EEE"/><text x="'+(padL-6)+'" y="'+(gy+3)+'" font-size="9" fill="#bbb" text-anchor="end">'+Math.round(gv)+'</text>'; }
+        labels.forEach(function(lb,i){ s+='<text x="'+X(i)+'" y="'+(H-8)+'" font-size="9" fill="#999" text-anchor="middle">'+lb+'</text>'; });
+        series.forEach(function(se,si){ var col=colors[si%colors.length]; var pts=se.data.map(function(v,i){ return X(i)+','+Y(v); }).join(' '); s+='<polyline points="'+pts+'" fill="none" stroke="'+col+'" stroke-width="2"/>'; se.data.forEach(function(v,i){ s+='<circle cx="'+X(i)+'" cy="'+Y(v)+'" r="3" fill="'+col+'"/>'; }); });
+        return s+'</svg>';
+      }
+      window.b1vTrend = function(g){
+        S.trendG=g;
+        document.querySelectorAll('#b1v-trend-seg button').forEach(function(b){ b.classList.toggle('active', b.dataset.g===g); });
+        var d=S.stats.trend[g];
+        document.getElementById('b1v-trend-chart').innerHTML = b1vLineChart(d.labels, d.series, ['#2F6BE4','#63A0FA']);
+      };
+      window.b1vRank = function(g){
+        S.rankG=g;
+        document.querySelectorAll('#b1v-rank-seg button').forEach(function(b){ b.classList.toggle('active', b.dataset.g===g); });
+        var arr=S.stats.rank[g], max=Math.max.apply(null, arr.map(function(x){ return x.n; }))||1, h='';
+        arr.forEach(function(x,i){ h += '<div class="b1v-rank-row"><div class="rk">'+(i+1)+'</div><div class="nm">'+esc(x.name)+'</div><div class="tr"><div class="fl" style="width:'+(x.n/max*100)+'%;"></div></div><div class="n">'+x.n+'</div></div>'; });
+        document.getElementById('b1v-rank-list').innerHTML = h;
       };
 
       /* ---------- 其他 UI ---------- */
@@ -8540,11 +8549,6 @@
         document.querySelectorAll('#b1v-set-nav div').forEach(function(x){ x.classList.remove('active'); });
         el.classList.add('active');
         document.querySelectorAll('#page-bot-1v1 .b1v-set-pane').forEach(function(x){ x.classList.toggle('active', x.id==='b1v-set-'+id); });
-      };
-      window.b1vToggleOnline = function(){
-        var el = document.getElementById('b1v-online');
-        el.classList.toggle('on');
-        b1vToast(el.classList.contains('on') ? '已上線,開始接收佇列指派' : '已離線,不再接收新進線');
       };
       window.b1vKb = function(btn){
         var on = btn.dataset.on==='1';
@@ -8562,6 +8566,29 @@
         s.querySelector('b').onclick = function(){ s.remove(); };
         input.parentNode.insertBefore(s, input); input.value='';
       };
+      /* 例外日:新增/刪除一列(單天 Datepicker) */
+      window.b1vAddHoli = function(val, name){
+        var list = document.getElementById('b1v-holi-list'); if(!list) return;
+        var empty = list.querySelector('.b1v-holi-empty'); if(empty) empty.remove();
+        var row = document.createElement('div'); row.className='b1v-holi-row';
+        row.innerHTML = '<input type="date"'+(val?' value="'+val+'"':'')+'>'
+          + '<input type="text" class="b1v-holi-name" placeholder="備註(選填)"'+(name?' value="'+esc(name)+'"':'')+'>'
+          + '<button type="button" class="b1v-holi-del" onclick="b1vDelHoli(this)" aria-label="刪除此列">×</button>';
+        list.appendChild(row);
+        var d = row.querySelector('input[type=date]'); if(d) d.focus();
+      };
+      window.b1vDelHoli = function(btn){
+        var row = btn.closest('.b1v-holi-row'); var list = row.parentNode;
+        row.remove();
+        if(!list.querySelector('.b1v-holi-row')){
+          list.innerHTML = '<div class="b1v-holi-empty">尚無例外日,點下方「＋ 新增例外日」建立。</div>';
+        }
+      };
+      /* 服務時段:勾選才啟用該日時間欄,未勾選 disable */
+      window.b1vToggleDay = function(cb){
+        var tr=cb.closest('tr'); if(!tr) return;
+        tr.querySelectorAll('input[type=time]').forEach(function(t){ t.disabled=!cb.checked; });
+      };
       var toastTimer=null;
       window.b1vToast = function(msg){
         var t = document.getElementById('b1v-toast');
@@ -8570,37 +8597,18 @@
         toastTimer = setTimeout(function(){ t.classList.remove('show'); }, 2600);
       };
 
-      /* ---------- 每秒計時 ---------- */
-      function tick(){
-        S.pending.forEach(function(q){ q.wait++; });
-        S.active.forEach(function(a){ if(a.status==='serving') a.svc++; });
-        if (S.qtab==='pending'){
-          var needRerender = S.pending.some(function(q){ return q.wait===151 || q.wait===180; });
-          if(needRerender) renderQueue();
-          else S.pending.forEach(function(q){
-            var el = document.querySelector('#b1v-qlist [data-qid="'+q.id+'"]');
-            if(el){ el.textContent = fmt(q.wait); el.classList.toggle('late', q.wait>150); }
-          });
-        } else if (S.qtab==='active'){
-          S.active.forEach(function(a){
-            var el = document.querySelector('#b1v-qlist [data-aid="'+a.id+'"]');
-            if(el) el.textContent = fmt(a.svc);
-          });
-        }
-        var hd = document.querySelector('#b1v-chat [data-svc]');
-        if(hd){ var c = findConv(hd.dataset.svc); if(c) hd.textContent = fmt(c.svc); }
-      }
-
       /* ---------- 初始化(goPage 進頁時呼叫) ---------- */
+      window.b1vDispPreview = function(){
+        var n=document.getElementById('b1v-disp-name'), t=document.getElementById('b1v-disp-title'), pv=document.getElementById('b1v-disp-preview'), tpl=document.getElementById('b1v-cp-join');
+        if(!pv||!tpl) return;
+        var parts=[]; if(n&&n.checked) parts.push('王小明'); if(t&&t.checked) parts.push('客服專員');
+        var who = parts.length ? parts.join(' ') : '專人';
+        pv.textContent = tpl.value.replace(/\{專人名稱\}/g, who);
+      };
       window.b1vInit = function(){
         if(S.inited) return;
         S.inited = true;
-        /* 文案管理清單 */
-        document.getElementById('b1v-copy-list').innerHTML = S.copies.map(function(c){
-          return '<div class="b1v-copy-item"><div class="t">'+c[0]+'</div><textarea>'+esc(c[1])+'</textarea></div>';
-        }).join('');
-        counts(); renderQueue(); renderChat(); renderCase(); b1vRenderMsgs(); b1vRenderRecs();
-        S.timer = setInterval(tick, 1000);
+        b1vRenderList(); b1vTrend('day'); b1vRank('day'); b1vDispPreview();
       };
     })();
     </script>
@@ -15248,7 +15256,7 @@
     /* 4.3 離職程序 已移除 */
     '5.1': { section: 'Bot 管理', name: 'BOT管理設定', group: 'group-bot' },
     '5.2': { section: 'Bot 管理', name: 'BOT使用數據', group: 'group-bot' },
-    'bot-1v1': { section: 'Bot 管理', name: '真人1v1對話紀錄', group: 'group-bot' },
+    'bot-1v1': { section: 'Bot 管理', name: '真人1v1服務', group: 'group-bot' },
     'bot-edit':     { section: 'Bot 管理', name: '編輯 Bot',  group: 'group-bot' },
     'bot-checkin':  { section: 'Bot 管理', name: '打卡記錄',  group: 'group-bot' },
     '6.1': { section: '行事曆管理', name: '公司行事曆', group: 'group-cal' },
