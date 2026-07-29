@@ -2968,6 +2968,430 @@
   .mdetail-row-val { flex:1; color:var(--text); }
   /* ===== [Figma Sync 結束] ===== */
 
+  /* ===== [新增開始] 自動化服務樣式 =====
+       規則卡＋橫向流程鏈＋就地展開的節點設定面板
+       說明文字不在介面呈現，故無 callout / badge 類樣式 */
+
+  .auto-board-empty {
+    display: flex; align-items: center; justify-content: center;
+    padding: 48px 24px; border: 1px dashed var(--border);
+    border-radius: var(--radius-lg); background: var(--bg);
+    font-size: 13px; color: var(--text-muted);
+  }
+
+  /* 規則卡 */
+  .auto-rule-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius-lg); margin-bottom: 12px;
+    box-shadow: var(--shadow-sm);
+  }
+  .auto-rule-card:last-child { margin-bottom: 0; }
+  .auto-rule-card.editing { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-soft); }
+  .auto-rule-card.off { background: var(--bg); }
+  .auto-rule-card.off .arc-chain { opacity: 0.45; filter: grayscale(1); }
+
+  .arc-head { display: flex; align-items: center; gap: 8px; padding: 10px 14px 0; min-height: 20px; }
+  .arc-badge {
+    font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 20px;
+    background: var(--hover); color: var(--text-secondary); border: 1px solid var(--border);
+  }
+
+  .arc-more-wrap { margin-left: auto; position: relative; flex-shrink: 0; }
+  .arc-more {
+    width: 26px; height: 26px; border-radius: var(--radius-sm);
+    border: none; background: transparent; color: var(--text-muted);
+    cursor: pointer; font-size: 15px; line-height: 1; font-family: inherit;
+  }
+  .arc-more:hover { background: var(--hover); color: var(--text); }
+  .arc-menu {
+    display: none; position: absolute; right: 0; top: 30px; z-index: 20;
+    min-width: 104px; background: var(--surface);
+    border: 1px solid var(--border); border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-lg); padding: 4px;
+  }
+  .arc-menu.open { display: block; }
+  .arc-menu button {
+    display: block; width: 100%; text-align: left;
+    border: none; background: transparent; font-family: inherit;
+    font-size: 12px; color: var(--text); padding: 7px 10px;
+    border-radius: var(--radius-sm); cursor: pointer;
+  }
+  .arc-menu button:hover { background: var(--hover); }
+  .arc-menu button.danger { color: var(--danger); }
+  .arc-menu button.danger:hover { background: var(--danger-soft); }
+
+  /* 橫向流程鏈 */
+  .arc-chain { display: flex; align-items: stretch; flex-wrap: wrap; gap: 6px; padding: 10px 14px 14px; }
+  .arc-node {
+    display: flex; flex-direction: column; justify-content: center;
+    min-width: 132px; max-width: 200px; text-align: left;
+    background: var(--surface); border: 1.5px solid var(--border);
+    border-radius: var(--radius); padding: 8px 11px;
+    cursor: pointer; font-family: inherit;
+    transition: border-color .15s, box-shadow .15s;
+  }
+  .arc-node:hover { border-color: var(--primary); }
+  .arc-node.active { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-soft); }
+  /* 尚未設定：虛線框、值轉灰 */
+  .arc-node.todo { border-style: dashed; border-color: var(--border-strong); }
+  .arc-node.todo .n-v { color: var(--text-muted); font-weight: 500; }
+  .arc-node .n-k {
+    display: flex; align-items: center; gap: 4px;
+    font-size: 10px; font-weight: 700; color: var(--text-muted); margin-bottom: 2px;
+  }
+  .arc-node.trigger .n-k { color: var(--primary); }
+  .arc-node.card    .n-k { color: var(--success); }
+  .arc-node .n-v { font-size: 12.5px; font-weight: 600; color: var(--text); line-height: 1.4; }
+  .arc-node .n-sub { font-size: 10px; color: var(--text-muted); margin-top: 2px; line-height: 1.45; }
+  /* 時間節點尚未設定時的精簡呈現 */
+  .arc-node .n-add {
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 600; color: var(--primary); line-height: 1.4;
+  }
+  .arc-node.delay.todo { border-color: var(--primary); border-style: dashed; min-width: 96px; }
+  .arc-node.delay.todo:hover { background: var(--primary-soft); }
+
+  .arc-arw { display: flex; align-items: center; color: var(--text-muted); font-size: 12px; }
+  .arc-term {
+    display: flex; align-items: center; padding: 0 12px;
+    font-size: 11px; color: var(--text-muted);
+    border: 1px dashed var(--border); border-radius: var(--radius); background: var(--bg);
+  }
+  .arc-insert {
+    border: 1.5px dashed var(--primary); border-radius: var(--radius);
+    background: transparent; color: var(--primary);
+    font-size: 11px; font-weight: 600; font-family: inherit;
+    padding: 6px 12px; cursor: pointer;
+  }
+  .arc-insert:hover { background: var(--primary-soft); }
+
+  /* 就地展開的節點設定面板 */
+  .arc-panel {
+    position: relative; margin: 0 14px 14px;
+    background: var(--bg); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 16px 18px;
+  }
+  .arc-panel::before {
+    content: ''; position: absolute; top: -7px; left: var(--caret-x, 40px);
+    width: 12px; height: 12px; background: var(--bg);
+    border-left: 1px solid var(--border); border-top: 1px solid var(--border);
+    transform: rotate(45deg);
+  }
+  .arc-panel-head {
+    display: flex; align-items: center; gap: 8px;
+    padding-bottom: 10px; margin-bottom: 14px; border-bottom: 1px solid var(--border);
+  }
+  .arc-panel-head .ph-title { font-size: 13px; font-weight: 700; color: var(--text); }
+  .arc-panel-head .ph-close {
+    margin-left: auto; border: none; background: transparent; cursor: pointer;
+    color: var(--text-muted); width: 24px; height: 24px; border-radius: var(--radius-sm);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .arc-panel-head .ph-close:hover { background: var(--hover); color: var(--text); }
+  .arc-panel-body { display: grid; grid-template-columns: 1fr 280px; gap: 18px; align-items: start; }
+  @media (max-width: 1180px) { .arc-panel-body { grid-template-columns: 1fr; } }
+  .arc-panel-foot {
+    display: flex; justify-content: flex-end;
+    margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border);
+  }
+
+  .auto-field { margin-bottom: 16px; }
+  .auto-field:last-child { margin-bottom: 0; }
+  .auto-field > label {
+    display: block; font-size: 12px; font-weight: 600;
+    color: var(--text); margin-bottom: 6px;
+  }
+
+  /* 選項卡片（起始事件） */
+  .auto-opt-card {
+    display: block; cursor: pointer;
+    border: 1.5px solid var(--border-strong); border-radius: var(--radius-sm);
+    padding: 9px 12px; background: var(--surface);
+    transition: border-color .15s, background .15s;
+  }
+  .auto-opt-card:hover { border-color: var(--primary); }
+  .auto-opt-card.selected { border-color: var(--primary); background: var(--primary-soft); }
+  .auto-opt-card.disabled { cursor: not-allowed; opacity: 0.45; background: var(--bg); border-color: var(--border); }
+  .auto-opt-card.disabled:hover { border-color: var(--border); }
+  .auto-opt-card .oc-title { font-size: 13px; font-weight: 600; color: var(--text); }
+  .auto-opt-card .oc-desc { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+  /* 時間 segment */
+  .auto-seg { display: inline-flex; border: 1px solid var(--border-strong); border-radius: var(--radius-sm); overflow: hidden; }
+  .auto-seg button {
+    border: none; background: var(--surface); padding: 0 12px; height: 30px;
+    font-size: 12px; color: var(--text-secondary); font-family: inherit;
+    border-right: 1px solid var(--border); cursor: pointer;
+  }
+  .auto-seg button:last-child { border-right: none; }
+  .auto-seg button:hover { background: var(--hover); }
+  .auto-seg button.active { background: var(--primary); color: #fff; font-weight: 600; }
+
+  /* 收件對象 */
+  .auto-target-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 12px; border: 1px solid var(--border);
+    border-radius: var(--radius-sm); margin-bottom: 6px; cursor: pointer;
+  }
+  .auto-target-row:last-child { margin-bottom: 0; }
+  .auto-target-row:hover { background: var(--hover); }
+  .auto-target-row.checked { border-color: var(--primary); background: var(--primary-soft); }
+  .auto-target-row.disabled { cursor: not-allowed; background: var(--bg); opacity: 0.5; }
+  .auto-target-row.disabled:hover { background: var(--bg); }
+  .auto-target-row input { accent-color: var(--primary); flex-shrink: 0; }
+  .auto-target-row .tr-title { font-size: 13px; color: var(--text); }
+
+  /* 訊息預覽（顯示實際內容，非說明文字） */
+  .auto-msg-preview { border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+  .auto-msg-preview .amp-to {
+    padding: 7px 12px; border-bottom: 1px solid var(--border);
+    font-size: 11px; color: var(--text-muted); background: var(--surface);
+  }
+  .auto-msg-preview .amp-screen { background: #f0f2f5; padding: 14px 12px; }
+  .auto-msg-preview .amp-row { display: flex; gap: 8px; align-items: flex-start; }
+  .auto-msg-preview .amp-avatar {
+    width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
+    background: var(--primary); color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700;
+  }
+  .auto-msg-preview .amp-bubble {
+    max-width: 80%; background: #fff; border-radius: 4px 14px 14px 14px;
+    padding: 9px 12px; font-size: 12px; line-height: 1.65; color: var(--text);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.10); white-space: pre-wrap; word-break: break-word;
+  }
+  .auto-msg-preview .amp-bubble.empty { color: var(--text-muted); }
+  .auto-msg-preview .amp-var {
+    background: var(--primary-soft); color: var(--primary);
+    border-radius: 3px; padding: 0 3px; font-weight: 600;
+  }
+  .auto-msg-preview .amp-cardbtn {
+    margin-top: 9px; padding-top: 9px; border-top: 1px solid var(--border);
+    text-align: center; font-size: 12px; font-weight: 600; color: var(--primary);
+  }
+
+  /* ===== 訊息區塊（chips ＋ 型別選擇 ＋ 編輯器） ===== */
+  .auto-blocks { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  .auto-block-chip {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 5px 8px 5px 10px; border-radius: 20px;
+    border: 1.5px solid var(--border); background: var(--surface);
+    font-size: 12px; color: var(--text-secondary); cursor: pointer; user-select: none;
+  }
+  .auto-block-chip:hover { border-color: var(--primary); }
+  .auto-block-chip.active { border-color: var(--primary); background: var(--primary-soft); color: var(--primary); font-weight: 600; }
+  .auto-block-chip b {
+    font-weight: 400; color: var(--text-muted); padding: 0 2px; border-radius: 50%;
+  }
+  .auto-block-chip b:hover { color: var(--danger); }
+  .auto-block-add {
+    border: 1.5px dashed var(--primary); border-radius: 20px; background: transparent;
+    color: var(--primary); font-size: 12px; font-weight: 600; font-family: inherit;
+    padding: 5px 12px; cursor: pointer;
+  }
+  .auto-block-add:hover { background: var(--primary-soft); }
+
+  /* 型別選擇格（就地展開，不用 Modal） */
+  .auto-type-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;
+    margin-top: 10px; padding: 12px; background: var(--surface);
+    border: 1px solid var(--border); border-radius: var(--radius);
+  }
+  .auto-type-item {
+    position: relative; padding: 12px 6px; text-align: center; cursor: pointer;
+    border: 1.5px solid var(--border); border-radius: var(--radius-sm); background: var(--surface);
+    transition: border-color .15s, background .15s;
+  }
+  .auto-type-item:hover { border-color: var(--primary); background: var(--primary-soft); }
+  .auto-type-item.disabled { opacity: 0.4; cursor: not-allowed; }
+  .auto-type-item.disabled:hover { border-color: var(--border); background: var(--surface); }
+  .auto-type-item .ti-ico { font-size: 20px; margin-bottom: 4px; }
+  .auto-type-item .ti-label { font-size: 11px; font-weight: 600; color: var(--text); }
+  .auto-type-item .ti-tag {
+    font-size: 9px; color: var(--primary); background: var(--primary-soft);
+    border-radius: 3px; padding: 0 3px; margin-top: 3px; display: inline-block;
+  }
+
+  /* 區塊編輯器 */
+  .auto-block-editor {
+    margin-top: 12px; padding: 14px; background: var(--surface);
+    border: 1px solid var(--border); border-radius: var(--radius);
+  }
+  .auto-block-editor .abe-head { font-size: 12px; font-weight: 700; color: var(--text); margin-bottom: 10px; }
+  .auto-inline-row { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; }
+  .auto-x {
+    border: none; background: transparent; color: var(--text-muted);
+    cursor: pointer; font-size: 15px; padding: 0 6px; font-family: inherit; line-height: 1;
+  }
+  .auto-x:hover { color: var(--danger); }
+  .auto-upload { display: flex; align-items: center; gap: 8px; }
+  .auto-sticker-row { display: flex; flex-wrap: wrap; gap: 8px; }
+  .auto-sticker {
+    font-size: 22px; padding: 5px 8px; border-radius: var(--radius-sm);
+    border: 1.5px solid var(--border); cursor: pointer; line-height: 1;
+  }
+  .auto-sticker:hover { border-color: var(--primary); }
+  .auto-sticker.active { border-color: var(--primary); background: var(--primary-soft); }
+  .auto-carousel-edit { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; }
+  .auto-ccard {
+    min-width: 168px; flex-shrink: 0; padding: 10px;
+    border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--bg);
+  }
+  /* 按鈕動作選擇器 */
+  .auto-btn-card {
+    padding: 10px; margin-bottom: 8px;
+    border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--bg);
+  }
+  .auto-act { display: inline-flex; border: 1px solid var(--border-strong); border-radius: var(--radius-sm); overflow: hidden; }
+  .auto-act button {
+    border: none; background: var(--surface); padding: 0 10px; height: 26px;
+    font-size: 11px; color: var(--text-secondary); font-family: inherit;
+    border-right: 1px solid var(--border); cursor: pointer;
+  }
+  .auto-act button:last-child { border-right: none; }
+  .auto-act button:hover { background: var(--hover); }
+  .auto-act button.active { background: var(--primary); color: #fff; font-weight: 600; }
+  .auto-act button.off { opacity: 0.4; cursor: not-allowed; }
+  .auto-act button.off:hover { background: var(--surface); }
+
+  .auto-ccard .cc-head {
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: 11px; font-weight: 600; color: var(--text-muted); margin-bottom: 6px;
+  }
+
+  /* ===== 預覽：各格式泡泡 ===== */
+  .auto-msg-preview .amp-row { margin-bottom: 8px; }
+  .auto-msg-preview .amp-row:last-child { margin-bottom: 0; }
+  .auto-msg-preview .amp-sticker { font-size: 34px; line-height: 1.1; }
+  .auto-msg-preview .amp-media {
+    width: 132px; height: 82px; background: #fff; border-radius: 10px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 3px; font-size: 22px; box-shadow: 0 1px 3px rgba(0,0,0,0.10);
+  }
+  .auto-msg-preview .amp-media span { font-size: 10px; color: var(--text-muted); }
+  .auto-msg-preview .amp-file {
+    background: #fff; border-radius: 10px; padding: 9px 12px; font-size: 11px;
+    color: var(--text); box-shadow: 0 1px 3px rgba(0,0,0,0.10);
+  }
+  .auto-msg-preview .amp-carousel { display: flex; gap: 6px; overflow-x: auto; max-width: 200px; }
+  .auto-msg-preview .amp-ccard {
+    min-width: 96px; flex-shrink: 0; background: #fff; border-radius: 10px;
+    overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.10);
+  }
+  .auto-msg-preview .amp-ccard .cc-img {
+    height: 42px; background: #e6e9ee; display: flex; align-items: center;
+    justify-content: center; font-size: 16px;
+  }
+  .auto-msg-preview .amp-ccard .cc-title { font-size: 10px; font-weight: 600; padding: 6px 7px 3px; color: var(--text); }
+  .auto-msg-preview .amp-ccard .cc-btn {
+    font-size: 10px; color: var(--primary); text-align: center;
+    padding: 5px; border-top: 1px solid var(--border); font-weight: 600;
+  }
+  .auto-msg-preview .amp-list-title {
+    font-size: 11px; font-weight: 700; padding: 9px 12px;
+    border-bottom: 1px solid var(--border); color: var(--text);
+  }
+  .auto-msg-preview .amp-list-item {
+    font-size: 11px; padding: 7px 12px; border-bottom: 1px solid var(--border); color: var(--text-secondary);
+  }
+  .auto-msg-preview .amp-list-item:last-child { border-bottom: none; }
+
+  /* ===== 預設訊息：事件卡片清單 ===== */
+  .def-msg-card {
+    background: #f7f8fa; border: 1px solid var(--border);
+    border-radius: var(--radius-lg); padding: 8px;
+    margin-bottom: 10px; cursor: pointer; transition: border-color .15s, box-shadow .15s;
+  }
+  .def-msg-card:last-child { margin-bottom: 0; }
+  .def-msg-card:hover { border-color: var(--primary); }
+  .def-msg-card.selected {
+    border: 2px solid var(--primary); padding: 7px; cursor: default;
+    background: var(--surface);
+  }
+  .def-msg-card .dmc-head {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 10px 16px; border-bottom: 1px solid transparent;
+  }
+  .def-msg-card.selected .dmc-head { border-bottom-color: var(--border); }
+  .def-msg-card .dmc-name {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 13px; font-weight: 600; color: var(--text);
+  }
+  .def-msg-card .dmc-tag {
+    font-size: 10px; font-weight: 600; padding: 1px 7px; border-radius: 20px;
+    background: var(--hover); color: var(--text-secondary); border: 1px solid var(--border);
+  }
+  .def-msg-card .dmc-tag.cb { background: var(--primary-soft); color: var(--primary); border-color: rgba(0,123,255,0.28); }
+  .def-msg-card .dmc-desc { font-size: 10px; color: var(--text-muted); margin-top: 3px; line-height: 1.6; }
+  .def-msg-card .dmc-desc b { color: var(--text-secondary); font-weight: 600; }
+
+  /* ===== 訊息格式編輯器（對齊推播排程樣式） ===== */
+  .auto-fld { margin-bottom: 10px; }
+  .auto-fld-lbl { font-size: 12px; font-weight: 600; color: var(--text); margin-bottom: 5px; }
+  .auto-fld-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+  .auto-cnt { font-size: 11px; color: var(--text-muted); text-align: right; margin-top: 3px; }
+
+  /* 按鈕列 */
+  .auto-btn-row { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; }
+  .auto-btn-note {
+    flex: 1; font-size: 11px; color: var(--primary);
+    background: var(--primary-soft); border-radius: var(--radius-sm); padding: 6px 10px;
+  }
+  .auto-btn-hint {
+    font-size: 11px; color: var(--primary); background: var(--primary-soft);
+    border-radius: var(--radius-sm); padding: 5px 9px; margin: -2px 0 8px;
+  }
+  .auto-btn-hint.muted { color: var(--text-muted); background: var(--bg); }
+  .auto-btn-hint a { color: var(--primary); font-weight: 600; margin-left: 6px; }
+
+  /* 上傳區 / 縮圖 */
+  .auto-upzone {
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    height: 52px; border: 1px dashed var(--border-strong); border-radius: var(--radius-sm);
+    background: var(--surface); font-size: 18px; color: var(--text-muted);
+  }
+  .auto-img-sq {
+    width: 32px; height: 32px; flex-shrink: 0; font-size: 14px;
+    border: 1px solid var(--border); border-radius: var(--radius-sm);
+    display: flex; align-items: center; justify-content: center; background: var(--surface);
+  }
+  .auto-list-row { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; }
+
+  /* 預覽：按鈕訊息 / 列表 / 輪播內文 */
+  .auto-msg-preview .amp-btn-title {
+    font-size: 12px; padding: 10px 12px; color: var(--text); line-height: 1.6;
+    border-bottom: 1px solid var(--border);
+  }
+  .auto-msg-preview .amp-ext { font-size: 9px; opacity: .7; }
+  .auto-msg-preview .amp-ccard .cc-desc {
+    font-size: 9px; color: var(--text-muted); padding: 0 7px 4px; line-height: 1.4;
+  }
+  .auto-msg-preview .amp-list-img {
+    height: 56px; background: #e6e9ee; display: flex; align-items: center;
+    justify-content: center; font-size: 18px;
+  }
+  .auto-msg-preview .amp-list-desc {
+    font-size: 10px; color: var(--text-muted); padding: 0 12px 8px;
+    border-bottom: 1px solid var(--border);
+  }
+  .auto-msg-preview .amp-list-item {
+    display: flex; align-items: center; justify-content: space-between; gap: 8px;
+    font-size: 11px; padding: 7px 12px; border-bottom: 1px solid var(--border);
+  }
+  .auto-msg-preview .amp-list-item .li-t { color: var(--text); font-weight: 600; }
+  .auto-msg-preview .amp-list-item .li-d { color: var(--text-muted); font-size: 10px; margin-top: 1px; }
+  .auto-msg-preview .amp-list-item .li-img {
+    width: 26px; height: 26px; flex-shrink: 0; background: #e6e9ee;
+    border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 11px;
+  }
+  /* 設定者輔助註記（成員端看不到） */
+  .auto-msg-preview .amp-annot {
+    margin: 8px 0 0 36px; font-size: 10px; color: var(--primary);
+    background: rgba(255,255,255,.85); border-left: 2px solid var(--primary);
+    border-radius: 0 4px 4px 0; padding: 4px 8px; line-height: 1.5;
+  }
+  /* ===== [新增結束] 自動化服務樣式 ===== */
+
 </style>
 
 <!-- ===== [通訊錄改版 abv2 styles] ===== -->
@@ -5854,6 +6278,8 @@
       <div class="tabs" style="margin-bottom:0; padding-top:4px;" id="bot-edit-main-tabs">
         <button class="tab active" onclick="switchBotMainTab(this,'bot-tab-basic')">基本設定</button>
         <button class="tab" onclick="switchBotMainTab(this,'bot-tab-interaction')">互動設計</button>
+        <!-- ===== [新增] 自動化服務：與基本設定／互動設計並列（規格 §03 定位於 Bot 設定層） ===== -->
+        <button class="tab" id="bot-main-tab-automation" onclick="switchBotMainTab(this,'bot-tab-automation')">自動化腳本</button>
         <button class="tab bot-template-only" onclick="switchBotMainTab(this,'bot-tab-exclusive')" style="display:none;">專屬設定</button>
       </div>
 
@@ -6063,7 +6489,7 @@
           <button class="bot-sidenav-item tab active" onclick="switchBotSubTab(this,'bot-subtab-push')" style="font-size:13px; padding:8px 16px; border-radius:0; border-bottom:2px solid var(--primary);">📣 推播設定</button>
           <button class="bot-sidenav-item tab" onclick="switchBotSubTab(this,'bot-subtab-menu')" style="font-size:13px; padding:8px 16px; border-radius:0; border-bottom:2px solid transparent; color:var(--text-secondary);">📋 選單設定</button>
           <button class="bot-sidenav-item tab" onclick="switchBotSubTab(this,'bot-subtab-keyword')" style="font-size:13px; padding:8px 16px; border-radius:0; border-bottom:2px solid transparent; color:var(--text-secondary);">🔑 關鍵字設定</button>
-          <button class="bot-sidenav-item tab" onclick="switchBotSubTab(this,'bot-subtab-message')" style="font-size:13px; padding:8px 16px; border-radius:0; border-bottom:2px solid transparent; color:var(--text-secondary);">💬 預設訊息</button>
+          <button class="bot-sidenav-item tab" id="bot-subtab-btn-message" onclick="switchBotSubTab(this,'bot-subtab-message')" style="font-size:13px; padding:8px 16px; border-radius:0; border-bottom:2px solid transparent; color:var(--text-secondary);">💬 預設訊息</button>
         </div>
 
         <!-- 推播設定（Figma 724:26945） -->
@@ -6225,21 +6651,13 @@
 
           <div style="display:flex; gap:16px; align-items:flex-start;">
 
-            <!-- 左：成員加入事件卡片（藍色選中邊框） -->
-            <div style="flex:1; min-width:0;">
-              <div style="background:#f7f8fa; border:2px solid var(--primary); border-radius:var(--radius-lg); overflow:hidden; padding:8px;" id="msg-event-join-card">
-                <!-- Header -->
-                <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 16px; border-bottom:1px solid var(--border);">
-                  <div>
-                    <div style="font-size:13px; font-weight:600;">成員加入事件</div>
-                    <div style="font-size:10px; color:var(--text-muted);">新用戶受邀進入已有機器人的團隊、群組或多人聊天室時發送。</div>
-                  </div>
-                  <label class="switch"><input type="checkbox" checked /><span class="slider"></span></label>
-                </div>
+            <!-- 左：事件卡片清單（6 個事件，參考規格書 §04 起始事件字典） -->
+            <div style="flex:1; min-width:0;" id="def-msg-host">
+              <div id="def-msg-list"></div>
 
-                <!-- Body：回覆訊息內容 -->
+              <!-- 共用編輯區：由 JS 移入目前選取的事件卡片內 -->
+              <div id="def-msg-shared-body" style="display:none;">
                 <div style="padding:16px;">
-                  <!-- Section header -->
                   <div style="border-top:1px solid var(--border); padding-top:10px; margin-bottom:12px;">
                     <div style="font-size:12px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.06em;">回覆訊息內容</div>
                   </div>
@@ -6251,9 +6669,7 @@
                       <span style="font-size:12px; color:var(--text-muted);">一般訊息 <span id="def-msg-block-count" style="color:var(--danger);">0</span> / 5</span>
                       <span style="font-size:12px; color:var(--text-muted);">快速回覆 <span style="color:var(--danger);">0</span> / 1</span>
                     </div>
-                    <!-- chips row -->
                     <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;" id="def-msg-blocks-row">
-                      <!-- 新增按鈕（dashed, primary color, Figma 849:63753） -->
                       <button onclick="openModal('modal-push-msg-type'); _pushMsgCtx='def-msg';" style="display:inline-flex;align-items:center;gap:4px;padding:5px 10px;border-radius:6px;border:1.5px dashed var(--primary);background:#f2f3f5;cursor:pointer;font-size:12px;color:var(--primary);font-family:inherit;">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                         新增
@@ -6261,16 +6677,15 @@
                     </div>
                   </div>
 
-                  <!-- Active block editor (shown when a block is added) -->
-                  <div id="def-msg-block-editors" style="display:none;">
+                  <div id="def-msg-block-editors">
                     <div id="def-msg-editor-text" class="card" style="padding:14px; border:2px solid var(--border);">
                       <div style="font-size:13px; font-weight:600; margin-bottom:8px;">文字訊息</div>
-                      <textarea class="input full" id="def-msg-text" rows="3" placeholder="輸入推播訊息內容" oninput="updateDefMsgPreview()" style="resize:vertical;"></textarea>
+                      <textarea class="input full" id="def-msg-text" rows="3" placeholder="輸入回覆訊息內容" oninput="updateDefMsgPreview()" style="resize:vertical;"></textarea>
                       <div style="display:flex; gap:6px; margin-top:6px; flex-wrap:wrap;">
-                        <span class="push-var-chip" onclick="insertPushVar('def-msg-text','{{姓名}}')">{{姓名}}</span>
-                        <span class="push-var-chip" onclick="insertPushVar('def-msg-text','{{部門}}')">{{部門}}</span>
-                        <span class="push-var-chip" onclick="insertPushVar('def-msg-text','{{日期}}')">{{日期}}</span>
-                        <span class="push-var-chip" onclick="insertPushVar('def-msg-text','{{時間}}')">{{時間}}</span>
+                        <span class="push-var-chip" onclick="insertPushVar('def-msg-text','{{姓名}}'); updateDefMsgPreview();">{{姓名}}</span>
+                        <span class="push-var-chip" onclick="insertPushVar('def-msg-text','{{部門}}'); updateDefMsgPreview();">{{部門}}</span>
+                        <span class="push-var-chip" onclick="insertPushVar('def-msg-text','{{日期}}'); updateDefMsgPreview();">{{日期}}</span>
+                        <span class="push-var-chip" onclick="insertPushVar('def-msg-text','{{時間}}'); updateDefMsgPreview();">{{時間}}</span>
                       </div>
                     </div>
                   </div>
@@ -6304,7 +6719,22 @@
           </div>
         </div>
 
+
       </div><!-- /bot-tab-interaction -->
+
+      <!-- ===== [新增開始] 自動化服務 =====
+           說明文字一律不在介面呈現，集中於「Bot自動化腳本_需求規格書」 -->
+      <div id="bot-tab-automation" class="bot-edit-tab-pane" style="display:none; padding-top:20px;">
+
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; gap:16px;">
+          <div style="font-weight:600; font-size:15px;">自動化腳本</div>
+          <button class="btn primary sm" id="auto-add-btn" style="flex-shrink:0;" onclick="autoCreateRule()">＋ 新增流程</button>
+        </div>
+
+        <div id="auto-rule-board"></div>
+
+      </div>
+      <!-- ===== [新增結束] 自動化服務 ===== -->
 
       <!-- ── 專屬設定（範本 Bot） ── -->
       <div id="bot-tab-exclusive" class="bot-edit-tab-pane" style="display:none; padding-top:20px;">
@@ -12355,6 +12785,24 @@
 </div>
 </div>
 
+<!-- Modal：刪除自動化規則確認 -->
+<div class="modal-overlay" id="modal-auto-rule-delete" onclick="closeModalIfBackdrop(event,'modal-auto-rule-delete')">
+  <div class="modal" style="width:420px;">
+    <div class="modal-head">
+      <h3 class="modal-title">刪除自動化規則</h3>
+      <button class="icon-btn" onclick="closeModal('modal-auto-rule-delete')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div style="font-size:14px;">確定要刪除這條自動化流程嗎？此動作無法復原。</div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn" onclick="closeModal('modal-auto-rule-delete')">取消</button>
+      <button class="btn danger" onclick="autoConfirmDelete()">確認刪除</button>
+    </div>
+  </div>
+</div>
+<!-- ===== [新增結束] Modal：自動化規則 ===== -->
+
 <!-- ============= Modal：Bot 範本編輯（Figma 681:16108 — 基本設定/互動設計/專屬設計 三Tab + 兩欄） ============= -->
 <div class="modal-overlay" id="modal-bot-template-edit" onclick="closeModalIfBackdrop(event,'modal-bot-template-edit')">
   <div class="modal" style="width:960px; max-height:92vh; display:flex; flex-direction:column;">
@@ -17636,12 +18084,94 @@ function orgLangAccToggle() {
   }
 
   /* ===== 預設訊息 block editors ===== */
+  /* ===== [新增開始] 預設訊息：6 個事件（依需求規格書 §04 起始事件字典） ===== */
+  var DEF_MSG_EVENTS = [
+    { key: 'dept',  name: '成員部門異動', tag: '後台事件', cb: false, on: false,
+      desc: '成員所屬部門變更時發送。', text: '' },
+    { key: 'title', name: '成員職位異動', tag: '後台事件', cb: false, on: false,
+      desc: '成員職位變更時發送。', text: '' },
+    { key: 'new',   name: '新增成員',     tag: '後台事件', cb: false, on: true,
+      desc: '系統中建立新成員帳號時發送。', text: '歡迎加入啟動國際！請先完成個人資料填寫。' },
+    { key: 'join',  name: '成員加入 Bot 群組', tag: '群組 callback', cb: true, on: true,
+      desc: '成員<b>加入此 Bot</b>，或<b>加入 Bot 所在的團隊／群組／多人聊天室</b>時發送。兩種情況皆歸此事件。',
+      text: '歡迎加入！有任何問題都可以直接問我。' },
+    { key: 'left',  name: '成員移出 Bot 群組', tag: '群組 callback', cb: true, on: false,
+      desc: '成員<b>封鎖此 Bot</b>，或<b>離開 Bot 所在的團隊／群組／多人聊天室</b>時發送。兩種情況皆歸此事件。', text: '' },
+    { key: 'fallback', name: '自動回覆（fallback）', tag: '訊息未命中', cb: false, on: true,
+      desc: '使用者發送訊息但未命中任何關鍵字、也不是點擊按鈕時發送。僅預設訊息可用。',
+      text: '不好意思，我還不太懂這個問題，您可以試試輸入「真人客服」。' }
+  ];
+  var _defMsgSel = 'join';
+
+  function _defMsgGet(k) {
+    for (var i = 0; i < DEF_MSG_EVENTS.length; i++) if (DEF_MSG_EVENTS[i].key === k) return DEF_MSG_EVENTS[i];
+    return null;
+  }
+
+  function renderDefMsgList() {
+    var host = document.getElementById('def-msg-host');
+    var list = document.getElementById('def-msg-list');
+    var shared = document.getElementById('def-msg-shared-body');
+    if (!host || !list || !shared) return;
+
+    /* 先把共用編輯區移出，避免 innerHTML 重建時被清掉 */
+    host.appendChild(shared);
+    shared.style.display = 'none';
+
+    list.innerHTML = DEF_MSG_EVENTS.map(function(e) {
+      var sel = (e.key === _defMsgSel);
+      return '<div class="def-msg-card' + (sel ? ' selected' : '') + '" id="def-msg-card-' + e.key + '"'
+           + ' onclick="selectDefMsgEvent(\'' + e.key + '\')">'
+           + '<div class="dmc-head">'
+           + '<div style="flex:1; min-width:0;">'
+           + '<div class="dmc-name">' + e.name + '</div>'
+           + '<div class="dmc-desc">' + e.desc + '</div>'
+           + '</div>'
+           + '<label class="switch" onclick="event.stopPropagation()">'
+           + '<input type="checkbox"' + (e.on ? ' checked' : '') + ' onchange="toggleDefMsgEvent(\'' + e.key + '\', this.checked)" />'
+           + '<span class="slider"></span></label>'
+           + '</div>'
+           + '<div id="def-msg-slot-' + e.key + '"></div>'
+           + '</div>';
+    }).join('');
+
+    /* 共用編輯區移入選取的卡片 */
+    var slot = document.getElementById('def-msg-slot-' + _defMsgSel);
+    if (slot) { slot.appendChild(shared); shared.style.display = 'block'; }
+
+    var ev = _defMsgGet(_defMsgSel);
+    var ta = document.getElementById('def-msg-text');
+    if (ta && ev) ta.value = ev.text || '';
+    updateDefMsgPreview();
+  }
+
+  function selectDefMsgEvent(k) {
+    if (k === _defMsgSel) return;
+    /* 切換前先存回目前事件的內容 */
+    var cur = _defMsgGet(_defMsgSel);
+    var ta = document.getElementById('def-msg-text');
+    if (cur && ta) cur.text = ta.value;
+    _defMsgSel = k;
+    renderDefMsgList();
+  }
+
+  function toggleDefMsgEvent(k, on) {
+    var e = _defMsgGet(k);
+    if (e) e.on = on;
+  }
+  /* ===== [新增結束] 預設訊息 6 事件 ===== */
+
   function updateDefMsgPreview() {
     var bubble = document.getElementById('def-msg-phone-bubble');
     var textArea = document.getElementById('def-msg-text');
-    if (bubble && textArea && textArea.value) {
-      bubble.innerHTML = '<div style="max-width:85%;"><div style="background:white;border-radius:4px 16px 16px 16px;padding:10px 12px;font-size:12px;color:#333;box-shadow:0 1px 3px rgba(0,0,0,0.1);line-height:1.6;">' + textArea.value + '</div></div>';
-    }
+    if (!bubble || !textArea) return;
+    /* 內容存回目前選取的事件 */
+    var ev = (typeof _defMsgGet === 'function') ? _defMsgGet(_defMsgSel) : null;
+    if (ev) ev.text = textArea.value;
+    var v = (textArea.value || '').trim();
+    bubble.innerHTML = v
+      ? '<div style="max-width:85%;"><div style="background:white;border-radius:4px 16px 16px 16px;padding:10px 12px;font-size:12px;color:#333;box-shadow:0 1px 3px rgba(0,0,0,0.1);line-height:1.6;">' + v.replace(/</g,'&lt;') + '</div></div>'
+      : '<div style="max-width:85%;"><div style="background:white;border-radius:4px 16px 16px 16px;padding:10px 12px;font-size:12px;color:#888;box-shadow:0 1px 3px rgba(0,0,0,0.1);line-height:1.6;">填寫左側內容即時更新…</div></div>';
   }
 
   /* ===== 打卡記錄 JS ===== */
@@ -18729,6 +19259,8 @@ function orgLangAccToggle() {
       var firstSub = document.querySelector('.bot-sidenav-item');
       if (firstSub) switchBotSubTab(firstSub, 'bot-subtab-push');
     }
+    /* 自動化服務：流程板由 JS 渲染，切入時重繪 */
+    if (paneId === 'bot-tab-automation' && typeof autoRenderBoard === 'function') autoRenderBoard();
   }
 
   function switchBotSubTab(btn, paneId) {
@@ -18745,7 +19277,1022 @@ function orgLangAccToggle() {
     document.querySelectorAll('.bot-sub-tab-pane').forEach(function(p) { p.style.display = 'none'; });
     var target = document.getElementById(paneId);
     if (target) target.style.display = '';
+    /* 預設訊息：事件清單由 JS 渲染 */
+    if (paneId === 'bot-subtab-message' && typeof renderDefMsgList === 'function') renderDefMsgList();
   }
+
+  /* ===== [新增開始] 自動化服務 JS =====
+     模型：規則不帶名稱，身分＝起始事件（一事件一規則，已用過的事件不可再選）
+     流程語法：初始設定 →（時間 → 卡片）× 最多 2 →結束
+     「等待使用者完成」不是獨立節點，而是卡片帶不帶「互動按鈕」的屬性
+       ・卡片帶按鈕 → 後面必須接（時間 → 卡片）
+       ・卡片不帶按鈕 → 可直接接結束
+     說明文字一律不在介面呈現，集中於需求規格書 */
+
+  /* 起始事件字典（規格 §04，排除自動回覆） */
+  var AUTO_EVENTS = {
+    dept:  { name: '成員部門異動',      allowSelf: true },
+    title: { name: '成員職位異動',      allowSelf: true },
+    new:   { name: '新增成員',          allowSelf: true },
+    join:  { name: '成員加入 Bot 群組', allowSelf: true },
+    left:  { name: '成員移出 Bot 群組', allowSelf: false }
+  };
+  var AUTO_EVENT_ORDER = ['dept', 'title', 'new', 'join', 'left'];
+
+  /* 時間選項（規格 §06，無「立即」，自訂上限 30 天） */
+  var AUTO_DELAYS = ['10 分鐘後', '1 小時後', '1 天後', '7 天後', '自訂'];
+  var AUTO_MAX_CARDS = 2;
+
+  var AUTO_TARGET_LABEL = { self: '本人', mgr: '直屬主管', admin: 'Bot 管理者' };
+
+  var AUTO_NODE_ICON = {
+    trigger: '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg>',
+    delay:   '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
+    card:    '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18"/></svg>'
+  };
+
+  /* ---------- 資料 ---------- */
+  function autoNewStep() {
+    return { delay: '', delayNum: 3, delayUnit: '天', hasCard: false, blocks: [], sel: -1, picker: false,
+             targets: { self: true, mgr: false, admin: false } };
+  }
+  function autoNewRule(ev) {
+    return { id: 'r' + (++_autoSeq), event: ev || '', enabled: true, steps: [autoNewStep()] };
+  }
+  var _autoSeq = 100;
+
+  var AUTO_RULES = [
+    { id: 'r1', event: 'join', enabled: true, steps: [
+        { delay: '10 分鐘後', delayNum: 3, delayUnit: '天', hasCard: true, sel: -1, picker: false,
+          blocks: [ { type: 'text', text: '歡迎加入！請閱讀新人手冊後點擊下方按鈕。' },
+                    { type: 'button', title: '看完新人手冊了嗎？', btns: [
+                      { action: 'uri',  label: '查看手冊', value: 'https://example.com/handbook' },
+                      { action: 'next', label: '我已完成', value: '' } ] } ],
+          targets: { self: true, mgr: false, admin: false } },
+        { delay: '1 天後', delayNum: 3, delayUnit: '天', hasCard: true, sel: -1, picker: false,
+          blocks: [ { type: 'text', text: '{{姓名}} 您好，這是您的進階教材，請於本週內完成。' },
+                    { type: 'file', name: '進階教材.pdf' } ],
+          targets: { self: true, mgr: true, admin: false } }
+      ] },
+    { id: 'r2', event: 'dept', enabled: true, steps: [
+        { delay: '10 分鐘後', delayNum: 3, delayUnit: '天', hasCard: true, sel: -1, picker: false,
+          blocks: [ { type: 'text', text: '{{姓名}} 已於 {{日期}} 異動至 {{部門}}，請確認交接事項。' } ],
+          targets: { self: false, mgr: true, admin: true } }
+      ] },
+    { id: 'r3', event: 'left', enabled: true, steps: [
+        { delay: '10 分鐘後', delayNum: 3, delayUnit: '天', hasCard: true, sel: -1, picker: false,
+          blocks: [ { type: 'text', text: '{{姓名}} 已於 {{日期}} 退出群組，請確認是否需調整權限。' } ],
+          targets: { self: false, mgr: true, admin: true } }
+      ] },
+    /* Default：空白流程（初始設定空值 → 時間空值 → 結束） */
+    { id: 'r4', event: '', enabled: true, steps: [
+        { delay: '', delayNum: 3, delayUnit: '天', hasCard: false, sel: -1, picker: false,
+          blocks: [], targets: { self: true, mgr: false, admin: false } }
+      ] }
+  ];
+
+  var _autoOpen = { ruleId: null, node: null };
+
+  function _autoEl(id) { return document.getElementById(id); }
+  function _autoEsc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+  function autoGetRule(id) { for (var i = 0; i < AUTO_RULES.length; i++) if (AUTO_RULES[i].id === id) return AUTO_RULES[i]; return null; }
+  function autoUsedEvents(exceptId) {
+    return AUTO_RULES.filter(function(r) { return r.id !== exceptId && r.event; }).map(function(r) { return r.event; });
+  }
+
+  /* ---------- 衍生值 ---------- */
+  function autoDelayText(st) {
+    if (!st.delay) return '';
+    if (st.delay !== '自訂') return st.delay;
+    return st.delayNum + ' ' + st.delayUnit + '後';
+  }
+  /* 自訂時間上限 30 天 */
+  function autoDelayDays(st) {
+    var n = parseFloat(st.delayNum) || 0;
+    return st.delayUnit === '分鐘' ? n / 1440 : st.delayUnit === '小時' ? n / 24 : n;
+  }
+  function autoDelayOver(st) { return st.delay === '自訂' && autoDelayDays(st) > 30; }
+
+  function autoTargetList(st) {
+    return ['self', 'mgr', 'admin'].filter(function(k) { return st.targets[k]; }).map(function(k) { return AUTO_TARGET_LABEL[k]; });
+  }
+  /* ===== 訊息區塊（參考推播管理，最多 5 則泡泡） ===== */
+  var AUTO_BLOCK_TYPES = {
+    text:     { label: '文字',   ico: '✏️', acts: false },
+    sticker:  { label: '貼圖',   ico: '😀', acts: false },
+    image:    { label: '圖片',   ico: '🖼️', acts: false },
+    video:    { label: '影片',   ico: '🎬', acts: false },
+    button:   { label: '按鈕',   ico: '🔘', acts: true  },
+    carousel: { label: '輪播圖', ico: '🎠', acts: true  },
+    file:     { label: '檔案',   ico: '📎', acts: false },
+    list:     { label: '列表',   ico: '📋', acts: false }
+  };
+  var AUTO_BLOCK_ORDER = ['text', 'sticker', 'image', 'video', 'button', 'carousel', 'file', 'list'];
+  var AUTO_MAX_BLOCKS = 5;
+  var AUTO_STICKERS = ['😀', '👍', '🎉', '🙏', '💪', '📣', '✅', '❤️'];
+
+  /* 按鈕動作（對齊推播排程的「連結／關鍵字／電話」，另加自動化專屬的「接續下一步」） */
+  var AUTO_ACTIONS = {
+    next:    { label: '接續下一步', needVal: false },
+    uri:     { label: '連結',       needVal: true, ph: 'https://' },
+    keyword: { label: '關鍵字',     needVal: true, ph: '關鍵字文字' },
+    tel:     { label: '電話',       needVal: true, ph: '0212345678' }
+  };
+  var AUTO_ACTION_ORDER = ['next', 'uri', 'keyword', 'tel'];
+  var AUTO_MAX_BTNS = 10;      /* 按鈕訊息：對齊推播 10 顆 */
+  var AUTO_MAX_LIST_ITEMS = 4; /* 列表訊息：對齊推播 4 項 */
+  var AUTO_MAX_CAROUSEL = 5;
+
+  function autoNewBtn(label, action) { return { action: action || 'uri', label: label || '', value: '' }; }
+  function autoNewCCard(n) {
+    var btns = [];
+    for (var i = 0; i < (n || 2); i++) btns.push(autoNewBtn(''));
+    return { img: '', title: '', desc: '', btns: btns };
+  }
+
+  function autoNewBlock(t) {
+    if (t === 'text')     return { type: t, text: '' };
+    if (t === 'sticker')  return { type: t, sticker: '👍' };
+    if (t === 'image')    return { type: t, name: '' };
+    if (t === 'video')    return { type: t, name: '' };
+    if (t === 'file')     return { type: t, name: '' };
+    if (t === 'button')   return { type: t, title: '', btns: [autoNewBtn('')] };
+    if (t === 'carousel') return { type: t, btnCount: 2, cards: [autoNewCCard(2), autoNewCCard(2)] };
+    if (t === 'list')     return { type: t, useImg: true, img: '', useTitle: true, title: '',
+                                   useDesc: true, desc: '', items: [{ title: '', desc: '', img: '' }] };
+    return { type: 'text', text: '' };
+  }
+
+  /* 「接續下一步」只允許出現在按鈕訊息（輪播圖語意為多選一，MVP 無分支故不提供） */
+  function autoStepWaits(st) {
+    return (st.blocks || []).some(function(b) {
+      return b.type === 'button' && (b.btns || []).some(function(a) { return a.action === 'next'; });
+    });
+  }
+  function autoStepHasPostback(st) { return autoStepWaits(st); }
+
+  /* 全流程掃描目前「接續下一步」掛在哪一顆 */
+  function autoFindNext(r) {
+    for (var i = 0; i < r.steps.length; i++) {
+      var bs = r.steps[i].blocks || [];
+      for (var bi = 0; bi < bs.length; bi++) {
+        if (bs[bi].type !== 'button') continue;
+        var btns = bs[bi].btns || [];
+        for (var k = 0; k < btns.length; k++) {
+          if (btns[k].action === 'next') return { i: i, bi: bi, k: k, label: btns[k].label || '（未命名按鈕）' };
+        }
+      }
+    }
+    return null;
+  }
+
+  /* 卡片摘要 */
+  function autoCardValue(st) {
+    var bs = st.blocks || [];
+    if (!bs.length) return '';
+    var first = bs[0];
+    if (first.type === 'text' && (first.text || '').trim()) {
+      var m = first.text.trim();
+      return m.length > 16 ? m.slice(0, 16) + '…' : m;
+    }
+    if (first.type === 'button' && (first.title || '').trim()) {
+      var t = first.title.trim();
+      return t.length > 16 ? t.slice(0, 16) + '…' : t;
+    }
+    return bs.map(function(b) { return AUTO_BLOCK_TYPES[b.type].label; }).join('＋');
+  }
+  function autoCardSub(st) {
+    var n = (st.blocks || []).length;
+    var t = autoTargetList(st).join('、');
+    return n ? (n + ' 則 · ' + (t || '未選對象')) : '';
+  }
+
+
+  /* 按鈕動作：next＝接續下一步（技術上為 postback）／uri＝開啟連結 */
+  /* 卡片是否為「等待卡」：只要有任一按鈕的動作是「接續下一步」 */
+  /* 相容舊呼叫點 */
+
+  /* ---------- 流程板 ---------- */
+  /* 渲染前正規化：不論資料怎麼來，狀態都要符合規則 */
+  function autoNormalize(r) {
+    var ev = r.event ? AUTO_EVENTS[r.event] : null;
+    /* 沒有卡片的步驟不應存在訊息區塊 */
+    r.steps.forEach(function(st) { if (!st.hasCard) { st.blocks = []; st.sel = -1; } });
+
+    r.steps.forEach(function(st, i) {
+      st.blocks = st.blocks || [];
+      var isLast = (i === r.steps.length - 1);
+      /* 「接續下一步」需要後續步驟，且本人收得到；不符則降級為「開啟連結」（保留區塊本身） */
+      var allowNext = (!ev || ev.allowSelf) && !isLast;
+      if (!allowNext) {
+        st.blocks.forEach(function(b) {
+          if (b.type === 'button') (b.btns || []).forEach(function(a) {
+            if (a.action === 'next') { a.action = 'uri'; a.value = ''; }
+          });
+        });
+      }
+      /* 有「接續下一步」的卡片固定發本人（規格 §05） */
+      if (autoStepWaits(st)) st.targets = { self: true, mgr: false, admin: false };
+      else if (ev && !ev.allowSelf) st.targets.self = false;
+      if (st.sel >= st.blocks.length) st.sel = st.blocks.length - 1;
+    });
+  }
+
+  function autoRenderBoard() {
+    var board = _autoEl('auto-rule-board');
+    if (!board) return;
+    AUTO_RULES.forEach(autoNormalize);
+
+    var html = '';
+    if (!AUTO_RULES.length) {
+      html = '<div class="auto-board-empty">尚未建立自動化流程<button class="btn primary sm" style="margin-left:12px;" onclick="autoCreateRule()">＋ 新增流程</button></div>';
+    } else {
+      AUTO_RULES.forEach(function(r) { html += autoRuleCardHtml(r); });
+    }
+    board.innerHTML = html;
+
+    var addBtn = _autoEl('auto-add-btn');
+    if (addBtn) {
+      var full = autoUsedEvents().length >= AUTO_EVENT_ORDER.length || AUTO_RULES.length >= AUTO_EVENT_ORDER.length;
+      addBtn.disabled = full;
+      addBtn.style.opacity = full ? '.45' : '';
+      addBtn.style.cursor = full ? 'not-allowed' : '';
+      addBtn.title = full ? '五個起始事件都已建立流程' : '';
+    }
+    autoPositionCaret();
+  }
+
+  function autoRuleCardHtml(r) {
+    var open = (_autoOpen.ruleId === r.id);
+    var h = '<div class="auto-rule-card' + (r.enabled ? '' : ' off') + (open ? ' editing' : '') + '" id="card-' + r.id + '">';
+
+    h += '<div class="arc-head">'
+       + (r.enabled ? '' : '<span class="arc-badge off">已停用</span>')
+       + '<span class="arc-more-wrap">'
+       + '<button class="arc-more" onclick="autoToggleMenu(event,\'' + r.id + '\')">⋯</button>'
+       + '<span class="arc-menu" id="menu-' + r.id + '">'
+       + '<button onclick="autoToggleEnabled(\'' + r.id + '\')">' + (r.enabled ? '停用' : '啟用') + '</button>'
+       + '<button class="danger" onclick="autoAskDelete(\'' + r.id + '\')">刪除</button>'
+       + '</span></span></div>';
+
+    /* 流程鏈 */
+    h += '<div class="arc-chain">';
+    h += node('trigger', '初始設定', r.event ? AUTO_EVENTS[r.event].name : '', '');
+    h += arw();
+
+    r.steps.forEach(function(st, i) {
+      h += node('delay' + i, '時間', autoDelayText(st), '');
+      h += arw();
+      if (st.hasCard) {
+        h += node('card' + i, '卡片', autoCardValue(st), autoCardSub(st));
+        h += arw();
+      } else if (st.delay) {
+        /* 時間設定好之後才提供補卡片 */
+        h += '<button class="arc-insert" onclick="autoAddCardToStep(\'' + r.id + '\',' + i + ')">＋ 卡片</button>' + arw();
+      }
+    });
+
+    /* 已有完整的一組才能再加下一組時間；帶 postback 的卡片必有後續，不另顯示 */
+    var last = r.steps[r.steps.length - 1];
+    if (r.steps.length < AUTO_MAX_CARDS && last.hasCard && !autoStepHasPostback(last)) {
+      h += '<button class="arc-insert" onclick="autoAddStep(\'' + r.id + '\')">＋ 時間</button>' + arw();
+    }
+    h += '<span class="arc-term">結束</span></div>';
+
+    if (open && _autoOpen.node) h += autoPanelHtml(r, _autoOpen.node);
+    return h + '</div>';
+
+    function arw() { return '<span class="arc-arw">▸</span>'; }
+    function node(key, k, v, sub) {
+      var empty = !v;
+      var base = key.replace(/\d+$/, '');
+      var isOpen = open && _autoOpen.node === key;
+      var head = '<button class="arc-node ' + base + (isOpen ? ' active' : '') + (empty ? ' todo' : '')
+               + '" data-node="' + key + '" onclick="autoOpenNode(\'' + r.id + '\',\'' + key + '\')">';
+      /* 時間節點尚未設定時，只顯示「＋時間」 */
+      if (empty && base === 'delay') return head + '<span class="n-add">＋時間</span></button>';
+      return head
+           + '<span class="n-k">' + (AUTO_NODE_ICON[base] || '') + k + '</span>'
+           + '<span class="n-v">' + (empty ? '尚未設定' : _autoEsc(v)) + '</span>'
+           + (sub && !empty ? '<span class="n-sub">' + _autoEsc(sub) + '</span>' : '')
+           + '</button>';
+    }
+  }
+
+  /* ---------- 節點設定面板（就地展開） ---------- */
+  function autoPanelHtml(r, node) {
+    var title = node === 'trigger' ? '初始設定' : (node.indexOf('delay') === 0 ? '時間' : '卡片');
+    var h = '<div class="arc-panel" id="panel-' + r.id + '">'
+          + '<div class="arc-panel-head"><span class="ph-title">' + title + '</span>'
+          + '<button class="ph-close" onclick="autoCloseNode()">'
+          + '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>'
+          + '</button></div><div class="arc-panel-body"><div>';
+
+    if (node === 'trigger') h += autoPanelTrigger(r);
+    else {
+      var i = parseInt(node.replace(/\D/g, ''), 10);
+      h += (node.indexOf('delay') === 0) ? autoPanelDelay(r, i) : autoPanelCard(r, i);
+    }
+    h += '</div><div>' + autoPanelSide(r, node) + '</div></div>';
+    h += '<div class="arc-panel-foot"><button class="btn primary sm" onclick="autoCloseNode()">完成</button></div>';
+    return h + '</div>';
+  }
+
+  function autoPanelTrigger(r) {
+    var used = autoUsedEvents(r.id);
+    var h = '<div class="auto-field"><label>起始事件</label><div style="display:grid; gap:8px;">';
+    AUTO_EVENT_ORDER.forEach(function(k) {
+      var taken = used.indexOf(k) > -1;
+      var sel = (r.event === k);
+      h += '<label class="auto-opt-card' + (sel ? ' selected' : '') + (taken ? ' disabled' : '') + '"'
+         + (taken ? '' : ' onclick="autoSetEvent(\'' + r.id + '\',\'' + k + '\')"') + '>'
+         + '<div class="oc-title">' + AUTO_EVENTS[k].name + '</div>'
+         + (taken ? '<div class="oc-desc">已被其他流程使用</div>' : '')
+         + '</label>';
+    });
+    return h + '</div></div>';
+  }
+
+  function autoPanelDelay(r, i) {
+    var st = r.steps[i];
+    var labels = { '10 分鐘後': '10 分鐘', '1 小時後': '1 小時', '1 天後': '1 天', '7 天後': '7 天', '自訂': '自訂' };
+    var h = '<div class="auto-field"><label>延遲時間</label><div class="auto-seg">';
+    AUTO_DELAYS.forEach(function(d) {
+      h += '<button class="' + (st.delay === d ? 'active' : '') + '" onclick="autoSetStep(\'' + r.id + '\',' + i + ',\'delay\',\'' + d + '\')">' + labels[d] + '</button>';
+    });
+    h += '</div>';
+    if (st.delay === '自訂') {
+      var over = autoDelayOver(st);
+      h += '<div style="display:flex; margin-top:10px; align-items:center; gap:8px;">'
+         + '<input class="input' + (over ? ' error' : '') + '" type="number" min="1" value="' + st.delayNum + '" style="width:90px;"'
+         + ' oninput="autoSetStep(\'' + r.id + '\',' + i + ',\'delayNum\',this.value)" />'
+         + '<select class="input" style="width:100px;" onchange="autoSetStep(\'' + r.id + '\',' + i + ',\'delayUnit\',this.value)">'
+         + ['分鐘', '小時', '天'].map(function(u) { return '<option' + (st.delayUnit === u ? ' selected' : '') + '>' + u + '</option>'; }).join('')
+         + '</select><span class="text-sec" style="font-size:11px;">上限 30 天</span></div>'
+         + (over ? '<div class="auto-delay-err" style="font-size:11px;color:var(--danger);margin-top:4px;">超過 30 天上限</div>' : '');
+    }
+    return h + '</div>';
+  }
+
+  function autoPanelCard(r, i) {
+    var st = r.steps[i];
+    var ev = r.event ? AUTO_EVENTS[r.event] : null;
+    var isLast = (i === r.steps.length - 1);
+    var selfOk = !ev || ev.allowSelf;
+    /* 含 postback 區塊＝等待卡，必須有後續節點承接回應 */
+    var canWait = selfOk && (!isLast || r.steps.length < AUTO_MAX_CARDS);
+    var lockSelf = autoStepWaits(st);
+    var bs = st.blocks || [];
+    if (st.sel == null || st.sel >= bs.length) st.sel = bs.length ? 0 : -1;
+
+    /* --- 區塊 chips --- */
+    var h = '<div class="auto-field"><label>訊息格式'
+          + '<span class="text-sec" style="font-weight:400; margin-left:8px;">' + bs.length + ' / ' + AUTO_MAX_BLOCKS + '</span></label>'
+          + '<div class="auto-blocks">';
+    bs.forEach(function(b, bi) {
+      h += '<span class="auto-block-chip' + (bi === st.sel ? ' active' : '') + '" onclick="autoSelBlock(\'' + r.id + '\',' + i + ',' + bi + ')">'
+         + AUTO_BLOCK_TYPES[b.type].ico + ' ' + AUTO_BLOCK_TYPES[b.type].label
+         + '<b onclick="event.stopPropagation(); autoDelBlock(\'' + r.id + '\',' + i + ',' + bi + ')">×</b></span>';
+    });
+    if (bs.length < AUTO_MAX_BLOCKS) {
+      h += '<button class="auto-block-add" onclick="autoTogglePicker(\'' + r.id + '\',' + i + ')">＋ 新增</button>';
+    }
+    h += '</div>';
+
+    /* --- 型別選擇（就地展開，不用 Modal） --- */
+    if (st.picker) {
+      h += '<div class="auto-type-grid">';
+      AUTO_BLOCK_ORDER.forEach(function(t) {
+        var meta = AUTO_BLOCK_TYPES[t];
+        /* 8 種格式一律開放；限制落在按鈕的「動作」而非型別 */
+        h += '<div class="auto-type-item" onclick="autoAddBlock(\'' + r.id + '\',' + i + ',\'' + t + '\')">'
+           + '<div class="ti-ico">' + meta.ico + '</div><div class="ti-label">' + meta.label + '</div>'
+           + '</div>';
+      });
+      h += '</div>';
+    }
+    h += '</div>';
+
+    /* --- 選取區塊的編輯器 --- */
+    if (st.sel > -1 && bs[st.sel]) h += autoBlockEditor(r, i, st.sel, bs[st.sel]);
+
+    /* --- 收件對象 --- */
+    h += '<div class="auto-field"><label>收件對象'
+       + (lockSelf ? '<span class="text-sec" style="font-weight:400; margin-left:8px;">有按鈕要接續下一步，固定發給本人</span>' : '')
+       + '</label>';
+    ['self', 'mgr', 'admin'].forEach(function(k) {
+      var off = (k === 'self' && ev && !ev.allowSelf) || (lockSelf && k !== 'self');
+      var on = !!st.targets[k] && !off;
+      h += '<label class="auto-target-row' + (on ? ' checked' : '') + (off ? ' disabled' : '') + '"'
+         + (off ? '' : ' onclick="autoToggleTarget(event,\'' + r.id + '\',' + i + ',\'' + k + '\')"') + '>'
+         + '<input type="checkbox"' + (on ? ' checked' : '') + (off ? ' disabled' : '') + ' />'
+         + '<div><div class="tr-title">' + AUTO_TARGET_LABEL[k] + '</div></div></label>';
+    });
+    return h + '</div>';
+  }
+
+  /* 各型別的編輯器 */
+
+  /* 按鈕動作選擇器：接續下一步 / 開啟連結（不使用 postback、URI 等技術名稱） */
+
+  /* 動作物件的其他欄位（文字／網址） */
+
+  /* 各型別的編輯器（欄位對齊「互動管理／推播排程」的新增推播） */
+  function autoBlockEditor(r, i, bi, b) {
+    var set = function(field) { return 'autoSetBlock(\'' + r.id + '\',' + i + ',' + bi + ',\'' + field + '\',this.value)'; };
+    var h = '<div class="auto-block-editor"><div class="abe-head">'
+          + AUTO_BLOCK_TYPES[b.type].ico + ' ' + AUTO_BLOCK_TYPES[b.type].label + '</div>';
+
+    if (b.type === 'text') {
+      h += '<textarea class="input full" rows="3" oninput="' + set('text') + '">' + _autoEsc(b.text) + '</textarea>'
+         + autoVarChips(r.id, i, bi);
+
+    } else if (b.type === 'sticker') {
+      h += '<div class="auto-sticker-row">' + AUTO_STICKERS.map(function(s) {
+             return '<span class="auto-sticker' + (b.sticker === s ? ' active' : '') + '"'
+                  + ' onclick="autoSetBlock(\'' + r.id + '\',' + i + ',' + bi + ',\'sticker\',\'' + s + '\')">' + s + '</span>';
+           }).join('') + '</div>';
+
+    } else if (b.type === 'image' || b.type === 'video' || b.type === 'file') {
+      var hint = b.type === 'image' ? '支援 PNG / JPG，大小不超過 5MB'
+               : b.type === 'video' ? '支援 MP4，大小不超過 200MB' : '單檔不超過 100MB';
+      h += '<div class="auto-upload"><button class="btn sm">選擇檔案</button>'
+         + '<input class="input" style="flex:1;" placeholder="檔案名稱" value="' + _autoEsc(b.name) + '" oninput="' + set('name') + '" /></div>'
+         + '<div class="help">' + hint + '</div>';
+
+    /* ===== 按鈕訊息：標題文字 ＋ 最多 10 顆按鈕（對齊推播） ===== */
+    } else if (b.type === 'button') {
+      h += '<div class="auto-fld"><div class="auto-fld-lbl">標題文字</div>'
+         + '<input class="input full" maxlength="100" placeholder="內文" value="' + _autoEsc(b.title) + '" oninput="' + set('title') + '" />'
+         + '<div class="auto-cnt">' + (b.title || '').length + '/100</div></div>'
+         + autoVarChips(r.id, i, bi);
+
+      h += '<div class="auto-fld" style="margin-top:12px;">'
+         + '<div class="auto-fld-head"><span class="auto-fld-lbl" style="margin:0;">按鈕設定</span>'
+         + '<span class="auto-cnt" style="margin:0;"><b style="color:var(--info);">' + b.btns.length + '</b> / ' + AUTO_MAX_BTNS + '</span></div>';
+      b.btns.forEach(function(a, k) {
+        h += autoBtnRow(r, i, bi, -1, k, a, b.btns.length > 1);
+      });
+      if (b.btns.length < AUTO_MAX_BTNS) {
+        h += '<button class="btn ghost sm" style="margin-top:6px;" onclick="autoAddBtn(\'' + r.id + '\',' + i + ',' + bi + ',-1)">＋ 新增項目</button>';
+      }
+      h += '</div>';
+
+    /* ===== 輪播圖：卡片按鈕數量套用全部卡片（對齊推播） ===== */
+    } else if (b.type === 'carousel') {
+      h += '<div class="auto-fld"><div class="auto-fld-lbl">卡片按鈕數量</div>'
+         + '<div class="help" style="margin:0 0 6px;">有多卡片的情況下，<span style="color:#f97316;">此設定將套用到所有卡片</span>。</div>'
+         + '<div class="auto-seg">'
+         + [1, 2, 3].map(function(n) {
+             return '<button class="' + (b.btnCount === n ? 'active' : '') + '"'
+                  + ' onclick="autoSetCarouselBtnCount(\'' + r.id + '\',' + i + ',' + bi + ',' + n + ')">' + n + '個</button>';
+           }).join('')
+         + '</div></div>';
+
+      h += '<div class="auto-carousel-edit" style="margin-top:10px;">';
+      b.cards.forEach(function(c, ci) {
+        h += '<div class="auto-ccard"><div class="cc-head">第 ' + (ci + 1) + ' 張'
+           + (b.cards.length > 1 ? '<button class="auto-x" onclick="autoDelCard(\'' + r.id + '\',' + i + ',' + bi + ',' + ci + ')">×</button>' : '')
+           + '</div>'
+           + '<div class="auto-upzone" onclick="return false;">🖼️</div>'
+           + '<input class="input full" style="margin-top:6px;" maxlength="40" placeholder="標題" value="' + _autoEsc(c.title) + '"'
+           + ' oninput="autoSetCard(\'' + r.id + '\',' + i + ',' + bi + ',' + ci + ',\'title\',this.value)" />'
+           + '<input class="input full" style="margin-top:6px;" maxlength="60" placeholder="內文說明" value="' + _autoEsc(c.desc || '') + '"'
+           + ' oninput="autoSetCard(\'' + r.id + '\',' + i + ',' + bi + ',' + ci + ',\'desc\',this.value)" />';
+        (c.btns || []).forEach(function(a, k) {
+          h += autoBtnRow(r, i, bi, ci, k, a, false);
+        });
+        h += '</div>';
+      });
+      h += '</div>';
+      if (b.cards.length < AUTO_MAX_CAROUSEL) {
+        h += '<button class="btn ghost sm" style="margin-top:8px;" onclick="autoAddCard(\'' + r.id + '\',' + i + ',' + bi + ')">＋ 新增卡片</button>';
+      }
+
+    /* ===== 列表訊息：封面 ＋ 最多 4 項（對齊推播，無按鈕） ===== */
+    } else if (b.type === 'list') {
+      h += autoChk(r, i, bi, 'useImg', '上傳圖片', '（選填）')
+         + (b.useImg ? '<div class="auto-upzone" style="margin-bottom:10px;">🖼️ <span class="help" style="margin:0;">支援 PNG，大小不超過 5MB</span></div>' : '');
+
+      h += autoChk(r, i, bi, 'useTitle', '封面標題', '')
+         + (b.useTitle ? '<input class="input full" style="margin-bottom:10px;" maxlength="100" placeholder="例：請填寫您的需求" value="' + _autoEsc(b.title) + '" oninput="' + set('title') + '" />' : '');
+
+      h += autoChk(r, i, bi, 'useDesc', '封面內文', '')
+         + (b.useDesc ? '<input class="input full" style="margin-bottom:10px;" maxlength="100" placeholder="例：請填寫您的需求" value="' + _autoEsc(b.desc) + '" oninput="' + set('desc') + '" />' : '');
+
+      h += '<div class="auto-fld"><div class="auto-fld-head"><span class="auto-fld-lbl" style="margin:0;">項目內容</span>'
+         + '<span class="auto-cnt" style="margin:0;"><b style="color:var(--info);">' + b.items.length + '</b> / ' + AUTO_MAX_LIST_ITEMS + '</span></div>';
+      b.items.forEach(function(it, k) {
+        h += '<div class="auto-list-row">'
+           + '<input class="input" style="flex:1;" maxlength="50" placeholder="項目標題" value="' + _autoEsc(it.title) + '"'
+           + ' oninput="autoSetItem(\'' + r.id + '\',' + i + ',' + bi + ',' + k + ',\'title\',this.value)" />'
+           + '<input class="input" style="flex:1;" maxlength="50" placeholder="項目內文" value="' + _autoEsc(it.desc) + '"'
+           + ' oninput="autoSetItem(\'' + r.id + '\',' + i + ',' + bi + ',' + k + ',\'desc\',this.value)" />'
+           + '<div class="auto-img-sq">🖼️</div>'
+           + (b.items.length > 1 ? '<button class="auto-x" onclick="autoDelItem(\'' + r.id + '\',' + i + ',' + bi + ',' + k + ')">×</button>' : '')
+           + '</div>';
+      });
+      if (b.items.length < AUTO_MAX_LIST_ITEMS) {
+        h += '<button class="btn ghost sm" style="margin-top:6px;" onclick="autoAddItem(\'' + r.id + '\',' + i + ',' + bi + ')">＋ 新增項目</button>';
+      }
+      h += '</div>';
+    }
+    return h + '</div>';
+  }
+
+  /* 勾選式欄位（列表訊息的封面元素） */
+  function autoChk(r, i, bi, field, label, note) {
+    var b = autoGetRule(r.id).steps[i].blocks[bi];
+    return '<label style="display:flex; align-items:center; gap:6px; margin-bottom:6px; cursor:pointer;">'
+         + '<input type="checkbox"' + (b[field] ? ' checked' : '') + ' style="accent-color:var(--primary);"'
+         + ' onchange="autoSetBlock(\'' + r.id + '\',' + i + ',' + bi + ',\'' + field + '\',this.checked)" />'
+         + '<span style="font-size:12px; font-weight:600;">' + label + '</span>'
+         + (note ? '<span class="help" style="margin:0;">' + note + '</span>' : '')
+         + '</label>';
+  }
+
+  /* 單一按鈕列：動作 ＋ 按鈕文字 ＋ 值（ci = -1 表示按鈕訊息，否則為輪播卡索引） */
+  function autoBtnRow(r, i, bi, ci, k, a, canDel) {
+    var addr = '\'' + r.id + '\',' + i + ',' + bi + ',' + ci + ',' + k;
+    var isCarousel = (ci >= 0);
+    var canNext = !isCarousel && autoCanWaitHere(r, i);
+    var holder = autoFindNext(r);
+    var isHolder = holder && holder.i === i && holder.bi === bi && holder.k === k && ci < 0;
+    var taken = holder && !isHolder;
+
+    var opts = AUTO_ACTION_ORDER.filter(function(t) {
+      if (t !== 'next') return true;
+      return !isCarousel;                       /* 輪播圖不提供「接續下一步」 */
+    }).map(function(t) {
+      var off = (t === 'next') && (!canNext || taken);
+      return '<option value="' + t + '"' + (a.action === t ? ' selected' : '') + (off ? ' disabled' : '') + '>'
+           + AUTO_ACTIONS[t].label + '</option>';
+    }).join('');
+
+    var h = '<div class="auto-btn-row">'
+          + '<select class="input" style="width:104px; font-size:12px;" onchange="autoSetAct(' + addr + ',this.value)">' + opts + '</select>'
+          + '<input class="input" style="flex:0 0 150px;" maxlength="20" placeholder="按鈕文字" value="' + _autoEsc(a.label) + '"'
+          + ' oninput="autoSetBtnField(' + addr + ',\'label\',this.value)" />';
+    if (AUTO_ACTIONS[a.action] && AUTO_ACTIONS[a.action].needVal) {
+      h += '<input class="input" style="flex:1;" placeholder="' + AUTO_ACTIONS[a.action].ph + '" value="' + _autoEsc(a.value || '') + '"'
+         + ' oninput="autoSetBtnField(' + addr + ',\'value\',this.value)" />';
+    } else {
+      h += '<span class="auto-btn-note">按下後進入下一步</span>';
+    }
+    if (canDel) h += '<button class="auto-x" onclick="autoDelBtn(' + addr + ')">×</button>';
+    h += '</div>';
+
+    /* 整條流程只能有一顆「接續下一步」→ 提供一鍵搬移 */
+    if (!isCarousel && canNext && taken) {
+      h += '<div class="auto-btn-hint">整條流程只能有一顆「接續下一步」，目前在「' + _autoEsc(holder.label) + '」'
+         + '<a href="javascript:void(0)" onclick="autoMoveNext(' + addr + ')">改到這顆</a></div>';
+    } else if (!isCarousel && !canNext) {
+      h += '<div class="auto-btn-hint muted">此卡片後方沒有步驟可接續，無法使用「接續下一步」</div>';
+    }
+    return h;
+  }
+
+  function autoVarChips(rid, i, bi) {
+    return '<div style="display:flex; gap:6px; margin-top:6px; flex-wrap:wrap;">'
+         + ['{{姓名}}', '{{部門}}', '{{職位}}', '{{主管姓名}}', '{{日期}}'].map(function(v) {
+             return '<span class="push-var-chip" onclick="autoAppendVar(\'' + rid + '\',' + i + ',' + bi + ',\'' + v + '\')">' + v + '</span>';
+           }).join('') + '</div>';
+  }
+
+  /* 右側：訊息預覽（顯示實際內容，非說明文字） */
+  var AUTO_VAR_SAMPLE = {
+    '{{姓名}}': '王小明', '{{部門}}': '研發部', '{{職位}}': '資深工程師',
+    '{{主管姓名}}': '陳小明', '{{日期}}': '2026/07/28'
+  };
+  function autoRenderMsgText(raw) {
+    var out = _autoEsc(raw);
+    Object.keys(AUTO_VAR_SAMPLE).forEach(function(k) {
+      out = out.split(_autoEsc(k)).join('<span class="amp-var">' + AUTO_VAR_SAMPLE[k] + '</span>');
+    });
+    return out;
+  }
+  /* ---------- 區塊操作 ---------- */
+  function _autoStep(ruleId, i) { var r = autoGetRule(ruleId); return r && r.steps[i] ? r.steps[i] : null; }
+
+  function autoTogglePicker(ruleId, i) {
+    var st = _autoStep(ruleId, i);
+    if (!st) return;
+    st.picker = !st.picker;
+    autoRenderBoard();
+  }
+
+  function autoAddBlock(ruleId, i, t) {
+    var r = autoGetRule(ruleId), st = r && r.steps[i];
+    if (!st || (st.blocks || []).length >= AUTO_MAX_BLOCKS) return;
+    /* 8 種格式皆可加入；按鈕預設動作為「開啟連結」，不影響流程 */
+    st.blocks.push(autoNewBlock(t));
+    st.sel = st.blocks.length - 1;
+    st.picker = false;
+    autoRenderBoard();
+  }
+
+  /* 這張卡是否允許「接續下一步」：需有後續步驟可承接，且本人收得到 */
+  function autoCanWaitHere(r, i) {
+    var ev = r.event ? AUTO_EVENTS[r.event] : null;
+    if (ev && !ev.allowSelf) return false;
+    return (i < r.steps.length - 1) || (r.steps.length < AUTO_MAX_CARDS);
+  }
+
+  /* 設定按鈕動作；選「接續下一步」時自動接出後續（時間＋卡片） */
+
+  function autoDelBlock(ruleId, i, bi) {
+    var st = _autoStep(ruleId, i);
+    if (!st) return;
+    st.blocks.splice(bi, 1);
+    if (st.sel >= st.blocks.length) st.sel = st.blocks.length - 1;
+    autoRenderBoard();
+  }
+
+  function autoSelBlock(ruleId, i, bi) {
+    var st = _autoStep(ruleId, i);
+    if (!st) return;
+    st.sel = (st.sel === bi) ? -1 : bi;
+    st.picker = false;
+    autoRenderBoard();
+  }
+
+  function autoSetBlock(ruleId, i, bi, field, val) {
+    var r = autoGetRule(ruleId), st = r && r.steps[i];
+    if (!st || !st.blocks[bi]) return;
+    st.blocks[bi][field] = val;
+    /* 文字類即時更新不重繪，避免游標中斷 */
+    if (field === 'text' || field === 'name' || field === 'title') autoRefreshLive(r, i);
+    else autoRenderBoard();
+  }
+
+  function autoAppendVar(ruleId, i, bi, v) {
+    var st = _autoStep(ruleId, i);
+    if (!st || !st.blocks[bi]) return;
+    var b = st.blocks[bi];
+    b.text = (b.text || '') + v;
+    autoRenderBoard();
+  }
+
+  /* 陣列型欄位（按鈕文字、列表項目） */
+  /* 輪播卡 */
+
+  /* ---------- 預覽：把所有區塊畫成聊天泡泡 ---------- */
+
+
+  /* ---------- 按鈕／卡片／項目操作 ---------- */
+  function _autoBtnArr(st, bi, ci) {
+    var b = st.blocks[bi];
+    if (!b) return null;
+    if (ci >= 0) return (b.cards[ci] || {}).btns || null;
+    return b.btns || null;
+  }
+
+  function autoSetBtnField(ruleId, i, bi, ci, k, field, val) {
+    var r = autoGetRule(ruleId), st = r && r.steps[i];
+    if (!st) return;
+    var arr = _autoBtnArr(st, bi, ci);
+    if (!arr || !arr[k]) return;
+    arr[k][field] = val;
+    autoRefreshLive(r, i);
+  }
+
+  function autoSetAct(ruleId, i, bi, ci, k, action) {
+    var r = autoGetRule(ruleId), st = r && r.steps[i];
+    if (!st) return;
+    var arr = _autoBtnArr(st, bi, ci);
+    if (!arr || !arr[k]) return;
+    if (action === 'next') {
+      if (ci >= 0) return;                        /* 輪播圖不可 */
+      if (!autoCanWaitHere(r, i)) return;
+      var holder = autoFindNext(r);
+      if (holder && !(holder.i === i && holder.bi === bi && holder.k === k)) return;  /* 已有一顆 */
+      if (i === r.steps.length - 1) { var ns = autoNewStep(); ns.hasCard = true; r.steps.push(ns); }
+    }
+    arr[k].action = action;
+    if (action === 'next') arr[k].value = '';
+    autoRenderBoard();
+  }
+
+  /* 把「接續下一步」搬到這一顆（原本那顆改為連結） */
+  function autoMoveNext(ruleId, i, bi, ci, k) {
+    var r = autoGetRule(ruleId);
+    if (!r || ci >= 0) return;
+    var holder = autoFindNext(r);
+    if (holder) {
+      var old = r.steps[holder.i].blocks[holder.bi].btns[holder.k];
+      if (old) { old.action = 'uri'; old.value = ''; }
+    }
+    var arr = _autoBtnArr(r.steps[i], bi, ci);
+    if (arr && arr[k]) { arr[k].action = 'next'; arr[k].value = ''; }
+    if (i === r.steps.length - 1) { var ns = autoNewStep(); ns.hasCard = true; r.steps.push(ns); }
+    autoRenderBoard();
+  }
+
+  function autoAddBtn(ruleId, i, bi, ci) {
+    var r = autoGetRule(ruleId), st = r && r.steps[i];
+    if (!st) return;
+    var arr = _autoBtnArr(st, bi, ci);
+    if (!arr || arr.length >= AUTO_MAX_BTNS) return;
+    arr.push(autoNewBtn(''));
+    autoRenderBoard();
+  }
+  function autoDelBtn(ruleId, i, bi, ci, k) {
+    var r = autoGetRule(ruleId), st = r && r.steps[i];
+    if (!st) return;
+    var arr = _autoBtnArr(st, bi, ci);
+    if (!arr || arr.length <= 1) return;
+    arr.splice(k, 1);
+    autoRenderBoard();
+  }
+
+  /* 輪播圖：按鈕數量套用到所有卡片 */
+  function autoSetCarouselBtnCount(ruleId, i, bi, n) {
+    var r = autoGetRule(ruleId), st = r && r.steps[i];
+    if (!st || !st.blocks[bi]) return;
+    var b = st.blocks[bi];
+    b.btnCount = n;
+    b.cards.forEach(function(c) {
+      c.btns = c.btns || [];
+      while (c.btns.length > n) c.btns.pop();
+      while (c.btns.length < n) c.btns.push(autoNewBtn(''));
+    });
+    autoRenderBoard();
+  }
+  function autoAddCard(ruleId, i, bi) {
+    var st = _autoStep(ruleId, i);
+    if (!st || st.blocks[bi].cards.length >= AUTO_MAX_CAROUSEL) return;
+    st.blocks[bi].cards.push(autoNewCCard(st.blocks[bi].btnCount));
+    autoRenderBoard();
+  }
+  function autoDelCard(ruleId, i, bi, ci) {
+    var st = _autoStep(ruleId, i);
+    if (!st || st.blocks[bi].cards.length <= 1) return;
+    st.blocks[bi].cards.splice(ci, 1);
+    autoRenderBoard();
+  }
+  function autoSetCard(ruleId, i, bi, ci, field, val) {
+    var r = autoGetRule(ruleId), st = r && r.steps[i];
+    if (!st || !st.blocks[bi].cards[ci]) return;
+    st.blocks[bi].cards[ci][field] = val;
+    autoRefreshLive(r, i);
+  }
+
+  /* 列表項目 */
+  function autoAddItem(ruleId, i, bi) {
+    var st = _autoStep(ruleId, i);
+    if (!st || st.blocks[bi].items.length >= AUTO_MAX_LIST_ITEMS) return;
+    st.blocks[bi].items.push({ title: '', desc: '', img: '' });
+    autoRenderBoard();
+  }
+  function autoDelItem(ruleId, i, bi, k) {
+    var st = _autoStep(ruleId, i);
+    if (!st || st.blocks[bi].items.length <= 1) return;
+    st.blocks[bi].items.splice(k, 1);
+    autoRenderBoard();
+  }
+  function autoSetItem(ruleId, i, bi, k, field, val) {
+    var r = autoGetRule(ruleId), st = r && r.steps[i];
+    if (!st || !st.blocks[bi].items[k]) return;
+    st.blocks[bi].items[k][field] = val;
+    autoRefreshLive(r, i);
+  }
+
+  /* ---------- 預覽泡泡 ---------- */
+  function autoBlockBubble(b) {
+    var t = b.type;
+    if (t === 'text') {
+      var m = (b.text || '').trim();
+      return m ? '<div class="amp-bubble">' + autoRenderMsgText(m) + '</div>'
+               : '<div class="amp-bubble empty">（文字尚未填寫）</div>';
+    }
+    if (t === 'sticker') return '<div class="amp-sticker">' + b.sticker + '</div>';
+    if (t === 'image')   return '<div class="amp-media">🖼️<span>' + _autoEsc(b.name || '圖片') + '</span></div>';
+    if (t === 'video')   return '<div class="amp-media">🎬<span>' + _autoEsc(b.name || '影片') + '</span></div>';
+    if (t === 'file')    return '<div class="amp-file">📎 ' + _autoEsc(b.name || '檔案') + '</div>';
+
+    if (t === 'button') {
+      return '<div class="amp-bubble" style="padding:0; overflow:hidden;">'
+           + '<div class="amp-btn-title">' + (b.title ? autoRenderMsgText(b.title) : '<span style="color:var(--text-muted);">（標題文字尚未填寫）</span>') + '</div>'
+           + (b.btns || []).map(function(a) {
+               return '<div class="amp-cardbtn">' + _autoEsc(a.label || '按鈕')
+                    + (a.action === 'uri' ? ' <span class="amp-ext">↗</span>' : '') + '</div>';
+             }).join('') + '</div>';
+    }
+    if (t === 'carousel') {
+      return '<div class="amp-carousel">' + (b.cards || []).map(function(c) {
+        return '<div class="amp-ccard"><div class="cc-img">🖼️</div>'
+             + '<div class="cc-title">' + _autoEsc(c.title || '標題') + '</div>'
+             + (c.desc ? '<div class="cc-desc">' + _autoEsc(c.desc) + '</div>' : '')
+             + (c.btns || []).map(function(a) {
+                 return '<div class="cc-btn">' + _autoEsc(a.label || '按鈕')
+                      + (a.action === 'uri' ? ' <span class="amp-ext">↗</span>' : '') + '</div>';
+               }).join('')
+             + '</div>';
+      }).join('') + '</div>';
+    }
+    if (t === 'list') {
+      var h = '<div class="amp-bubble" style="padding:0; overflow:hidden;">';
+      if (b.useImg) h += '<div class="amp-list-img">🖼️</div>';
+      if (b.useTitle) h += '<div class="amp-list-title">' + _autoEsc(b.title || '封面標題') + '</div>';
+      if (b.useDesc)  h += '<div class="amp-list-desc">' + _autoEsc(b.desc || '封面內文') + '</div>';
+      h += (b.items || []).map(function(it) {
+        return '<div class="amp-list-item">'
+             + '<div><div class="li-t">' + _autoEsc(it.title || '項目標題') + '</div>'
+             + '<div class="li-d">' + _autoEsc(it.desc || '項目內文') + '</div></div>'
+             + '<div class="li-img">🖼️</div></div>';
+      }).join('');
+      return h + '</div>';
+    }
+    return '';
+  }
+
+  function autoPanelSide(r, node) {
+    if (node.indexOf('card') !== 0) return '';
+    var i = parseInt(node.replace(/\D/g, ''), 10);
+    var st = r.steps[i];
+    var bs = st.blocks || [];
+    var tl = autoTargetList(st);
+    /* 設定者輔助註記緊接在對應泡泡下方（成員端看不到） */
+    var holder = autoFindNext(r);
+    var body = bs.length
+      ? bs.map(function(b, bidx) {
+          var row = '<div class="amp-row"><div class="amp-avatar">客</div>' + autoBlockBubble(b) + '</div>';
+          if (holder && holder.i === i && holder.bi === bidx) {
+            row += '<div class="amp-annot">↑「' + _autoEsc(holder.label || '未命名按鈕') + '」按下後進入下一步</div>';
+          }
+          return row;
+        }).join('')
+      : '<div class="amp-row"><div class="amp-avatar">客</div><div class="amp-bubble empty">尚未設定</div></div>';
+
+    return '<div class="auto-msg-preview" style="margin-top:0;">'
+         + '<div class="amp-to">發送給：<b>' + _autoEsc(tl.length ? tl.join('、') : '尚未選擇') + '</b></div>'
+         + '<div class="amp-screen">' + body + '</div></div>';
+  }
+
+  /* ---------- 互動 ---------- */
+  function autoOpenNode(ruleId, node) {
+    if (_autoOpen.ruleId === ruleId && _autoOpen.node === node) { autoCloseNode(); return; }
+    _autoOpen = { ruleId: ruleId, node: node };
+    autoRenderBoard();
+  }
+  function autoCloseNode() { _autoOpen = { ruleId: null, node: null }; autoRenderBoard(); }
+
+  function autoPositionCaret() {
+    if (!_autoOpen.ruleId || !_autoOpen.node) return;
+    var card = _autoEl('card-' + _autoOpen.ruleId), panel = _autoEl('panel-' + _autoOpen.ruleId);
+    if (!card || !panel) return;
+    var n = card.querySelector('.arc-node[data-node="' + _autoOpen.node + '"]');
+    if (!n) return;
+    panel.style.setProperty('--caret-x', Math.max(12, n.offsetLeft + n.offsetWidth / 2 - panel.offsetLeft - 6) + 'px');
+  }
+
+  function autoSetEvent(ruleId, ev) {
+    var r = autoGetRule(ruleId);
+    if (!r || autoUsedEvents(ruleId).indexOf(ev) > -1) return;
+    r.event = ev;
+    /* 成員移出群組：本人不可收件，連帶不可有互動按鈕（按鈕固定發本人） */
+    if (!AUTO_EVENTS[ev].allowSelf) {
+      r.steps.forEach(function(st) {
+        st.targets.self = false;
+        /* 保留區塊，只把「接續下一步」降級為「開啟連結」 */
+        (st.blocks || []).forEach(function(b) {
+          if (b.type === 'button') (b.btns || []).forEach(function(a) {
+            if (a.action === 'next') { a.action = 'uri'; a.value = ''; }
+          });
+        });
+      });
+      while (r.steps.length > 1) r.steps.pop();
+    }
+    autoRenderBoard();
+  }
+
+  function autoSetStep(ruleId, i, field, val) {
+    var r = autoGetRule(ruleId);
+    if (!r || !r.steps[i]) return;
+    r.steps[i][field] = val;
+    if (field === 'delayNum') autoRefreshLive(r, i);
+    else autoRenderBoard();
+  }
+
+
+
+  /* 打字時只更新受影響部分，避免輸入框重建失焦 */
+  function autoRefreshLive(r, i) {
+    var card = _autoEl('card-' + r.id);
+    if (!card) return;
+    var st = r.steps[i];
+    var cn = card.querySelector('.arc-node[data-node="card' + i + '"]');
+    if (cn) {
+      var v = autoCardValue(st);
+      cn.querySelector('.n-v').textContent = v || '尚未設定';
+      cn.classList.toggle('todo', !v);
+      var sub = cn.querySelector('.n-sub');
+      var subTxt = autoCardSub(st);
+      if (sub) sub.textContent = v ? subTxt : '';
+    }
+    var dn = card.querySelector('.arc-node[data-node="delay' + i + '"]');
+    if (dn) { var dv = autoDelayText(st); dn.querySelector('.n-v').textContent = dv || '尚未設定'; }
+    /* 自訂天數：即時反映 30 天上限，改回合法值要能解除錯誤狀態 */
+    var numIn = document.querySelector('#panel-' + r.id + ' input[type="number"]');
+    if (numIn) {
+      var over = autoDelayOver(st);
+      numIn.classList.toggle('error', over);
+      var errEl = numIn.parentElement.parentElement.querySelector('.auto-delay-err');
+      if (over && !errEl) {
+        var d = document.createElement('div');
+        d.className = 'auto-delay-err';
+        d.style.cssText = 'font-size:11px;color:var(--danger);margin-top:4px;';
+        d.textContent = '超過 30 天上限';
+        numIn.parentElement.parentElement.appendChild(d);
+      } else if (!over && errEl) { errEl.remove(); }
+    }
+    var panel = _autoEl('panel-' + r.id);
+    if (panel) {
+      var side = panel.querySelector('.arc-panel-body > div:last-child');
+      if (side) side.innerHTML = autoPanelSide(r, _autoOpen.node);
+    }
+  }
+
+  /* 加下一組：先只長出「時間」，卡片由使用者再補 */
+  function autoAddStep(ruleId) {
+    var r = autoGetRule(ruleId);
+    if (!r || r.steps.length >= AUTO_MAX_CARDS) return;
+    r.steps.push(autoNewStep());
+    _autoOpen = { ruleId: ruleId, node: 'delay' + (r.steps.length - 1) };
+    autoRenderBoard();
+  }
+  /* 在既有的時間節點後補上卡片 */
+  function autoAddCardToStep(ruleId, i) {
+    var r = autoGetRule(ruleId);
+    if (!r || !r.steps[i]) return;
+    r.steps[i].hasCard = true;
+    _autoOpen = { ruleId: ruleId, node: 'card' + i };
+    autoRenderBoard();
+  }
+
+  function autoToggleTarget(e, ruleId, i, key) {
+    if (e) e.preventDefault();
+    var r = autoGetRule(ruleId);
+    if (!r) return;
+    r.steps[i].targets[key] = !r.steps[i].targets[key];
+    autoRenderBoard();
+  }
+
+  function autoToggleMenu(e, ruleId) {
+    e.stopPropagation();
+    var m = _autoEl('menu-' + ruleId), was = m && m.classList.contains('open');
+    document.querySelectorAll('.arc-menu.open').forEach(function(x) { x.classList.remove('open'); });
+    if (m && !was) m.classList.add('open');
+  }
+  document.addEventListener('click', function() {
+    document.querySelectorAll('.arc-menu.open').forEach(function(x) { x.classList.remove('open'); });
+  });
+
+  function autoToggleEnabled(ruleId) {
+    var r = autoGetRule(ruleId);
+    if (!r) return;
+    r.enabled = !r.enabled;
+    autoRenderBoard();
+  }
+
+  function autoCreateRule() {
+    if (AUTO_RULES.length >= AUTO_EVENT_ORDER.length) return;
+    var r = autoNewRule('');
+    AUTO_RULES.push(r);
+    _autoOpen = { ruleId: r.id, node: 'trigger' };
+    autoRenderBoard();
+    var c = _autoEl('card-' + r.id);
+    if (c && c.scrollIntoView) c.scrollIntoView({ block: 'center', behavior: 'smooth' });
+  }
+
+  var _autoDeleteId = null;
+  function autoAskDelete(ruleId) { _autoDeleteId = ruleId; openModal('modal-auto-rule-delete'); }
+  function autoConfirmDelete() {
+    var r = autoGetRule(_autoDeleteId);
+    if (r) AUTO_RULES.splice(AUTO_RULES.indexOf(r), 1);
+    if (_autoOpen.ruleId === _autoDeleteId) _autoOpen = { ruleId: null, node: null };
+    _autoDeleteId = null;
+    closeModal('modal-auto-rule-delete');
+    autoRenderBoard();
+  }
+
+  /* 分頁互連（保留給其他呼叫點） */
+  function goBotDefaultMsg() {
+    var it = null;
+    document.querySelectorAll('#bot-edit-main-tabs .tab').forEach(function(t) {
+      if (t.textContent.trim() === '互動設計') it = t;
+    });
+    if (it) switchBotMainTab(it, 'bot-tab-interaction');
+    var b = document.getElementById('bot-subtab-btn-message');
+    if (b) switchBotSubTab(b, 'bot-subtab-message');
+    window.scrollTo(0, 0);
+  }
+  function goBotAutomation() {
+    var b = document.getElementById('bot-main-tab-automation');
+    if (b) switchBotMainTab(b, 'bot-tab-automation');
+    window.scrollTo(0, 0);
+  }
+  /* ===== [新增結束] 自動化服務 JS ===== */
 
   /* ===== BOT使用數據 JS ===== */
   function botDataRangeChange(val) { /* placeholder for range filter */ }
