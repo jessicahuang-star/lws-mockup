@@ -195,14 +195,15 @@
 
     <p style="font-weight:700;margin:22px 0 4px;">各事件的對象、參數與觸發來源</p>
     <p style="font-size:13px;color:var(--muted);margin:0 0 8px;"><b>對象規則一句話：預設訊息一律發給當事人（不給選）；自動化可複選當事人／直屬主管／Bot 管理者。</b>「自動回覆」為預設訊息專用，不進自動化；<b>「成員移出 Bot 群組」的當事人鎖住、不給選</b>。</p>
+    <p style="font-size:13px;color:var(--muted);margin:0 0 8px;"><b>參數規則一句話：</b>自動化因可能發給主管／管理者或批次彙整，故<b>不含</b> <code>{姓名}{部門}</code>（各列已分「預設訊息／自動化」標示）。</p>
     <table>
       <tr><th style="width:132px;">事件</th><th style="width:96px;">預設訊息<br>發送對象</th><th style="width:150px;">自動化設定<br>可選對象</th><th style="width:132px;">參數設定值</th><th>觸發來源</th></tr>
-      <tr><td>成員部門異動</td><td rowspan="3">當事人</td><td rowspan="3">當事人／直屬主管／<br>Bot 管理者<br><span style="color:var(--muted);font-size:12px;">（複選）</span></td><td rowspan="3"><code>{部門}</code> <code>{日期}</code><br><span style="color:var(--muted);font-size:12px;">預設訊息與自動化<b>相同</b></span></td><td rowspan="3"><span class="badge b-slate">後台（主動推播）</span><br><span class="badge b-warn">警示</span> <b>僅「SaaS 後台」操作才會觸發。</b>若 HR 改於 <b>LINE WORKS Admin</b> 端變更組織，或走定期同步路徑，<b>系統抓不到此異動、事件不會發出</b>，該名成員不會收到通知。導入時須與 HR 約定組織異動一律於 SaaS 後台操作（風險詳見 <a href="#s11-5">§11.5</a> <span class="qid">Q-B04</span>）</td></tr>
+      <tr><td>成員部門異動</td><td rowspan="3">當事人</td><td rowspan="3">當事人／直屬主管／<br>Bot 管理者<br><span style="color:var(--muted);font-size:12px;">（複選）</span></td><td rowspan="3"><b>預設訊息</b> <code>{姓名}</code> <code>{部門}</code> <code>{日期}</code> <code>{時間}</code><br><b>自動化</b> <code>{日期}</code> <code>{時間}</code></td><td rowspan="3"><span class="badge b-slate">後台（主動推播）</span><br><span class="badge b-warn">警示</span> <b>僅「SaaS 後台」操作才會觸發。</b>若 HR 改於 <b>LINE WORKS Admin</b> 端變更組織，或走定期同步路徑，<b>系統抓不到此異動、事件不會發出</b>，該名成員不會收到通知。導入時須與 HR 約定組織異動一律於 SaaS 後台操作（風險詳見 <a href="#s11-5">§11.5</a> <span class="qid">Q-B04</span>）</td></tr>
       <tr><td>成員職位異動</td></tr>
       <tr><td>新增成員</td></tr>
-      <tr><td>成員加入 Bot 群組</td><td>當事人</td><td>當事人／直屬主管／<br>Bot 管理者<br><span style="color:var(--muted);font-size:12px;">（複選）</span></td><td><span style="color:var(--muted);">依變數字典（<a href="#s11-6">§11.6</a>）</span></td><td rowspan="2"><span class="badge b-acc">群組（callback）</span><br><span style="color:var(--muted);font-size:12px;">Bot 須 <code>enable_callback=true</code>，否則不會觸發</span></td></tr>
-      <tr><td>成員移出 Bot 群組</td><td>群組<br><span style="color:var(--muted);font-size:12px;">（本人已離開）</span></td><td>直屬主管／<br>Bot 管理者<br><span style="color:var(--muted);font-size:12px;">（複選）</span><br><span class="badge b-no">當事人鎖住</span></td><td><span style="color:var(--muted);">依變數字典（<a href="#s11-6">§11.6</a>）</span></td></tr>
-      <tr><td>自動回覆（fallback）</td><td>當事人<br><span style="color:var(--muted);font-size:12px;">（發訊息者）</span></td><td><span class="badge b-no">不適用</span><br><span style="color:var(--muted);font-size:12px;">僅預設訊息</span></td><td><span style="color:var(--muted);">依變數字典（<a href="#s11-6">§11.6</a>）</span></td><td><span class="badge b-slate">訊息未命中</span><br><b>群組中須 <code>@Bot</code> 提及才觸發</b>（1:1 對話則直接觸發）。若群組內每則未命中都回覆會洗版，故加此限制</td></tr>
+      <tr><td>成員加入 Bot 群組</td><td>當事人</td><td>當事人／直屬主管／<br>Bot 管理者<br><span style="color:var(--muted);font-size:12px;">（複選）</span></td><td><code>{姓名}</code> <code>{部門}</code> <code>{日期}</code> <code>{時間}</code></td><td rowspan="2"><span class="badge b-acc">群組（callback）</span><br><span style="color:var(--muted);font-size:12px;">Bot 須 <code>enable_callback=true</code>，否則不會觸發</span></td></tr>
+      <tr><td>成員移出 Bot 群組</td><td>群組<br><span style="color:var(--muted);font-size:12px;">（本人已離開）</span></td><td>直屬主管／<br>Bot 管理者<br><span style="color:var(--muted);font-size:12px;">（複選）</span><br><span class="badge b-no">當事人鎖住</span></td><td><code>{姓名}</code> <code>{部門}</code> <code>{日期}</code> <code>{時間}</code></td></tr>
+      <tr><td>自動回覆（fallback）</td><td>當事人<br><span style="color:var(--muted);font-size:12px;">（發訊息者）</span></td><td><span class="badge b-no">不適用</span><br><span style="color:var(--muted);font-size:12px;">僅預設訊息</span></td><td><b>預設訊息</b> <code>{姓名}</code> <code>{部門}</code> <code>{日期}</code> <code>{時間}</code><br><b>自動化</b> <span style="color:var(--muted);">不適用</span></td><td><span class="badge b-slate">訊息未命中</span><br><b>群組中須 <code>@Bot</code> 提及才觸發</b>（1:1 對話則直接觸發）。若群組內每則未命中都回覆會洗版，故加此限制</td></tr>
     </table>
     
 
@@ -389,7 +390,7 @@
     <table>
       <tr><th style="width:70px;">#</th><th style="width:78px;">嚴重度</th><th>項目</th><th style="width:250px;">狀態 / 建議</th></tr>
       <tr><td class="qid">Q-P01</td><td><span class="badge b-ok">已決議</span></td><td>同一成員同一流程重複觸發（如一個月內兩次部門異動，或前一流程還在等完成）</td><td><b>保留新事件、取消舊流程</b>。舊卡片按鈕失效後靜默忽略（見 §09）</td></tr>
-      <tr><td class="qid">Q-P02</td><td><span class="badge b-ok">已決議</span></td><td>停用／刪除流程時，已排程與等待中的流程實例如何處理</td><td><b>一併取消</b>，停用時顯示受影響筆數（見 §11.0）</td></tr>
+      <tr><td class="qid">Q-P02</td><td><span class="badge b-ok">已決議</span></td><td>停用／刪除流程時，已排程與等待中的流程實例如何處理</td><td><b>停用＝暫停</b>（凍結、可恢復，恢復時套<b>最新版本</b>）；<b>刪除＝永久取消</b>（終態）。兩者皆顯示受影響筆數（見 §11.0、§11.4）</td></tr>
       <tr><td class="qid">Q-P05</td><td><span class="badge b-ok">已決議</span></td><td>流程上限是每隻 Bot 5 條或全租戶 5 條</td><td><b>每隻 Bot 各 5 條</b>，組織事件跨 Bot 重複發送由設定者避免（見 §03）</td></tr>
       <tr><td class="qid">Q-P03</td><td><span class="badge b-ok">已決議</span></td><td>流程被編輯時，正在進行中的流程實例用舊設定還是新設定</td><td><b>用舊設定（觸發當下的 <code>flow_snapshot</code>）</b>，使卡片 2 與使用者已看到的卡片 1 語境一致。<b>副作用：</b>改錯字不影響已在跑的流程</td></tr>
       <tr><td class="qid">Q-P14</td><td><span class="badge b-ok">已決議</span></td><td>真人服務進行中時，自動化推播照發嗎<br><span style="color:var(--muted);">（原待確認 #1 擴充：A 型的延遲推播也可能落在真人服務期間）</span></td><td><b>B 型等待中遇真人接手 → 取消該 run</b>；<b>A 型照發</b>（它是通知，與真人對話無關）。不做「延後至服務結束」（成本較高）</td></tr>
@@ -412,6 +413,7 @@
       <tr><td class="qid">Q-B06</td><td><span class="badge b-slate">中</span></td><td>素材上傳可否完全復用推播排程通道？流程未儲存就離開時，已上傳的孤兒檔案如何清理</td></tr>
       <tr><td class="qid">Q-B08</td><td><span class="badge b-slate">中</span></td><td>正式環境的排程器（cron）是否已啟用？多台 worker 的部署形態（影響領取排程項的鎖策略）</td></tr>
       <tr><td class="qid">Q-B10</td><td><span class="badge b-slate">中</span></td><td>依 Q-P05 決議，需一支「查詢同租戶<b>其他 Bot</b> 已使用哪些組織事件」的 API 供介面警示。權限上該 admin 可能只管得到部分 Bot，需確認可否跨 Bot 查詢</td></tr>
+      <tr><td class="qid">Q-B11</td><td><span class="badge b-warn">高</span></td><td><b>「停用＝暫停、恢復時遷移至最新版本」的版本遷移可行性？</b>被暫停的 run 綁定舊版本快照，恢復時需接續跑<b>最新版本</b>（依 <span class="qid">Q-P02</span> 決議「新版」）。需後端評估：① run 進度（<code>current_seq</code>）如何對應到新版步驟；② 新版<b>刪除／改動了 run 已跑過或正在等的步驟</b>時如何處理（略過／就地結束／報錯）；③ 恢復時依 <code>paused_at</code> 順延 <code>expires_at</code> 與待發 <code>run_at</code>。見 §11.0、§11.4。</td></tr>
       <tr><td>—</td><td><span class="badge b-ok">已確認</span></td><td>組織管理已有完整「部門主管」資料，各部門可設主管（原待確認 #4）</td></tr>
     </table>
 
@@ -527,8 +529,8 @@
     <table>
       <tr><th style="width:150px;">狀態</th><td><b>僅兩種：啟用中 / 已停用。不做草稿狀態。</b></td></tr>
       <tr><td><b>新建時的預設</b></td><td><b>已停用</b>（三節點皆空的流程不得啟用，否則事件觸發會發出空訊息）。「啟用」在流程不完整時 <b>disable</b> 並指出缺哪一項（事件未選／時間未填／卡片無內容）</td></tr>
-      <tr><td><b>停用的作用範圍</b></td><td><b>一併取消該流程所有「已排程未發送」與「等待完成中」的實例</b>（依 <span class="qid">Q-P02</span> 決議）。停用時顯示「將取消 N 筆等待中的流程」二次確認；<b>刪除亦同</b>，但執行歷史保留</td></tr>
-      <tr><td><b>重新啟用的行為</b></td><td><b>停用為「永久取消」進行中的實例，非「暫停」。</b>重新啟用後<b>不會接續</b>先前被取消的流程，僅對<b>之後新發生的事件</b>生效（被取消的 run 為終態，見 §14.4）。</td></tr>
+      <tr><td><b>停用 / 刪除的作用範圍</b></td><td><b>停用＝暫停：</b>凍結該流程所有「已排程未發送」與「等待完成中」的實例（不發送、時效時鐘暫停），<b>可恢復</b>；顯示「將暫停 N 筆流程」二次確認。<br><b>刪除＝永久取消：</b>進行中的實例轉終態、<b>不可恢復</b>；顯示「將取消 N 筆」二次確認，執行歷史保留。（依 <span class="qid">Q-P02</span> 決議）</td></tr>
+      <tr><td><b>重新啟用（恢復）的行為</b></td><td>重新啟用後，被暫停的實例<b>從凍結處恢復續跑</b>（時效時鐘接續計算）。恢復時<b>套用啟用當下的最新版本</b>——若停用期間曾修改流程，進行中的人會<b>接續跑修正後的新版</b>（版本遷移，見 §11.4）。<br><span style="color:var(--muted);font-size:13px;">⚠️ 版本遷移可能造成「前半段舊版、後半段新版」的體驗；若新版結構與 run 當前進度不相容（如刪除了已跑過的步驟），處理方式<b>待工程評估</b>。</span></td></tr>
       <tr><td><b>層級 / 入口</b></td><td><b>整條流程</b>，不做節點層級開關；入口為卡片右上 ⋯ 選單 →「停用」，<b>不用 switch 開關</b></td></tr>
       <tr><td><b>標籤呈現</b></td><td>啟用中<b>不顯示任何標籤</b>；已停用顯示「已停用」標籤且<b>整條流程灰階＋降透明度</b></td></tr>
     </table>
@@ -663,7 +665,8 @@
     $table->string('subject_user_id')->comment('事件當事人 LW userId');
     $table->json('context')->nullable()->comment('變數快照:姓名/舊部門/新部門/職位/事件日期');
     $table->string('state', 20)->default('scheduled')
-          ->comment('scheduled|waiting|completed|expired|cancelled|failed');
+          ->comment('scheduled|waiting|paused|completed|expired|cancelled|failed');
+    $table->timestamp('paused_at')->nullable()->comment('停用凍結當下時間;恢復時據此順延 expires_at 與待發 run_at(時效時鐘暫停)');
     $table->unsignedTinyInteger('current_seq')->default(0)->comment('已完成到第幾張卡');
     $table->char('advance_token', 32)->nullable()->unique()
           ->comment('postback 識別用短 token,不放業務資料');
@@ -718,7 +721,7 @@
       <tr><td>POST</td><td><code>/bots/{botId}/automation-flows</code></td><td><code>create</code></td><td>建立空流程（三節點皆空值、<code>enabled=false</code>）</td></tr>
       <tr><td>GET</td><td><code>/bots/{botId}/automation-flows/{id}</code></td><td><code>view</code></td><td>單一流程（含 steps 與 bubbles）</td></tr>
       <tr><td>PUT</td><td><code>/bots/{botId}/automation-flows/{id}</code></td><td><code>edit</code></td><td><b>整條流程一次覆寫</b>（含 steps 陣列）。理由見下方 callout</td></tr>
-      <tr><td>PATCH</td><td><code>/bots/{botId}/automation-flows/{id}/state</code></td><td><code>edit</code></td><td>啟用 / 停用。<b>停用時一併取消未完成 run 並回傳受影響筆數</b>（依 <span class="qid">Q-P02</span> 決議）；<b>啟用時驗證流程完整性</b>，不完整則回 <code>BusinessException</code></td></tr>
+      <tr><td>PATCH</td><td><code>/bots/{botId}/automation-flows/{id}/state</code></td><td><code>edit</code></td><td>啟用 / 停用（＝暫停）。<b>停用時凍結未完成 run（轉 <code>paused</code>、暫停時效時鐘）並回傳受影響筆數</b>；<b>啟用時恢復 <code>paused</code> run、遷移至最新版本並驗證流程完整性</b>，不完整則回 <code>BusinessException</code>（依 <span class="qid">Q-P02</span>）。永久取消走 <code>DELETE</code>。</td></tr>
       <tr><td>DELETE</td><td><code>/bots/{botId}/automation-flows/{id}</code></td><td><code>delete</code></td><td>刪除；同樣取消未完成 run，run 歷史保留</td></tr>
       <tr><td>GET</td><td><code>/bots/{botId}/automation-flows/{id}/runs</code></td><td><code>view</code></td><td><span class="badge b-slate">Phase 2</span>等待中／歷史執行清單（可見度功能，API 先預留）</td></tr>
     </table>
@@ -766,11 +769,12 @@
     <h3>run 狀態機</h3>
     <table>
       <tr><th style="width:105px;">狀態</th><th>進入條件</th><th>離開條件</th></tr>
-      <tr><td><code>scheduled</code></td><td>事件觸發、run 建立、job#1 已排定</td><td>→ <code>waiting</code>（卡片 1 含推進按鈕且已送出）<br>→ <code>completed</code>（A 型最後一張卡送出）<br>→ <code>cancelled</code> / <code>failed</code></td></tr>
-      <tr><td><code>waiting</code></td><td>含推進按鈕的卡片已成功送達本人</td><td>→ <code>scheduled</code>（收到 postback，排 job#2）<br>→ <code>expired</code>（<code>expires_at</code> 到）<br>→ <code>cancelled</code></td></tr>
+      <tr><td><code>scheduled</code></td><td>事件觸發、run 建立、job#1 已排定</td><td>→ <code>waiting</code>（卡片 1 含推進按鈕且已送出）<br>→ <code>completed</code>（A 型最後一張卡送出）<br>→ <code>paused</code>（流程停用）<br>→ <code>cancelled</code> / <code>failed</code></td></tr>
+      <tr><td><code>waiting</code></td><td>含推進按鈕的卡片已成功送達本人</td><td>→ <code>scheduled</code>（收到 postback，排 job#2）<br>→ <code>expired</code>（<code>expires_at</code> 到）<br>→ <code>paused</code>（流程停用）<br>→ <code>cancelled</code></td></tr>
       <tr><td><code>completed</code></td><td>最後一張卡片送出（Send API 回 2xx 即算，不追送達回執）</td><td>終態</td></tr>
       <tr><td><code>expired</code></td><td>逾 30 天未推進</td><td>終態，<b>靜默、不發任何訊息</b>（依 §05）</td></tr>
-      <tr><td><code>cancelled</code></td><td>流程被停用／刪除（<span class="qid">Q-P02</span>）、被新事件取代（<span class="qid">Q-P01</span>）、真人服務接手、當事人不可達</td><td>終態</td></tr>
+      <tr><td><code>paused</code></td><td>流程被<b>停用</b>（凍結；<code>expires_at</code> 時效時鐘暫停）<br><span style="color:var(--muted);font-size:12px;">非終態</span></td><td>→ <code>scheduled</code>／<code>waiting</code>（重新啟用：<b>遷移至最新版本</b>並接續計時）<br>→ <code>cancelled</code>（改為刪除）</td></tr>
+      <tr><td><code>cancelled</code></td><td>流程被<b>刪除</b>（<span class="qid">Q-P02</span>）、被新事件取代（<span class="qid">Q-P01</span>）、真人服務接手、當事人不可達</td><td>終態</td></tr>
       <tr><td><code>failed</code></td><td>重試耗盡仍無法送出</td><td>終態，<b>MVP 不通知任何人</b>（僅 log，<span class="qid">Q-P11</span>）</td></tr>
     </table>
 
@@ -896,7 +900,7 @@
       <tr><td>就地展開 + 即時同步 + 游標不中斷</td><td>技術可行。注意：節點顯示值建議 <b>debounce 150~300ms</b> 更新，避免每個按鍵觸發整條流程重繪導致 input 失焦；元件 key 必須穩定（用 step id / button id，非索引）</td></tr>
       <tr><td>callback 未啟用的 Bot</td><td><span class="qid">Q-F04</span> <b>群組事件類流程與「接續下一步」都依賴 callback</b>；Bot 未開時應停用這些選項並說明原因（可導向 Bot 基本設定）</td></tr>
       <tr><td>不完整流程</td><td>依 §11.0：新建預設「已停用」，「啟用」在不完整時 disable 並指出缺哪一項</td></tr>
-      <tr><td>停用的二次確認</td><td>依 <span class="qid">Q-P02</span> 決議，停用需顯示「將取消 N 筆等待中的流程」（<code>meta.waiting_run_count</code>）</td></tr>
+      <tr><td>停用／刪除的二次確認</td><td>依 <span class="qid">Q-P02</span>：<b>停用</b>顯示「將暫停 N 筆流程」、<b>刪除</b>顯示「將取消 N 筆」（<code>meta.waiting_run_count</code>）</td></tr>
       <tr><td>跨 Bot 重複警示</td><td>依 <span class="qid">Q-P05</span> 決議，選擇組織事件時若其他 Bot 已設定，需顯示警示（<code>meta.used_by_other_bots</code>）</td></tr>
       <tr><td>預覽保真度</td><td>輪播圖與列表較難與平台完全一致。建議先求「結構正確、比例近似」，並標註「實際呈現以 LINE WORKS 為準」</td></tr>
       <tr><td>權限</td><td>view / create / edit / delete 四種 action 要分別反映（唯讀者看得到但不能改）</td></tr>
