@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bot 自動化腳本 — 需求規格書</title>
+<style>
+  :root{
+    --ink:#1f2733; --muted:#61708a; --line:#e2e7ee; --bg:#f6f8fb; --card:#ffffff;
+    --acc:#3b6fd4; --accbg:#eaf0fc; --slate:#5b6673; --slatebg:#eef1f5;
+    --green:#0f9488; --greenbg:#e0f3f0; --amber:#b7791f; --amberbg:#fbf1dd; --red:#c0392b; --redbg:#fbe9e7;
+    --purple:#6b4fbb; --purplebg:#efeafb;
+    --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:system-ui,-apple-system,"PingFang TC","Microsoft JhengHei",sans-serif;color:var(--ink);background:var(--bg);line-height:1.7;font-size:15px;}
+  .wrap{max-width:960px;margin:0 auto;padding:0 20px 80px;}
+  header.top{background:linear-gradient(135deg,#2b3a55,#3b6fd4);color:#fff;padding:36px 20px;margin-bottom:8px;}
+  header.top .inner{max-width:960px;margin:0 auto;}
+  header.top h1{margin:0 0 8px;font-size:26px;}
+  header.top .meta{font-size:13px;opacity:.9;display:flex;flex-wrap:wrap;gap:8px 20px;margin-top:12px;}
+  header.top .meta b{opacity:.75;font-weight:600;}
+  .toc{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 22px;margin:24px 0;}
+  .toc h2{margin:0 0 8px;font-size:14px;color:var(--muted);letter-spacing:.5px;}
+  .toc ol{margin:0;padding-left:20px;columns:2;column-gap:32px;font-size:14px;}
+  .toc a{color:var(--acc);text-decoration:none;}
+  .toc a:hover{text-decoration:underline;}
+  section{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:26px 28px;margin:20px 0;}
+  h2.sec{font-size:20px;margin:0 0 4px;display:flex;align-items:baseline;gap:10px;}
+  h2.sec .n{color:var(--acc);font-size:15px;font-weight:700;}
+  .lead{color:var(--muted);margin:2px 0 18px;font-size:14px;}
+  h3{font-size:16px;margin:22px 0 8px;}
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:14px;}
+  th,td{border:1px solid var(--line);padding:9px 12px;text-align:left;vertical-align:top;}
+  th{background:var(--slatebg);font-weight:600;}
+  tr:nth-child(even) td{background:#fafbfd;}
+  code{background:var(--slatebg);padding:1px 6px;border-radius:5px;font-size:13px;}
+  .badge{display:inline-block;font-size:12px;font-weight:600;padding:2px 9px;border-radius:20px;white-space:nowrap;}
+  .b-ok{background:var(--greenbg);color:var(--green);}
+  .b-warn{background:var(--amberbg);color:var(--amber);}
+  .b-no{background:var(--redbg);color:var(--red);}
+  .b-acc{background:var(--accbg);color:var(--acc);}
+  .b-slate{background:var(--slatebg);color:var(--slate);}
+  .callout{border-left:4px solid var(--acc);background:var(--accbg);padding:12px 16px;border-radius:0 8px 8px 0;margin:14px 0;font-size:14px;}
+  .callout.warn{border-color:var(--amber);background:var(--amberbg);}
+  .callout.limit{border-color:var(--red);background:var(--redbg);}
+  /* flow */
+  .flowrow{display:flex;flex-wrap:wrap;align-items:stretch;gap:8px;margin:14px 0;}
+  .node{background:var(--slatebg);border:1px solid var(--line);border-radius:10px;padding:10px 14px;font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:center;text-align:center;min-width:96px;}
+  .node.acc{background:var(--accbg);border-color:var(--acc);color:var(--acc);}
+  .node.green{background:var(--greenbg);border-color:var(--green);color:var(--green);}
+  .node.wait{background:var(--amberbg);border-color:var(--amber);color:var(--amber);}
+  .arrow{display:flex;align-items:center;color:var(--muted);font-weight:700;font-size:18px;}
+  /* two entries */
+  .entries{display:grid;grid-template-columns:1fr auto 1fr;gap:14px;align-items:center;margin:16px 0;}
+  .entry{border:1px solid var(--line);border-radius:12px;padding:16px 18px;}
+  .entry.simple{background:var(--slatebg);}
+  .entry.adv{background:var(--accbg);border-color:var(--acc);}
+  .entry h4{margin:0 0 4px;font-size:16px;}
+  .entry .sub{color:var(--muted);font-size:13px;margin-bottom:8px;}
+  .entry ul{margin:6px 0 0;padding-left:18px;font-size:13px;}
+  .upgrade{text-align:center;color:var(--acc);font-weight:700;font-size:14px;padding:0 4px;}
+  /* priority funnel */
+  .prio{list-style:none;padding:0;margin:14px 0;counter-reset:p;}
+  .prio li{position:relative;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 14px 10px 46px;margin:8px 0;font-size:14px;}
+  .prio li::before{counter-increment:p;content:counter(p);position:absolute;left:10px;top:50%;transform:translateY(-50%);width:24px;height:24px;border-radius:50%;background:var(--acc);color:#fff;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;}
+  .prio li.top{border-color:var(--red);}
+  .prio li.top::before{background:var(--red);}
+  .prio li.last{border-color:var(--amber);}
+  .prio li.last::before{background:var(--amber);}
+  .prio b{color:var(--ink);}
+  .foot{color:var(--muted);font-size:13px;text-align:center;margin-top:30px;}
+  /* 開發篇專用 */
+  pre{background:#1e2530;color:#dfe6f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:12.5px;line-height:1.6;font-family:var(--mono);}
+  pre code{background:none;color:inherit;padding:0;font-size:inherit;}
+  .qid{font-family:var(--mono);font-weight:700;font-size:12.5px;color:var(--purple);white-space:nowrap;}
+  .b-pp{background:var(--purplebg);color:var(--purple);}
+  .callout.ok{border-color:var(--green);background:var(--greenbg);}
+  .layers{display:grid;gap:10px;margin:16px 0;}
+  .layer{border:1px solid var(--line);border-radius:10px;padding:12px 16px;background:#fafbfd;}
+  .layer h5{margin:0 0 4px;font-size:14px;}
+  .layer p{margin:0;font-size:13px;color:var(--muted);}
+  .layer .who{float:right;}
+  .devbar{background:linear-gradient(135deg,#1e2a3d,#2f5aa8);color:#fff;border-radius:14px;padding:22px 28px;margin:32px 0 20px;}
+  .devbar h2{margin:0 0 6px;font-size:22px;}
+  .devbar p{margin:0;font-size:13.5px;color:#d6e2f5;}
+  .tocgroup{font-size:12px;color:var(--muted);letter-spacing:.5px;font-weight:700;margin:10px 0 2px;break-after:avoid;}
+  @media(max-width:680px){.entries{grid-template-columns:1fr;}.toc ol{columns:1;}}
+  @media print{body{background:#fff;}section,.toc{break-inside:avoid;border-color:#ccc;}header.top{background:#2b3a55 !important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="inner">
+    <h1>Bot 自動化腳本 — 需求規格書</h1>
+    <div class="lead" style="color:#dfe7f5;margin:0;">LINE Works Bot 模組擴建｜事件觸發的自動化訊息機制</div>
+    <div class="meta">
+      <span><b>版本</b> v0.7（對象調整＋文件重整）</span>
+      <span><b>日期</b> 2026-08-04</span>
+      <span><b>撰寫</b> UX（Jessica）</span>
+      <span><b>狀態</b> 需求＋介面已收斂；開發篇待工程 review</span>
+    </div>
+    <div style="margin-top:14px;padding:10px 14px;background:rgba(255,255,255,.14);border-radius:8px;font-size:13px;">
+      <b>👷 工程請直接看 §11 開發實作附錄</b>　—　§01~§10 為需求與介面規格（背景參照），§11 為資料模型、API 契約、執行語意與技術限制。
+    </div>
+  </div>
+</header>
+<div class="wrap">
+
+  <div class="toc">
+    <h2>目錄</h2>
+    <div class="tocgroup">需求篇 ── PM / 設計閱讀</div>
+    <ol>
+      <li><a href="#s1">功能總覽與定位</a></li>
+      <li><a href="#s2">功能架構（兩入口分界）</a></li>
+      <li><a href="#s3">起始事件字典</a></li>
+      <li><a href="#s4">兩型流程（A 型 / B 型）</a></li>
+      <li><a href="#s5">參數定義</a></li>
+      <li><a href="#s6">訊息偵測與格式顯示規則</a></li>
+      <li><a href="#s7">訊息的優先級定義</a></li>
+      <li><a href="#s8">邊界處理</a></li>
+      <li><a href="#s9">已知限制（MVP）</a></li>
+      <li><a href="#s10">未決項總表（待確認事項）</a></li>
+    </ol>
+    <div class="tocgroup" style="margin-top:14px;">開發篇 ── 工程閱讀</div>
+    <ol start="11">
+      <li><a href="#s11">開發實作附錄</a>
+        <ul style="margin:4px 0;padding-left:16px;font-size:13px;list-style:none;">
+          <li><a href="#s11-0">11.0 介面契約（流程板與訊息編輯器）</a></li>
+          <li><a href="#s11-1">11.1 架構分層與資料流</a></li>
+          <li><a href="#s11-2">11.2 資料模型草案</a></li>
+          <li><a href="#s11-3">11.3 API 契約草案</a></li>
+          <li><a href="#s11-4">11.4 執行語意與異常路徑</a></li>
+          <li><a href="#s11-5">11.5 觸發來源技術盤點</a></li>
+          <li><a href="#s11-6">11.6 訊息組裝與平台限制</a></li>
+          <li><a href="#s11-7">11.7 前端實作要點</a></li>
+          <li><a href="#s11-8">11.8 建議實作切分</a></li>
+        </ul>
+      </li>
+    </ol>
+  </div>
+
+  <!-- 1 -->
+  <section id="s1">
+    <h2 class="sec"><span class="n">01</span>功能總覽與定位</h2>
+    <p class="lead">為每一隻 Bot 提供「事件觸發 → 後續自動化動作」的能力，擴充目前僅有單一事件訊息的現況。</p>
+    <table>
+      <tr><th style="width:130px;">功能名稱</th><td>Bot 自動化腳本</td></tr>
+      <tr><th>目的</th><td>讓後台管理者（HR）針對成員相關事件，設定延遲、多對象、可等待使用者回應的自動化訊息流程。</td></tr>
+      <tr><th>Bot 定位</th><td>內部通知型</td></tr>
+      <tr><th>可套用範圍</th><td>每一隻 Bot 皆可設定</td></tr>
+      <tr><th>功能位置</th><td>Bot 管理 → 5.1 BOT管理設定 → 編輯 → <b>自動化服務</b>（與「基本設定」「互動設計」<b>同層並列</b>，詳見 <a href="#s11-0" style="color:var(--acc);">§11.0</a>）</td></tr>
+      <tr><th>核心概念</th><td><b>預設訊息</b>負責「即時單則」；<b>自動化腳本</b>負責「有選擇（對象／時間／流程）的後續行為」。</td></tr>
+    </table>
+  </section>
+
+  <!-- 2 -->
+  <section id="s2">
+    <h2 class="sec"><span class="n">02</span>功能架構（兩入口分界）</h2>
+    <p class="lead">兩入口<b>功能獨立</b>（各自可單獨設定），但 UX 上刻意相連：自動化是預設訊息的「升級路徑」。</p>
+    <div class="entries">
+      <div class="entry simple">
+        <h4>預設訊息</h4>
+        <div class="sub">互動設定｜即時單則・入門</div>
+        <ul>
+          <li>對象：<b>依事件固定、不給選</b>（當事人／群組，見 §03）</li>
+          <li>時間：<b>固定立即</b></li>
+          <li>內容：單一則</li>
+        </ul>
+      </div>
+      <div class="upgrade">升級 →<br><span style="font-weight:400;font-size:12px;color:var(--muted);">需要選對象／延遲／等回應</span></div>
+      <div class="entry adv">
+        <h4>自動化腳本</h4>
+        <div class="sub">Bot 設定｜延伸流程・進階</div>
+        <ul>
+          <li>對象：<b>可選（本人／主管／管理者，複選）</b></li>
+          <li>時間：<b>只走延遲（10 分鐘～最大 30 天，無立即）</b></li>
+          <li>流程：A 型 / B 型、可等完成</li>
+        </ul>
+      </div>
+    </div>
+    <div class="callout">
+      <b>判準：</b>要<b>延遲、選對象、或等回應</b> → 用自動化腳本；<b>發生當下就發一則給當事人</b> → 用預設訊息。<br>
+      <b>時間分工：</b>預設訊息＝<b>立即</b>（唯一）；自動化＝<b>只走延遲</b>（10 分鐘起，最大 30 天）。兩者不重疊。<br>
+      <b>對象分工：</b>預設訊息＝<b>只發給事件的直接關係人</b>（當事人／群組）；<b>主管與 Bot 管理者一律走自動化</b>。兩者不重疊。
+    </div>
+    <p style="font-size:13px;color:var(--muted);">兩者共用<b>同一份事件字典（同名）</b>；重疊是刻意的，靠能力差異自然分流，並以「從預設訊息一鍵延伸成自動化」避免混淆。</p>
+  </section>
+
+  <!-- 3 -->
+  <section id="s3">
+    <h2 class="sec"><span class="n">03</span>起始事件字典</h2>
+    <p class="lead">預設訊息與自動化腳本<b>共用同一份事件字典</b>（同名）；另有「自動回覆」為預設訊息專用。命名統一，不得同事異名。</p>
+    
+
+    <p style="font-weight:700;margin:22px 0 4px;">各事件的對象、參數與觸發來源</p>
+    <p style="font-size:13px;color:var(--muted);margin:0 0 8px;"><b>對象規則一句話：預設訊息一律發給當事人（不給選）；自動化可複選當事人／直屬主管／Bot 管理者。</b>「自動回覆」為預設訊息專用，不進自動化；<b>「成員移出 Bot 群組」的當事人鎖住、不給選</b>。</p>
+    <table>
+      <tr><th style="width:132px;">事件</th><th style="width:96px;">預設訊息<br>發送對象</th><th style="width:150px;">自動化設定<br>可選對象</th><th style="width:132px;">參數設定值</th><th>觸發來源</th></tr>
+      <tr><td>成員部門異動</td><td rowspan="3">當事人</td><td rowspan="3">當事人／直屬主管／<br>Bot 管理者<br><span style="color:var(--muted);font-size:12px;">（複選）</span></td><td rowspan="3"><code>{部門}</code> <code>{日期}</code><br><span style="color:var(--muted);font-size:12px;">預設訊息與自動化<b>相同</b></span></td><td rowspan="3"><span class="badge b-slate">後台（主動推播）</span><br><span class="badge b-warn">警示</span> <b>僅「SaaS 後台」操作才會觸發。</b>若 HR 改於 <b>LINE WORKS Admin</b> 端變更組織，或走定期同步路徑，<b>系統抓不到此異動、事件不會發出</b>，該名成員不會收到通知。導入時須與 HR 約定組織異動一律於 SaaS 後台操作（風險詳見 <a href="#s11-5">§11.5</a> <span class="qid">Q-B04</span>）</td></tr>
+      <tr><td>成員職位異動</td></tr>
+      <tr><td>新增成員</td></tr>
+      <tr><td>成員加入 Bot 群組</td><td>當事人</td><td>當事人／直屬主管／<br>Bot 管理者<br><span style="color:var(--muted);font-size:12px;">（複選）</span></td><td><span style="color:var(--muted);">依變數字典（<a href="#s11-6">§11.6</a>）</span></td><td rowspan="2"><span class="badge b-acc">群組（callback）</span><br><span style="color:var(--muted);font-size:12px;">Bot 須 <code>enable_callback=true</code>，否則不會觸發</span></td></tr>
+      <tr><td>成員移出 Bot 群組</td><td>群組<br><span style="color:var(--muted);font-size:12px;">（本人已離開）</span></td><td>直屬主管／<br>Bot 管理者<br><span style="color:var(--muted);font-size:12px;">（複選）</span><br><span class="badge b-no">當事人鎖住</span></td><td><span style="color:var(--muted);">依變數字典（<a href="#s11-6">§11.6</a>）</span></td></tr>
+      <tr><td>自動回覆（fallback）</td><td>當事人<br><span style="color:var(--muted);font-size:12px;">（發訊息者）</span></td><td><span class="badge b-no">不適用</span><br><span style="color:var(--muted);font-size:12px;">僅預設訊息</span></td><td><span style="color:var(--muted);">依變數字典（<a href="#s11-6">§11.6</a>）</span></td><td><span class="badge b-slate">訊息未命中</span><br><b>群組中須 <code>@Bot</code> 提及才觸發</b>（1:1 對話則直接觸發）。若群組內每則未命中都回覆會洗版，故加此限制</td></tr>
+    </table>
+    
+
+    
+
+    
+
+    
+  </section>
+
+  <!-- 4 -->
+  <section id="s4">
+    <h2 class="sec"><span class="n">04</span>兩型流程（A 型 / B 型）</h2>
+    <p class="lead">A 型與 B 型<b>唯一差別</b>：要不要加一個「<b>中間條件</b>」讓使用者操作（＝等完成）。兩者都能設彈性延遲。</p>
+    <div class="callout limit"><b>注意：「A 型／B 型」為本文件的內部術語，不得出現在使用者介面。</b>介面上以<b>卡片裡有沒有 postback 類訊息區塊（按鈕／輪播圖）</b>表達此差異——<br>・卡片<b>不含</b>按鈕／輪播圖 → 直接接結束（＝A 型）　・卡片<b>含</b>按鈕／輪播圖 → 必須再接「時間 → 卡片」（＝B 型）<br>詳見 <a href="#s11-0" style="color:var(--acc);">§11.0 介面契約</a>。</div>
+
+    <h3>A 型｜直接通知 <span class="badge b-ok">5 事件皆適用</span></h3>
+    <p style="font-size:13px;color:var(--ink);margin:2px 0 8px;"><b>定位接近預設訊息</b>（事件 → 發訊息、中間不需使用者操作），差別在 A 型可設<b>彈性延遲時間</b>（並可選對象）。</p>
+    <div class="flowrow">
+      <div class="node acc">起始事件</div><div class="arrow">→</div>
+      <div class="node">時間</div><div class="arrow">→</div>
+      <div class="node green">推播</div>
+    </div>
+    <p style="font-size:13px;color:var(--muted);margin:0;">例：成員移出群組 →（10 分鐘後）→ 通知主管「XX 已退出」。使用者不需任何動作。</p>
+
+    <h3>B 型｜等完成再走 <span class="badge b-warn">移出群組不可選</span></h3>
+    <div class="flowrow">
+      <div class="node acc">起始事件</div><div class="arrow">→</div>
+      <div class="node">時間</div><div class="arrow">→</div>
+      <div class="node">推訊息<br>（含完成訊號・發本人）</div><div class="arrow">→</div>
+      <div class="node wait">等完成</div><div class="arrow">→</div>
+      <div class="node">時間</div><div class="arrow">→</div>
+      <div class="node green">推播</div>
+    </div>
+    <p style="font-size:13px;color:var(--muted);margin:0;">例：新人加入群組 →（10 分鐘後）→ 發教育訓練（含完成鈕）→ 按完成 →（1 天後）→ 發進階教材。</p>
+    <div class="callout"><b>B 型必然是 2 張卡片。</b>依 §11.0「最後一張卡片不可設接續下一步」＋ §09「最多 2 張卡片」可推得：<b>「接續下一步」只能設在第 1 張卡</b>，單卡流程一律為 A 型。<br>
+    <b>兩張卡前面都各有一個時間節點</b>（§11.0），故第 1 張卡最快也是事件後 10 分鐘發出——<b>沒有「立即」</b>（見 §05）。</div>
+
+    <div class="callout warn"><b>B 型限制：</b>「等完成」需要使用者「人在且會回應」，故<b>成員移出群組不可選 B 型</b>（人已離開，發不到也不會回完成）。完成訊號一律發給<b>本人</b>；後續推播的收件人才是可設定的對象。</div>
+
+    <h3 style="margin-top:28px;">範例情境｜新進人員教育訓練 Bot</h3>
+    <p style="font-size:13px;color:var(--muted);margin:2px 0 12px;">同一個情境，分別走 A 型與 B 型。</p>
+
+    <div style="border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:10px 0;">
+      <div style="font-weight:600;margin-bottom:10px;"><span class="badge b-slate">A 型</span>　直接通知主管（不需使用者動作）</div>
+      <div class="flowrow">
+        <div class="node acc">成員加入<br>教育訓練群組</div><div class="arrow">→</div>
+        <div class="node">10 分鐘後</div><div class="arrow">→</div>
+        <div class="node green">推播給<br>直屬主管</div>
+      </div>
+      <div style="font-size:13px;color:var(--muted);">內容：「您的新成員【小明】今日起開始教育訓練。」</div>
+    </div>
+
+    <div style="border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:10px 0;">
+      <div style="font-weight:600;margin-bottom:10px;"><span class="badge b-slate">B 型</span>　等完成再發進階教材</div>
+      <div class="flowrow">
+        <div class="node acc">成員加入<br>教育訓練群組</div><div class="arrow">→</div>
+        <div class="node">10 分鐘後</div><div class="arrow">→</div>
+        <div class="node">發教育訓練訊息<br>（含完成鈕・發本人）</div><div class="arrow">→</div>
+        <div class="node wait">等完成</div><div class="arrow">→</div>
+        <div class="node">1 天後</div><div class="arrow">→</div>
+        <div class="node green">推播給<br>本人</div>
+      </div>
+      <div style="font-size:13px;color:var(--muted);line-height:1.9;">
+        ① 加入群組 →（10 分鐘後）→ 發「教育訓練連結 ＋ <b>常駐按鈕『我已完成』（postback）</b>」給本人<br>
+        ② 使用者看完教材，點「我已完成」→ 完成監聽接住，推進流程<br>
+        ③ 完成後 1 天 → 推播「進階教材已解鎖，請本週內完成。」給本人
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 -->
+  <section id="s5">
+    <h2 class="sec"><span class="n">05</span>參數定義</h2>
+    <table>
+      <tr><th style="width:130px;">參數</th><th>選項</th><th>規則</th></tr>
+      <tr><td>時間</td><td><b>只走延遲</b>：10 分鐘 / 1 小時 / 1 天 / 7 天 / 自訂（最大 30 天）<br><b>自訂 ＝ 數值 ＋ 單位下拉（分鐘／小時／天）</b>，有效範圍 10 分鐘 ~ 30 天</td><td><b>不含「立即」</b>（立即屬預設訊息）。<br><b>計時起點：</b>第 1 張卡從<b>事件發生</b>起算；第 2 張卡在 B 型從<b>「完成」當下</b>起算、在 A 型從<b>第 1 張卡實際送出</b>起算。<br>實際送達為「不早於設定時間」，非精準準時（誤差 ±1 分鐘，批次時可能更久）</td></tr>
+      <tr><td>對象</td><td><b>複選</b>：本人 / 直屬主管 / Bot 管理者<br><b>一律為 1:1 個人訊息</b>，不發送到群組</td><td>選項<b>隨事件動態</b>：成員移出群組時「本人」鎖住（見下）。<br>「直屬主管」於<b>推播當下</b>解析（非事件當下鎖定），故 30 天後若主管已換人，收件者為新主管</td></tr>
+      <tr><td>內容</td><td>自動化自行撰寫</td><td>與預設訊息<b>分開</b>，不引用預設訊息（避免雙重發送）</td></tr>
+      <tr><td><b>時效期限</b></td><td>系統預設 <b>30 天</b>（Lv1，不開放調整）</td><td>等待中的流程逾 30 天未完成／未觸發 → <b>自動作廢（靜默取消）</b></td></tr>
+    </table>
+    <div class="callout"><b>自動化時效期限（Lv1）：</b>系統層級預設 <b>30 天</b>，主要用於 B 型「等待完成」——超過 30 天未完成即自動作廢，避免僵屍流程無限累積。<b>靜默取消、不另發提醒</b>（發提醒屬 Lv3 逾時分支，本版不做）。自訂延遲上限亦為 30 天，與此一致。<br>
+    <b>起算點與範圍：</b>自<b>事件發生當下</b>起算，且為<b>整條流程的硬上限</b>（非只限等待階段）。因此若第 1 張卡的延遲設得很長（如 30 天），使用者幾乎沒有完成的時間窗——介面應於此組合提示設定者。</div>
+    <h3>對象 × 事件 可選矩陣</h3>
+    <table>
+      <tr><th>事件</th><th>本人</th><th>直屬主管</th><th>Bot 管理者</th></tr>
+      <tr><td>加入群組 / 新增成員 / 部門異動 / 職位異動</td><td><span class="badge b-ok">可（需可達）</span></td><td><span class="badge b-ok">可</span></td><td><span class="badge b-ok">可</span></td></tr>
+      <tr><td>成員移出群組</td><td><span class="badge b-no">鎖住（人已離開）</span></td><td><span class="badge b-ok">可</span></td><td><span class="badge b-ok">可</span></td></tr>
+    </table>
+    
+    
+  </section>
+
+  <!-- 6 -->
+  <section id="s6">
+    <h2 class="sec"><span class="n">06</span>訊息偵測與格式顯示規則</h2>
+    <p class="lead">Bot 只偵測得到 <code>postback</code> 與 <code>message</code>（送出文字／位置／照片／檔案）；<b>連結、複製</b>為裝置端行為，偵測不到。</p>
+    <div class="scroll-x">
+    <table>
+      <tr><th>分類</th><th>訊息格式</th><th>可用按鈕動作</th><th>接續下一步 / 完成方式</th><th>完成條件（偵測）</th></tr>
+      <tr><td>靜態<br><span style="color:var(--muted);font-size:12px;">（無按鈕）</span></td><td>文字、貼圖、圖片、影片、檔案</td><td>—</td><td><span class="badge b-no">❌ 不可</span></td><td>—</td></tr>
+      <tr><td>互動·多卡</td><td>輪播圖</td><td>連結、關鍵字、複製</td><td><span class="badge b-no">❌ 不可</span></td><td>—</td></tr>
+      <tr><td rowspan="4">互動·單卡</td><td rowspan="4"><b>按鈕、列表</b></td><td rowspan="4">接續下一步、連結、關鍵字、複製</td><td><span class="badge b-ok">✅</span> 文字（預設）</td><td>按按鈕 → <code>postback</code></td></tr>
+      <tr><td><span class="badge b-ok">✅</span> 傳送位置</td><td>送出 <code>location</code></td></tr>
+      <tr><td><span class="badge b-ok">✅</span> 上傳照片（Image）</td><td>送出 <code>image</code>（含 jpg／jpeg）</td></tr>
+      <tr><td><span class="badge b-ok">✅</span> 上傳檔案</td><td>送出 <code>file</code>（jpg／jpeg 以外）</td></tr>
+    </table>
+    </div>
+    <div class="callout"><b>提交型完成（位置／照片／檔案）：</b>收到<b>不符指定類型</b>的內容 → 不推進，提示重送；jpg／jpeg 一律歸「上傳照片」。<br><span style="color:var(--muted);font-size:13px;">走 🅑 Message 路，與 §07 優先級整合細節待補；位置打卡另可加「地理範圍」檢查。</span></div>
+    <ol style="margin:14px 0 0;padding-left:22px;">
+      <li>接續下一步<b>不做</b>快速回覆與輪播圖（橫向捲軸）。</li>
+      <li>接續下一步<b>一個流程只能觸發一次</b>（泡泡層互斥細節見 §11.0）。</li>
+    </ol>
+  </section>
+
+  <!-- 7 -->
+  <section id="s7">
+    <h2 class="sec"><span class="n">07</span>訊息的優先級定義</h2>
+    <p class="lead">一則互動進來，<b>先看它是哪一種 callback 事件</b>（Postback 或 Message），再走對應規則。兩者是不同事件類型，處理路徑分開。</p>
+
+    <h3 style="margin-top:8px;">🅐 Postback 事件（按了帶 postback 的按鈕）</h3>
+    <div class="callout">直接依按鈕資料處理；若這顆是某 B 型的<b>完成鈕（卡片常駐按鈕 ＋ postback）→ 推進流程</b>。結束。<br><span style="color:var(--muted);font-size:13px;">postback 不經過關鍵字／fallback 比對，路徑最單純。<b>本規格完成訊號採此路。</b></span></div>
+
+    <h3>🅑 Message 事件（送出文字，含關鍵字、快速回覆送文字）— 依序比對</h3>
+    <ol class="prio">
+      <li class="top"><b>真人服務關鍵字</b>（全站統一控制）→ 轉真人。<b>最高，可中斷進行中的流程。</b></li>
+      <li><b>B 型完成監聽</b>（僅當完成訊號改採「文字」時才會用到）→ 被流程吃掉，推進（不再跑關鍵字、不進 fallback）。</li>
+      <li><b>一般關鍵字</b> → 關鍵字回覆。</li>
+      <li class="last"><b>自動回覆（fallback）</b> → 都沒命中，最後才回。</li>
+    </ol>
+    <div class="callout"><b>鐵則：</b>被「完成監聽」吃掉的訊息，絕不可再進「自動回覆」。<b>真人服務關鍵字＝保留字</b>，任何 Bot 的關鍵字／完成訊號都不得使用（用了會被劫走），設定時應擋掉或警告。<br><span style="color:var(--muted);font-size:13px;">因本規格完成訊號採 postback（走 🅐 路），🅑 的「完成監聽」在此設計下用不到——僅退回文字方案時才需要。</span></div>
+
+    <h3>B 型「等待完成」中 × 各種訊息進來 — 行為對照表</h3>
+    <table>
+      <tr><th>使用者做的事</th><th>走哪條路 / 反應</th><th>B 型流程狀態</th></tr>
+      <tr><td>按「我已完成」（卡片常駐按鈕＋postback）</td><td>🅐 Postback → 完成監聽接住</td><td><span class="badge b-ok">推進 → 進入延遲</span></td></tr>
+      <tr><td>打真人服務關鍵字</td><td>🅑 ① 轉真人</td><td><span class="badge b-warn">流程中斷（處理見待確認 #1）</span></td></tr>
+      <tr><td>打一般關鍵字（如「請假」）</td><td>🅑 ③ 關鍵字回覆</td><td><span class="badge b-slate">繼續等待，不受影響</span></td></tr>
+      <tr><td>送出無意義訊息</td><td>🅑 ④ 自動回覆</td><td><span class="badge b-slate">繼續等待，不受影響</span></td></tr>
+    </table>
+    <div class="callout"><b>核心觀念：</b>B 型「等待中」<u>不會卡住 Bot 其他功能</u>；使用者照樣能觸發關鍵字。流程只認它<b>專屬的完成訊號</b>——<b>觸發關鍵字 ≠ 完成</b>，不會推進流程。完成訊號採 postback（🅐 路），與關鍵字／fallback 天生不衝突。</div>
+  </section>
+
+  <!-- 8 -->
+  <section id="s8">
+    <h2 class="sec"><span class="n">08</span>邊界處理</h2>
+    <table>
+      <tr><th style="width:190px;">情況</th><th>處理方式</th></tr>
+      <tr><td>直屬主管如何解析</td><td>= 該成員所屬<b>部門的主管</b>（於組織管理設定維護）</td></tr>
+      <tr><td>部門異動時，抓新或舊部門主管</td><td>抓<b>新部門</b>主管（異動後歸屬）</td></tr>
+      <tr><td>當事人自己就是部門主管</td><td>發給「主管」= 發給自己（MVP；未來可設往上一層）</td></tr>
+      <tr><td>新增成員尚未分部門</td><td>「主管」收件人<b>自動略過</b>，不報錯</td></tr>
+      <tr><td>「本人」可達性</td><td>透過 <b>SaaS 後台</b>變更組織資料時，Bot <b>可</b>對當事人發出 1:1 訊息，<b>不需事先互動</b>（已實測，見 §10.4 <span class="qid">Q-L04</span>）</td></tr>
+      <tr><td>成員移出群組發給本人</td><td>不可（人已離開）→ 對象改主管／管理者</td></tr>
+      <tr><td>完成用文字撞關鍵字 / 真人服務字</td><td>設定時擋掉或警告；執行時套第 8 節優先序</td></tr>
+    </table>
+  </section>
+
+  <!-- 9 -->
+  <section id="s9">
+    <h2 class="sec"><span class="n">09</span>已知限制（MVP）</h2>
+    <div class="callout limit"><b>不做逾時「提醒」分支（Lv3）：</b>B 型若使用者一直不完成，滿 <b>30 天由時效期限自動作廢（Lv1）</b>，但<b>不主動提醒 HR</b>（無人知道誰沒完成）。</div>
+    <div class="callout limit"><b>沒有「立即」：</b>自動化最短延遲 10 分鐘（§05），通報類訊息（如成員移出群組通知主管）必然有至少 10 分鐘落差。此為刻意取捨——「立即」屬預設訊息的能力範圍。</div>
+    <div class="callout limit"><b>重複觸發會取消舊流程：</b>同一成員同一流程再次觸發時，以最新事件為準、取消舊流程（<span class="qid">Q-P01</span> 決議）。使用者手上舊卡片的「我已完成」按鈕<b>按下後不會有任何反應</b>（常駐按鈕無法收回，系統靜默忽略）。</div>
+    <div class="callout limit"><b>無節流機制：</b>大量組織異動（如月初批次匯入 200 名新成員）會在同一時刻產生大量推播，人工停用來不及。MVP 僅有發送端速率控制（技術自保），實際送達時間可能晚於設定值。詳見 §11.5。</div>
+    <div class="callout limit"><b>不做靜音時段：</b>延遲若落在深夜或假日照樣發送。未來可補「僅在服務時段發送」。</div>
+    <div class="callout limit"><b>組織事件僅在「SaaS 後台操作路徑」才會觸發：</b>變更若發生在 LINE WORKS Admin 端或定期同步路徑，事件不會觸發，將造成<b>部分員工收到通知、部分沒收到</b>。MVP 不做補償機制，導入時需與 HR 約定「組織異動一律於 SaaS 後台操作」（見 §11.5 <span class="qid">Q-B04</span>）。</div>
+    <div class="callout limit"><b>同一次人事作業可能產生多則通知：</b>部門＋職位同時異動、先建檔後補部門、新增成員後又加入 Bot 群組 —— 當事人會收到 2 則。<b>MVP 不做合併／抑制</b>，各則文案須能獨立成立。</div>
+    <div class="callout limit"><b>管理者／主管的通知一定慢於當事人：</b>這兩種對象只能走自動化，最短延遲 10 分鐘，且會佔用「每隻 Bot 5 條流程」額度；三個組織事件都要通知管理者將佔掉 3 條。</div>
+    <div class="callout limit"><b>流程長度上限：</b>一條流程最多 <b>2 張卡片</b>（即 <code>初始設定 → 時間 → 卡片 → 時間 → 卡片 → 結束</code>），不做更深的串鏈、不做分支與條件判斷。</div>
+    <div class="callout limit"><b>一事件一流程：</b>每個起始事件只能建立<b>一條</b>自動化流程，已被使用的事件不會出現在其他流程的選項中。<b>上限為每隻 Bot 各 5 條</b>（＝ 5 個事件各一條）。同一事件的多段訊息請用同一條流程的兩張卡片表達。<br>
+    <b>連帶限制：</b>組織層事件（新增成員／部門異動／職位異動）在多隻 Bot 各自設定時會<b>對同一位員工重複發送內容相同的訊息</b>，系統不阻止（人為設定失誤，MVP 先忽略）。</div>
+  </section>
+
+  <!-- 10 -->
+  <section id="s10">
+    <h2 class="sec"><span class="n">10</span>未決項總表</h2>
+    <p class="lead">全文件唯一的未決項清單（需求端與工程端合併）。<b>阻斷 = 沒答案無法估時、無法開工。</b>編號規則：<span class="qid">Q-P</span> PM 決策｜<span class="qid">Q-B</span> 問後端｜<span class="qid">Q-F</span> 問前端｜<span class="qid">Q-L</span> 查證 LINE WORKS 平台。</p>
+
+    <div class="callout limit"><b>目前有 3 項阻斷級未決：</b><span class="qid">Q-B05</span>（管理者帳號對應）、<span class="qid">Q-F01</span>（訊息編輯器可否復用）、<span class="qid">Q-L09</span>（編輯器是否開放 postback）。<br>
+    <b><span class="qid">Q-B05</span> 的影響範圍：</b>Bot 管理者非預設訊息的對象，此題只影響<b>自動化的收件人選項</b>，但管理者的通知已全數改由自動化承接，若為否則等同無法通知管理者。</div>
+
+    <h3>10.1 需 PM 決策</h3>
+    <table>
+      <tr><th style="width:70px;">#</th><th style="width:78px;">嚴重度</th><th>項目</th><th style="width:250px;">狀態 / 建議</th></tr>
+      <tr><td class="qid">Q-P01</td><td><span class="badge b-ok">已決議</span></td><td>同一成員同一流程重複觸發（如一個月內兩次部門異動，或前一流程還在等完成）</td><td><b>保留新事件、取消舊流程</b>。舊卡片按鈕失效後靜默忽略（見 §09）</td></tr>
+      <tr><td class="qid">Q-P02</td><td><span class="badge b-ok">已決議</span></td><td>停用／刪除流程時，已排程與等待中的流程實例如何處理</td><td><b>一併取消</b>，停用時顯示受影響筆數（見 §11.0）</td></tr>
+      <tr><td class="qid">Q-P05</td><td><span class="badge b-ok">已決議</span></td><td>流程上限是每隻 Bot 5 條或全租戶 5 條</td><td><b>每隻 Bot 各 5 條</b>，組織事件跨 Bot 重複發送由設定者避免（見 §03）</td></tr>
+      <tr><td class="qid">Q-P03</td><td><span class="badge b-ok">已決議</span></td><td>流程被編輯時，正在進行中的流程實例用舊設定還是新設定</td><td><b>用舊設定（觸發當下的 <code>flow_snapshot</code>）</b>，使卡片 2 與使用者已看到的卡片 1 語境一致。<b>副作用：</b>改錯字不影響已在跑的流程</td></tr>
+      <tr><td class="qid">Q-P14</td><td><span class="badge b-ok">已決議</span></td><td>真人服務進行中時，自動化推播照發嗎<br><span style="color:var(--muted);">（原待確認 #1 擴充：A 型的延遲推播也可能落在真人服務期間）</span></td><td><b>B 型等待中遇真人接手 → 取消該 run</b>；<b>A 型照發</b>（它是通知，與真人對話無關）。不做「延後至服務結束」（成本較高）</td></tr>
+      <tr><td class="qid">Q-P17</td><td><span class="badge b-slate">中</span></td><td>變數字典完整清單與缺值行為</td><td>建議清單見 §11.6；缺值一律<b>留空</b>，不阻止發送</td></tr>
+      <tr><td class="qid">Q-P18</td><td><span class="badge b-slate">中</span></td><td>「接續下一步」自動降級時要不要提示使用者<br><span style="color:var(--muted);">降級為「開啟連結」後會產生一顆沒有網址的按鈕</span></td><td>建議<b>變更前攔截確認</b>，降級後標記為需補網址</td></tr>
+      <tr><td class="qid">Q-P19</td><td><span class="badge b-slate">中</span></td><td>群組事件是否需要「發送到該群組」的收件人選項</td><td>建議 <b>MVP 不做</b>，已於 §05 明確定義為一律 1:1</td></tr>
+      <tr><td class="qid">Q-P08</td><td><span class="badge b-slate">中</span></td><td>執行歷史保留多久</td><td>建議 <b>90 天</b>後清理（MVP 無查詢介面，但需避免無上限成長）</td></tr>
+      <tr><td class="qid">Q-P11</td><td><span class="badge b-slate">中</span></td><td>流程執行失敗時要通知誰</td><td>建議 <b>MVP 只記 log</b>（與「不做逾時提醒」的取捨一致），Phase 2 補後台查詢入口</td></tr>
+    </table>
+
+    <h3>10.2 需後端確認</h3>
+    <table>
+      <tr><th style="width:70px;">#</th><th style="width:78px;">嚴重度</th><th>項目</th></tr>
+      <tr><td class="qid">Q-B04</td><td><span class="badge b-warn">高</span></td><td><b>成員／組織資料有幾條變更路徑？</b>後台單筆編輯、CSV 批次匯入、與 LINE WORKS 的同步、直接在 LINE WORKS Admin 修改 —— 哪些會經過我方 Service 而能發出事件？<br><b>2026-08-03 決議：降為「高」，MVP 不做 diff-based 補償。</b>已實測 SaaS 後台路徑可正常觸發並送達當事人，非後台路徑不觸發之風險改以文字說明記錄（§09、§11.5），導入時與 HR 約定「組織異動一律於 SaaS 後台操作」。<b>仍需後端回覆路徑清單</b>，以確認 CSV 批次匯入是否同樣經過我方 Service。<span style="color:var(--muted);">（原待確認 #3）</span></td></tr>
+      <tr><td class="qid">Q-B05</td><td><span class="badge b-no">阻斷</span></td><td><b>「Bot 管理者」如何界定，且後台 admin 帳號是否已對應 LINE WORKS userId？</b>沒有對應就無法把訊息推給管理者，該收件人選項需拿掉。<br><b>影響範圍：</b>管理者非預設訊息的對象，此題只影響自動化的收件人選項；但稽核通知已全數改由自動化承接，若為否等同<b>組織異動完全無法通知管理者</b>。<span style="color:var(--muted);">（原待確認 #5）</span></td></tr>
+      <tr><td class="qid">Q-B03</td><td><span class="badge b-warn">高</span></td><td>推播排程的訊息內容目前儲存結構（JSON 欄位／子表）？能否直接沿用，避免兩套訊息格式各自演化</td></tr>
+      <tr><td class="qid">Q-B07</td><td><span class="badge b-warn">高</span></td><td>「內部訊息結構 → LINE WORKS Send API payload」的組裝邏輯是否已抽成可複用 Service？若寫在推播 Controller 內，需先重構</td></tr>
+      <tr><td class="qid">Q-B01</td><td><span class="badge b-slate">中</span></td><td>自動化的等待狀態應另建執行實例表，還是共用既有 <code>bot_conversation_states</code>？（後者為「每人每 Bot 一流程」，會與真人 1v1 競用同一列）</td></tr>
+      <tr><td class="qid">Q-B02</td><td><span class="badge b-slate">中</span></td><td>流程刪除採軟刪除或硬刪除？軟刪除會與「一事件一流程」的唯一約束衝突（刪掉後同事件無法再建）</td></tr>
+      <tr><td class="qid">Q-B06</td><td><span class="badge b-slate">中</span></td><td>素材上傳可否完全復用推播排程通道？流程未儲存就離開時，已上傳的孤兒檔案如何清理</td></tr>
+      <tr><td class="qid">Q-B08</td><td><span class="badge b-slate">中</span></td><td>正式環境的排程器（cron）是否已啟用？多台 worker 的部署形態（影響領取排程項的鎖策略）</td></tr>
+      <tr><td class="qid">Q-B10</td><td><span class="badge b-slate">中</span></td><td>依 Q-P05 決議，需一支「查詢同租戶<b>其他 Bot</b> 已使用哪些組織事件」的 API 供介面警示。權限上該 admin 可能只管得到部分 Bot，需確認可否跨 Bot 查詢</td></tr>
+      <tr><td>—</td><td><span class="badge b-ok">已確認</span></td><td>組織管理已有完整「部門主管」資料，各部門可設主管（原待確認 #4）</td></tr>
+    </table>
+
+    <h3>10.3 需前端確認</h3>
+    <table>
+      <tr><th style="width:70px;">#</th><th style="width:78px;">嚴重度</th><th>項目</th></tr>
+      <tr><td class="qid">Q-F01</td><td><span class="badge b-no">阻斷</span></td><td><b>推播排程的訊息編輯器（格式 chips ＋ 編輯區 ＋ 預覽）是否為可復用元件？</b>若與推播頁面耦合，需先重構抽出並回歸測試推播排程。<b>這是前端工時樂觀／悲觀的最大變數</b>，詳見 §11.7</td></tr>
+      <tr><td class="qid">Q-P09</td><td><span class="badge b-warn">高</span></td><td><b>儲存時機：</b>自動儲存（每次改動即打 API）還是明確的儲存動作？§11.0 定義編輯模型為「就地展開、無 Modal、無儲存驗證」，但未定義儲存時機，這影響 API 設計與 dirty 狀態處理</td></tr>
+      <tr><td class="qid">Q-F02</td><td><span class="badge b-warn">高</span></td><td>按鈕是否有穩定 id（非陣列索引）？「接續下一步」唯一性與「改到這顆」搬移功能依賴此</td></tr>
+      <tr><td class="qid">Q-F03</td><td><span class="badge b-slate">中</span></td><td>按鈕文字未填時，「目前掛在哪一顆」的提示要顯示什麼（建議 fallback「第 N 顆按鈕」）</td></tr>
+      <tr><td class="qid">Q-F04</td><td><span class="badge b-slate">中</span></td><td>Bot 未啟用 callback 時介面如何呈現（群組事件類流程與「接續下一步」皆不可用）</td></tr>
+    </table>
+
+    <h3>10.4 需查證 LINE WORKS 平台文件／實測</h3>
+    <table>
+      <tr><th style="width:70px;">#</th><th style="width:78px;">嚴重度</th><th>項目</th></tr>
+      <tr><td class="qid">Q-L09</td><td><span class="badge b-no">阻斷</span></td><td><b>按鈕／輪播圖編輯器是否開放 postback action？</b><span style="color:var(--muted);">（原待確認 #2，已隨 Quick Reply 方案否決而改寫）</span>若不支援，<b>「等待完成」能力需整體重新評估</b>——不是改用 Quick Reply 就能解決</td></tr>
+      <tr><td class="qid">Q-L08</td><td><span class="badge b-warn">高</span></td><td><b>常駐按鈕在 30 天後是否仍可點擊並正常回傳 postback？</b>本規格的等待機制完全依賴這件事，建議<b>實測</b>而非只讀文件</td></tr>
+      <tr><td class="qid">Q-L01</td><td><span class="badge b-warn">高</span></td><td>群組加入／離開的 callback 事件類型、是否區分「自己加入／被他人加入」、批次加入時是一事件帶多人或多個事件、是否保證送達（漏事件無補償機制）</td></tr>
+      <tr><td class="qid">Q-L03</td><td><span class="badge b-warn">高</span></td><td>Send API 的速率限制（per bot / per tenant，每秒與每日配額）—— 決定限流參數，見 §11.5</td></tr>
+      <tr><td class="qid">Q-L06</td><td><span class="badge b-warn">高</span></td><td>「列表」訊息格式需對齊實際 List Template 規格（欄位、項目上限、項目是否可帶動作）。<span style="color:var(--muted);">（原待確認 #6）</span>目前為示意（沿用推播排程欄位），畫面將於 Figma 微調。<b>工程建議 MVP 先不做列表格式</b>（8 種格式中唯一未經驗證者）。若項目可帶動作，唯一性限制同樣適用（見 §11.0 / §11.0）</td></tr>
+      <tr><td class="qid">Q-L02</td><td><span class="badge b-slate">中</span></td><td>postback data 的長度上限 —— 決定完成訊號識別碼的格式，見 §11.2</td></tr>
+      <tr><td class="qid">Q-L05</td><td><span class="badge b-slate">中</span></td><td>Button Template 按鈕上限是否為 10？輪播 5 張 × 3 顆是否正確？（沿用推播排程數字，需確認已驗證過）</td></tr>
+      <tr><td class="qid">Q-L07</td><td><span class="badge b-slate">中</span></td><td>媒體大小／格式限制，是否需公開可存取 URL 及其有效期</td></tr>
+      <tr><td class="qid">Q-L04</td><td><span class="badge b-ok">已確認</span></td><td><b>Bot 能否對「從未與 Bot 互動過」的成員主動發起 1:1 訊息？→ 可以。</b>已實測：透過 SaaS 後台變更組織資料時，Bot 可對當事人發出 1:1 訊息，不需事先互動。<br><span style="color:var(--muted);">※ 驗證範圍為 SaaS 後台操作路徑；LINE WORKS 端變更仍受 <span class="qid">Q-B04</span> 的事件來源限制。</span></td></tr>
+    </table>
+  </section>
+
+  <!-- 11 -->
+  <div class="devbar" id="s11">
+    <h2>§11　開發實作附錄</h2>
+    <p>以下為工程實作面的資料模型、API 契約、執行語意與技術限制。§01~§10 為需求與介面規格，作為背景參照。</p>
+  </div>
+
+  <section>
+    <p class="lead" style="margin-top:0;"><b>本附錄的定位：</b>§01~§10 回答「要什麼」，本附錄回答「怎麼做得出來、哪裡做不出來」。未決項一律回到 <a href="#s10" style="color:var(--acc);">§10 未決項總表</a>，本附錄不另列清單。</p>
+    <div class="callout warn"><b>前提聲明：</b>以下資料模型與 API 草案是依 <code>lw-cms-api</code>（Laravel / MySQL / Redis / 多租戶 / envelope 回應 / 巢狀路由 / permission middleware）<b>既有慣例</b>推導的草稿，<b>不是定案</b>。欄位命名、與既有 <code>bots</code> / <code>bot_keywords</code> / <code>bot_conversation_states</code> 的整合點，請後端 review 後定案。<br>
+    凡標示「需查證」的 LINE WORKS 平台行為，本文件<b>不做結論</b>，只說明它為什麼會影響設計。</div>
+    <div class="callout"><b>一句話定義這個功能的技術本質：</b>它<b>不是設定 CRUD</b>，而是一個<b>有狀態的、以組織／群組事件為觸發源的延遲訊息排程引擎</b>，附帶單步的使用者回應等待機制。有排程器、有最長 30 天的執行實例、有 webhook 回呼監聽、有失敗重試——<b>複雜度八成在後端</b>，前端主要成本在復用推播排程的訊息編輯器。</div>
+  </section>
+
+  <!-- 11.0 -->
+  <section id="s11-0">
+    <h2 class="sec"><span class="n">11.0</span>介面契約（流程板與訊息編輯器）</h2>
+    <p class="lead">本節為<b>前後端共同依循的介面契約</b>，是實作流程板與訊息編輯器的規格來源。畫面外觀以 mockup 與 Figma 為準（<code>LWS_調整0707.html</code> → Bot 管理 / 5.1 BOT管理設定 / 編輯 / 自動化服務），本節只定義<b>行為與限制</b>。</p>
+
+    <h3>功能位置與流程語法</h3>
+    <table>
+      <tr><th style="width:150px;">功能位置</th><td>Bot 管理 → 5.1 BOT管理設定 → 編輯 → <b>自動化服務</b>；與<b>基本設定</b>、<b>互動設計</b><b>同層並列</b>的頂層分頁，<u>不</u>放在互動設計底下</td></tr>
+      <tr><th>節點序列</th><td><code>初始設定 →（時間 → 卡片）× 1～2 → 結束</code>。流程<b>不另取名稱</b>，其身分＝起始事件，故一事件一流程</td></tr>
+      <tr><th>新增時的預設</th><td><code>初始設定（空）→ 時間（空）→ 卡片（空）→ 結束</code>，三節點皆未設定</td></tr>
+      <tr><th>時間必先於卡片</th><td>每張卡片前面一定有一個時間節點；因 §05 不含「立即」，最短 10 分鐘</td></tr>
+      <tr><th>上限</th><td>最多 <b>2 張卡片</b>（見 §09）</td></tr>
+      <tr><th>編輯模型</th><td><b>不使用 Modal</b>。點節點即<b>就地展開</b>設定面板（左：設定／右：訊息預覽），同時只開一個；打字時節點值與預覽<b>即時同步且游標不中斷</b>；未設定節點以<b>虛線外框</b>＋灰字「尚未設定」表示，不另掛狀態標籤</td></tr>
+    </table>
+
+    <h3>節點可設定內容</h3>
+    <table>
+      <tr><th style="width:110px;">節點</th><th>可設定項目</th><th style="width:300px;">限制</th></tr>
+      <tr><td><b>初始設定</b></td><td>從 §03 的 5 個起始事件擇一（<b>排除自動回覆</b>，它非觸發事件）</td><td>已被其他流程使用的事件呈<b>停用</b>並標示「已被其他流程使用」</td></tr>
+      <tr><td><b>時間</b></td><td>10 分鐘 / 1 小時 / 1 天 / 7 天 / 自訂</td><td>自訂上限 <b>30 天</b>，超過即時顯示錯誤</td></tr>
+      <tr><td><b>卡片</b></td><td>① 訊息區塊（最多 5 則）<br>② 收件對象（複選：本人／直屬主管／Bot 管理者）</td><td>・收件對象<b>逐卡設定</b>，兩張卡可發不同對象<br>・<b>含「接續下一步」的卡片，收件對象鎖定「本人」</b>（依 §04）<br>・只有「開啟連結」的卡片不鎖定<br>・成員移出 Bot 群組時「本人」鎖住，<b>連帶該事件無法使用「接續下一步」</b><br>・勾選「本人」時，若該事件的<b>預設訊息已啟用</b>，需顯示<b>雙重發送警示</b>（不阻擋，由設定者判斷）</td></tr>
+    </table>
+
+    <h3>按鈕動作與「接續下一步」</h3>
+    <div class="callout"><b>「等待使用者完成」由<u>按鈕的動作</u>決定，不是由訊息格式決定。</b>按鈕與輪播圖在每一張卡片都可使用。</div>
+    <table>
+      <tr><th style="width:130px;">動作（介面用語）</th><th style="width:110px;">技術格式</th><th>行為</th></tr>
+      <tr><td><b>接續下一步</b><br><span class="badge b-acc">自動化專屬</span></td><td><code>postback</code></td><td>Bot 收得到；按下後流程往下走。此卡片即「等待卡」，收件對象固定<b>本人</b>。<b>整條流程限一顆</b>，輪播圖不提供</td></tr>
+      <tr><td><b>連結</b></td><td><code>URI</code></td><td>開啟網址；Bot 收不到（§06 無 callback），流程不受影響。收件對象可自由選擇</td></tr>
+      <tr><td><b>關鍵字</b></td><td><code>message</code></td><td>送出該文字。<b>不推進流程</b>——依 §07 屬第 3 層關鍵字回覆，與第 2 層完成監聽是不同機制</td></tr>
+      <tr><td><b>電話</b></td><td><code>tel</code></td><td>撥打號碼；Bot 收不到，流程不受影響</td></tr>
+    </table>
+    <table>
+      <tr><th>卡片位置</th><th style="width:150px;">接續下一步</th><th style="width:120px;">開啟連結</th></tr>
+      <tr><td>有後續步驟的卡片</td><td><span class="badge b-ok">可選</span></td><td><span class="badge b-ok">可選</span></td></tr>
+      <tr><td>最後一張卡片</td><td><span class="badge b-no">停用</span>（後面無步驟可接續）</td><td><span class="badge b-ok">可選</span></td></tr>
+      <tr><td>成員移出 Bot 群組</td><td><span class="badge b-no">停用</span>（本人已離開）</td><td><span class="badge b-ok">可選</span></td></tr>
+    </table>
+    <div class="callout limit"><b>唯一性限制：整條流程只能有一顆「接續下一步」。</b>流程只有一條路徑（§09 不做分支），多顆推進按鈕會讓成員的選擇無法被使用。五條規則：<br>
+    ① <b>跨訊息泡泡互斥</b>——任一泡泡已設定，其他所有泡泡都不能再設<br>
+    ② <b>同泡泡內多顆按鈕互斥</b>——按鈕格式最多 10 顆，其中一顆已設則同泡泡其餘不能設（輪播圖不提供；列表目前無按鈕）<br>
+    ③ <b>呈現</b>——不可設定時<b>顯示 disable（不隱藏）</b>，並標明目前掛在哪一顆按鈕<br>
+    ④ <b>搬移</b>——提供「改到這顆」一鍵搬移，原本那顆自動改為「連結」<br>
+    ⑤ <b>解除</b>——原持有者改為其他動作後，全流程該選項恢復可選</div>
+    <div class="callout"><b>成員端看不出差別：</b>「接續下一步」在成員眼中就是普通按鈕，與「連結」外觀一致，不額外插入按鈕或泡泡。<b>設定端輔助：</b>後台預覽在對應泡泡下方顯示註記（例 <code>↑「我已完成」按下後進入下一步</code>），此註記不發送給成員。</div>
+    <div class="callout"><b>狀態一致性：</b>若因變更事件或步驟結構導致「接續下一步」失去可承接的後續（例：改為成員移出群組），系統<b>自動降級為「開啟連結」並保留區塊</b>，不刪除已設定內容（可見性處理見 <span class="qid">Q-P18</span>）。</div>
+    <div class="callout warn"><b>固定使用 Postback，不使用 Quick Reply</b>（QR 短暫、撐不住最長 30 天窗口）。與 <span class="qid">Q-L09</span> 連動。</div>
+
+    <h3>訊息格式（欄位對齊「互動管理／推播排程」）</h3>
+    <p style="font-size:13px;color:var(--muted);margin:0 0 8px;">一張卡片最多 <b>5 則訊息泡泡</b>，可混搭下列格式。欄位與上限<b>與新增推播完全一致</b>，唯一差異是按鈕動作多了「接續下一步」。編輯方式沿用「格式 chips ＋ 編輯區」，型別選擇器<b>就地展開</b>（不用 Modal）。</p>
+    <table>
+      <tr><th style="width:100px;">格式</th><th>欄位</th><th style="width:170px;">上限 / 備註</th></tr>
+      <tr><td>文字</td><td>文字內容，支援變數</td><td>—</td></tr>
+      <tr><td>貼圖</td><td>從貼圖庫擇一</td><td>—</td></tr>
+      <tr><td>圖片</td><td>上傳圖片</td><td>PNG / JPG，5MB 以內</td></tr>
+      <tr><td>影片</td><td>上傳影片</td><td>MP4，200MB 以內</td></tr>
+      <tr><td>檔案</td><td>上傳檔案</td><td>100MB 以內</td></tr>
+      <tr><td><b>按鈕</b></td><td>標題文字（100 字）＋ 按鈕項目；每顆 ＝ 動作 ＋ 按鈕文字（20 字）＋ 值</td><td>按鈕最多 <b>10 顆</b></td></tr>
+      <tr><td><b>輪播圖</b></td><td>卡片按鈕數量（1／2／3，套用全部卡片）；每張 ＝ 圖片 ＋ 標題（40 字）＋ 內文（60 字）＋ 按鈕</td><td>卡片最多 5 張<br><b>不提供「接續下一步」</b></td></tr>
+      <tr><td><b>列表</b><br><span class="badge b-warn">示意</span></td><td>圖片（選填）、封面標題（100 字）、封面內文（100 字）可個別勾選；項目 ＝ 標題（50 字）＋ 內文（50 字）＋ 圖片</td><td>項目最多 <b>4 項</b>、目前<b>無按鈕</b><br>待依 LINE WORKS List Template 調整（<span class="qid">Q-L06</span>）</td></tr>
+    </table>
+    <div class="callout warn"><b>列表格式為示意，工程建議 MVP 先不做</b>（8 種格式中唯一未經驗證者，<span class="qid">Q-L06</span>）。<b>預先確立：</b>若列表項目日後可帶動作，上述唯一性限制<b>同樣適用</b>。<br><b>不提供「快速回覆」格式</b>——推播排程有，但自動化的等待機制必須是常駐按鈕。</div>
+
+    <h3>訊息預覽</h3>
+    <table>
+      <tr><th style="width:150px;">變數代入</th><td>預覽中變數以<b>示意值</b>顯示（研發部／2026-08-04…）並加底色，讓設定者直接看到成品</td></tr>
+      <tr><th>各式區塊</th><td>8 種格式皆有對應泡泡樣式，最多 5 則依序呈現</td></tr>
+      <tr><th>收件人</th><td>預覽上方顯示「發送給：⋯」，隨對象勾選即時變動</td></tr>
+    </table>
+
+    <h3>流程狀態</h3>
+    <table>
+      <tr><th style="width:150px;">狀態</th><td><b>僅兩種：啟用中 / 已停用。不做草稿狀態。</b></td></tr>
+      <tr><td><b>新建時的預設</b></td><td><b>已停用</b>（三節點皆空的流程不得啟用，否則事件觸發會發出空訊息）。「啟用」在流程不完整時 <b>disable</b> 並指出缺哪一項（事件未選／時間未填／卡片無內容）</td></tr>
+      <tr><td><b>停用的作用範圍</b></td><td><b>一併取消該流程所有「已排程未發送」與「等待完成中」的實例</b>（依 <span class="qid">Q-P02</span> 決議）。停用時顯示「將取消 N 筆等待中的流程」二次確認；<b>刪除亦同</b>，但執行歷史保留</td></tr>
+      <tr><td><b>重新啟用的行為</b></td><td><b>停用為「永久取消」進行中的實例，非「暫停」。</b>重新啟用後<b>不會接續</b>先前被取消的流程，僅對<b>之後新發生的事件</b>生效（被取消的 run 為終態，見 §14.4）。</td></tr>
+      <tr><td><b>層級 / 入口</b></td><td><b>整條流程</b>，不做節點層級開關；入口為卡片右上 ⋯ 選單 →「停用」，<b>不用 switch 開關</b></td></tr>
+      <tr><td><b>標籤呈現</b></td><td>啟用中<b>不顯示任何標籤</b>；已停用顯示「已停用」標籤且<b>整條流程灰階＋降透明度</b></td></tr>
+    </table>
+    <div class="callout warn"><b>停用能力的定位：</b>可防止流程<b>持續</b>觸發，但<b>擋不住瞬間大量觸發</b>——大量組織異動時訊息可能數秒內發送完畢，人工停用來不及。此缺口需靠節流機制解決，未列入 MVP（見 §11.5）。</div>
+
+    <h3>用語與資訊呈現規範</h3>
+    <div class="callout limit">
+      <b>① 「A 型」「B 型」不得出現在使用者介面。</b>此為本文件與工程溝通的內部術語；介面上以「卡片有無 postback 區塊（按鈕／輪播圖）」表達。<br>
+      <b>② 介面上不放需求說明文字。</b>邊界處理、偵測規則、訊息優先序、MVP 限制等一律不在 mockup 呈現（集中於 §05～§09）。介面只顯示<b>設定值本身</b>。<br>
+      <b>③ 不使用狀態標籤描述設定完整度。</b>未設定節點以虛線外框表達即可。
+    </div>
+  </section>
+
+  <!-- 11.1 -->
+  <section id="s11-1">
+    <h2 class="sec"><span class="n">11.1</span>架構分層與資料流</h2>
+    <p class="lead">建議切成五層，各層失敗互不污染，並讓「觸發」與「發送」之間一定隔一層可持久化的排程佇列。</p>
+
+    <div class="layers">
+      <div class="layer">
+        <h5>① 觸發層（Trigger）<span class="who badge b-slate">後端</span></h5>
+        <p>兩種來源：<b>組織事件</b>（後台改部門／職位／新增成員 → Laravel Event / Model Observer）與 <b>群組事件</b>（LINE WORKS webhook callback → 既有 <code>BotWebhookController</code>）。職責僅止於：辨識事件 → 找出對應流程 → 建立執行實例。</p>
+      </div>
+      <div class="layer">
+        <h5>② 實例層（Run）<span class="who badge b-slate">後端</span></h5>
+        <p>每個「事件 × 當事人」開一筆 run，鎖定當下的<b>流程版本</b>與<b>變數快照</b>（姓名、新舊部門…）。run 是唯一有生命週期的東西，狀態機見 <a href="#s11-4">§11.4</a>。</p>
+      </div>
+      <div class="layer">
+        <h5>③ 排程層（Schedule）<span class="who badge b-slate">後端</span></h5>
+        <p>每個待發卡片寫一筆 job（含 <code>scheduled_at</code>）到<b>資料表</b>，由排程器<b>每分鐘</b>掃描到期項目丟進 queue。<b>不使用 queue 的 delay 直接排 30 天</b>——理由見下方 callout。</p>
+      </div>
+      <div class="layer">
+        <h5>④ 發送層（Dispatch）<span class="who badge b-slate">後端</span></h5>
+        <p>解析收件人 → 組裝訊息 payload → 呼叫 Send API → 記錄結果、重試、速率控制。</p>
+      </div>
+      <div class="layer">
+        <h5>⑤ 監聽層（Listen）<span class="who badge b-slate">後端</span></h5>
+        <p>webhook 收到 postback → 用 token 找回 run → 冪等地推進流程。必須與既有關鍵字／fallback 的優先序共存（<a href="#s7">§07</a>）。</p>
+      </div>
+    </div>
+
+    <div class="callout limit"><b>為什麼排程不能只用 queue delay：</b>Redis 的 delayed job 排 30 天有三個現實問題——① Redis 資料若非持久化或做過 flush，等待中的流程<b>整批消失且無跡可查</b>；② 要「取消」某條等待中的流程（停用流程、真人服務接手）時，delayed job <b>難以精準撤回</b>；③ 部署時的 queue restart 與版本不相容風險累積 30 天。<br>
+    <b>建議：DB 表當作真實來源，queue 只負責「現在該發的那一批」</b>，是可觀測、可取消、可重跑的做法，也讓未來「等待中名單」功能免費取得。</div>
+
+    <h3>A 型（無等待）資料流</h3>
+    <div class="flowrow">
+      <div class="node acc">事件</div><div class="arrow">→</div>
+      <div class="node">建立 run<br><span style="font-weight:400;">＋變數快照</span></div><div class="arrow">→</div>
+      <div class="node">寫 job<br><span style="font-weight:400;">scheduled_at</span></div><div class="arrow">→</div>
+      <div class="node wait">排程器<br><span style="font-weight:400;">每分鐘掃</span></div><div class="arrow">→</div>
+      <div class="node green">解析收件人<br>組裝→Send API</div><div class="arrow">→</div>
+      <div class="node">run=completed</div>
+    </div>
+
+    <h3>B 型（含一次等待）資料流</h3>
+    <div class="flowrow">
+      <div class="node acc">事件</div><div class="arrow">→</div>
+      <div class="node">run<br><span style="font-weight:400;">＋advance_token</span></div><div class="arrow">→</div>
+      <div class="node">job#1 → 發卡片 1<br><span style="font-weight:400;">（含 postback 按鈕）</span></div><div class="arrow">→</div>
+      <div class="node wait">run=waiting<br><span style="font-weight:400;">最長 30 天</span></div><div class="arrow">→</div>
+      <div class="node acc">webhook<br>postback</div><div class="arrow">→</div>
+      <div class="node">job#2<br><span style="font-weight:400;">delay 起算點</span></div><div class="arrow">→</div>
+      <div class="node green">發卡片 2</div>
+    </div>
+
+    <h3>與既有系統的整合點（請後端 review）</h3>
+    <table>
+      <tr><th style="width:160px;">我們需要</th><th style="width:190px;">既有可用</th><th>備註 / 風險</th></tr>
+      <tr><td>Bot 清單、callback 開關</td><td><code>bots</code>（<code>enable_callback</code> / <code>callback_url</code>）</td><td>群組事件與 postback 都依賴 callback；<b>Bot 未開 callback 時，B 型與群組事件類流程應無法啟用</b>（前端需擋，<span class="qid">Q-F04</span>）</td></tr>
+      <tr><td>webhook 進線</td><td><code>webhooks/lineworks/bots/{botId}</code>（<code>BotWebhookController</code>）</td><td>需在此新增 postback 分派邏輯，且<b>不得破壞既有關鍵字／fallback 行為</b></td></tr>
+      <tr><td>即時流程狀態</td><td><code>bot_conversation_states</code>（<code>flow</code>/<code>step</code>/<code>expires_at</code>）</td><td><span class="qid">Q-B01</span> 該表為「每人每 Bot 一流程」，會與真人 1v1（<code>flow='human_service'</code>）競用同一列 → <b>建議自動化另建 run 表</b>，僅在需要互斥時查詢對方</td></tr>
+      <tr><td>關鍵字比對</td><td><code>bot_keywords</code>（<code>match_type='exact'</code>）</td><td><a href="#s7">§07</a> 要求「真人服務關鍵字為保留字，設定時擋掉或警告」→ 自動化的「關鍵字」動作按鈕值需與此表交叉驗證</td></tr>
+      <tr><td>權限</td><td><code>admins</code> + Role + <code>permission</code> middleware</td><td>新 menu key（建議 <code>bot-automation</code>）需補 <code>MenuStructureSeeder</code> / <code>RoleSeeder</code>（<span class="qid">Q-B08</span>）</td></tr>
+      <tr><td>多租戶</td><td><code>tenants</code> + <code>tenant_id</code></td><td>所有新表必掛，Model <code>use BelongsToTenant</code></td></tr>
+      <tr><td>訊息素材上傳</td><td>推播排程既有的上傳機制</td><td><span class="qid">Q-B06</span> 應完全復用，不另建通道</td></tr>
+    </table>
+  </section>
+  <!-- 11.2 -->
+  <section id="s11-2">
+    <h2 class="sec"><span class="n">11.2</span>資料模型草案</h2>
+    <p class="lead">四張表：<b>flows</b>（規則）／<b>steps</b>（卡片與時間）／<b>runs</b>（執行實例）／<b>jobs</b>（排程項）。全部依既有慣例：<code>tenant_id</code>、snake_case、欄位加中文 comment、<code>timestamps()</code>。</p>
+
+    <h3><code>bot_automation_flows</code> — 流程規則</h3>
+<pre><code>Schema::create('bot_automation_flows', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('tenant_id')->constrained()->cascadeOnDelete();
+    $table->foreignId('bot_id')->constrained()->cascadeOnDelete();
+    $table->string('trigger_event', 40)
+          ->comment('member_dept_changed|member_position_changed|member_created|group_joined|group_left');
+    $table->boolean('enabled')->default(false)->comment('啟用中/已停用;新建預設 false(見 §11.0)');
+    $table->unsignedSmallInteger('expire_days')->default(30)->comment('時效期限(天),Lv1 固定 30');
+    $table->unsignedInteger('version')->default(1)->comment('內容變更即 +1;run 觸發時鎖版本');
+    $table->foreignId('created_by')->nullable()->constrained('admins')->nullOnDelete();
+    $table->foreignId('updated_by')->nullable()->constrained('admins')->nullOnDelete();
+    $table->timestamps();
+    $table->softDeletes();
+    $table->unique(['bot_id', 'trigger_event'], 'uniq_bot_event'); // 一事件一流程
+});</code></pre>
+    <div class="callout"><b><code>unique(bot_id, trigger_event)</code> 就是「一事件一流程」的實作</b>（依 <span class="qid">Q-P05</span> 決議為 per Bot）。介面的「已被其他流程使用 → 停用選項」只是 UX 防線，DB 層仍需這道約束以防併發建立。<br>
+    <b>注意 SoftDeletes 與 unique 的衝突：</b>軟刪除一條流程後，同事件無法再建（唯一鍵仍佔用）。解法是唯一鍵改含 <code>deleted_at</code>，或刪除採硬刪除＋保留 run 歷史。<span class="qid">Q-B02</span></div>
+
+    <h3><code>bot_automation_steps</code> — 時間節點 + 卡片</h3>
+<pre><code>Schema::create('bot_automation_steps', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('tenant_id')->constrained()->cascadeOnDelete();
+    $table->foreignId('flow_id')->constrained('bot_automation_flows')->cascadeOnDelete();
+    $table->unsignedTinyInteger('seq')->comment('1 或 2,第幾張卡片(MVP 上限 2)');
+    $table->unsignedInteger('delay_minutes')->nullable()
+          ->comment('本卡片前的時間節點,10 ~ 43200(30天);null=尚未設定;無 0 值(見 §05)');
+    $table->json('recipients')->nullable()->comment('["self","manager","bot_admin"];含推進按鈕時鎖 ["self"]');
+    $table->json('bubbles')->nullable()->comment('最多 5 則訊息泡泡,結構對齊推播排程');
+    $table->boolean('has_advance_action')->default(false)
+          ->comment('本卡是否含「接續下一步」postback;全流程限一,由 Service 驗證');
+    $table->timestamps();
+    $table->unique(['flow_id', 'seq']);
+});</code></pre>
+    <table>
+      <tr><th style="width:170px;">設計取捨</th><th>說明</th></tr>
+      <tr><td>為何 steps 獨立成表而非 flows 的 JSON 欄位</td><td>① job 需要外鍵指向具體 step；② 未來放寬 2 張上限時不需改結構；③ 便於查詢「哪些流程含推進按鈕」。若後端偏好單表＋JSON 也可行，但 <code>has_advance_action</code> 這類需被查詢的欄位建議拉成實體欄位。</td></tr>
+      <tr><td><code>bubbles</code> 為何用 JSON</td><td>訊息泡泡的結構<b>必須與推播排程完全一致</b>（<a href="#s11-0">§11.0</a>）。若推播排程已有既有的訊息儲存格式，<b>直接沿用它的 schema，不要另創</b>。<span class="qid">Q-B03</span></td></tr>
+      <tr><td>欄位皆 nullable</td><td>因無草稿狀態，新增流程時三節點皆為空值即入庫。<b>配套：<code>flows.enabled</code> 預設 false，不完整不得啟用</b>（見 §11.0），執行層另做兜底檢查。</td></tr>
+    </table>
+
+    <h3><code>bot_automation_runs</code> — 執行實例</h3>
+<pre><code>Schema::create('bot_automation_runs', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('tenant_id')->constrained()->cascadeOnDelete();
+    $table->foreignId('bot_id')->constrained()->cascadeOnDelete();
+    $table->foreignId('flow_id')->constrained('bot_automation_flows')->cascadeOnDelete();
+    $table->unsignedInteger('flow_version')->comment('觸發當下的流程版本');
+    $table->json('flow_snapshot')->nullable()->comment('觸發當下的完整流程設定快照(見 Q-P03)');
+    $table->string('subject_user_id')->comment('事件當事人 LW userId');
+    $table->json('context')->nullable()->comment('變數快照:姓名/舊部門/新部門/職位/事件日期');
+    $table->string('state', 20)->default('scheduled')
+          ->comment('scheduled|waiting|completed|expired|cancelled|failed');
+    $table->unsignedTinyInteger('current_seq')->default(0)->comment('已完成到第幾張卡');
+    $table->char('advance_token', 32)->nullable()->unique()
+          ->comment('postback 識別用短 token,不放業務資料');
+    $table->dateTime('triggered_at');
+    $table->dateTime('expires_at')->comment('triggered_at + expire_days;整條 run 硬上限(見 §05)');
+    $table->dateTime('advanced_at')->nullable()->comment('按下推進按鈕的時間(=卡片2 delay 起算點)');
+    $table->dateTime('finished_at')->nullable();
+    $table->string('end_reason', 40)->nullable()
+          ->comment('completed|expired|flow_disabled|superseded|human_service|send_failed|subject_unreachable');
+    $table->timestamps();
+    $table->index(['flow_id', 'state']);
+    $table->index(['bot_id', 'subject_user_id', 'state']);
+    $table->index(['state', 'expires_at']);
+});</code></pre>
+    <div class="callout"><b><code>advance_token</code> 的設計理由：</b>postback 的 data 欄位長度有限，且是使用者端可見／可能被重放的字串（<span class="qid">Q-L02</span> 需查證上限）。因此<b>不要把 run_id、step、租戶資訊塞進 postback data</b>，只放一個隨機 token（如 <code>auto:9f3c…</code>），伺服器端反查。token 用完即失效，同時解決重複點擊與 <span class="qid">Q-P01</span> 決議的「舊流程被取消後按鈕失效」兩個問題。</div>
+    <div class="callout warn"><b>即使 MVP 不做「等待中名單」，這張表也必須存在。</b>它是取消、逾時作廢、失敗排查、以及未來可見度功能的唯一依據。若把等待狀態只放 Redis，逾時規則與可觀測性都會失去。</div>
+
+    <h3><code>bot_automation_jobs</code> — 排程項（真實來源）</h3>
+<pre><code>Schema::create('bot_automation_jobs', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('tenant_id')->constrained()->cascadeOnDelete();
+    $table->foreignId('run_id')->constrained('bot_automation_runs')->cascadeOnDelete();
+    $table->foreignId('step_id')->constrained('bot_automation_steps')->cascadeOnDelete();
+    $table->dateTime('scheduled_at')->comment('到期時間,排程器每分鐘掃 due');
+    $table->string('state', 20)->default('pending')->comment('pending|dispatched|sent|failed|cancelled');
+    $table->unsignedTinyInteger('attempts')->default(0);
+    $table->json('result')->nullable()->comment('各收件人送達結果 [{recipient,user_id,ok,error}]');
+    $table->text('last_error')->nullable();
+    $table->dateTime('sent_at')->nullable();
+    $table->timestamps();
+    $table->index(['state', 'scheduled_at']);
+});</code></pre>
+    <table>
+      <tr><th style="width:130px;">機制</th><th>建議做法</th></tr>
+      <tr><td>掃描</td><td>排程器每分鐘撈 <code>state=pending AND scheduled_at &lt;= now()</code>，以 <code>SELECT … FOR UPDATE SKIP LOCKED</code> 或原子性 <code>update state=dispatched</code> 領取，避免多台 worker 重複發送（<span class="qid">Q-B08</span>）。<b>需有 batch size 上限</b>，見 §11.5。</td></tr>
+      <tr><td>精度</td><td>誤差 <b>±1 分鐘</b>。最小單位是 10 分鐘故可接受，已寫入 <a href="#s5">§05</a> 避免 QA 判為 bug。</td></tr>
+      <tr><td>重試</td><td>暫時性錯誤（5xx / timeout / rate limit）重試 <b>3 次</b>、指數退避（1 / 5 / 25 分）；永久性錯誤（收件人不存在、400）<b>不重試</b>直接記 failed。</td></tr>
+      <tr><td>速率控制</td><td>發送 worker 需限流（見 §11.5），建議 Redis token bucket，per tenant / per bot 各一層。</td></tr>
+      <tr><td>清理</td><td>建議 <b>90 天</b>後歸檔或刪除，避免無上限成長（<span class="qid">Q-P08</span>）。</td></tr>
+    </table>
+  </section>
+
+  <!-- 11.3 -->
+  <section id="s11-3">
+    <h2 class="sec"><span class="n">11.3</span>API 契約草案</h2>
+    <p class="lead">依既有慣例：後台群組 middleware <code>['auth:admin','tenant.match','tenant.resolve','log.admin']</code>、per-bot 巢狀路由、每路由 <code>permission:bot-automation,&lt;action&gt;</code>、回應一律 envelope <code>{ message, data, meta, errors }</code>。</p>
+
+    <table>
+      <tr><th style="width:66px;">Method</th><th>路由</th><th style="width:100px;">permission</th><th>說明</th></tr>
+      <tr><td>GET</td><td><code>/bots/{botId}/automation-flows</code></td><td><code>view</code></td><td>流程清單（最多 5 條，<b>不分頁</b>）。<code>meta</code> 帶回可用事件、已佔用事件、<code>enable_callback</code></td></tr>
+      <tr><td>GET</td><td><code>/bots/{botId}/automation-flows/meta</code></td><td><code>view</code></td><td>事件字典、變數字典、格式上限（供前端渲染選項，避免硬編碼）；<b>並帶回同租戶其他 Bot 已使用的組織事件</b>供警示（<span class="qid">Q-B10</span>）</td></tr>
+      <tr><td>POST</td><td><code>/bots/{botId}/automation-flows</code></td><td><code>create</code></td><td>建立空流程（三節點皆空值、<code>enabled=false</code>）</td></tr>
+      <tr><td>GET</td><td><code>/bots/{botId}/automation-flows/{id}</code></td><td><code>view</code></td><td>單一流程（含 steps 與 bubbles）</td></tr>
+      <tr><td>PUT</td><td><code>/bots/{botId}/automation-flows/{id}</code></td><td><code>edit</code></td><td><b>整條流程一次覆寫</b>（含 steps 陣列）。理由見下方 callout</td></tr>
+      <tr><td>PATCH</td><td><code>/bots/{botId}/automation-flows/{id}/state</code></td><td><code>edit</code></td><td>啟用 / 停用。<b>停用時一併取消未完成 run 並回傳受影響筆數</b>（依 <span class="qid">Q-P02</span> 決議）；<b>啟用時驗證流程完整性</b>，不完整則回 <code>BusinessException</code></td></tr>
+      <tr><td>DELETE</td><td><code>/bots/{botId}/automation-flows/{id}</code></td><td><code>delete</code></td><td>刪除；同樣取消未完成 run，run 歷史保留</td></tr>
+      <tr><td>GET</td><td><code>/bots/{botId}/automation-flows/{id}/runs</code></td><td><code>view</code></td><td><span class="badge b-slate">Phase 2</span>等待中／歷史執行清單（可見度功能，API 先預留）</td></tr>
+    </table>
+
+    <div class="callout"><b>為何建議 PUT 整條而非逐節點 PATCH：</b><a href="#s11-0">§11.0</a> 是「就地展開、無 Modal、無儲存驗證」，加上 §11.0 的<b>跨泡泡唯一性限制</b>（整條流程只能有一顆推進按鈕）——這條規則<b>只能在「看到整條流程」時驗證</b>。若做逐節點 PATCH，後端每次都要重讀整條再驗證，等於 PUT 但多了不一致的中間狀態。<br>
+    <b>連帶待確認 <span class="qid">Q-P09</span>：</b>儲存時機是自動儲存還是明確儲存動作？這決定前端要不要管 dirty 狀態。</div>
+
+    <div class="callout warn"><b>驗證責任必須在後端重做一次。</b>前端的 disable／鎖定只是 UX，以下規則後端 Request/Service 層必須獨立驗證：<br>
+    ① 一事件一流程（DB unique 兜底）　② 整條流程僅一顆 <code>advance</code> 動作　③ 最後一張 step 不可含 <code>advance</code>（連帶：<b>B 型必為 2 張卡</b>）　④ 含 <code>advance</code> 的 step 收件人強制 <code>["self"]</code>　⑤ <code>group_left</code> 事件不可含 <code>advance</code>、收件人不可含 <code>self</code>　⑥ <code>delay_minutes</code> ∈ [10, 43200]　⑦ 泡泡數 ≤ 5、按鈕 ≤ 10、輪播 ≤ 5 張　⑧ 按鈕的「關鍵字」值不得等於真人服務保留字　⑨ 啟用時流程必須完整</div>
+
+    <h3>建議的 Resource 輸出形狀</h3>
+<pre><code>{
+  "message": "ok",
+  "data": {
+    "id": 12, "bot_id": 3,
+    "trigger_event": "group_joined",
+    "trigger_event_label": "成員加入 Bot 群組",
+    "enabled": true, "version": 4,
+    "steps": [
+      { "seq": 1, "delay_minutes": 10, "recipients": ["self"],
+        "has_advance_action": true,
+        "bubbles": [ { "type": "text", "text": "{{姓名}} 你好…" },
+                     { "type": "buttons", "title": "…",
+                       "items": [ { "id": "b1", "action": "advance", "label": "我已完成" },
+                                  { "id": "b2", "action": "uri", "label": "教材", "value": "https://…" } ] } ] },
+      { "seq": 2, "delay_minutes": 1440, "recipients": ["self","manager"],
+        "has_advance_action": false, "bubbles": [ … ] }
+    ]
+  },
+  "meta": {
+    "enable_callback": true,
+    "used_events": ["member_created"],
+    "used_by_other_bots": ["member_created"],
+    "advance_holder": { "step_seq": 1, "bubble_index": 1, "button_id": "b1", "label": "我已完成" },
+    "waiting_run_count": 7
+  }
+}</code></pre>
+    <div class="callout"><b><code>meta.advance_holder</code> 是給前端用的：</b>§11.0 規則 3 要求「不可設定時顯示 disable，並標明目前掛在哪一顆按鈕」。前端需要一個穩定的 <b>button id</b> 才能定位與實作「改到這顆」搬移功能——因此<b>每顆按鈕必須有持久化的 id</b>，不能只靠陣列索引（索引會因刪除按鈕而位移）。<span class="qid">Q-F02</span></div>
+  </section>
+  <!-- 11.4 -->
+  <section id="s11-4">
+    <h2 class="sec"><span class="n">11.4</span>執行語意與異常路徑</h2>
+    <p class="lead">§01~§10 描述了「會發生什麼」，這一節補齊「異常時的行為」。</p>
+
+    <h3>run 狀態機</h3>
+    <table>
+      <tr><th style="width:105px;">狀態</th><th>進入條件</th><th>離開條件</th></tr>
+      <tr><td><code>scheduled</code></td><td>事件觸發、run 建立、job#1 已排定</td><td>→ <code>waiting</code>（卡片 1 含推進按鈕且已送出）<br>→ <code>completed</code>（A 型最後一張卡送出）<br>→ <code>cancelled</code> / <code>failed</code></td></tr>
+      <tr><td><code>waiting</code></td><td>含推進按鈕的卡片已成功送達本人</td><td>→ <code>scheduled</code>（收到 postback，排 job#2）<br>→ <code>expired</code>（<code>expires_at</code> 到）<br>→ <code>cancelled</code></td></tr>
+      <tr><td><code>completed</code></td><td>最後一張卡片送出（Send API 回 2xx 即算，不追送達回執）</td><td>終態</td></tr>
+      <tr><td><code>expired</code></td><td>逾 30 天未推進</td><td>終態，<b>靜默、不發任何訊息</b>（依 §05）</td></tr>
+      <tr><td><code>cancelled</code></td><td>流程被停用／刪除（<span class="qid">Q-P02</span>）、被新事件取代（<span class="qid">Q-P01</span>）、真人服務接手、當事人不可達</td><td>終態</td></tr>
+      <tr><td><code>failed</code></td><td>重試耗盡仍無法送出</td><td>終態，<b>MVP 不通知任何人</b>（僅 log，<span class="qid">Q-P11</span>）</td></tr>
+    </table>
+
+    <h3>冪等與併發（後端必處理）</h3>
+    <table>
+      <tr><th style="width:185px;">情境</th><th>處理方式</th></tr>
+      <tr><td>使用者重複點推進按鈕<br><span style="color:var(--muted);">按鈕常駐，必然發生</span></td><td>以 <code>advance_token</code> 為冪等鍵：<code>UPDATE runs SET state='scheduled', advanced_at=now() WHERE advance_token=? AND state='waiting'</code>，<b>影響列數 0 即忽略</b>（不回訊息、不報錯）。第二次點擊完全靜默。</td></tr>
+      <tr><td>同一成員同一流程重複觸發<br><span class="badge b-ok">已決議 Q-P01</span></td><td><b>保留新事件、取消舊 run</b>：建立新 run 前先將同 <code>flow_id + subject_user_id</code> 的未完成 run 轉 <code>cancelled</code>（<code>end_reason=superseded</code>），舊 <code>advance_token</code> 隨之失效。<br><b>使用者手上舊卡片的按鈕仍在且可點 → 點擊時查不到有效 token → 靜默忽略</b>（與重複點擊同一路徑處理）。</td></tr>
+      <tr><td>多台 worker 同時撈到同一 job</td><td>原子性領取（<code>SKIP LOCKED</code> 或檢查 affected rows）</td></tr>
+      <tr><td>流程被編輯，但有 run 正在等待中</td><td><span class="badge b-ok">已決議</span><span class="qid">Q-P03</span> run 執行時<b>一律用觸發當下的 <code>flow_snapshot</code>（舊設定）</b>，避免使用者按完成後收到與當初語境不符的卡片 2。代價：改錯字不影響已在跑的流程</td></tr>
+      <tr><td>webhook 重送</td><td>群組事件與 postback 都需<b>去重</b>：以 callback 的唯一識別（event id / timestamp+user）做短期 Redis 去重鍵</td></tr>
+      <tr><td>當事人在等待期間離職 / 被停用</td><td>發送時偵測收件人不可用 → run 轉 <code>cancelled</code>（<code>end_reason=subject_unreachable</code>），不重試、不預先掃描</td></tr>
+      <tr><td>B 型卡片 1 發不到本人</td><td><b>整條 run 直接 cancelled</b>——否則會留一筆永遠等到逾期的殭屍 run</td></tr>
+    </table>
+
+    <h3>與真人服務、關鍵字的互斥關係</h3>
+    <div class="callout ok"><b>好消息：</b>因完成訊號採 <b>postback</b>（<a href="#s6">§06</a> 定案），它走的是與關鍵字／fallback <b>不同的 callback 事件類型</b>，兩者天生不衝突。<b>webhook 分派邏輯：先看是不是 postback → 是則查 token → 命中則推進並結束處理；不是 postback 才進既有的關鍵字／fallback 流程。</b>既有行為完全不受影響。</div>
+    <div class="callout ok"><b><span class="badge b-ok">已決議</span>與真人服務的交集（<span class="qid">Q-P14</span>）：</b>發卡片時若該成員正處於真人服務中（查 <code>bot_conversation_states</code> 或 <code>human_service_conversations.state IN (pending,serving)</code>）——<br>
+    ・<b>B 型「等待完成」中遇真人接手 → 取消該 run</b>（狀態轉 <code>cancelled</code>）。B 型的前提是「人在且會回應」，真人接手代表對話情境已變，繼續等待無意義。<br>
+    ・<b>A 型 → 照發</b>，不檢查真人服務狀態。A 型是單向通知，與真人對話無關。<br>
+    <b>不實作「延後至服務結束」</b>（需額外的排程重掛機制，成本較高）。</div>
+  </section>
+
+  <!-- 11.5 -->
+  <section id="s11-5">
+    <h2 class="sec"><span class="n">11.5</span>觸發來源技術盤點</h2>
+    <p class="lead"><a href="#s3">§03</a> 已正確指出「後台事件與群組事件是兩種不同觸發來源」。但真正的風險比這更深一層：<b>組織資料的變更可能不經過我們的後台</b>。</p>
+
+    <table>
+      <tr><th style="width:120px;">事件</th><th style="width:140px;">技術來源</th><th>風險 / 待確認</th></tr>
+      <tr><td>新增成員</td><td rowspan="3">後台操作 → Laravel Event / Model Observer</td><td rowspan="3"><span class="badge b-warn">高</span><span class="qid">Q-B04</span> <b>成員／組織資料的變更路徑有幾條？</b>後台單筆編輯、CSV 批次匯入、與 LINE WORKS 的定期同步、直接在 LINE WORKS Admin 改組織 —— <b>只有經過我方 Service 的路徑才發得出事件</b>。<br>
+      <b>處理方式：</b>已實測 SaaS 後台路徑可正常觸發並送達當事人，MVP <b>不做</b> diff-based 補償偵測。<br>
+      <b>殘餘風險：</b>因對象為當事人本人，非後台路徑的變更不觸發時會造成<b>部分員工收到、部分沒收到</b>。緩解方式為營運約定：導入時與 HR 明訂「組織異動一律於 SaaS 後台操作」。<br>
+      <b>仍需後端回覆：</b>CSV 批次匯入是否同樣經過我方 Service？（若否，月初批次匯入這個主要情境會整批不觸發。）<br>
+      <b>觸發判準：</b>不是「成員資料被更新」就發事件，而是<b>部門 ID／職位 ID 實際變動</b>才發；其他欄位修改、部門或職位<b>改名</b>（成員所屬 ID 未變）一律不發。以字串比對實作會導致整個部門的成員同時收到誤通知。</td></tr>
+      <tr><td>成員部門異動</td></tr>
+      <tr><td>成員職位異動</td></tr>
+      <tr><td>成員加入 Bot 群組</td><td rowspan="2">LINE WORKS webhook callback</td><td rowspan="2"><span class="qid">Q-L01</span> 需確認 callback 事件類型與可靠性：事件名稱、是否<b>區分「自己加入」與「被他人加入」</b>、批次加入時是<b>一個事件帶多人</b>還是多個事件、<b>是否保證送達</b>（漏事件時無補償機制）。<br>另：Bot 必須 <code>enable_callback=true</code>，否則此類流程完全不會觸發 → 前端需擋（<span class="qid">Q-F04</span>）。</td></tr>
+      <tr><td>成員移出 Bot 群組</td></tr>
+    </table>
+
+    <h3>批次觸發的風險</h3>
+    <div class="callout limit"><b><a href="#s11-0">§11.0</a> 已察覺「人工停用擋不住瞬間大量觸發」，但實際規模更大。</b>典型情境：月初 HR 一次匯入 200 位新成員。<br>
+    <b>量體分兩層看：</b><br>
+    ・<b>預設訊息</b>：200 位當事人 × 各 1 則 = <b>200 則、且為「立即」發送</b>（無 10 分鐘延遲可當緩衝）。<br>
+    ・<b>自動化</b>：200 個 run，若對象複選了主管與管理者，10 分鐘後同一時刻再發 <b>200~600 則</b>。<br>
+    <b>三個必須處理的點：</b><br>
+    ① <b>Send API 速率限制</b>（<span class="qid">Q-L03</span>）—— 需查證 per bot / per tenant 的配額。超限會整批失敗；預設訊息那 200 則沒有延遲可以攤平，更為吃緊。<br>
+    ② <b>排程器單次撈取量</b> —— 必須有 batch size 上限，否則一次撈 600 筆同步發送會拖垮 worker。<br>
+    ③ <b>訊息品質</b> —— 對象改為當事人後，<b>預設訊息不再有洗版問題</b>（每人只收自己那一則），故<b>不需要彙整或去重機制、工程請勿為預設訊息實作彙整邏輯</b>；洗版風險只剩自動化選了主管／管理者時（少數人收到大量通知）。<br>
+    <b>即使 MVP 不做「熔斷」，也必須做發送端限流</b>（technical safeguard，不是功能）：per bot 每秒 N 則、超出的自然延後。<b>注意：</b>此限流會使預設訊息的「立即」在批次情境下實際變成數分鐘內陸續送達——「立即」應理解為「儘速、不排隊等待設定時間」。自動化側已寫入 <a href="#s5">§05</a>「不早於設定時間」。</div>
+
+    <h3>收件人解析</h3>
+    <table>
+      <tr><th style="width:110px;">收件人</th><th style="width:150px;">解析方式</th><th>風險</th></tr>
+      <tr><td><code>self</code>（本人）</td><td>事件當事人的 LW userId</td><td><span class="badge b-ok">已確認</span><span class="qid">Q-L04</span> <b>可對「從未與 Bot 互動過」的成員主動發起 1:1 訊息</b>（已實測，SaaS 後台路徑）。<code>self</code> 是三個組織事件<b>預設訊息的唯一收件人</b>，建議將其解析失敗獨立記錄以利追查。</td></tr>
+      <tr><td><code>manager</code>（直屬主管）</td><td>當事人所屬部門的主管</td><td>資料已確認可抓。解析時機已定為<b>發送當下</b>（見 §05）。另需定義：部門無主管 → 略過（§08 已定）；主管本人已離職 → 略過還是往上一層？</td></tr>
+      <tr><td><code>bot_admin</code>（Bot 管理者）</td><td>?</td><td><span class="badge b-no">阻斷</span><span class="qid">Q-B05</span> ① 「Bot 管理者」在既有 <code>admins</code> + Role 體系中如何界定 —— 有 per-bot 歸屬關聯，或「所有具 bot 管理權限的 admin」？<br>② 更關鍵：<b>要推訊息給 admin，必須有 admin ↔ LW userId 的對應</b>。<b>若沒有，這個收件人選項做不出來。</b><br><b>影響範圍：</b>管理者只出現在自動化，但稽核通知已全數改由自動化承接，若此題為否等同<b>組織異動完全無法通知管理者</b>。</td></tr>
+    </table>
+    <div class="callout warn"><b>解析失敗的統一原則：</b><a href="#s8">§08</a> 只寫「新增成員尚未分部門 → 主管略過，不報錯」。推廣為統一規則：<b>部分收件人解析失敗 → 略過該收件人、其餘照發、記錄於 <code>jobs.result</code>；全部失敗 → job 記 failed，但 run 不中斷後續步驟。</b>B 型例外：卡片 1 發不到本人 → 整條 run 直接 cancelled。</div>
+  </section>
+  <!-- 11.6 -->
+  <section id="s11-6">
+    <h2 class="sec"><span class="n">11.6</span>訊息組裝與平台限制</h2>
+    <p class="lead"><a href="#s11-0">§11.0</a> 已明訂「欄位與新增推播完全一致」——這是很好的決策，工程上應<b>直接復用</b>而非平行實作。</p>
+
+    <h3>復用推播排程的前提</h3>
+    <table>
+      <tr><th style="width:130px;">層次</th><th style="width:230px;">復用目標</th><th>待確認</th></tr>
+      <tr><td>資料結構</td><td>bubbles 的 JSON schema 沿用推播排程</td><td><span class="qid">Q-B03</span> 推播排程的訊息內容目前存哪、結構為何？</td></tr>
+      <tr><td>組裝邏輯</td><td>「內部結構 → Send API payload」的轉換器</td><td><span class="qid">Q-B07</span> 是否已抽成可複用 Service？若寫在推播 Controller 裡需先重構</td></tr>
+      <tr><td>素材上傳</td><td>圖片／影片／檔案的上傳與 URL 取得</td><td><span class="qid">Q-B06</span> 另需處理<b>孤兒檔案</b>（流程未儲存就離開時已上傳的素材）</td></tr>
+      <tr><td>前端編輯器</td><td>「格式 chips ＋ 編輯區」元件</td><td><span class="qid">Q-F01</span> <b>前端工作量的最大變數</b>，見 §11.7</td></tr>
+      <tr><td>唯一新增</td><td>按鈕動作多一種 <code>advance</code>（接續下一步）</td><td>在共用元件上開一個「可用動作清單」參數，<b>不要 fork 元件</b></td></tr>
+    </table>
+
+    <h3>平台限制需查證</h3>
+    <table>
+      <tr><th style="width:140px;">項目</th><th style="width:190px;">需求文件寫的</th><th>需查證</th></tr>
+      <tr><td>常駐按鈕存活期</td><td>等待窗口最長 30 天</td><td><span class="qid">Q-L08</span> <b>30 天後按鈕是否仍可點擊並正常回傳 postback？整個等待機制依賴這件事，建議實測。</b></td></tr>
+      <tr><td>postback 支援</td><td>固定使用 postback</td><td><span class="qid">Q-L09</span> 編輯器是否開放 postback action？<b>不支援則「等待完成」需整體重新評估</b></td></tr>
+      <tr><td>postback data 長度</td><td>—</td><td><span class="qid">Q-L02</span> 上限多少字元？（決定 <code>advance_token</code> 格式）</td></tr>
+      <tr><td>按鈕 / 輪播數量</td><td>按鈕 ≤ 10、輪播 ≤ 5 張 × 3 顆</td><td><span class="qid">Q-L05</span> 沿用推播排程數字，需確認已驗證過</td></tr>
+      <tr><td>列表格式</td><td><b>已標示為「示意」</b>，欄位尚未對齊</td><td><span class="qid">Q-L06</span> <b>工程建議 MVP 先不做列表格式</b>——欄位未定，且它是 8 種格式中唯一沒有既有驗證的，可省一輪返工</td></tr>
+      <tr><td>媒體限制</td><td>影片 200MB / 檔案 100MB</td><td><span class="qid">Q-L07</span> 平台的大小與格式限制，是否需公開可存取 URL（影響儲存與過期策略）</td></tr>
+    </table>
+
+    <h3>變數字典（需求未定義完整，<span class="qid">Q-P17</span>）</h3>
+    <div class="callout warn"><b>§11.0 的訊息格式只出現了 <code>{{姓名}}</code> 一個例子，訊息預覽提到部門與日期。</b>工程需要一份完整字典，每個變數要定義：<br>
+    ① <b>來源欄位</b>　② <b>各事件是否可用</b>（例：<code>{{舊部門}}</code> 只有部門異動事件有）　③ <b>缺值行為</b>（建議留空，不顯示 <code>{{}}</code>、不阻止發送）　④ <b>快照時機</b>（建議事件觸發當下就存進 <code>runs.context</code>，否則 30 天後「新部門」可能又變了）<br>
+    <b>建議清單：</b><code>{{姓名}}</code> <code>{{部門}}</code> <code>{{舊部門}}</code> <code>{{新部門}}</code> <code>{{職位}}</code> <code>{{舊職位}}</code> <code>{{新職位}}</code> <code>{{主管姓名}}</code> <code>{{事件日期}}</code> <code>{{群組名稱}}</code><br>
+    <b>已定案：</b>「成員部門異動／職位異動／新增成員」<b>只提供 <code>{部門}</code> 與 <code>{日期}</code></b>，預設訊息與自動化相同，<b>不提供</b> <code>{{姓名}}</code> 等其他變數；上方建議清單僅適用其餘事件。<br>
+    <b>前端連帶需求：</b>變數選單需依「當前選定的起始事件」動態過濾；使用者若先寫好變數再改事件，需提示失效變數。</div>
+  </section>
+
+  <!-- 11.7 -->
+  <section id="s11-7">
+    <h2 class="sec"><span class="n">11.7</span>前端實作要點</h2>
+    <p class="lead">介面契約（<a href="#s11-0">§11.0</a>）已相當完整，可直接實作。前端的風險不在版面，而在<b>元件復用</b>與<b>跨元件的規則狀態</b>。</p>
+
+    <h3><span class="badge b-no">阻斷</span>訊息編輯器能否復用（<span class="qid">Q-F01</span>）</h3>
+    <table>
+      <tr><th style="width:230px;">情況</th><th>影響</th></tr>
+      <tr><td>已是獨立元件（props 驅動、無頁面耦合）</td><td>只需傳入「可用動作清單」與「上限設定」，前端工作量集中在流程板本身 —— <b>樂觀情境</b></td></tr>
+      <tr><td>與推播頁面耦合（直接讀該頁 store、寫死 API 路徑）</td><td>需<b>先重構抽元件</b>再接自動化。這是一筆需獨立估時的前置工作，且會動到既有上線功能 → <b>需回歸測試推播排程</b></td></tr>
+      <tr><td>完全重寫一套</td><td><span class="badge b-no">不建議</span>8 種格式 × 欄位驗證 × 預覽 = 大量重複邏輯，兩邊會逐漸長歪，違背「欄位與推播完全一致」的意圖</td></tr>
+    </table>
+    <div class="callout"><b>估時前必須先回答這題。</b>前端總工時的樂觀／悲觀差距幾乎全部來自這裡。</div>
+
+    <h3>「接續下一步」唯一性 —— 需要流程層級狀態</h3>
+    <div class="callout warn">§11.0 的五條規則（跨泡泡互斥、同泡泡互斥、disable 並標明掛在哪、一鍵搬移、解除後恢復）意味著<b>這個狀態不能放在按鈕元件或泡泡元件內</b>，必須提升到<b>整條流程的 store</b>。<br>
+    <b>實作建議：</b>流程層維護單一 <code>advanceHolder = { stepSeq, bubbleIndex, buttonId } | null</code>。所有按鈕的該選項可用性 = <code>advanceHolder === null || 是自己</code>。「改到這顆」＝一次 mutation 同時改兩顆按鈕（原持有者降為「連結」）。<br>
+    <b>連帶需要：</b>① 每顆按鈕的穩定 id（<span class="qid">Q-F02</span>）② 按鈕文字為空時的 disable 提示 fallback（建議「第 N 顆按鈕」，<span class="qid">Q-F03</span>）</div>
+
+    <h3>自動降級的可見性（<span class="qid">Q-P18</span>）</h3>
+    <div class="callout warn">§11.0 最後一條：「若因變更事件或步驟結構導致接續下一步失去可承接的後續，系統<b>自動</b>將該按鈕降級為開啟連結並保留區塊」。<br>
+    <b>工程要問的是：降級時要不要告知使用者？</b>按鈕動作被靜默改掉、且「連結」動作<b>需要一個 URL 而降級時沒有 URL</b> —— 會產生一顆<b>沒有值的連結按鈕</b>（無效狀態）。<br>
+    <b>建議：</b>① 變更前攔截提示「此變更會使『我已完成』按鈕失效，將改為開啟連結且需重新填入網址，是否繼續？」② 降級後該按鈕標記為未完成。</div>
+
+    <h3>其他前端項目</h3>
+    <table>
+      <tr><th style="width:170px;">項目</th><th>說明 / 建議</th></tr>
+      <tr><td>就地展開 + 即時同步 + 游標不中斷</td><td>技術可行。注意：節點顯示值建議 <b>debounce 150~300ms</b> 更新，避免每個按鍵觸發整條流程重繪導致 input 失焦；元件 key 必須穩定（用 step id / button id，非索引）</td></tr>
+      <tr><td>callback 未啟用的 Bot</td><td><span class="qid">Q-F04</span> <b>群組事件類流程與「接續下一步」都依賴 callback</b>；Bot 未開時應停用這些選項並說明原因（可導向 Bot 基本設定）</td></tr>
+      <tr><td>不完整流程</td><td>依 §11.0：新建預設「已停用」，「啟用」在不完整時 disable 並指出缺哪一項</td></tr>
+      <tr><td>停用的二次確認</td><td>依 <span class="qid">Q-P02</span> 決議，停用需顯示「將取消 N 筆等待中的流程」（<code>meta.waiting_run_count</code>）</td></tr>
+      <tr><td>跨 Bot 重複警示</td><td>依 <span class="qid">Q-P05</span> 決議，選擇組織事件時若其他 Bot 已設定，需顯示警示（<code>meta.used_by_other_bots</code>）</td></tr>
+      <tr><td>預覽保真度</td><td>輪播圖與列表較難與平台完全一致。建議先求「結構正確、比例近似」，並標註「實際呈現以 LINE WORKS 為準」</td></tr>
+      <tr><td>權限</td><td>view / create / edit / delete 四種 action 要分別反映（唯讀者看得到但不能改）</td></tr>
+    </table>
+  </section>
+
+  <!-- 11.8 -->
+  <section id="s11-8">
+    <h2 class="sec"><span class="n">11.8</span>建議實作切分</h2>
+    <p class="lead">建議分三階段，讓「排程引擎」這個高風險項先獨立驗證，不與訊息編輯器的工作互相阻塞。</p>
+
+    <table>
+      <tr><th style="width:74px;">階段</th><th style="width:200px;">範圍</th><th>可動工的前提</th></tr>
+      <tr>
+        <td><b>P0</b><br><span class="badge b-acc">先做</span></td>
+        <td><b>技術驗證（Spike）</b><br>・常駐按鈕 30 天後可否回傳（<span class="qid">Q-L08</span>）<br>・編輯器是否開放 postback（<span class="qid">Q-L09</span>）<br>・Send API 配額（<span class="qid">Q-L03</span>）<br>・admin ↔ LW userId 對應（<span class="qid">Q-B05</span>）<br><span style="color:var(--muted);font-size:12px;">✓ 對未互動成員能否推 1:1（<span class="qid">Q-L04</span>）—— 2026-08-03 已實測通過<br>△ 組織事件變更路徑（<span class="qid">Q-B04</span>）—— 已降級，仍需後端回覆 CSV 匯入路徑</span></td>
+        <td><b>無前提，立即可做。</b>這些題的答案會改變功能可行性與需求內容，先做可避免整體返工。建議 1~2 天內完成。<b><span class="qid">Q-B05</span> 為本階段最關鍵項</b>——管理者的通知已全數改由自動化承接，沒有其他管道可退</td>
+      </tr>
+      <tr>
+        <td><b>P1</b></td>
+        <td><b>後端執行層</b><br>・四張表 + Model/Service<br>・觸發 → run → job → 發送<br>・postback 監聽與冪等<br>・逾時作廢、取消、限流<br>・A 型完整可跑（純文字）</td>
+        <td><span class="badge b-ok">Q-P01 / Q-P02 / Q-P03 / Q-P05 / Q-P14 / C-01 已決議</span>剩餘前提：<b><span class="qid">Q-B05</span></b>（阻斷，僅影響管理者收件人）、<span class="qid">Q-B04</span>（高，需後端回覆路徑清單）。<br><b>可用純文字訊息先跑通全流程</b>，不等訊息編輯器。<br><b>實作要求：</b>組織事件的觸發判準須<b>比對部門 ID／職位 ID</b>而非名稱字串；<b>預設訊息不得實作彙整／去重邏輯</b>（見 §11.5）</td>
+      </tr>
+      <tr>
+        <td><b>P2</b></td>
+        <td><b>前端 + 完整訊息格式</b><br>・流程板 + 就地展開面板<br>・復用訊息編輯器（7 種格式）<br>・唯一性規則與搬移<br>・預覽<br>・啟用／停用</td>
+        <td>需先有 <b><span class="qid">Q-F01</span></b>（阻斷，決定要不要先重構）、<span class="qid">Q-P09</span>（儲存策略）、<span class="qid">Q-F02</span>。<br><b>列表格式（第 8 種）建議延後至 <span class="qid">Q-L06</span> 定案</b></td>
+      </tr>
+      <tr>
+        <td><b>P3</b><br><span class="badge b-slate">Phase 2</span></td>
+        <td>等待中名單可見度、失敗查詢介面、節流／熔斷、服務時段限制</td>
+        <td><b>Phase 2 項目。因 P1 已把 run 落 DB，這些屬純查詢與規則疊加，不需重做執行層</b></td>
+      </tr>
+    </table>
+
+    <div class="callout ok"><b>整體評估：</b>需求收斂度高、且已正確識別 postback／callback 的技術本質。<b>主要缺口不在功能定義，而在異常路徑與執行語意</b>——即 §11.4~§11.5 補齊的部分。<br>
+    <b>最需要優先處理的是 P0 的技術驗證</b>，其中最關鍵的剩餘阻斷為 <span class="qid">Q-B05</span>（管理者帳號對應）與 <span class="qid">Q-F01</span>（訊息編輯器可否復用）。</div>
+  </section>
+  <p class="foot">Bot 自動化腳本 需求規格書 v0.7（對象調整＋文件重整）｜2026-08-04｜需求篇 §01~§10 為設計收斂結果；開發篇 §11 為工程草案，實作前請逐項與後端／前端確認。</p>
+
+</div>
+</body>
+</html>
