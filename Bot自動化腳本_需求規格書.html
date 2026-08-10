@@ -95,8 +95,8 @@
     <h1>Bot 自動化腳本 — 需求規格書</h1>
     <div class="lead" style="color:#dfe7f5;margin:0;">LINE Works Bot 模組擴建｜事件觸發的自動化訊息機制</div>
     <div class="meta">
-      <span><b>版本</b> v0.7（對象調整＋文件重整）</span>
-      <span><b>日期</b> 2026-08-04</span>
+      <span><b>版本</b> v0.8（組織事件移除管理者＋聊天室政策相依）</span>
+      <span><b>日期</b> 2026-08-10</span>
       <span><b>撰寫</b> UX（Jessica）</span>
       <span><b>狀態</b> 需求＋介面已收斂；開發篇待工程 review</span>
     </div>
@@ -173,7 +173,7 @@
         <h4>自動化腳本</h4>
         <div class="sub">Bot 設定｜延伸流程・進階</div>
         <ul>
-          <li>對象：<b>可選（本人／主管／管理者，複選）</b></li>
+          <li>對象：<b>可選（本人／主管，複選）</b><br><span style="font-size:12px;">管理者僅限兩個群組事件</span></li>
           <li>時間：<b>只走延遲（10 分鐘～最大 30 天，無立即）</b></li>
           <li>流程：A 型 / B 型、可等完成</li>
         </ul>
@@ -194,16 +194,16 @@
     
 
     <p style="font-weight:700;margin:22px 0 4px;">各事件的對象、參數與觸發來源</p>
-    <p style="font-size:13px;color:var(--muted);margin:0 0 8px;"><b>對象規則一句話：預設訊息一律發給當事人（不給選）；自動化可複選當事人／直屬主管／Bot 管理者。</b>「自動回覆」為預設訊息專用，不進自動化；<b>「成員移出 Bot 群組」的當事人鎖住、不給選</b>。</p>
-    <p style="font-size:13px;color:var(--muted);margin:0 0 8px;"><b>參數規則一句話：</b>自動化因可能發給主管／管理者或批次彙整，故<b>不含</b> <code>{姓名}{部門}</code>（各列已分「預設訊息／自動化」標示）。</p>
+    <p style="font-size:13px;color:var(--muted);margin:0 0 8px;"><b>對象規則一句話：預設訊息一律發給當事人（不給選）；自動化可複選當事人／直屬主管。「Bot 管理者」僅限兩個群組事件，三個組織事件不提供。</b>「自動回覆」為預設訊息專用，不進自動化；<b>「成員移出 Bot 群組」的當事人鎖住、不給選</b>。</p>
+    <p style="font-size:13px;color:var(--muted);margin:0 0 8px;"><b>參數規則一句話：預設訊息與自動化使用<u>同一組</u>參數，不再區分</b>（收件人只剩當事人與其直屬主管，各自只收到與自己相關的那一則，無批次彙整情境）。<br><b>參數主體：</b><code>{姓名}</code><code>{部門}</code> 一律解析為<b>事件當事人</b>，非收件人；發給直屬主管時亦同。取值為<b>事件觸發當下的快照</b>（見 <a href="#s11-2">§11.2</a> <code>runs.context</code>）。</p>
     <table>
       <tr><th style="width:132px;">事件</th><th style="width:96px;">預設訊息<br>發送對象</th><th style="width:150px;">自動化設定<br>可選對象</th><th style="width:132px;">參數設定值</th><th>觸發來源</th></tr>
-      <tr><td>成員部門異動</td><td rowspan="3">當事人</td><td rowspan="3">當事人／直屬主管／<br>Bot 管理者<br><span style="color:var(--muted);font-size:12px;">（複選）</span></td><td rowspan="3"><b>預設訊息</b> <code>{姓名}</code> <code>{部門}</code> <code>{日期}</code> <code>{時間}</code><br><b>自動化</b> <code>{日期}</code> <code>{時間}</code></td><td rowspan="3"><span class="badge b-slate">後台（主動推播）</span><br><span class="badge b-warn">警示</span> <b>僅「SaaS 後台」操作才會觸發。</b>若 HR 改於 <b>LINE WORKS Admin</b> 端變更組織，或走定期同步路徑，<b>系統抓不到此異動、事件不會發出</b>，該名成員不會收到通知。導入時須與 HR 約定組織異動一律於 SaaS 後台操作（風險詳見 <a href="#s11-5">§11.5</a> <span class="qid">Q-B04</span>）</td></tr>
+      <tr><td>成員部門異動</td><td rowspan="3">當事人</td><td rowspan="3">當事人／直屬主管<br><span style="color:var(--muted);font-size:12px;">（複選）</span><br><span class="badge b-no">不提供 Bot 管理者</span></td><td rowspan="3"><code>{姓名}</code> <code>{部門}</code> <code>{日期}</code> <code>{時間}</code><br><span style="color:var(--muted);font-size:12px;">預設訊息與自動化相同</span></td><td rowspan="3"><span class="badge b-slate">後台（主動推播）</span><br><span class="badge b-warn">警示</span> <b>僅「SaaS 後台」操作才會觸發。</b>若 HR 改於 <b>LINE WORKS Admin</b> 端變更組織，或走定期同步路徑，<b>系統抓不到此異動、事件不會發出</b>，該名成員不會收到通知。導入時須與 HR 約定組織異動一律於 SaaS 後台操作（風險詳見 <a href="#s11-5">§11.5</a> <span class="qid">Q-B04</span>）</td></tr>
       <tr><td>成員職位異動</td></tr>
       <tr><td>新增成員</td></tr>
-      <tr><td>成員加入 Bot 群組</td><td>當事人</td><td>當事人／直屬主管／<br>Bot 管理者<br><span style="color:var(--muted);font-size:12px;">（複選）</span></td><td><code>{姓名}</code> <code>{部門}</code> <code>{日期}</code> <code>{時間}</code></td><td rowspan="2"><span class="badge b-acc">群組（callback）</span><br><span style="color:var(--muted);font-size:12px;">Bot 須 <code>enable_callback=true</code>，否則不會觸發</span></td></tr>
+      <tr><td>成員加入 Bot 群組</td><td>當事人</td><td>當事人／直屬主管／<br>Bot 管理者<br><span style="color:var(--muted);font-size:12px;">（複選）</span></td><td><code>{姓名}</code> <code>{部門}</code> <code>{日期}</code> <code>{時間}</code></td><td rowspan="2"><span class="badge b-acc">群組（callback）</span><br><span style="color:var(--muted);font-size:12px;"><b>兩個前置條件缺一不觸發：</b>① Bot 已啟用 callback ② Bot 聊天室政策為「可加入群組聊天室」（政策於其他模組設定，見 <a href="#s11-5">§11.5</a>）</span></td></tr>
       <tr><td>成員移出 Bot 群組</td><td>群組<br><span style="color:var(--muted);font-size:12px;">（本人已離開）</span></td><td>直屬主管／<br>Bot 管理者<br><span style="color:var(--muted);font-size:12px;">（複選）</span><br><span class="badge b-no">當事人鎖住</span></td><td><code>{姓名}</code> <code>{部門}</code> <code>{日期}</code> <code>{時間}</code></td></tr>
-      <tr><td>自動回覆（fallback）</td><td>當事人<br><span style="color:var(--muted);font-size:12px;">（發訊息者）</span></td><td><span class="badge b-no">不適用</span><br><span style="color:var(--muted);font-size:12px;">僅預設訊息</span></td><td><b>預設訊息</b> <code>{姓名}</code> <code>{部門}</code> <code>{日期}</code> <code>{時間}</code><br><b>自動化</b> <span style="color:var(--muted);">不適用</span></td><td><span class="badge b-slate">訊息未命中</span><br><b>群組中須 <code>@Bot</code> 提及才觸發</b>（1:1 對話則直接觸發）。若群組內每則未命中都回覆會洗版，故加此限制</td></tr>
+      <tr><td>自動回覆（fallback）</td><td>當事人<br><span style="color:var(--muted);font-size:12px;">（發訊息者）</span></td><td><span class="badge b-no">不適用</span><br><span style="color:var(--muted);font-size:12px;">僅預設訊息</span></td><td><code>{姓名}</code> <code>{部門}</code> <code>{日期}</code> <code>{時間}</code><br><span style="color:var(--muted);font-size:12px;">僅預設訊息，無自動化</span></td><td><span class="badge b-slate">訊息未命中</span><br><b>群組中須 <code>@Bot</code> 提及才觸發</b>（1:1 對話則直接觸發）。若群組內每則未命中都回覆會洗版，故加此限制</td></tr>
     </table>
     
 
@@ -281,7 +281,7 @@
     <table>
       <tr><th style="width:130px;">參數</th><th>選項</th><th>規則</th></tr>
       <tr><td>時間</td><td><b>只走延遲</b>：10 分鐘 / 1 小時 / 1 天 / 7 天 / 自訂（最大 30 天）<br><b>自訂 ＝ 數值 ＋ 單位下拉（分鐘／小時／天）</b>，有效範圍 10 分鐘 ~ 30 天</td><td><b>不含「立即」</b>（立即屬預設訊息）。<br><b>計時起點：</b>第 1 張卡從<b>事件發生</b>起算；第 2 張卡在 B 型從<b>「完成」當下</b>起算、在 A 型從<b>第 1 張卡實際送出</b>起算。<br>實際送達為「不早於設定時間」，非精準準時（誤差 ±1 分鐘，批次時可能更久）</td></tr>
-      <tr><td>對象</td><td><b>複選</b>：本人 / 直屬主管 / Bot 管理者<br><b>一律為 1:1 個人訊息</b>，不發送到群組</td><td>選項<b>隨事件動態</b>：成員移出群組時「本人」鎖住（見下）。<br>「直屬主管」於<b>推播當下</b>解析（非事件當下鎖定），故 30 天後若主管已換人，收件者為新主管</td></tr>
+      <tr><td>對象</td><td><b>複選</b>：本人 / 直屬主管 / Bot 管理者<br><b>一律為 1:1 個人訊息</b>，不發送到群組</td><td>選項<b>隨事件動態</b>（見下矩陣）：成員移出群組時「本人」鎖住；<b>三個組織事件不提供「Bot 管理者」</b>。<br>「直屬主管」於<b>推播當下</b>解析（非事件當下鎖定），故 30 天後若主管已換人，收件者為新主管</td></tr>
       <tr><td>內容</td><td>自動化自行撰寫</td><td>與預設訊息<b>分開</b>，不引用預設訊息（避免雙重發送）</td></tr>
       <tr><td><b>時效期限</b></td><td>系統預設 <b>30 天</b>（Lv1，不開放調整）</td><td>等待中的流程逾 30 天未完成／未觸發 → <b>自動作廢（靜默取消）</b></td></tr>
     </table>
@@ -290,9 +290,11 @@
     <h3>對象 × 事件 可選矩陣</h3>
     <table>
       <tr><th>事件</th><th>本人</th><th>直屬主管</th><th>Bot 管理者</th></tr>
-      <tr><td>加入群組 / 新增成員 / 部門異動 / 職位異動</td><td><span class="badge b-ok">可（需可達）</span></td><td><span class="badge b-ok">可</span></td><td><span class="badge b-ok">可</span></td></tr>
-      <tr><td>成員移出群組</td><td><span class="badge b-no">鎖住（人已離開）</span></td><td><span class="badge b-ok">可</span></td><td><span class="badge b-ok">可</span></td></tr>
+      <tr><td>新增成員 / 部門異動 / 職位異動</td><td><span class="badge b-ok">可（需可達）</span></td><td><span class="badge b-ok">可</span></td><td><span class="badge b-no">不提供</span></td></tr>
+      <tr><td>成員加入 Bot 群組</td><td><span class="badge b-ok">可（需可達）</span></td><td><span class="badge b-ok">可</span></td><td><span class="badge b-ok">可</span></td></tr>
+      <tr><td>成員移出 Bot 群組</td><td><span class="badge b-no">鎖住（人已離開）</span></td><td><span class="badge b-ok">可</span></td><td><span class="badge b-ok">可</span></td></tr>
     </table>
+    <p style="font-size:13px;color:var(--muted);margin:8px 0 0;">三個組織事件的收件人只有當事人與其直屬主管，各自僅收到與自己相關的那一則，故<b>不需要彙整或摘要機制</b>。「Bot 管理者」的組織異動稽核改由後台異動紀錄查詢。</p>
     
     
   </section>
@@ -372,9 +374,11 @@
     <div class="callout limit"><b>不做靜音時段：</b>延遲若落在深夜或假日照樣發送。未來可補「僅在服務時段發送」。</div>
     <div class="callout limit"><b>組織事件僅在「SaaS 後台操作路徑」才會觸發：</b>變更若發生在 LINE WORKS Admin 端或定期同步路徑，事件不會觸發，將造成<b>部分員工收到通知、部分沒收到</b>。MVP 不做補償機制，導入時需與 HR 約定「組織異動一律於 SaaS 後台操作」（見 §11.5 <span class="qid">Q-B04</span>）。</div>
     <div class="callout limit"><b>同一次人事作業可能產生多則通知：</b>部門＋職位同時異動、先建檔後補部門、新增成員後又加入 Bot 群組 —— 當事人會收到 2 則。<b>MVP 不做合併／抑制</b>，各則文案須能獨立成立。</div>
-    <div class="callout limit"><b>管理者／主管的通知一定慢於當事人：</b>這兩種對象只能走自動化，最短延遲 10 分鐘，且會佔用「每隻 Bot 5 條流程」額度；三個組織事件都要通知管理者將佔掉 3 條。</div>
+    <div class="callout limit"><b>主管／管理者的通知一定慢於當事人：</b>這兩種對象只能走自動化，最短延遲 10 分鐘。</div>
+    <div class="callout limit"><b>三個組織事件不通知 Bot 管理者：</b>新增成員／部門異動／職位異動的收件人只有當事人與直屬主管。管理者若需掌握組織異動，改由<b>後台異動紀錄</b>查詢，本功能不提供推播。</div>
+    <div class="callout limit"><b>相依於 Bot 聊天室政策（他模組設定）：</b>「成員加入／移出 Bot 群組」兩個事件需政策為<b>「可加入群組聊天室」</b>才會觸發；政策為<b>「僅限 1 對 1 聊天室」</b>時這兩個事件不可用，僅其餘事件可設定。政策的設定介面不在本功能範圍，但行為相依，見 §11.5。</div>
     <div class="callout limit"><b>流程長度上限：</b>一條流程最多 <b>2 張卡片</b>（即 <code>初始設定 → 時間 → 卡片 → 時間 → 卡片 → 結束</code>），不做更深的串鏈、不做分支與條件判斷。</div>
-    <div class="callout limit"><b>一事件一流程：</b>每個起始事件只能建立<b>一條</b>自動化流程，已被使用的事件不會出現在其他流程的選項中。<b>上限為每隻 Bot 各 5 條</b>（＝ 5 個事件各一條）。同一事件的多段訊息請用同一條流程的兩張卡片表達。<br>
+    <div class="callout limit"><b>一事件一流程：</b>每個起始事件只能建立<b>一條</b>自動化流程，已被使用的事件不會出現在其他流程的選項中。<b>上限為每隻 Bot 各 5 條</b>（＝ 5 個事件各一條）；聊天室政策為「僅限 1 對 1」時可用事件剩 3 個，額度呈現為「<b>N / 3（2 個事件因聊天室政策不可用）</b>」。同一事件的多段訊息請用同一條流程的兩張卡片表達。<br>
     <b>連帶限制：</b>組織層事件（新增成員／部門異動／職位異動）在多隻 Bot 各自設定時會<b>對同一位員工重複發送內容相同的訊息</b>，系統不阻止（人為設定失誤，MVP 先忽略）。</div>
   </section>
 
@@ -384,7 +388,7 @@
     <p class="lead">全文件唯一的未決項清單（需求端與工程端合併）。<b>阻斷 = 沒答案無法估時、無法開工。</b>編號規則：<span class="qid">Q-P</span> PM 決策｜<span class="qid">Q-B</span> 問後端｜<span class="qid">Q-F</span> 問前端｜<span class="qid">Q-L</span> 查證 LINE WORKS 平台。</p>
 
     <div class="callout limit"><b>目前有 3 項阻斷級未決：</b><span class="qid">Q-B05</span>（管理者帳號對應）、<span class="qid">Q-F01</span>（訊息編輯器可否復用）、<span class="qid">Q-L09</span>（編輯器是否開放 postback）。<br>
-    <b><span class="qid">Q-B05</span> 的影響範圍：</b>Bot 管理者非預設訊息的對象，此題只影響<b>自動化的收件人選項</b>，但管理者的通知已全數改由自動化承接，若為否則等同無法通知管理者。</div>
+    <b><span class="qid">Q-B05</span> 的影響範圍：</b>已縮小為<b>「成員加入／移出 Bot 群組」兩個事件的收件人選項</b>（三個組織事件已不提供管理者）。若為否，拿掉此選項即可，其中「成員移出 Bot 群組」將只剩「直屬主管」一個收件人。</div>
 
     <h3>10.1 需 PM 決策</h3>
     <table>
@@ -405,7 +409,7 @@
     <table>
       <tr><th style="width:70px;">#</th><th style="width:78px;">嚴重度</th><th>項目</th></tr>
       <tr><td class="qid">Q-B04</td><td><span class="badge b-warn">高</span></td><td><b>成員／組織資料有幾條變更路徑？</b>後台單筆編輯、CSV 批次匯入、與 LINE WORKS 的同步、直接在 LINE WORKS Admin 修改 —— 哪些會經過我方 Service 而能發出事件？<br><b>2026-08-03 決議：降為「高」，MVP 不做 diff-based 補償。</b>已實測 SaaS 後台路徑可正常觸發並送達當事人，非後台路徑不觸發之風險改以文字說明記錄（§09、§11.5），導入時與 HR 約定「組織異動一律於 SaaS 後台操作」。<b>仍需後端回覆路徑清單</b>，以確認 CSV 批次匯入是否同樣經過我方 Service。<span style="color:var(--muted);">（原待確認 #3）</span></td></tr>
-      <tr><td class="qid">Q-B05</td><td><span class="badge b-no">阻斷</span></td><td><b>「Bot 管理者」如何界定，且後台 admin 帳號是否已對應 LINE WORKS userId？</b>沒有對應就無法把訊息推給管理者，該收件人選項需拿掉。<br><b>影響範圍：</b>管理者非預設訊息的對象，此題只影響自動化的收件人選項；但稽核通知已全數改由自動化承接，若為否等同<b>組織異動完全無法通知管理者</b>。<span style="color:var(--muted);">（原待確認 #5）</span></td></tr>
+      <tr><td class="qid">Q-B05</td><td><span class="badge b-no">阻斷</span></td><td><b>「Bot 管理者」如何界定，且後台 admin 帳號是否已對應 LINE WORKS userId？</b>沒有對應就無法把訊息推給管理者，該收件人選項需拿掉。<br><b>影響範圍：</b>僅「成員加入／移出 Bot 群組」兩個事件的收件人選項（三個組織事件已不提供管理者）。若為否，拿掉此選項即可，「成員移出 Bot 群組」將只剩「直屬主管」。<span style="color:var(--muted);">（原待確認 #5）</span></td></tr>
       <tr><td class="qid">Q-B03</td><td><span class="badge b-warn">高</span></td><td>推播排程的訊息內容目前儲存結構（JSON 欄位／子表）？能否直接沿用，避免兩套訊息格式各自演化</td></tr>
       <tr><td class="qid">Q-B07</td><td><span class="badge b-warn">高</span></td><td>「內部訊息結構 → LINE WORKS Send API payload」的組裝邏輯是否已抽成可複用 Service？若寫在推播 Controller 內，需先重構</td></tr>
       <tr><td class="qid">Q-B01</td><td><span class="badge b-slate">中</span></td><td>自動化的等待狀態應另建執行實例表，還是共用既有 <code>bot_conversation_states</code>？（後者為「每人每 Bot 一流程」，會與真人 1v1 競用同一列）</td></tr>
@@ -424,7 +428,7 @@
       <tr><td class="qid">Q-P09</td><td><span class="badge b-warn">高</span></td><td><b>儲存時機：</b>自動儲存（每次改動即打 API）還是明確的儲存動作？§11.0 定義編輯模型為「就地展開、無 Modal、無儲存驗證」，但未定義儲存時機，這影響 API 設計與 dirty 狀態處理</td></tr>
       <tr><td class="qid">Q-F02</td><td><span class="badge b-warn">高</span></td><td>按鈕是否有穩定 id（非陣列索引）？「接續下一步」唯一性與「改到這顆」搬移功能依賴此</td></tr>
       <tr><td class="qid">Q-F03</td><td><span class="badge b-slate">中</span></td><td>按鈕文字未填時，「目前掛在哪一顆」的提示要顯示什麼（建議 fallback「第 N 顆按鈕」）</td></tr>
-      <tr><td class="qid">Q-F04</td><td><span class="badge b-slate">中</span></td><td>Bot 未啟用 callback 時介面如何呈現（群組事件類流程與「接續下一步」皆不可用）</td></tr>
+      <tr><td class="qid">Q-F04</td><td><span class="badge b-slate">中</span></td><td><b>設定層可用性規則：</b>Bot 未啟用 callback 時，<b>預設訊息與自動化服務整組不可使用</b>；聊天室政策為「僅限 1 對 1」時，「成員加入／移出 Bot 群組」兩個事件不可選。需前端確認可據此擋下。<span style="color:var(--muted);">（介面如何呈現不在本規格範圍，由 PD 定義）</span></td></tr>
     </table>
 
     <h3>10.4 需查證 LINE WORKS 平台文件／實測</h3>
@@ -432,7 +436,7 @@
       <tr><th style="width:70px;">#</th><th style="width:78px;">嚴重度</th><th>項目</th></tr>
       <tr><td class="qid">Q-L09</td><td><span class="badge b-no">阻斷</span></td><td><b>按鈕／輪播圖編輯器是否開放 postback action？</b><span style="color:var(--muted);">（原待確認 #2，已隨 Quick Reply 方案否決而改寫）</span>若不支援，<b>「等待完成」能力需整體重新評估</b>——不是改用 Quick Reply 就能解決</td></tr>
       <tr><td class="qid">Q-L08</td><td><span class="badge b-warn">高</span></td><td><b>常駐按鈕在 30 天後是否仍可點擊並正常回傳 postback？</b>本規格的等待機制完全依賴這件事，建議<b>實測</b>而非只讀文件</td></tr>
-      <tr><td class="qid">Q-L01</td><td><span class="badge b-warn">高</span></td><td>群組加入／離開的 callback 事件類型、是否區分「自己加入／被他人加入」、批次加入時是一事件帶多人或多個事件、是否保證送達（漏事件無補償機制）</td></tr>
+      <tr><td class="qid">Q-L01</td><td><span class="badge b-warn">高</span></td><td>群組加入／離開的 callback 事件類型、是否區分「自己加入／被他人加入」、批次加入時是一事件帶多人或多個事件、是否保證送達（漏事件無補償機制）<br><b>驗證前提：</b>測試 Bot 的聊天室政策須設為「可加入群組聊天室」，否則收不到事件會得到錯誤結論</td></tr>
       <tr><td class="qid">Q-L03</td><td><span class="badge b-warn">高</span></td><td>Send API 的速率限制（per bot / per tenant，每秒與每日配額）—— 決定限流參數，見 §11.5</td></tr>
       <tr><td class="qid">Q-L06</td><td><span class="badge b-warn">高</span></td><td>「列表」訊息格式需對齊實際 List Template 規格（欄位、項目上限、項目是否可帶動作）。<span style="color:var(--muted);">（原待確認 #6）</span>目前為示意（沿用推播排程欄位），畫面將於 Figma 微調。<b>工程建議 MVP 先不做列表格式</b>（8 種格式中唯一未經驗證者）。若項目可帶動作，唯一性限制同樣適用（見 §11.0 / §11.0）</td></tr>
       <tr><td class="qid">Q-L02</td><td><span class="badge b-slate">中</span></td><td>postback data 的長度上限 —— 決定完成訊號識別碼的格式，見 §11.2</td></tr>
@@ -473,9 +477,9 @@
     <h3>節點可設定內容</h3>
     <table>
       <tr><th style="width:110px;">節點</th><th>可設定項目</th><th style="width:300px;">限制</th></tr>
-      <tr><td><b>初始設定</b></td><td>從 §03 的 5 個起始事件擇一（<b>排除自動回覆</b>，它非觸發事件）</td><td>已被其他流程使用的事件呈<b>停用</b>並標示「已被其他流程使用」</td></tr>
+      <tr><td><b>初始設定</b></td><td>從 §03 的 5 個起始事件擇一（<b>排除自動回覆</b>，它非觸發事件）。聊天室政策為「僅限 1 對 1」時，可選事件為 <b>3 個</b></td><td>事件呈<b>停用</b>的兩種原因，須分別標示：<br>① 「已被其他流程使用」<br>② 「聊天室政策為僅限 1 對 1，不支援此事件」（僅限加入／移出 Bot 群組）</td></tr>
       <tr><td><b>時間</b></td><td>10 分鐘 / 1 小時 / 1 天 / 7 天 / 自訂</td><td>自訂上限 <b>30 天</b>，超過即時顯示錯誤</td></tr>
-      <tr><td><b>卡片</b></td><td>① 訊息區塊（最多 5 則）<br>② 收件對象（複選：本人／直屬主管／Bot 管理者）</td><td>・收件對象<b>逐卡設定</b>，兩張卡可發不同對象<br>・<b>含「接續下一步」的卡片，收件對象鎖定「本人」</b>（依 §04）<br>・只有「開啟連結」的卡片不鎖定<br>・成員移出 Bot 群組時「本人」鎖住，<b>連帶該事件無法使用「接續下一步」</b><br>・勾選「本人」時，若該事件的<b>預設訊息已啟用</b>，需顯示<b>雙重發送警示</b>（不阻擋，由設定者判斷）</td></tr>
+      <tr><td><b>卡片</b></td><td>① 訊息區塊（最多 5 則）<br>② 收件對象（複選：本人／直屬主管／Bot 管理者）</td><td>・收件對象<b>逐卡設定</b>，兩張卡可發不同對象<br>・<b>含「接續下一步」的卡片，收件對象鎖定「本人」</b>（依 §04）<br>・只有「開啟連結」的卡片不鎖定<br>・成員移出 Bot 群組時「本人」鎖住，<b>連帶該事件無法使用「接續下一步」</b><br>・<b>三個組織事件不提供「Bot 管理者」</b>，該選項不出現<br>・勾選「本人」時，若該事件的<b>預設訊息已啟用</b>，需顯示<b>雙重發送警示</b>（不阻擋，由設定者判斷）</td></tr>
     </table>
 
     <h3>按鈕動作與「接續下一步」</h3>
@@ -599,7 +603,8 @@
     <h3>與既有系統的整合點（請後端 review）</h3>
     <table>
       <tr><th style="width:160px;">我們需要</th><th style="width:190px;">既有可用</th><th>備註 / 風險</th></tr>
-      <tr><td>Bot 清單、callback 開關</td><td><code>bots</code>（<code>enable_callback</code> / <code>callback_url</code>）</td><td>群組事件與 postback 都依賴 callback；<b>Bot 未開 callback 時，B 型與群組事件類流程應無法啟用</b>（前端需擋，<span class="qid">Q-F04</span>）</td></tr>
+      <tr><td>Bot 清單、callback 開關</td><td><code>bots</code>（<code>enable_callback</code> / <code>callback_url</code>）</td><td><b>Bot 未開 callback 時，預設訊息與自動化服務整組不可使用</b>（前端需擋，<span class="qid">Q-F04</span>）</td></tr>
+      <tr><td>Bot 聊天室政策</td><td><b>他模組既有欄位</b>（欄位名待後端提供）</td><td>值為「僅限 1 對 1 聊天室」時，<b>「成員加入／移出 Bot 群組」兩個事件不可選</b>。本功能<b>只讀不寫</b>，政策的設定介面不在本範圍</td></tr>
       <tr><td>webhook 進線</td><td><code>webhooks/lineworks/bots/{botId}</code>（<code>BotWebhookController</code>）</td><td>需在此新增 postback 分派邏輯，且<b>不得破壞既有關鍵字／fallback 行為</b></td></tr>
       <tr><td>即時流程狀態</td><td><code>bot_conversation_states</code>（<code>flow</code>/<code>step</code>/<code>expires_at</code>）</td><td><span class="qid">Q-B01</span> 該表為「每人每 Bot 一流程」，會與真人 1v1（<code>flow='human_service'</code>）競用同一列 → <b>建議自動化另建 run 表</b>，僅在需要互斥時查詢對方</td></tr>
       <tr><td>關鍵字比對</td><td><code>bot_keywords</code>（<code>match_type='exact'</code>）</td><td><a href="#s7">§07</a> 要求「真人服務關鍵字為保留字，設定時擋掉或警告」→ 自動化的「關鍵字」動作按鈕值需與此表交叉驗證</td></tr>
@@ -716,7 +721,7 @@
 
     <table>
       <tr><th style="width:66px;">Method</th><th>路由</th><th style="width:100px;">permission</th><th>說明</th></tr>
-      <tr><td>GET</td><td><code>/bots/{botId}/automation-flows</code></td><td><code>view</code></td><td>流程清單（最多 5 條，<b>不分頁</b>）。<code>meta</code> 帶回可用事件、已佔用事件、<code>enable_callback</code></td></tr>
+      <tr><td>GET</td><td><code>/bots/{botId}/automation-flows</code></td><td><code>view</code></td><td>流程清單（最多 5 條，<b>不分頁</b>）。<code>meta</code> 帶回可用事件、已佔用事件、<code>enable_callback</code>、<code>chat_policy</code></td></tr>
       <tr><td>GET</td><td><code>/bots/{botId}/automation-flows/meta</code></td><td><code>view</code></td><td>事件字典、變數字典、格式上限（供前端渲染選項，避免硬編碼）；<b>並帶回同租戶其他 Bot 已使用的組織事件</b>供警示（<span class="qid">Q-B10</span>）</td></tr>
       <tr><td>POST</td><td><code>/bots/{botId}/automation-flows</code></td><td><code>create</code></td><td>建立空流程（三節點皆空值、<code>enabled=false</code>）</td></tr>
       <tr><td>GET</td><td><code>/bots/{botId}/automation-flows/{id}</code></td><td><code>view</code></td><td>單一流程（含 steps 與 bubbles）</td></tr>
@@ -753,6 +758,7 @@
   },
   "meta": {
     "enable_callback": true,
+    "chat_policy": "group_allowed",
     "used_events": ["member_created"],
     "used_by_other_bots": ["member_created"],
     "advance_holder": { "step_seq": 1, "bubble_index": 1, "button_id": "b1", "label": "我已完成" },
@@ -773,10 +779,14 @@
       <tr><td><code>waiting</code></td><td>含推進按鈕的卡片已成功送達本人</td><td>→ <code>scheduled</code>（收到 postback，排 job#2）<br>→ <code>expired</code>（<code>expires_at</code> 到）<br>→ <code>paused</code>（流程停用）<br>→ <code>cancelled</code></td></tr>
       <tr><td><code>completed</code></td><td>最後一張卡片送出（Send API 回 2xx 即算，不追送達回執）</td><td>終態</td></tr>
       <tr><td><code>expired</code></td><td>逾 30 天未推進</td><td>終態，<b>靜默、不發任何訊息</b>（依 §05）</td></tr>
-      <tr><td><code>paused</code></td><td>流程被<b>停用</b>（凍結；<code>expires_at</code> 時效時鐘暫停）<br><span style="color:var(--muted);font-size:12px;">非終態</span></td><td>→ <code>scheduled</code>／<code>waiting</code>（重新啟用：<b>遷移至最新版本</b>並接續計時）<br>→ <code>cancelled</code>（改為刪除）</td></tr>
+      <tr><td><code>paused</code></td><td>流程被<b>停用</b>（凍結；<code>expires_at</code> 時效時鐘暫停）<br><b>聊天室政策改為「僅限 1 對 1」</b>時，兩個群組事件流程的啟用開關自動關閉，其未完成 run 一併轉入本狀態<br><span style="color:var(--muted);font-size:12px;">非終態</span></td><td>→ <code>scheduled</code>／<code>waiting</code>（重新啟用：<b>遷移至最新版本</b>並接續計時）<br>→ <code>cancelled</code>（改為刪除）</td></tr>
       <tr><td><code>cancelled</code></td><td>流程被<b>刪除</b>（<span class="qid">Q-P02</span>）、被新事件取代（<span class="qid">Q-P01</span>）、真人服務接手、當事人不可達</td><td>終態</td></tr>
       <tr><td><code>failed</code></td><td>重試耗盡仍無法送出</td><td>終態，<b>MVP 不通知任何人</b>（僅 log，<span class="qid">Q-P11</span>）</td></tr>
     </table>
+    <div class="callout"><b>聊天室政策變更的連帶行為：</b>政策由他模組維護，改為「僅限 1 對 1 聊天室」時——<br>
+    ① 「成員加入／移出 Bot 群組」兩個事件的既有流程<b>保留設定內容</b>，僅將<code>enabled</code> 轉為 <code>false</code>，未完成 run 轉 <code>paused</code>（比照流程停用，時效時鐘暫停）。<br>
+    ② 政策<b>改回「可加入群組聊天室」時不自動復活</b>，流程開關維持關閉，需人工手動開啟。<br>
+    ③ 於基本設定變更政策時<b>顯示提醒但不阻擋</b>，提醒需帶出受影響的流程筆數。</div>
 
     <h3>冪等與併發（後端必處理）</h3>
     <table>
@@ -812,7 +822,7 @@
       <b>觸發判準：</b>不是「成員資料被更新」就發事件，而是<b>部門 ID／職位 ID 實際變動</b>才發；其他欄位修改、部門或職位<b>改名</b>（成員所屬 ID 未變）一律不發。以字串比對實作會導致整個部門的成員同時收到誤通知。</td></tr>
       <tr><td>成員部門異動</td></tr>
       <tr><td>成員職位異動</td></tr>
-      <tr><td>成員加入 Bot 群組</td><td rowspan="2">LINE WORKS webhook callback</td><td rowspan="2"><span class="qid">Q-L01</span> 需確認 callback 事件類型與可靠性：事件名稱、是否<b>區分「自己加入」與「被他人加入」</b>、批次加入時是<b>一個事件帶多人</b>還是多個事件、<b>是否保證送達</b>（漏事件時無補償機制）。<br>另：Bot 必須 <code>enable_callback=true</code>，否則此類流程完全不會觸發 → 前端需擋（<span class="qid">Q-F04</span>）。</td></tr>
+      <tr><td>成員加入 Bot 群組</td><td rowspan="2">LINE WORKS webhook callback</td><td rowspan="2"><span class="qid">Q-L01</span> 需確認 callback 事件類型與可靠性：事件名稱、是否<b>區分「自己加入」與「被他人加入」</b>、批次加入時是<b>一個事件帶多人</b>還是多個事件、<b>是否保證送達</b>（漏事件時無補償機制）。<br>另：此兩事件有<b>兩個前置條件，缺一不觸發</b>——① Bot 已啟用 callback ② Bot 聊天室政策為「可加入群組聊天室」。政策由他模組維護，本功能只讀（<span class="qid">Q-F04</span>）。</td></tr>
       <tr><td>成員移出 Bot 群組</td></tr>
     </table>
 
@@ -820,11 +830,11 @@
     <div class="callout limit"><b><a href="#s11-0">§11.0</a> 已察覺「人工停用擋不住瞬間大量觸發」，但實際規模更大。</b>典型情境：月初 HR 一次匯入 200 位新成員。<br>
     <b>量體分兩層看：</b><br>
     ・<b>預設訊息</b>：200 位當事人 × 各 1 則 = <b>200 則、且為「立即」發送</b>（無 10 分鐘延遲可當緩衝）。<br>
-    ・<b>自動化</b>：200 個 run，若對象複選了主管與管理者，10 分鐘後同一時刻再發 <b>200~600 則</b>。<br>
+    ・<b>自動化</b>：200 個 run，若對象複選了直屬主管，10 分鐘後同一時刻再發 <b>200~400 則</b>。<br>
     <b>三個必須處理的點：</b><br>
     ① <b>Send API 速率限制</b>（<span class="qid">Q-L03</span>）—— 需查證 per bot / per tenant 的配額。超限會整批失敗；預設訊息那 200 則沒有延遲可以攤平，更為吃緊。<br>
-    ② <b>排程器單次撈取量</b> —— 必須有 batch size 上限，否則一次撈 600 筆同步發送會拖垮 worker。<br>
-    ③ <b>訊息品質</b> —— 對象改為當事人後，<b>預設訊息不再有洗版問題</b>（每人只收自己那一則），故<b>不需要彙整或去重機制、工程請勿為預設訊息實作彙整邏輯</b>；洗版風險只剩自動化選了主管／管理者時（少數人收到大量通知）。<br>
+    ② <b>排程器單次撈取量</b> —— 必須有 batch size 上限，否則一次撈數百筆同步發送會拖垮 worker。<br>
+    ③ <b>訊息品質</b> —— 三個組織事件的收件人只有當事人與其直屬主管，各自只收到與自己相關的那一則，故<b>不需要彙整、摘要或去重機制，工程請勿實作彙整邏輯</b>。唯一殘留的集中風險是<b>集中招募</b>（大量新人同屬少數部門）時該部門主管單次收到數十則，MVP 接受此風險、不做處理。<br>
     <b>即使 MVP 不做「熔斷」，也必須做發送端限流</b>（technical safeguard，不是功能）：per bot 每秒 N 則、超出的自然延後。<b>注意：</b>此限流會使預設訊息的「立即」在批次情境下實際變成數分鐘內陸續送達——「立即」應理解為「儘速、不排隊等待設定時間」。自動化側已寫入 <a href="#s5">§05</a>「不早於設定時間」。</div>
 
     <h3>收件人解析</h3>
@@ -832,7 +842,7 @@
       <tr><th style="width:110px;">收件人</th><th style="width:150px;">解析方式</th><th>風險</th></tr>
       <tr><td><code>self</code>（本人）</td><td>事件當事人的 LW userId</td><td><span class="badge b-ok">已確認</span><span class="qid">Q-L04</span> <b>可對「從未與 Bot 互動過」的成員主動發起 1:1 訊息</b>（已實測，SaaS 後台路徑）。<code>self</code> 是三個組織事件<b>預設訊息的唯一收件人</b>，建議將其解析失敗獨立記錄以利追查。</td></tr>
       <tr><td><code>manager</code>（直屬主管）</td><td>當事人所屬部門的主管</td><td>資料已確認可抓。解析時機已定為<b>發送當下</b>（見 §05）。另需定義：部門無主管 → 略過（§08 已定）；主管本人已離職 → 略過還是往上一層？</td></tr>
-      <tr><td><code>bot_admin</code>（Bot 管理者）</td><td>?</td><td><span class="badge b-no">阻斷</span><span class="qid">Q-B05</span> ① 「Bot 管理者」在既有 <code>admins</code> + Role 體系中如何界定 —— 有 per-bot 歸屬關聯，或「所有具 bot 管理權限的 admin」？<br>② 更關鍵：<b>要推訊息給 admin，必須有 admin ↔ LW userId 的對應</b>。<b>若沒有，這個收件人選項做不出來。</b><br><b>影響範圍：</b>管理者只出現在自動化，但稽核通知已全數改由自動化承接，若此題為否等同<b>組織異動完全無法通知管理者</b>。</td></tr>
+      <tr><td><code>bot_admin</code>（Bot 管理者）</td><td>?</td><td><span class="badge b-no">阻斷</span><span class="qid">Q-B05</span> ① 「Bot 管理者」在既有 <code>admins</code> + Role 體系中如何界定 —— 有 per-bot 歸屬關聯，或「所有具 bot 管理權限的 admin」？<br>② 更關鍵：<b>要推訊息給 admin，必須有 admin ↔ LW userId 的對應</b>。<b>若沒有，這個收件人選項做不出來。</b><br><b>影響範圍：</b>僅「成員加入／移出 Bot 群組」兩個事件（三個組織事件已不提供管理者）。若為否，拿掉此選項即可，「成員移出 Bot 群組」將只剩「直屬主管」。</td></tr>
     </table>
     <div class="callout warn"><b>解析失敗的統一原則：</b><a href="#s8">§08</a> 只寫「新增成員尚未分部門 → 主管略過，不報錯」。推廣為統一規則：<b>部分收件人解析失敗 → 略過該收件人、其餘照發、記錄於 <code>jobs.result</code>；全部失敗 → job 記 failed，但 run 不中斷後續步驟。</b>B 型例外：卡片 1 發不到本人 → 整條 run 直接 cancelled。</div>
   </section>
@@ -866,7 +876,8 @@
     <div class="callout warn"><b>§11.0 的訊息格式只出現了 <code>{{姓名}}</code> 一個例子，訊息預覽提到部門與日期。</b>工程需要一份完整字典，每個變數要定義：<br>
     ① <b>來源欄位</b>　② <b>各事件是否可用</b>（例：<code>{{舊部門}}</code> 只有部門異動事件有）　③ <b>缺值行為</b>（建議留空，不顯示 <code>{{}}</code>、不阻止發送）　④ <b>快照時機</b>（建議事件觸發當下就存進 <code>runs.context</code>，否則 30 天後「新部門」可能又變了）<br>
     <b>建議清單：</b><code>{{姓名}}</code> <code>{{部門}}</code> <code>{{舊部門}}</code> <code>{{新部門}}</code> <code>{{職位}}</code> <code>{{舊職位}}</code> <code>{{新職位}}</code> <code>{{主管姓名}}</code> <code>{{事件日期}}</code> <code>{{群組名稱}}</code><br>
-    <b>已定案：</b>「成員部門異動／職位異動／新增成員」<b>只提供 <code>{部門}</code> 與 <code>{日期}</code></b>，預設訊息與自動化相同，<b>不提供</b> <code>{{姓名}}</code> 等其他變數；上方建議清單僅適用其餘事件。<br>
+    <b>已定案（v0.8 更新）：</b>全部事件的<b>預設訊息與自動化使用同一組參數</b>，不再區分。「成員部門異動／職位異動／新增成員」提供 <code>{姓名}</code> <code>{部門}</code> <code>{日期}</code> <code>{時間}</code>；上方建議清單為其餘變數的擴充候選，本版不做。<br>
+    <b>參數主體：</b><code>{姓名}</code><code>{部門}</code> 一律指<b>事件當事人</b>而非收件人——同一則文案會同時發給當事人與其直屬主管，故<b>文案須以第三人稱撰寫</b>；若需對兩者分別措辭，請用兩張卡片各設不同收件對象（見 §11.0）。<br>
     <b>前端連帶需求：</b>變數選單需依「當前選定的起始事件」動態過濾；使用者若先寫好變數再改事件，需提示失效變數。</div>
   </section>
 
@@ -898,7 +909,9 @@
     <table>
       <tr><th style="width:170px;">項目</th><th>說明 / 建議</th></tr>
       <tr><td>就地展開 + 即時同步 + 游標不中斷</td><td>技術可行。注意：節點顯示值建議 <b>debounce 150~300ms</b> 更新，避免每個按鍵觸發整條流程重繪導致 input 失焦；元件 key 必須穩定（用 step id / button id，非索引）</td></tr>
-      <tr><td>callback 未啟用的 Bot</td><td><span class="qid">Q-F04</span> <b>群組事件類流程與「接續下一步」都依賴 callback</b>；Bot 未開時應停用這些選項並說明原因（可導向 Bot 基本設定）</td></tr>
+      <tr><td>callback 未啟用的 Bot</td><td><span class="qid">Q-F04</span> <b>Bot 未啟用 callback 時，預設訊息與自動化服務整組不可使用</b>；應停用整個功能並說明原因（可導向 Bot 基本設定）</td></tr>
+      <tr><td>聊天室政策為「僅限 1 對 1」</td><td><b>「成員加入／移出 Bot 群組」兩個事件不可選</b>，起始事件下拉停用該兩項並說明原因。此時可用事件為 3 個，額度呈現為「<b>N / 3（2 個事件因聊天室政策不可用）</b>」</td></tr>
+      <tr><td>聊天室政策中途改為「僅限 1 對 1」</td><td>既有的兩個群組事件流程<b>保留設定內容</b>，但<b>啟用開關自動關閉</b>；等待中的 run 依流程停用規則處理。政策改回時<b>不自動復活</b>，需人工手動開啟。變更政策時<b>跳提醒但不阻擋</b></td></tr>
       <tr><td>不完整流程</td><td>依 §11.0：新建預設「已停用」，「啟用」在不完整時 disable 並指出缺哪一項</td></tr>
       <tr><td>停用／刪除的二次確認</td><td>依 <span class="qid">Q-P02</span>：<b>停用</b>顯示「將暫停 N 筆流程」、<b>刪除</b>顯示「將取消 N 筆」（<code>meta.waiting_run_count</code>）</td></tr>
       <tr><td>跨 Bot 重複警示</td><td>依 <span class="qid">Q-P05</span> 決議，選擇組織事件時若其他 Bot 已設定，需顯示警示（<code>meta.used_by_other_bots</code>）</td></tr>
@@ -917,12 +930,12 @@
       <tr>
         <td><b>P0</b><br><span class="badge b-acc">先做</span></td>
         <td><b>技術驗證（Spike）</b><br>・常駐按鈕 30 天後可否回傳（<span class="qid">Q-L08</span>）<br>・編輯器是否開放 postback（<span class="qid">Q-L09</span>）<br>・Send API 配額（<span class="qid">Q-L03</span>）<br>・admin ↔ LW userId 對應（<span class="qid">Q-B05</span>）<br><span style="color:var(--muted);font-size:12px;">✓ 對未互動成員能否推 1:1（<span class="qid">Q-L04</span>）—— 2026-08-03 已實測通過<br>△ 組織事件變更路徑（<span class="qid">Q-B04</span>）—— 已降級，仍需後端回覆 CSV 匯入路徑</span></td>
-        <td><b>無前提，立即可做。</b>這些題的答案會改變功能可行性與需求內容，先做可避免整體返工。建議 1~2 天內完成。<b><span class="qid">Q-B05</span> 為本階段最關鍵項</b>——管理者的通知已全數改由自動化承接，沒有其他管道可退</td>
+        <td><b>無前提，立即可做。</b>這些題的答案會改變功能可行性與需求內容，先做可避免整體返工。建議 1~2 天內完成。<b><span class="qid">Q-B05</span> 影響已縮小</b>——僅涉及兩個群組事件的管理者收件人選項，若為否拿掉選項即可，不影響其餘功能</td>
       </tr>
       <tr>
         <td><b>P1</b></td>
         <td><b>後端執行層</b><br>・四張表 + Model/Service<br>・觸發 → run → job → 發送<br>・postback 監聽與冪等<br>・逾時作廢、取消、限流<br>・A 型完整可跑（純文字）</td>
-        <td><span class="badge b-ok">Q-P01 / Q-P02 / Q-P03 / Q-P05 / Q-P14 / C-01 已決議</span>剩餘前提：<b><span class="qid">Q-B05</span></b>（阻斷，僅影響管理者收件人）、<span class="qid">Q-B04</span>（高，需後端回覆路徑清單）。<br><b>可用純文字訊息先跑通全流程</b>，不等訊息編輯器。<br><b>實作要求：</b>組織事件的觸發判準須<b>比對部門 ID／職位 ID</b>而非名稱字串；<b>預設訊息不得實作彙整／去重邏輯</b>（見 §11.5）</td>
+        <td><span class="badge b-ok">Q-P01 / Q-P02 / Q-P03 / Q-P05 / Q-P14 / C-01 已決議</span>剩餘前提：<b><span class="qid">Q-B05</span></b>（阻斷，僅影響兩個群組事件的管理者收件人）、<span class="qid">Q-B04</span>（高，需後端回覆路徑清單）。<br><b>可用純文字訊息先跑通全流程</b>，不等訊息編輯器。<br><b>實作要求：</b>組織事件的觸發判準須<b>比對部門 ID／職位 ID</b>而非名稱字串；<b>不得實作彙整／摘要／去重邏輯</b>（見 §11.5）；需讀取 Bot 聊天室政策以決定群組事件可用性</td>
       </tr>
       <tr>
         <td><b>P2</b></td>
@@ -937,9 +950,9 @@
     </table>
 
     <div class="callout ok"><b>整體評估：</b>需求收斂度高、且已正確識別 postback／callback 的技術本質。<b>主要缺口不在功能定義，而在異常路徑與執行語意</b>——即 §11.4~§11.5 補齊的部分。<br>
-    <b>最需要優先處理的是 P0 的技術驗證</b>，其中最關鍵的剩餘阻斷為 <span class="qid">Q-B05</span>（管理者帳號對應）與 <span class="qid">Q-F01</span>（訊息編輯器可否復用）。</div>
+    <b>最需要優先處理的是 P0 的技術驗證</b>，其中最關鍵的剩餘阻斷為 <span class="qid">Q-F01</span>（訊息編輯器可否復用）；<span class="qid">Q-B05</span>（管理者帳號對應）影響已縮小為兩個群組事件的收件人選項。</div>
   </section>
-  <p class="foot">Bot 自動化腳本 需求規格書 v0.7（對象調整＋文件重整）｜2026-08-04｜需求篇 §01~§10 為設計收斂結果；開發篇 §11 為工程草案，實作前請逐項與後端／前端確認。</p>
+  <p class="foot">Bot 自動化腳本 需求規格書 v0.8（組織事件移除管理者＋聊天室政策相依）｜2026-08-10｜需求篇 §01~§10 為設計收斂結果；開發篇 §11 為工程草案，實作前請逐項與後端／前端確認。</p>
 
 </div>
 </body>
