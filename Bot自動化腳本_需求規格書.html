@@ -194,16 +194,16 @@
     
 
     <p style="font-weight:700;margin:22px 0 4px;">各事件的對象、參數與觸發來源</p>
-    <p style="font-size:13px;color:var(--muted);margin:0 0 8px;"><b>對象規則一句話：預設訊息一律發給當事人（不給選）；自動化可複選當事人／直屬主管。「Bot 管理者」僅限兩個群組事件，三個組織事件不提供。</b>「自動回覆」為預設訊息專用，不進自動化；<b>「成員移出 Bot 群組」的當事人鎖住、不給選</b>。</p>
+    <p style="font-size:13px;color:var(--muted);margin:0 0 8px;"><b>對象規則一句話：預設訊息一律發給當事人（不給選）；自動化可複選當事人／直屬主管。「Bot 管理者」僅限兩個群組事件，三個組織事件不提供。</b>「自動回覆」為預設訊息專用，不進自動化。</p>
     <p style="font-size:13px;color:var(--muted);margin:0 0 8px;"><b>參數規則一句話：預設訊息與自動化使用<u>同一組</u>參數，不再區分</b>（收件人只剩當事人與其直屬主管，各自只收到與自己相關的那一則，無批次彙整情境）。<br><b>參數主體：</b><code>{姓名}</code><code>{部門}</code> 一律解析為<b>事件當事人</b>，非收件人；發給直屬主管時亦同。取值為<b>事件觸發當下的快照</b>（見 <a href="#s11-2">§11.2</a> <code>runs.context</code>）。</p>
     <table>
       <tr><th style="width:132px;">事件</th><th style="width:96px;">預設訊息<br>發送對象</th><th style="width:150px;">自動化設定<br>可選對象</th><th style="width:132px;">參數設定值</th><th>觸發來源</th></tr>
       <tr><td>成員部門異動</td><td rowspan="3">當事人</td><td rowspan="3">當事人／直屬主管<br><span style="color:var(--muted);font-size:12px;">（複選）</span><br><span class="badge b-no">不提供 Bot 管理者</span></td><td rowspan="3"><code>{姓名}</code> <code>{部門}</code> <code>{日期}</code> <code>{時間}</code><br><span style="color:var(--muted);font-size:12px;">預設訊息與自動化相同</span></td><td rowspan="3"><span class="badge b-slate">後台（主動推播）</span><br><span class="badge b-warn">警示</span> <b>僅「SaaS 後台」操作才會觸發。</b>若 HR 改於 <b>LINE WORKS Admin</b> 端變更組織，或走定期同步路徑，<b>系統抓不到此異動、事件不會發出</b>，該名成員不會收到通知。導入時須與 HR 約定組織異動一律於 SaaS 後台操作（風險詳見 <a href="#s11-5">§11.5</a> <span class="qid">Q-B04</span>）</td></tr>
       <tr><td>成員職位異動</td></tr>
       <tr><td>新增成員</td></tr>
-      <tr><td>成員加入 Bot 群組</td><td>當事人</td><td>當事人／直屬主管／<br>Bot 管理者<br><span style="color:var(--muted);font-size:12px;">（複選）</span></td><td><code>{姓名}</code> <code>{部門}</code> <code>{日期}</code> <code>{時間}</code></td><td rowspan="2"><span class="badge b-acc">群組（callback）</span><br><span style="color:var(--muted);font-size:12px;"><b>兩個前置條件缺一不觸發：</b>① Bot 已啟用 callback ② Bot 聊天室政策為「可加入群組聊天室」（政策於其他模組設定，見 <a href="#s11-5">§11.5</a>）</span></td></tr>
-      <tr><td>成員移出 Bot 群組</td><td>群組<br><span style="color:var(--muted);font-size:12px;">（本人已離開）</span></td><td>直屬主管／<br>Bot 管理者<br><span style="color:var(--muted);font-size:12px;">（複選）</span><br><span class="badge b-no">當事人鎖住</span></td><td><code>{姓名}</code> <code>{部門}</code> <code>{日期}</code> <code>{時間}</code></td></tr>
-      <tr><td>自動回覆（fallback）</td><td>當事人<br><span style="color:var(--muted);font-size:12px;">（發訊息者）</span></td><td><span class="badge b-no">不適用</span><br><span style="color:var(--muted);font-size:12px;">僅預設訊息</span></td><td><code>{姓名}</code> <code>{部門}</code> <code>{日期}</code> <code>{時間}</code><br><span style="color:var(--muted);font-size:12px;">僅預設訊息，無自動化</span></td><td><span class="badge b-slate">訊息未命中</span><br><b>群組中須 <code>@Bot</code> 提及才觸發</b>（1:1 對話則直接觸發）。若群組內每則未命中都回覆會洗版，故加此限制</td></tr>
+      <tr><td>成員加入 Bot 群組</td><td>群組</td><td>當事人／直屬主管／<br>Bot 管理者<br><span style="color:var(--muted);font-size:12px;">（複選）</span></td><td><code>{姓名}</code> <code>{部門}</code> <code>{日期}</code> <code>{時間}</code></td><td rowspan="2"><span class="badge b-acc">群組（callback）</span><br><span style="color:var(--muted);font-size:12px;"><b>兩個前置條件缺一不觸發：</b>① Bot 已啟用 callback ② Bot 聊天室政策為「可加入群組聊天室」（政策於其他模組設定，見 <a href="#s11-5">§11.5</a>）</span></td></tr>
+      <tr><td>成員移出 Bot 群組</td><td>群組<br><span style="color:var(--muted);font-size:12px;">（本人已離開）</span></td><td>當事人／直屬主管／<br>Bot 管理者<br><span style="color:var(--muted);font-size:12px;">（複選）</span></td><td><code>{姓名}</code> <code>{部門}</code> <code>{日期}</code> <code>{時間}</code></td></tr>
+      <tr><td>自動回覆（fallback）</td><td>當事人<br><span style="color:var(--muted);font-size:12px;">（發訊息者）</span></td><td><span class="badge b-no">不適用</span><br><span style="color:var(--muted);font-size:12px;">僅預設訊息</span></td><td><code>{姓名}</code> <code>{部門}</code> <code>{日期}</code> <code>{時間}</code><br><span style="color:var(--muted);font-size:12px;">僅預設訊息，無自動化</span></td><td><span class="badge b-slate">訊息未命中</span><br><b>僅 1:1 對話觸發；群組中不觸發</b></td></tr>
     </table>
     
 
@@ -242,7 +242,8 @@
     <div class="callout"><b>B 型必然是 2 張卡片。</b>依 §11.0「最後一張卡片不可設接續下一步」＋ §09「最多 2 張卡片」可推得：<b>「接續下一步」只能設在第 1 張卡</b>，單卡流程一律為 A 型。<br>
     <b>兩張卡前面都各有一個時間節點</b>（§11.0），故第 1 張卡最快也是事件後 10 分鐘發出——<b>沒有「立即」</b>（見 §05）。</div>
 
-    <div class="callout warn"><b>B 型限制：</b>「等完成」需要使用者「人在且會回應」，故<b>成員移出群組不可選 B 型</b>（人已離開，發不到也不會回完成）。完成訊號一律發給<b>本人</b>；後續推播的收件人才是可設定的對象。</div>
+    <div class="callout"><b>B 型與所有事件相容：</b>「等完成」需要使用者「人在且會回應」，<b>成員移出 Bot 群組亦可選 B 型</b>——當事人只是退出該群組、並未刪除 Bot，Bot 仍可對其發送 1:1 訊息並收到回應。完成訊號一律發給<b>本人</b>；後續推播的收件人才是可設定的對象。</div>
+    <div class="callout"><b>自動化一律為 1:1 私訊：</b>自動化的所有推播，都是該隻 Bot 對特定對象發送 1:1 個人訊息，<b>不會發送到群組</b>。只有<b>預設訊息</b>在群組類事件時才發送至群組（見 §03 事件表）。</div>
 
     <h3 style="margin-top:28px;">範例情境｜新進人員教育訓練 Bot</h3>
     <p style="font-size:13px;color:var(--muted);margin:2px 0 12px;">同一個情境，分別走 A 型與 B 型。</p>
@@ -281,7 +282,7 @@
     <table>
       <tr><th style="width:130px;">參數</th><th>選項</th><th>規則</th></tr>
       <tr><td>時間</td><td><b>只走延遲</b>：10 分鐘 / 1 小時 / 1 天 / 7 天 / 自訂（最大 30 天）<br><b>自訂 ＝ 數值 ＋ 單位下拉（分鐘／小時／天）</b>，有效範圍 10 分鐘 ~ 30 天</td><td><b>不含「立即」</b>（立即屬預設訊息）。<br><b>計時起點：</b>第 1 張卡從<b>事件發生</b>起算；第 2 張卡在 B 型從<b>「完成」當下</b>起算、在 A 型從<b>第 1 張卡實際送出</b>起算。<br>實際送達為「不早於設定時間」，非精準準時（誤差 ±1 分鐘，批次時可能更久）</td></tr>
-      <tr><td>對象</td><td><b>複選</b>：本人 / 直屬主管 / Bot 管理者<br><b>一律為 1:1 個人訊息</b>，不發送到群組</td><td>選項<b>隨事件動態</b>（見下矩陣）：成員移出群組時「本人」鎖住；<b>三個組織事件不提供「Bot 管理者」</b>。<br>「直屬主管」於<b>推播當下</b>解析（非事件當下鎖定），故 30 天後若主管已換人，收件者為新主管</td></tr>
+      <tr><td>對象</td><td><b>複選</b>：本人 / 直屬主管 / Bot 管理者<br><b>一律為 1:1 個人訊息</b>，不發送到群組</td><td>選項<b>隨事件動態</b>（見下矩陣）：<b>三個組織事件不提供「Bot 管理者」</b>。<br>「直屬主管」於<b>推播當下</b>解析（非事件當下鎖定），故 30 天後若主管已換人，收件者為新主管</td></tr>
       <tr><td>內容</td><td>自動化自行撰寫</td><td>與預設訊息<b>分開</b>，不引用預設訊息（避免雙重發送）</td></tr>
       <tr><td><b>時效期限</b></td><td>系統預設 <b>30 天</b>（Lv1，不開放調整）</td><td>等待中的流程逾 30 天未完成／未觸發 → <b>自動作廢（靜默取消）</b></td></tr>
     </table>
@@ -292,7 +293,7 @@
       <tr><th>事件</th><th>本人</th><th>直屬主管</th><th>Bot 管理者</th></tr>
       <tr><td>新增成員 / 部門異動 / 職位異動</td><td><span class="badge b-ok">可（需可達）</span></td><td><span class="badge b-ok">可</span></td><td><span class="badge b-no">不提供</span></td></tr>
       <tr><td>成員加入 Bot 群組</td><td><span class="badge b-ok">可（需可達）</span></td><td><span class="badge b-ok">可</span></td><td><span class="badge b-ok">可</span></td></tr>
-      <tr><td>成員移出 Bot 群組</td><td><span class="badge b-no">鎖住（人已離開）</span></td><td><span class="badge b-ok">可</span></td><td><span class="badge b-ok">可</span></td></tr>
+      <tr><td>成員移出 Bot 群組</td><td><span class="badge b-ok">可（需可達）</span></td><td><span class="badge b-ok">可</span></td><td><span class="badge b-ok">可</span></td></tr>
     </table>
     <p style="font-size:13px;color:var(--muted);margin:8px 0 0;">三個組織事件的收件人只有當事人與其直屬主管，各自僅收到與自己相關的那一則，故<b>不需要彙整或摘要機制</b>。「Bot 管理者」的組織異動稽核改由後台異動紀錄查詢。</p>
     
@@ -359,7 +360,7 @@
       <tr><td>當事人自己就是部門主管</td><td>發給「主管」= 發給自己（MVP；未來可設往上一層）</td></tr>
       <tr><td>新增成員尚未分部門</td><td>「主管」收件人<b>自動略過</b>，不報錯</td></tr>
       <tr><td>「本人」可達性</td><td>透過 <b>SaaS 後台</b>變更組織資料時，Bot <b>可</b>對當事人發出 1:1 訊息，<b>不需事先互動</b>（已實測，見 §10.4 <span class="qid">Q-L04</span>）</td></tr>
-      <tr><td>成員移出群組發給本人</td><td>不可（人已離開）→ 對象改主管／管理者</td></tr>
+      <tr><td>成員移出群組發給本人</td><td><b>可發</b>（退出群組不等於離開組織，仍可 1:1 送達）</td></tr>
       <tr><td>完成用文字撞關鍵字 / 真人服務字</td><td>設定時擋掉或警告；執行時套第 8 節優先序</td></tr>
     </table>
   </section>
@@ -479,7 +480,7 @@
       <tr><th style="width:110px;">節點</th><th>可設定項目</th><th style="width:300px;">限制</th></tr>
       <tr><td><b>初始設定</b></td><td>從 §03 的 5 個起始事件擇一（<b>排除自動回覆</b>，它非觸發事件）。聊天室政策為「僅限 1 對 1」時，可選事件為 <b>3 個</b></td><td>事件呈<b>停用</b>的兩種原因，須分別標示：<br>① 「已被其他流程使用」<br>② 「聊天室政策為僅限 1 對 1，不支援此事件」（僅限加入／移出 Bot 群組）</td></tr>
       <tr><td><b>時間</b></td><td>10 分鐘 / 1 小時 / 1 天 / 7 天 / 自訂</td><td>自訂上限 <b>30 天</b>，超過即時顯示錯誤</td></tr>
-      <tr><td><b>卡片</b></td><td>① 訊息區塊（最多 5 則）<br>② 收件對象（複選：本人／直屬主管／Bot 管理者）</td><td>・收件對象<b>逐卡設定</b>，兩張卡可發不同對象<br>・<b>含「接續下一步」的卡片，收件對象鎖定「本人」</b>（依 §04）<br>・只有「開啟連結」的卡片不鎖定<br>・成員移出 Bot 群組時「本人」鎖住，<b>連帶該事件無法使用「接續下一步」</b><br>・<b>三個組織事件不提供「Bot 管理者」</b>，該選項不出現<br>・勾選「本人」時，若該事件的<b>預設訊息已啟用</b>，需顯示<b>雙重發送警示</b>（不阻擋，由設定者判斷）</td></tr>
+      <tr><td><b>卡片</b></td><td>① 訊息區塊（最多 5 則）<br>② 收件對象（複選：本人／直屬主管／Bot 管理者）</td><td>・收件對象<b>逐卡設定</b>，兩張卡可發不同對象<br>・<b>含「接續下一步」的卡片，收件對象鎖定「本人」</b>（依 §04）<br>・只有「開啟連結」的卡片不鎖定<br>・<b>三個組織事件不提供「Bot 管理者」</b>，該選項不出現<br>・勾選「本人」時，若該事件的<b>預設訊息已啟用</b>，需顯示<b>雙重發送警示</b>（不阻擋，由設定者判斷）</td></tr>
     </table>
 
     <h3>按鈕動作與「接續下一步」</h3>
@@ -495,7 +496,7 @@
       <tr><th>卡片位置</th><th style="width:150px;">接續下一步</th><th style="width:120px;">開啟連結</th></tr>
       <tr><td>有後續步驟的卡片</td><td><span class="badge b-ok">可選</span></td><td><span class="badge b-ok">可選</span></td></tr>
       <tr><td>最後一張卡片</td><td><span class="badge b-no">停用</span>（後面無步驟可接續）</td><td><span class="badge b-ok">可選</span></td></tr>
-      <tr><td>成員移出 Bot 群組</td><td><span class="badge b-no">停用</span>（本人已離開）</td><td><span class="badge b-ok">可選</span></td></tr>
+      <tr><td>成員移出 Bot 群組</td><td><span class="badge b-ok">可選</span></td><td><span class="badge b-ok">可選</span></td></tr>
     </table>
     <div class="callout limit"><b>唯一性限制：整條流程只能有一顆「接續下一步」。</b>流程只有一條路徑（§09 不做分支），多顆推進按鈕會讓成員的選擇無法被使用。五條規則：<br>
     ① <b>跨訊息泡泡互斥</b>——任一泡泡已設定，其他所有泡泡都不能再設<br>
