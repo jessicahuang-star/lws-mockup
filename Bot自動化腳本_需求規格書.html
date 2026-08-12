@@ -95,7 +95,7 @@
     <h1>Bot 自動化腳本 — 需求規格書</h1>
     <div class="lead" style="color:#dfe7f5;margin:0;">LINE Works Bot 模組擴建｜事件觸發的自動化訊息機制</div>
     <div class="meta">
-      <span><b>版本</b> v1.2（群組事件預設訊息改用 {姓名清單}，與自動化參數分流）</span>
+      <span><b>版本</b> v1.3（啟用中流程須先停用才能編輯，Q-P03 改依此決議）</span>
       <span><b>日期</b> 2026-08-12</span>
       <span><b>撰寫</b> UX（Jessica）</span>
       <span><b>狀態</b> 需求＋介面已收斂</span>
@@ -356,6 +356,7 @@
     <div class="callout limit"><b>同一次人事作業可能產生多則通知：</b>部門＋職位同時異動、先建檔後補部門、新增成員後又加入 Bot 群組 —— 當事人會收到 2 則。<b>MVP 不做合併／抑制</b>，各則文案須能獨立成立。</div>
     <div class="callout limit"><b>直屬主管的通知一定慢於當事人：</b>此對象只能走自動化，最短延遲 10 分鐘。</div>
     <div class="callout limit"><b>自動化不通知 Bot 管理者：</b>五個事件的收件人一律只有<b>當事人與其直屬主管</b>。管理者若需掌握成員異動或群組進出，改由<b>後台異動紀錄</b>查詢，本功能不提供推播。</div>
+    <div class="callout limit"><b>啟用中的流程不可直接編輯：</b>須先<b>停用</b>才能修改內容。停用瞬間，進行中的 run 依<b>已送出不變、尚未送出待恢復後套新版</b>的規則凍結；編輯完成後由設定者<b>手動啟用</b>，凍結的 run 才恢復並套用新版本（<span class="qid">Q-P02</span>／<span class="qid">Q-P03</span>）。</div>
     <div class="callout limit"><b>相依於 Bot 聊天室政策（他模組設定）：</b>「成員加入／移出 Bot 群組」兩個事件需政策為<b>「可加入群組聊天室」</b>才會觸發；政策為<b>「僅限 1 對 1 聊天室」</b>時這兩個事件不可用，僅其餘事件可設定。政策的設定介面不在本功能範圍，但行為相依。</div>
     <div class="callout limit"><b>流程長度上限：</b><b>A 型 1 張卡</b>（<code>初始設定 → 時間 → 卡片 → 結束</code>）、<b>B 型 2 張卡</b>（<code>初始設定 → 時間 → 卡片 → 等完成 → 時間 → 卡片 → 結束</code>），<b>最多 2 張</b>。不做更深的串鏈、不做分支與條件判斷。</div>
     <div class="callout limit"><b>一事件一流程：</b>每個起始事件只能建立<b>一條</b>自動化流程，已被使用的事件不會出現在其他流程的選項中。<b>上限為每隻 Bot 各 5 條</b>（＝ 5 個事件各一條）；聊天室政策為「僅限 1 對 1」時可用事件剩 3 個，額度呈現為「<b>N / 3（2 個事件因聊天室政策不可用）</b>」。同一事件的多段訊息請用同一條流程的兩張卡片表達。<br>
@@ -375,7 +376,7 @@
       <tr><td class="qid">Q-P01</td><td><span class="badge b-ok">已決議</span></td><td>同一成員同一流程重複觸發（如一個月內兩次部門異動，或前一流程還在等完成）</td><td><b>保留新事件、取消舊流程</b>。舊卡片按鈕失效後靜默忽略。<br><b>群組事件例外：</b>識別鍵含群組，不同群組不互相取消（見 §09）</td></tr>
       <tr><td class="qid">Q-P02</td><td><span class="badge b-ok">已決議</span></td><td>停用／刪除流程時，已排程與等待中的流程實例如何處理</td><td><b>停用＝暫停</b>（凍結、可恢復，恢復時套<b>最新版本</b>）；<b>刪除＝永久取消</b>（終態）。兩者皆顯示受影響筆數</td></tr>
       <tr><td class="qid">Q-P05</td><td><span class="badge b-ok">已決議</span></td><td>流程上限是每隻 Bot 5 條或全租戶 5 條</td><td><b>每隻 Bot 各 5 條</b>，組織事件跨 Bot 重複發送由設定者避免（見 §03）</td></tr>
-      <tr><td class="qid">Q-P03</td><td><span class="badge b-ok">已決議</span></td><td>流程被編輯時，正在進行中的流程實例用舊設定還是新設定</td><td><b>用舊設定（觸發當下的 <code>flow_snapshot</code>）</b>，使卡片 2 與使用者已看到的卡片 1 語境一致。<b>副作用：</b>改錯字不影響已在跑的流程</td></tr>
+      <tr><td class="qid">Q-P03</td><td><span class="badge b-ok">已決議</span></td><td>流程被編輯時，正在進行中的流程實例用舊設定還是新設定</td><td><b>啟用中的流程不可直接編輯，須先停用才能修改。</b>因此不存在「邊跑邊被改」的情境：停用瞬間，所有進行中的 run 依 <span class="qid">Q-P02</span> 凍結；編輯完成後由設定者<b>手動啟用</b>，此時凍結的 run 恢復並套用<b>編輯後的最新版本</b>（同 <span class="qid">Q-P02</span>）。<br><b>已送出的卡片內容不受影響</b>（既成事實）；<b>尚未送出的卡片，恢復後才套用新版本</b>。</td></tr>
       <tr><td class="qid">Q-P14</td><td><span class="badge b-ok">已決議</span></td><td>真人服務進行中時，自動化推播照發嗎<br><span style="color:var(--muted);">（原待確認 #1 擴充：A 型的延遲推播也可能落在真人服務期間）</span></td><td><b>B 型等待中遇真人接手 → 取消該 run</b>；<b>A 型照發</b>（它是通知，與真人對話無關）。不做「延後至服務結束」（成本較高）</td></tr>
       <tr><td class="qid">Q-P17</td><td><span class="badge b-ok">已決議</span></td><td>變數字典完整清單與缺值行為</td><td>清單已於 §03 定案：<b>三個組織事件</b>預設訊息與自動化皆為 <code>{姓名}{部門}{日期}{時間}</code>；<b>兩個群組事件</b>預設訊息為 <code>{姓名清單}{日期}{時間}</code>、自動化為 <code>{姓名}{部門}{日期}{時間}</code>。缺值一律<b>留空</b>、不阻止發送（例：群組成員非組織名冊內的人時，<code>{姓名}{部門}</code> 留空）</td></tr>
       <tr><td class="qid">Q-P18</td><td><span class="badge b-ok">已決議</span></td><td>「接續下一步」自動降級時要不要提示使用者<br><span style="color:var(--muted);">拿掉唯一的「接續下一步」按鈕，會讓流程不再符合 B 型的定義（見 §04）</span></td><td><b>變更前跳提醒、不阻擋。</b>確認後<b>整條流程由 B 型降為 A 型</b>（<code>事件 → 時間 → 推播</code>）：原按鈕降級為「開啟連結」（標記需補網址），且<b>第 2 張卡與其時間節點一併移除</b>，只保留第 1 張卡</td></tr>
@@ -425,7 +426,7 @@
     </table>
   </section>
 
-  <p class="foot">Bot 自動化腳本 需求規格書 v1.2（群組事件預設訊息改用 {姓名清單}，與自動化參數分流）｜2026-08-12｜§01~§10 為設計收斂結果。</p>
+  <p class="foot">Bot 自動化腳本 需求規格書 v1.3（啟用中流程須先停用才能編輯，Q-P03 改依此決議）｜2026-08-12｜§01~§10 為設計收斂結果。</p>
 
 </div>
 </body>
