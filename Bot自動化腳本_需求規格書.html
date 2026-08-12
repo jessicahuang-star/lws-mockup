@@ -95,7 +95,7 @@
     <h1>Bot 自動化腳本 — 需求規格書</h1>
     <div class="lead" style="color:#dfe7f5;margin:0;">LINE Works Bot 模組擴建｜事件觸發的自動化訊息機制</div>
     <div class="meta">
-      <span><b>版本</b> v1.1（自動化移除 Bot 管理者收件人）</span>
+      <span><b>版本</b> v1.2（群組事件預設訊息改用 {姓名清單}，與自動化參數分流）</span>
       <span><b>日期</b> 2026-08-12</span>
       <span><b>撰寫</b> UX（Jessica）</span>
       <span><b>狀態</b> 需求＋介面已收斂</span>
@@ -175,14 +175,14 @@
 
     <p style="font-weight:700;margin:22px 0 4px;">各事件的對象、參數與觸發來源</p>
     <p style="font-size:13px;color:var(--muted);margin:0 0 8px;"><b>對象規則一句話：預設訊息一律發給當事人（不給選）；自動化可複選當事人／直屬主管，五個事件一致。</b>「自動回覆」為預設訊息專用，不進自動化。</p>
-    <p style="font-size:13px;color:var(--muted);margin:0 0 8px;"><b>參數規則一句話：五個事件使用<u>同一組</u>參數 <code>{姓名}{部門}{日期}{時間}</code>，預設訊息與自動化相同，無事件別的例外。</b>（收件人只剩當事人與其直屬主管，各自只收到與自己相關的那一則，無批次彙整情境。）<br><b>參數主體：</b><code>{姓名}</code><code>{部門}</code> 一律解析為<b>事件當事人</b>，非收件人；發給直屬主管時亦同。取值為<b>事件觸發當下的快照</b>。</p>
+    <p style="font-size:13px;color:var(--muted);margin:0 0 8px;"><b>參數規則一句話：三個組織事件預設訊息與自動化<u>共用同一組</u>參數 <code>{姓名}{部門}{日期}{時間}</code>；兩個群組事件<u>不同</u>——預設訊息用 <code>{姓名清單}{日期}{時間}</code>、自動化用 <code>{姓名}{部門}{日期}{時間}</code>。</b><br><b>差異原因：</b>群組事件的預設訊息發給<b>群組</b>，可能一次涉及多位當事人，故用<b>清單</b>且不含部門（多人多部門會使單行文字過雜）；自動化的收件人一律<b>當事人本人／直屬主管，單人 1:1</b>，不需清單。<br><b>參數主體：</b><code>{姓名}</code><code>{部門}</code> 一律解析為<b>事件當事人</b>，非收件人；發給直屬主管時亦同。<code>{姓名清單}</code> 為該次觸發事件涉及的<b>全部</b>當事人姓名，以「、」分隔，<b>有幾位就列幾位，不做省略截斷</b>。兩者取值皆為<b>事件觸發當下的快照</b>。</p>
     <table>
       <tr><th style="width:132px;">事件</th><th style="width:96px;">預設訊息<br>發送對象</th><th style="width:150px;">自動化設定<br>可選對象</th><th style="width:132px;">參數設定值</th><th>觸發來源</th></tr>
       <tr><td>成員部門異動</td><td rowspan="3">當事人</td><td rowspan="3">當事人／直屬主管<br><span style="color:var(--muted);font-size:12px;">（複選）</span></td><td rowspan="3"><code>{姓名}</code> <code>{部門}</code> <code>{日期}</code> <code>{時間}</code></td><td rowspan="3"><span class="badge b-slate">後台（主動推播）</span><br><span class="badge b-warn">警示</span> <b>僅「SaaS 後台」操作才會觸發。</b>若 HR 改於 <b>LINE WORKS Admin</b> 端變更組織，或走定期同步路徑，<b>系統抓不到此異動、事件不會發出</b>，該名成員不會收到通知。導入時須與 HR 約定組織異動一律於 SaaS 後台操作（風險詳見 <span class="qid">Q-B04</span>）</td></tr>
       <tr><td>成員職位異動</td></tr>
       <tr><td>新增成員</td></tr>
-      <tr><td>成員加入 Bot 群組</td><td>群組</td><td>當事人／直屬主管<br><span style="color:var(--muted);font-size:12px;">（複選）</span></td><td><code>{姓名}</code> <code>{部門}</code> <code>{日期}</code> <code>{時間}</code></td><td rowspan="2"><span class="badge b-acc">群組（callback）</span><br><span style="color:var(--muted);font-size:12px;"><b>兩個前置條件缺一不觸發：</b>① Bot 已啟用 callback ② Bot 聊天室政策為「可加入群組聊天室」（政策於其他模組設定）<br><b>不回溯：</b>僅在 <b>Bot 已於該群組內之後</b>，才對後續進出的成員觸發。Bot 被加進一個既有群組時，<b>不會為群組內原有成員產生事件</b>。</span></td></tr>
-      <tr><td>成員移出 Bot 群組</td><td>群組<br><span style="color:var(--muted);font-size:12px;">（本人已離開）</span></td><td>當事人／直屬主管<br><span style="color:var(--muted);font-size:12px;">（複選）</span></td><td><code>{姓名}</code> <code>{部門}</code> <code>{日期}</code> <code>{時間}</code></td></tr>
+      <tr><td>成員加入 Bot 群組</td><td>群組</td><td>當事人／直屬主管<br><span style="color:var(--muted);font-size:12px;">（複選）</span></td><td><b>預設訊息</b> <code>{姓名清單}</code> <code>{日期}</code> <code>{時間}</code><br><b>自動化</b> <code>{姓名}</code> <code>{部門}</code> <code>{日期}</code> <code>{時間}</code></td><td rowspan="2"><span class="badge b-acc">群組（callback）</span><br><span style="color:var(--muted);font-size:12px;"><b>兩個前置條件缺一不觸發：</b>① Bot 已啟用 callback ② Bot 聊天室政策為「可加入群組聊天室」（政策於其他模組設定）<br><b>不回溯：</b>僅在 <b>Bot 已於該群組內之後</b>，才對後續進出的成員觸發。Bot 被加進一個既有群組時，<b>不會為群組內原有成員產生事件</b>。</span></td></tr>
+      <tr><td>成員移出 Bot 群組</td><td>群組<br><span style="color:var(--muted);font-size:12px;">（本人已離開）</span></td><td>當事人／直屬主管<br><span style="color:var(--muted);font-size:12px;">（複選）</span></td><td><b>預設訊息</b> <code>{姓名清單}</code> <code>{日期}</code> <code>{時間}</code><br><b>自動化</b> <code>{姓名}</code> <code>{部門}</code> <code>{日期}</code> <code>{時間}</code></td></tr>
       <tr><td>自動回覆（fallback）</td><td>當事人<br><span style="color:var(--muted);font-size:12px;">（發訊息者）</span></td><td><span class="badge b-no">不適用</span><br><span style="color:var(--muted);font-size:12px;">僅預設訊息</span></td><td><code>{姓名}</code> <code>{部門}</code> <code>{日期}</code> <code>{時間}</code><br><span style="color:var(--muted);font-size:12px;">僅預設訊息，無自動化</span></td><td><span class="badge b-slate">訊息未命中</span><br><b>僅 1:1 對話觸發；群組中不觸發</b></td></tr>
     </table>
     
@@ -377,7 +377,7 @@
       <tr><td class="qid">Q-P05</td><td><span class="badge b-ok">已決議</span></td><td>流程上限是每隻 Bot 5 條或全租戶 5 條</td><td><b>每隻 Bot 各 5 條</b>，組織事件跨 Bot 重複發送由設定者避免（見 §03）</td></tr>
       <tr><td class="qid">Q-P03</td><td><span class="badge b-ok">已決議</span></td><td>流程被編輯時，正在進行中的流程實例用舊設定還是新設定</td><td><b>用舊設定（觸發當下的 <code>flow_snapshot</code>）</b>，使卡片 2 與使用者已看到的卡片 1 語境一致。<b>副作用：</b>改錯字不影響已在跑的流程</td></tr>
       <tr><td class="qid">Q-P14</td><td><span class="badge b-ok">已決議</span></td><td>真人服務進行中時，自動化推播照發嗎<br><span style="color:var(--muted);">（原待確認 #1 擴充：A 型的延遲推播也可能落在真人服務期間）</span></td><td><b>B 型等待中遇真人接手 → 取消該 run</b>；<b>A 型照發</b>（它是通知，與真人對話無關）。不做「延後至服務結束」（成本較高）</td></tr>
-      <tr><td class="qid">Q-P17</td><td><span class="badge b-ok">已決議</span></td><td>變數字典完整清單與缺值行為</td><td>清單已於 §03 定案：<b>五個事件一致 <code>{姓名}{部門}{日期}{時間}</code></b>，預設訊息與自動化相同。缺值一律<b>留空</b>、不阻止發送（例：群組成員非組織名冊內的人時，<code>{姓名}{部門}</code> 留空）</td></tr>
+      <tr><td class="qid">Q-P17</td><td><span class="badge b-ok">已決議</span></td><td>變數字典完整清單與缺值行為</td><td>清單已於 §03 定案：<b>三個組織事件</b>預設訊息與自動化皆為 <code>{姓名}{部門}{日期}{時間}</code>；<b>兩個群組事件</b>預設訊息為 <code>{姓名清單}{日期}{時間}</code>、自動化為 <code>{姓名}{部門}{日期}{時間}</code>。缺值一律<b>留空</b>、不阻止發送（例：群組成員非組織名冊內的人時，<code>{姓名}{部門}</code> 留空）</td></tr>
       <tr><td class="qid">Q-P18</td><td><span class="badge b-ok">已決議</span></td><td>「接續下一步」自動降級時要不要提示使用者<br><span style="color:var(--muted);">拿掉唯一的「接續下一步」按鈕，會讓流程不再符合 B 型的定義（見 §04）</span></td><td><b>變更前跳提醒、不阻擋。</b>確認後<b>整條流程由 B 型降為 A 型</b>（<code>事件 → 時間 → 推播</code>）：原按鈕降級為「開啟連結」（標記需補網址），且<b>第 2 張卡與其時間節點一併移除</b>，只保留第 1 張卡</td></tr>
       <tr><td class="qid">Q-P19</td><td><span class="badge b-ok">已決議</span></td><td>群組事件是否需要「發送到該群組」的收件人選項</td><td><b>MVP 不做</b>。自動化一律 1:1 私訊（§04、§05），群組僅由預設訊息發送</td></tr>
       <tr><td class="qid">Q-P08</td><td><span class="badge b-ok">已決議</span></td><td>執行歷史保留多久</td><td><b>保留 1 年（365 天），逾期清理</b>。MVP 無查詢介面，紀錄僅供工程查驗；仍須有定期清理排程，避免無上限成長</td></tr>
@@ -425,7 +425,7 @@
     </table>
   </section>
 
-  <p class="foot">Bot 自動化腳本 需求規格書 v1.1（自動化移除 Bot 管理者收件人）｜2026-08-12｜§01~§10 為設計收斂結果。</p>
+  <p class="foot">Bot 自動化腳本 需求規格書 v1.2（群組事件預設訊息改用 {姓名清單}，與自動化參數分流）｜2026-08-12｜§01~§10 為設計收斂結果。</p>
 
 </div>
 </body>
