@@ -3693,19 +3693,6 @@
 /* ---- 觸發引擎（Bot › 觸發引擎 / 新增觸發規則） ---- */
 .ihub .form-grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 14px; }
 @media (max-width: 900px) { .ihub .form-grid-3 { grid-template-columns: 1fr; } }
-.ihub .src-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px; }
-.ihub .src-card { border: 1px solid var(--border-strong); border-radius: var(--radius); background: var(--surface);
-  padding: 14px 16px; cursor: pointer; transition: border-color .15s, background .15s, box-shadow .15s; }
-.ihub .src-card:hover { border-color: var(--primary); box-shadow: var(--shadow-sm); }
-.ihub .src-card.sel { border-color: var(--primary); background: var(--primary-soft);
-  box-shadow: inset 0 0 0 1px rgba(0,123,255,0.16); }
-.ihub .src-card .src-head { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
-.ihub .src-card .src-name { font-weight: 600; font-size: 14px; }
-.ihub .src-card .src-fields { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 10px; }
-.ihub .src-card .src-fields span { font-size: 11.5px; padding: 2px 8px; border-radius: 999px;
-  background: var(--hover); color: var(--text-secondary); }
-.ihub .src-card .src-meta { display: flex; gap: 12px; font-size: 12px; color: var(--text-muted);
-  border-top: 1px solid var(--border); padding-top: 8px; }
 .ihub .cond-box { border: 1px solid var(--border); border-radius: var(--radius); background: var(--bg); padding: 16px; }
 .ihub .sentence { margin-top: 14px; background: var(--surface); border: 1px solid var(--border);
   border-radius: var(--radius-sm); padding: 11px 14px; font-size: 14px; line-height: 1.7; }
@@ -3716,6 +3703,40 @@
   border-top-left-radius: 3px; padding: 11px 14px; font-size: 13px; line-height: 1.7;
   white-space: pre-wrap; max-width: 340px; }
 .ihub textarea.input { height: auto; }
+
+/* ---- CB 標準欄位：中文名稱 + 代碼 兩段輸入 ---- */
+.ihub .cb-field { display: flex; flex-direction: column; gap: 4px; }
+.ihub .cb-field .cb-sub { height: 28px; font-size: 12px; color: var(--text-secondary); }
+.ihub .map-grid .mh-sub { font-weight: 400; font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+.ihub .map-grid { align-items: start; }
+.ihub .map-grid > .f-arrow, .ihub .map-grid > .x-btn { margin-top: 5px; }
+
+/* ---- 表格分頁（沿用全站 .pagination） ---- */
+.ihub .pagination { padding: 12px 20px; border-top: 1px solid var(--border); }
+
+/* ---- 觸發規則訊息內容：左編輯／右手機預覽 ---- */
+.ihub .msg-cols { display: grid; grid-template-columns: minmax(300px, 1fr) 300px; gap: 16px; align-items: start; }
+@media (max-width: 1100px) { .ihub .msg-cols { grid-template-columns: 1fr; } }
+
+/* ---- 可收合區塊（新增觸發規則） ---- */
+.ihub .sec-head { cursor: pointer; user-select: none; }
+.ihub .sec-head .chev { transition: transform .2s; color: var(--text-muted); flex-shrink: 0; }
+.ihub .sec-head.collapsed .chev { transform: rotate(-90deg); }
+.ihub .sec-head:hover .title { color: var(--primary); }
+
+/* ---- 動作參數值：左標籤（中文＋代碼）／右輸入 ---- */
+.ihub .param-row { display: grid; grid-template-columns: 190px 1fr; gap: 14px; align-items: center; padding: 5px 0; }
+.ihub .param-row .p-label { font-size: 13px; font-weight: 600; color: var(--text); }
+.ihub .param-row .p-code { font-family: ui-monospace, Menlo, monospace; font-size: 11.5px;
+  color: var(--text-muted); font-weight: 400; margin-left: 4px; }
+.ihub .param-row .p-opt { font-size: 11px; color: var(--text-muted); font-weight: 400; margin-left: 4px; }
+.ihub .param-empty { font-size: 12.5px; color: var(--text-muted); padding: 6px 0; }
+@media (max-width: 720px) { .ihub .param-row { grid-template-columns: 1fr; gap: 4px; } }
+
+/* ---- 推播訊息：來自整合中台的欄位變數 ---- */
+.push-var-chip.ih-var { background: var(--info-soft); color: var(--info); }
+.push-var-chip.ih-var:hover { background: var(--info); color: #fff; }
+.push-var-src { font-size: 11px; color: var(--text-muted); align-self: center; margin-left: 4px; }
 
 /* ---- Bot 列表：已設定觸發引擎的標記 ---- */
 .bot-trigger-flag { display: inline-flex; align-items: center; gap: 4px; flex-shrink: 0;
@@ -9628,7 +9649,7 @@
       </div>
     </section>
 
-    <!-- ===== [修改開始] 新增觸發規則（Bot › 觸發引擎） ===== -->
+    <!-- ===== [修改開始] 新增觸發規則（Bot › 觸發引擎，單一步驟） ===== -->
     <section id="page-bot-rule-new" class="page-wrap hidden ihub">
       <div class="page-head">
         <div>
@@ -9638,40 +9659,49 @@
         <div class="btn-group"><button class="btn" onclick="trgBackToBot()">取消</button></div>
       </div>
 
-      <div class="bulk-step-bar" id="trg-step-bar">
-        <div class="bulk-step active" onclick="trgWiz(1)" style="cursor:pointer;"><span class="bulk-step-num">1</span><span class="bulk-step-label">選擇動作</span></div>
-        <div class="bulk-step-line"></div>
-        <div class="bulk-step" onclick="trgWiz(2)" style="cursor:pointer;"><span class="bulk-step-num">2</span><span class="bulk-step-label">設定執行頻率</span></div>
-        <div class="bulk-step-line"></div>
-        <div class="bulk-step" onclick="trgWiz(3)" style="cursor:pointer;"><span class="bulk-step-num">3</span><span class="bulk-step-label">條件判斷</span></div>
-        <div class="bulk-step-line"></div>
-        <div class="bulk-step" onclick="trgWiz(4)" style="cursor:pointer;"><span class="bulk-step-num">4</span><span class="bulk-step-label">推送對象與訊息內容</span></div>
-        <div class="bulk-step-line"></div>
-        <div class="bulk-step" onclick="trgWiz(5)" style="cursor:pointer;"><span class="bulk-step-num">5</span><span class="bulk-step-label">確認</span></div>
+      <!-- 規則名稱 -->
+      <div class="card" style="margin-bottom:16px;">
+        <div class="card-body">
+          <div class="form-row" style="max-width:420px;margin-bottom:0;">
+            <label>規則名稱 <span class="req">*</span></label>
+            <input class="input full" id="trg-rule-name" value="低庫存提醒－耗材" />
+            <div class="help">會顯示在觸發引擎列表與觸發紀錄裡</div>
+          </div>
+        </div>
       </div>
 
-      <!-- Step 1：選擇動作 -->
-      <div id="trg-wiz-1">
-        <div class="card"><div class="card-body">
-          <div style="font-size:13px;font-weight:600;margin-bottom:10px;">選擇查詢動作 <span class="req">*</span></div>
-          <div class="src-grid" id="trg-src-grid"></div>
-
-          <div style="margin-top:22px;padding-top:20px;border-top:1px solid var(--border);">
-            <div style="font-size:13px;font-weight:600;margin-bottom:4px;">填寫 Request 參數</div>
-            <div class="text-muted" style="font-size:12.5px;margin-bottom:12px;">這份資料需要以下條件才能查詢。</div>
-            <div class="form-grid-3" id="trg-param-grid"></div>
+      <!-- 查詢動作 -->
+      <div class="card" style="margin-bottom:16px;">
+        <div class="card-head sec-head" onclick="trgToggleSec(this,'trg-sec-act')">
+          <span class="title">查詢動作 <span class="req">*</span></span>
+          <span class="sub" style="margin-left:auto;margin-right:10px;" id="trg-sum-act"></span>
+          <svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="card-body" id="trg-sec-act">
+          <div class="text-muted" style="font-size:12.5px;line-height:1.7;margin-bottom:10px;">
+            列出此連接器已定義的查詢動作，每次執行頻率到期，就是呼叫這支動作取得最新資料。找不到想要的動作？<span class="link" onclick="ihGoHub()">前往動作設定新增</span>
+          </div>
+          <div class="form-row" style="max-width:440px;margin-bottom:0;">
+            <select class="input full" id="trg-act-select" onchange="trgPickAct(this.value)"></select>
+            <div class="help" id="trg-act-hint"></div>
           </div>
 
-          <div class="foot-actions"><button class="btn primary" onclick="trgWiz(2)">下一步</button></div>
-        </div></div>
+          <div style="margin-top:20px;padding-top:18px;border-top:1px solid var(--border);">
+            <div style="font-size:14px;font-weight:600;margin-bottom:4px;">動作參數值</div>
+            <div class="text-muted" style="font-size:12.5px;margin-bottom:14px;">這支動作需要的參數，填入這條規則實際要查詢的值；例如查庫存要指定查哪一個商品</div>
+            <div id="trg-param-grid"></div>
+            <div class="help" style="margin-top:12px;">要同時監控多個商品／訂單？請分別建立多條規則，本階段一條規則對應一組固定的參數值</div>
+          </div>
+        </div>
       </div>
 
-      <!-- Step 2：執行頻率 -->
-      <div id="trg-wiz-2" class="hidden">
-        <div class="card"><div class="card-body">
-          <div class="form-grid-2" style="margin-bottom:16px;">
+      <!-- 執行頻率 -->
+      <div class="card" style="margin-bottom:16px;">
+        <div class="card-head sec-head" onclick="trgToggleSec(this,'trg-sec-freq')"><span class="title">執行頻率 <span class="req">*</span></span><svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div>
+        <div class="card-body" id="trg-sec-freq">
+          <div class="form-grid-2" style="margin-bottom:0;">
             <div class="form-row" style="margin-bottom:0;">
-              <label>執行頻率 <span class="req">*</span></label>
+              <label>檢查頻率</label>
               <select class="input full" id="trg-freq" onchange="trgFreqChange()">
                 <option>每 5 分鐘</option><option selected>每 30 分鐘</option><option>每小時</option><option>每天固定時間</option><option>每週固定時間</option>
               </select>
@@ -9683,25 +9713,22 @@
               <div class="help">選「每天」或「每週」時才需要設定（台灣時間）</div>
             </div>
           </div>
-          <div class="text-muted" style="font-size:12.5px;line-height:1.7;padding-top:14px;border-top:1px solid var(--border);">
+          <div class="text-muted" style="font-size:12.5px;line-height:1.7;margin-top:16px;padding-top:14px;border-top:1px solid var(--border);">
             檢查是定時的、發送是立即的。以每 30 分鐘為例，條件成立後最多再過 30 分鐘會被檢查到，檢查到即刻送出。實際檢查時間會前後浮動幾秒到幾分鐘，避免大量通知同時送出。
           </div>
-          <div class="foot-actions">
-            <button class="btn spacer" onclick="trgWiz(1)">上一步</button>
-            <button class="btn primary" onclick="trgWiz(3)">下一步</button>
-          </div>
-        </div></div>
+        </div>
       </div>
 
-      <!-- Step 3：條件判斷 -->
-      <div id="trg-wiz-3" class="hidden">
-        <div class="card"><div class="card-body">
+      <!-- 條件判斷與通知方式 -->
+      <div class="card" style="margin-bottom:16px;">
+        <div class="card-head sec-head" onclick="trgToggleSec(this,'trg-sec-cond')"><span class="title">條件判斷與通知方式</span><svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div>
+        <div class="card-body" id="trg-sec-cond">
           <label class="row-flex" style="margin-bottom:16px;font-size:13.5px;cursor:pointer;">
             <input type="checkbox" checked /> 只在符合特定條件時才通知
           </label>
 
           <div class="cond-box">
-            <div style="display:grid;grid-template-columns:1fr 190px 1fr;gap:11px;align-items:end;">
+            <div style="display:grid;grid-template-columns:1fr 190px 1fr;gap:11px;align-items:start;">
               <div class="form-row" style="margin-bottom:0;">
                 <label>欄位</label>
                 <select class="input full" id="trg-cf" onchange="trgSyncSentence()"></select>
@@ -9756,101 +9783,68 @@
               </div>
             </div>
           </div>
-
-          <div class="foot-actions">
-            <button class="btn spacer" onclick="trgWiz(2)">上一步</button>
-            <button class="btn primary" onclick="trgWiz(4)">下一步</button>
-          </div>
-        </div></div>
+        </div>
       </div>
 
-      <!-- Step 4：推送對象與訊息內容 -->
-      <div id="trg-wiz-4" class="hidden">
-        <div class="card"><div class="card-body">
+      <!-- 推送對象與訊息內容 -->
+      <div class="card" style="margin-bottom:16px;">
+        <div class="card-head sec-head" onclick="trgToggleSec(this,'trg-sec-msg')"><span class="title">推送對象與訊息內容</span><svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div>
+        <div class="card-body" id="trg-sec-msg">
           <div class="form-row">
             <label>推送對象 <span class="req">*</span></label>
-            <div class="row-flex" style="gap:8px;flex-wrap:wrap;margin-bottom:8px;">
-              <span class="chip">採購部 <span class="x">×</span></span>
-              <span class="chip">王明宏 <span class="x">×</span></span>
-              <button class="btn sm">＋ 選擇群組或成員</button>
-            </div>
-            <div class="text-sec" style="font-size:12.5px;background:var(--hover);border-radius:var(--radius-sm);padding:8px 12px;display:inline-block;">
-              已選 <b>2</b> 個對象　·　每次通知會發出 <b>2</b> 則訊息
-            </div>
-            <div class="help">只能選擇這支 Bot 可以觸及的群組與成員。選群組比逐一選成員更有效率——一個群組只算一則。</div>
+            <select class="input full" id="trg-target-select" onchange="trgAddTarget(this)">
+              <option value="">— 選擇群組或成員（可複選）—</option>
+              <optgroup label="群組" id="trg-target-og-group"></optgroup>
+              <optgroup label="成員" id="trg-target-og-member"></optgroup>
+            </select>
+            <div class="row-flex" style="gap:6px;flex-wrap:wrap;margin-top:8px;" id="trg-target-chips"></div>
+            <div class="help">只能選擇這支 Bot 可以觸及的群組與成員。選群組比逐一選成員更有效率——一個群組只算一則訊息。</div>
           </div>
 
-          <div class="form-row">
-            <label>推播格式 <span class="req">*</span></label>
-            <div class="help" style="margin:0 0 8px;">一次命中多筆時要怎麼呈現。目前試算會命中 <b>12</b> 筆。</div>
-            <div class="admin-option-box">
-              <div class="admin-opt-item">
-                <label class="admin-radio-lbl active" id="trg-fmt-lbl-list"><input type="radio" name="trg-fmt" value="list" checked onchange="trgFmt()" /> 單筆逐項列出</label>
-                <div class="admin-opt-sub text-sec" style="font-size:12px;">把每一筆依序列在訊息裡。最多列出 5 筆，超過會自動改用「摘要＋連結」，避免洗版。</div>
-              </div>
-              <div class="admin-opt-item">
-                <label class="admin-radio-lbl" id="trg-fmt-lbl-sum"><input type="radio" name="trg-fmt" value="sum" onchange="trgFmt()" /> 摘要 ＋ 連結</label>
-                <div class="admin-opt-sub text-sec" style="font-size:12px;">訊息只寫命中筆數，附一個連結，點開看完整清單。</div>
-              </div>
-            </div>
-          </div>
+          <div style="border-top:1px solid var(--border);padding-top:16px;">
+            <div style="font-size:13px;font-weight:600;margin-bottom:4px;">訊息內容 <span class="req">*</span></div>
+            <div class="text-muted" style="font-size:12.5px;margin-bottom:12px;">階段一僅支援一則文字訊息。命中多筆時，訊息會以摘要加上命中清單連結送出。</div>
 
-          <div class="form-grid-2">
-            <div>
-              <div class="form-row">
-                <label>訊息內容 <span class="req">*</span></label>
-                <div class="row-flex" style="gap:6px;flex-wrap:wrap;margin-bottom:7px;">
-                  <span class="text-muted" style="font-size:12px;">點擊插入：</span>
-                  <span id="trg-varbtns"></span>
+            <div class="msg-cols">
+              <!-- 左：編輯 -->
+              <div>
+                <div class="card" style="padding:16px;border:2px solid var(--border);">
+                  <div style="font-size:13px;font-weight:600;margin-bottom:10px;">文字訊息</div>
+                  <textarea class="input full" id="push-trg-text-0" rows="10" placeholder="輸入推播訊息內容" oninput="trgUpdatePreview()" style="height:auto;padding:10px 12px;line-height:1.7;resize:vertical;"></textarea>
+                  <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;align-items:center;">
+                    <span id="push-trg-ihvars" style="display:contents;"></span>
+                  </div>
                 </div>
-                <textarea class="input full mono" id="trg-msg" rows="10" style="height:auto;padding:10px 12px;line-height:1.7;">⚠️ 低庫存警示（共 {{命中筆數}} 項）
-
-{{#每一筆}}
-・{{商品名稱}}（{{商品編號}}）
-　現有 {{庫存數量}} ／ 安全量 {{安全庫存}}
-{{/每一筆}}
-
-請儘速安排補貨。</textarea>
-                <div class="help" id="trg-msg-note"><code>{{#每一筆}}</code> 與 <code>{{/每一筆}}</code> 之間的內容會依命中筆數重複。目前命中 12 筆、超過 5 筆上限，這則訊息會自動改用「摘要＋連結」送出（見右側預覽）。</div>
+                <div class="help" style="margin-top:8px;" id="trg-msg-note">變數會在送出時代入這次命中的資料；<code>{{命中筆數}}</code> 是這次符合條件的筆數。</div>
               </div>
-            </div>
-            <div>
-              <div style="font-size:13px;font-weight:600;margin-bottom:6px;">預覽</div>
-              <div class="text-muted" style="font-size:12.5px;margin-bottom:9px;">使用 IT 試打時取得的真實資料</div>
-              <div class="msg-prev">
-                <div class="av">🤖</div>
-                <div class="bub" id="trg-bubble"></div>
+
+              <!-- 右：即時手機預覽（比照推播） -->
+              <div style="padding:16px;background:#f7f8fa;border-radius:var(--radius);display:flex;flex-direction:column;align-items:center;">
+                <div style="font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:12px;align-self:flex-start;">即時預覽</div>
+                <div style="width:220px;background:#1a1a2e;border-radius:28px;padding:12px;box-shadow:0 8px 24px rgba(0,0,0,0.28);flex-shrink:0;">
+                  <div style="background:#111;border-radius:16px 16px 0 0;padding:8px 12px;display:flex;align-items:center;gap:8px;">
+                    <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#007BFF,#7c3aed);display:flex;align-items:center;justify-content:center;font-size:11px;color:white;font-weight:700;">值</div>
+                    <div><div style="font-size:11px;font-weight:700;color:white;" id="trg-phone-bot">值班通知 Bot</div><div style="font-size:9px;color:#888;">Bot</div></div>
+                  </div>
+                  <div style="background:#f0f2f5;border-radius:0 0 16px 16px;padding:12px;min-height:340px;">
+                    <div style="font-size:10px;color:#aaa;text-align:center;margin-bottom:12px;">今天</div>
+                    <div style="max-width:85%;">
+                      <div id="trg-bubble" style="background:white;border-radius:4px 16px 16px 16px;padding:10px 12px;font-size:12px;color:#333;box-shadow:0 1px 3px rgba(0,0,0,0.1);line-height:1.6;white-space:pre-wrap;"></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="help" style="margin-top:8px;text-align:center;font-size:11px;">此為示意預覽</div>
               </div>
-              <div class="help" style="margin-top:10px;">命中 12 筆大於上限 5 筆，已自動退化為「摘要＋連結」。
-                <button class="btn sm" style="margin-left:6px;" onclick="ihOpenHits('hit')">預覽連結開啟後的畫面</button></div>
-            </div>
-          </div>
-
-          <div class="foot-actions">
-            <button class="btn spacer" onclick="trgWiz(3)">上一步</button>
-            <button class="btn primary" onclick="trgWiz(5)">下一步</button>
-          </div>
-        </div></div>
-      </div>
-
-      <!-- Step 5：確認 -->
-      <div id="trg-wiz-5" class="hidden">
-        <div class="card">
-          <div class="card-head"><span class="title">觸發規則設定摘要</span></div>
-          <div class="card-body">
-            <div class="form-row" style="max-width:360px;">
-              <label>規則名稱 <span class="req">*</span></label>
-              <input class="input full" id="trg-rule-name" value="低庫存提醒－耗材" />
-            </div>
-            <div style="max-width:760px;" id="trg-summary"></div>
-            <div class="text-sec" style="margin-top:18px;padding-top:16px;border-top:1px solid var(--border);font-size:13px;line-height:1.8;" id="trg-final-note"></div>
-            <div class="foot-actions">
-              <button class="btn spacer" onclick="trgWiz(4)">上一步</button>
-              <button class="btn" onclick="trgSave(false)">儲存但先不啟用</button>
-              <button class="btn primary" onclick="trgSave(true)">儲存並啟用</button>
             </div>
           </div>
         </div>
+      </div>
+
+      <div class="foot-actions" style="border-top:none;margin-top:0;padding-top:0;">
+        <span class="text-sec spacer" style="font-size:12.5px;line-height:1.7;" id="trg-final-note"></span>
+        <button class="btn" onclick="trgBackToBot()">取消</button>
+        <button class="btn" onclick="trgSave(false)">儲存但先不啟用</button>
+        <button class="btn primary" onclick="trgSave(true)">儲存並啟用</button>
       </div>
     </section>
     <!-- ===== [修改結束] 新增觸發規則 ===== -->
@@ -9862,20 +9856,13 @@
       <div class="page-head">
         <div>
           <h1 class="page-title">整合中台設定</h1>
-          <p class="page-desc" id="ih-hub-desc">把客戶既有系統串進來。設定好的查詢動作需要串接給指定的 Bot，該 Bot 的管理者才能在觸發引擎建立規則。</p>
+          <p class="page-desc">把客戶既有系統串進來。設定好的查詢動作需要串接給指定的 Bot，該 Bot 的管理者才能在觸發引擎建立規則；每個連接器底下可以查自己的觸發紀錄。</p>
         </div>
         <div class="btn-group">
-          <button class="btn primary" id="ih-hub-act-conn" onclick="ihStartConn()">新增連接器</button>
-          <button class="btn hidden" id="ih-hub-act-log">匯出 CSV</button>
+          <button class="btn primary" onclick="ihStartConn()">新增連接器</button>
         </div>
       </div>
 
-      <div class="tabs" id="ih-hub-tabs">
-        <button class="tab active" onclick="ihHubTab(this,'ih-panel-conn')">連接器管理</button>
-        <button class="tab" onclick="ihHubTab(this,'ih-panel-log')">觸發紀錄</button>
-      </div>
-
-      <!-- 分頁：連接器管理 -->
       <div id="ih-panel-conn">
         <div id="ih-conn-created" class="hidden">
           <div class="note success">
@@ -9895,35 +9882,6 @@
 
         <div class="conn-grid" id="ih-conn-grid"></div>
       </div>
-
-      <!-- 分頁：觸發紀錄 -->
-      <div id="ih-panel-log" class="hidden">
-        <div class="card">
-          <div class="panel-bar">
-            <select class="input" style="width:130px;"><option>近 7 天</option><option>近 24 小時</option><option>近 30 天</option><option>自訂區間…</option></select>
-            <select class="input" style="width:160px;"><option>全部連接器</option><option>鼎新 ERP（庫存）</option><option>Workday HR</option></select>
-            <select class="input" style="width:150px;"><option>全部 Bot</option><option>值班通知 Bot</option><option>內部公告 Bot</option><option>會議提醒 Bot</option></select>
-            <select class="input" style="width:120px;"><option>全部狀態</option><option>成功</option><option>失敗</option><option>未觸發</option><option>已抑制</option></select>
-            <span class="text-muted" style="margin-left:auto;font-size:12.5px;">符合 <b>1,284</b> 筆</span>
-          </div>
-          <div class="table-scroll">
-            <table class="data-table">
-              <thead>
-                <tr><th style="width:110px;">觸發時間</th><th style="width:140px;">Bot 名稱</th><th>連接器 / 查詢動作</th><th>規則 / 條件</th><th>發送結果</th></tr>
-              </thead>
-              <tbody>
-                <tr><td>08/18 10:30</td><td>值班通知 Bot</td><td>鼎新 ERP（庫存）<div class="sub-line">查詢庫存數量</div></td><td>低庫存提醒－耗材<div class="sub-line">當 庫存數量 小於 安全庫存</div></td><td><span class="badge success">成功</span><div class="sub-line">250 筆命中 12 筆・摘要＋連結已送出</div></td></tr>
-                <tr><td>08/18 10:25</td><td>值班通知 Bot</td><td>鼎新 ERP（庫存）<div class="sub-line">查詢庫存數量</div></td><td>低庫存提醒－耗材<div class="sub-line">當 庫存數量 小於 安全庫存</div></td><td><span class="badge info">已抑制</span><div class="sub-line">命中 12 筆皆已通知過，未重複發送</div></td></tr>
-                <tr><td>08/18 10:20</td><td>內部公告 Bot</td><td>鼎新 ERP（庫存）<div class="sub-line">查詢庫存數量</div></td><td>缺貨警示（採購群）<div class="sub-line">當 庫存數量 小於 安全庫存</div></td><td><span class="badge neutral">未觸發</span><div class="sub-line">250 筆命中 0 筆</div></td></tr>
-                <tr><td>08/18 10:15</td><td>值班通知 Bot</td><td>鼎新 ERP（庫存）<div class="sub-line">查詢待入庫訂單</div></td><td>到貨提醒<div class="sub-line">當 預計到貨日 3 天內即將到</div></td><td><span class="badge danger">失敗</span><div class="sub-line">連線逾時，已重試 3 次</div></td></tr>
-                <tr><td>08/18 10:00</td><td>值班通知 Bot</td><td>鼎新 ERP（庫存）<div class="sub-line">查詢庫存數量</div></td><td>低庫存提醒－耗材<div class="sub-line">當 庫存數量 小於 安全庫存</div></td><td><span class="badge success">成功</span> <span class="badge warning">略過 7 筆</span><div class="sub-line">條件欄位解析不到・<span class="link" onclick="ihOpenHits('skip')">查看略過清單</span></div></td></tr>
-                <tr><td>08/18 09:45</td><td>值班通知 Bot</td><td>鼎新 ERP（庫存）<div class="sub-line">查詢庫存數量</div></td><td>低庫存提醒－3C<div class="sub-line">當 庫存數量 小於 安全庫存</div></td><td><span class="badge danger">失敗</span><div class="sub-line">欄位路徑無法解析・198 / 250 筆失敗，超過 50% 門檻</div></td></tr>
-                <tr><td>08/18 09:30</td><td>會議提醒 Bot</td><td>Workday HR<div class="sub-line">查詢員工合約</div></td><td>合約到期提醒<div class="sub-line">當 合約到期日 30 天內即將到</div></td><td><span class="badge danger">失敗</span><div class="sub-line">推播失敗・Bot 已被移出群組</div></td></tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
     </section>
 
     <!-- ============= 新增連接器 ============= -->
@@ -9933,7 +9891,7 @@
           <h1 class="page-title">新增連接器</h1>
           <p class="page-desc">階段一僅支援 API 拉取型（CB 主動呼叫外部系統 API）、驗證方式僅支援 API Key。</p>
         </div>
-        <div class="btn-group"><button class="btn" onclick="ihGoHub('conn')">取消</button></div>
+        <div class="btn-group"><button class="btn" onclick="ihGoHub()">取消</button></div>
       </div>
 
       <div class="card">
@@ -9957,7 +9915,12 @@
             </div>
             <div class="form-row">
               <label>驗證方式</label>
-              <input class="input full" value="API Key（Header）" readonly />
+              <select class="input full" disabled>
+                <option selected>API Key（Header）</option>
+                <option disabled>Bearer Token</option>
+                <option disabled>Basic Auth</option>
+                <option disabled>OAuth 2.0</option>
+              </select>
               <div class="help">Bearer Token / Basic Auth / OAuth 2.0 目前未開放</div>
             </div>
           </div>
@@ -9989,7 +9952,7 @@
           </div>
 
           <div class="foot-actions">
-            <button class="btn" onclick="ihGoHub('conn')">取消</button>
+            <button class="btn" onclick="ihGoHub()">取消</button>
             <button class="btn primary" onclick="ihCreateConn()">建立連接器</button>
           </div>
         </div>
@@ -10004,7 +9967,7 @@
           <p class="page-desc"><code id="ih-d-url"></code>　|　建立於 <span id="ih-d-created"></span></p>
         </div>
         <div class="btn-group">
-          <button class="btn ghost sm" onclick="ihGoHub('conn')" style="display:inline-flex;align-items:center;gap:5px;">
+          <button class="btn ghost sm" onclick="ihGoHub()" style="display:inline-flex;align-items:center;gap:5px;">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
             返回連接器列表
           </button>
@@ -10016,6 +9979,7 @@
           <button class="tab active" onclick="ihTab(this,'ih-tab-actions')">動作設定 <span class="text-muted" id="ih-d-nact">0</span></button>
           <button class="tab" onclick="ihTab(this,'ih-tab-fields')">欄位對應 <span class="text-muted" id="ih-d-nfield">0</span></button>
           <button class="tab" onclick="ihTab(this,'ih-tab-rules')">使用中的規則 <span class="text-muted" id="ih-d-nrule">0</span></button>
+          <button class="tab" onclick="ihTab(this,'ih-tab-logs')">觸發紀錄 <span class="text-muted" id="ih-d-nlog">0</span></button>
           <button class="tab" onclick="ihTab(this,'ih-tab-basic')">基本資訊</button>
         </div>
 
@@ -10040,18 +10004,19 @@
         <div id="ih-tab-fields" class="hidden">
           <div class="panel-bar">
             <label style="font-size:13px;font-weight:600;">所屬動作</label>
-            <select class="input" id="ih-fm-filter" onchange="ihRenderFields()" style="width:210px;"></select>
+            <select class="input" id="ih-fm-filter" onchange="ihFmFilterChanged()" style="width:210px;"></select>
             <span class="text-muted" style="font-size:12.5px;" id="ih-fm-count"></span>
             <button class="btn sm hidden" id="ih-fm-clear" onclick="ihClearFieldMap()">清除篩選</button>
           </div>
           <div class="table-scroll">
             <table class="data-table">
               <thead>
-                <tr><th style="width:26%;">CB 標準欄位</th><th style="width:34px;"></th><th style="width:22%;">外部欄位（路徑）</th><th style="width:16%;">資料型別</th><th>所屬動作</th></tr>
+                <tr><th style="width:20%;">所屬動作</th><th style="width:22%;">外部欄位（路徑）</th><th style="width:34px;"></th><th style="width:26%;">CB 標準欄位</th><th style="width:16%;">資料型別</th></tr>
               </thead>
               <tbody id="ih-fm-tbody"></tbody>
             </table>
           </div>
+          <div id="ih-fm-pager"></div>
           <div style="padding:16px 20px;">
             <div class="note info" style="margin-bottom:0;">
               <svg class="ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
@@ -10075,6 +10040,36 @@
             <div class="note info" style="margin-bottom:0;">
               <svg class="ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
               <div>整合中台權限者對觸發引擎的業務面是「可視」，所以這裡是「前往檢視」而不是「前往編輯」——除非他同時也是該 Bot 的管理員。</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 觸發紀錄（此連接器底下所有動作的執行結果） -->
+        <div id="ih-tab-logs" class="hidden">
+          <div class="panel-bar">
+            <select class="input" style="width:130px;"><option>近 7 天</option><option>近 24 小時</option><option>近 30 天</option><option>自訂區間…</option></select>
+            <select class="input" style="width:170px;" id="ih-log-act" onchange="ihLogFilterChanged()"></select>
+            <select class="input" style="width:150px;" id="ih-log-bot" onchange="ihLogFilterChanged()"></select>
+            <select class="input" style="width:120px;" id="ih-log-st" onchange="ihLogFilterChanged()">
+              <option value="">全部狀態</option><option value="ok">成功</option><option value="err">失敗</option><option value="none">未觸發</option><option value="skip">已抑制</option>
+            </select>
+            <span class="text-muted" style="font-size:12.5px;" id="ih-log-count"></span>
+            <button class="btn sm" style="margin-left:auto;">匯出 CSV</button>
+          </div>
+          <div class="table-scroll" id="ih-log-table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr><th style="width:110px;">觸發時間</th><th style="width:140px;">Bot 名稱</th><th>查詢動作</th><th>規則 / 條件</th><th>執行結果</th></tr>
+              </thead>
+              <tbody id="ih-log-tbody"></tbody>
+            </table>
+          </div>
+          <div id="ih-log-pager"></div>
+          <div class="empty hidden" id="ih-log-empty">這個連接器目前沒有任何觸發紀錄。</div>
+          <div style="padding:16px 20px;">
+            <div class="note info" style="margin-bottom:0;">
+              <svg class="ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+              <div>這裡是這個連接器底下<b>所有查詢動作、所有 Bot</b> 的執行結果，僅整合中台權限者可見。紀錄保留 1 年。</div>
             </div>
           </div>
         </div>
@@ -10120,8 +10115,8 @@
             </div>
             <div class="form-row" style="margin-bottom:0;">
               <label>API 路徑 <span class="req">*</span></label>
-              <input class="input full mono" placeholder="/orders/{order_id}/status" />
-              <div class="help">相對於連接器的 API 基礎網址；路徑中可用 <code>{參數名稱}</code> 代表帶入的參數</div>
+              <input class="input full mono" value="/wms/v1/warehouses/{warehouse_id}/stock-items" />
+              <div class="help">相對於連接器的 API 基礎網址；路徑中可用 <code>{參數名稱}</code> 代表帶入的參數。完整網址為 <code>https://erp.acme.com.tw/api/v2/wms/v1/warehouses/{warehouse_id}/stock-items</code></div>
             </div>
           </div>
           <div class="form-row">
@@ -10129,9 +10124,9 @@
             <div class="help" style="margin:0 0 8px;">呼叫這支 API 前需要先提供的條件。系統無法自動偵測，請對照 API 文件填寫。</div>
             <div class="param-grid">
               <div class="ph">參數名稱</div><div class="ph">型別</div><div class="ph">說明</div><div class="ph" style="text-align:center;">必填</div><div></div>
-              <input class="input mono" value="warehouse" /><select class="input"><option>文字</option><option>數值</option><option>日期</option></select><input class="input" value="倉庫代號" /><div style="text-align:center;"><input type="checkbox" checked /></div><button class="x-btn">×</button>
-              <input class="input mono" value="category" /><select class="input"><option>文字</option><option>數值</option><option>日期</option></select><input class="input" value="商品分類" /><div style="text-align:center;"><input type="checkbox" checked /></div><button class="x-btn">×</button>
-              <input class="input mono" value="limit" /><select class="input"><option selected>數值</option><option>文字</option><option>日期</option></select><input class="input" value="每頁筆數" /><div style="text-align:center;"><input type="checkbox" /></div><button class="x-btn">×</button>
+              <input class="input mono" value="warehouse_id" /><select class="input"><option selected>文字</option><option>數值</option><option>日期</option></select><input class="input" value="倉庫代號" /><div style="text-align:center;"><input type="checkbox" checked /></div><button class="x-btn">×</button>
+              <input class="input mono" value="item_code" /><select class="input"><option selected>文字</option><option>數值</option><option>日期</option></select><input class="input" value="商品編號" /><div style="text-align:center;"><input type="checkbox" /></div><button class="x-btn">×</button>
+              <input class="input mono" value="category" /><select class="input"><option selected>文字</option><option>數值</option><option>日期</option></select><input class="input" value="商品分類" /><div style="text-align:center;"><input type="checkbox" /></div><button class="x-btn">×</button>
             </div>
             <button class="btn ghost sm" style="margin-top:8px;align-self:flex-start;">＋ 新增參數</button>
           </div>
@@ -10154,9 +10149,9 @@
             </div>
             <div class="card-body">
               <div class="text-muted" style="font-size:12.5px;margin-bottom:14px;">只用於這次測試，不會儲存。正式執行時的值由 Bot 管理者在建立觸發規則時填寫。</div>
-              <div class="form-row"><label><code>warehouse</code> <span class="req">*</span></label><input class="input full mono" value="WH-01" /><div class="help">倉庫代號・文字</div></div>
-              <div class="form-row"><label><code>category</code> <span class="req">*</span></label><input class="input full mono" value="耗材" /><div class="help">商品分類・文字</div></div>
-              <div class="form-row" style="margin-bottom:0;"><label><code>limit</code></label><input class="input full mono" placeholder="100" /><div class="help">每頁筆數・數值・選填</div></div>
+              <div class="form-row"><label><code>warehouse_id</code> <span class="req">*</span></label><input class="input full mono" value="TP01" /><div class="help">倉庫代號・文字</div></div>
+              <div class="form-row"><label><code>item_code</code></label><input class="input full mono" placeholder="A001" /><div class="help">商品編號・文字・選填</div></div>
+              <div class="form-row" style="margin-bottom:0;"><label><code>category</code></label><input class="input full mono" value="耗材" /><div class="help">商品分類・文字・選填</div></div>
               <div style="font-size:12px;color:var(--text-muted);margin-top:16px;padding-top:14px;border-top:1px solid var(--border);">會實際呼叫外部系統，與正式排程共用同一套逾時與限流設定。</div>
             </div>
           </div>
@@ -10171,7 +10166,7 @@
               <div id="ih-test-result" class="hidden">
                 <div class="note success">
                   <svg class="ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg>
-                  <div><b>呼叫成功　HTTP 200 · 264ms</b><br>回傳 <b>250 筆</b>，偵測到 <b>6 個欄位</b>。</div>
+                  <div><b>呼叫成功　HTTP 200 · 264ms</b><br><code>GET /wms/v1/warehouses/TP01/stock-items?category=耗材</code><br>回傳 <b>250 筆</b>，偵測到 <b>6 個欄位</b>。</div>
                 </div>
 
                 <div style="font-size:12.5px;font-weight:600;margin-bottom:7px;">實際回傳內容</div>
@@ -10179,7 +10174,7 @@
   "code": 0,
   "data": {
     "total": 250,
-    <mark>"list"</mark>: [
+    <mark>"items"</mark>: [
       {                       <span class="cmt">← 第一筆，作為示範</span>
         "item_no": "A001",
         "item_nm": "無線滑鼠",
@@ -10208,7 +10203,7 @@
 
                 <div class="form-row" id="ih-arrpath">
                   <label>陣列路徑 <span class="req">*</span></label>
-                  <input class="input full mono" value="data.list" />
+                  <input class="input full mono" value="data.items" />
                   <div class="help">指出回應中哪個位置是清單。若整份回應本身就是陣列則留空。</div>
                 </div>
 
@@ -10239,32 +10234,66 @@
           <div style="font-size:13px;font-weight:600;margin-bottom:12px;">Response 回傳欄位　<span class="text-muted" style="font-weight:400;font-size:12.5px;">共 6 個，由上一步的測試呼叫自動帶出</span></div>
           <div class="table-scroll">
             <div class="map-grid">
-              <div class="mh">CB 標準欄位</div><div></div><div class="mh">外部欄位</div><div class="mh">資料型別</div><div></div>
+              <div class="mh">外部欄位<div class="mh-sub">來自測試呼叫的回傳內容</div></div><div></div><div class="mh">CB 標準欄位<div class="mh-sub">上：代碼／下：中文名稱（Bot 端變數）</div></div><div class="mh">資料型別</div><div></div>
 
-              <select class="input"><option>item_code　商品編號</option><option>item_name　商品名稱</option></select>
-              <div class="f-arrow">←</div><input class="input mono" value="item_no" />
-              <select class="input"><option>文字／狀態</option></select><button class="x-btn">×</button>
+              <input class="input mono" value="item_no" />
+              <div class="f-arrow">→</div>
+              <div class="cb-field">
+                <input class="input mono" value="item_code" placeholder="code_name" />
+                <input class="input cb-sub" value="商品編號" placeholder="中文名稱" oninput="ihSyncCbName(this)" />
+              </div>
+              <select class="input"><option selected>文字／狀態</option><option>數值</option><option>日期</option></select>
+              <button class="x-btn">×</button>
 
-              <select class="input"><option>item_name　商品名稱</option></select>
-              <div class="f-arrow">←</div><input class="input mono" value="item_nm" />
-              <select class="input"><option>文字／狀態</option></select><button class="x-btn">×</button>
+              <input class="input mono" value="item_nm" />
+              <div class="f-arrow">→</div>
+              <div class="cb-field">
+                <input class="input mono" value="item_name" placeholder="code_name" />
+                <input class="input cb-sub" value="商品名稱" placeholder="中文名稱" oninput="ihSyncCbName(this)" />
+              </div>
+              <select class="input"><option selected>文字／狀態</option><option>數值</option><option>日期</option></select>
+              <button class="x-btn">×</button>
 
-              <select class="input"><option>stock_qty　庫存數量</option></select>
-              <div class="f-arrow">←</div><input class="input mono" value="qty_on_hand" />
-              <select class="input"><option>數值</option></select><button class="x-btn">×</button>
+              <input class="input mono" value="qty_on_hand" />
+              <div class="f-arrow">→</div>
+              <div class="cb-field">
+                <input class="input mono" value="stock_qty" placeholder="code_name" />
+                <input class="input cb-sub" value="庫存數量" placeholder="中文名稱" oninput="ihSyncCbName(this)" />
+              </div>
+              <select class="input"><option>文字／狀態</option><option selected>數值</option><option>日期</option></select>
+              <button class="x-btn">×</button>
 
-              <select class="input"><option>safety_stock_qty　安全庫存</option></select>
-              <div class="f-arrow">←</div><input class="input mono" value="qty_safety" />
-              <select class="input"><option>數值</option></select><button class="x-btn">×</button>
+              <input class="input mono" value="qty_safety" />
+              <div class="f-arrow">→</div>
+              <div class="cb-field">
+                <input class="input mono" value="safety_stock_qty" placeholder="code_name" />
+                <input class="input cb-sub" value="安全庫存" placeholder="中文名稱" oninput="ihSyncCbName(this)" />
+              </div>
+              <select class="input"><option>文字／狀態</option><option selected>數值</option><option>日期</option></select>
+              <button class="x-btn">×</button>
 
-              <select class="input"><option>vendor_name　供應商名稱</option></select>
-              <div class="f-arrow">←</div><input class="input mono" value="vendor.name" />
-              <select class="input"><option>文字／狀態</option></select><button class="x-btn">×</button>
+              <input class="input mono" value="checked_at" />
+              <div class="f-arrow">→</div>
+              <div class="cb-field">
+                <input class="input mono" value="last_check_date" placeholder="code_name" />
+                <input class="input cb-sub" value="最後盤點日" placeholder="中文名稱" oninput="ihSyncCbName(this)" />
+              </div>
+              <select class="input"><option>文字／狀態</option><option>數值</option><option selected>日期</option></select>
+              <button class="x-btn">×</button>
 
-              <select class="input"><option>last_check_date　最後盤點日</option></select>
-              <div class="f-arrow">←</div><input class="input mono" value="checked_at" />
-              <select class="input"><option>日期</option></select><button class="x-btn">×</button>
+              <input class="input mono" value="vendor.name" />
+              <div class="f-arrow">→</div>
+              <div class="cb-field">
+                <input class="input mono" value="vendor_name" placeholder="code_name" />
+                <input class="input cb-sub" value="供應商名稱" placeholder="中文名稱" oninput="ihSyncCbName(this)" />
+              </div>
+              <select class="input"><option selected>文字／狀態</option><option>數值</option><option>日期</option></select>
+              <button class="x-btn">×</button>
             </div>
+          </div>
+          <div class="help" style="margin-top:12px;">
+            <b>中文名稱</b>會成為 Bot 管理者在推播訊息裡看到的變數（例如 <code>{{訂單編號}}</code>），
+            <b>代碼</b>供系統與 IT 對照使用。這裡改了名稱，Bot 管理的推播訊息與觸發規則的變數清單會同步更新。
           </div>
           <div class="foot-actions">
             <button class="btn spacer" onclick="ihWiz(2)">上一步</button>
@@ -10279,7 +10308,7 @@
       <div class="page-head">
         <div>
           <h1 class="page-title">低庫存提醒－耗材</h1>
-          <p class="page-desc">執行時間 2026-08-18 10:30　·　值班通知 Bot　·　共 <b>12 筆</b>符合「庫存數量 小於 安全庫存」</p>
+          <p class="page-desc">執行時間 2026-08-18 10:30　·　值班通知 Bot　·　共 <b>12 筆</b>符合「庫存數量 &lt; 安全庫存」</p>
         </div>
         <div class="btn-group">
           <button class="btn ghost sm" onclick="ihGoLog()" style="display:inline-flex;align-items:center;gap:5px;">
@@ -10386,8 +10415,8 @@
         <div class="modal-head"><h3 class="modal-title">解除串接</h3>
           <button class="icon-btn" onclick="closeModal('ih-modal-unbind')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button></div>
         <div class="modal-body">
-          <p style="margin:0;font-size:14px;line-height:1.7;">解除此串接後，該 Bot 將無法再使用此動作底下的規則，規則將被停用，因此無法再根據條件發送訊息。請確認是否解除串接。</p>
-          <div class="text-sec" style="margin-top:18px;font-size:12.5px;"><b id="ih-unbind-bot"></b> 底下將被停用的規則（<b id="ih-unbind-n">0</b> 條）：</div>
+          <p style="margin:0;font-size:14px;line-height:1.7;">解除此串接後，該 Bot 用這支動作建立的觸發規則會<b>一併刪除且無法復原</b>，該 Bot 也無法再使用這支動作。請確認是否解除串接。</p>
+          <div class="text-sec" style="margin-top:18px;font-size:12.5px;"><b id="ih-unbind-bot"></b> 底下將一併刪除的規則（<b id="ih-unbind-n">0</b> 條）：</div>
           <div style="margin-top:8px;border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;">
             <table class="data-table">
               <thead><tr><th>觸發規則</th><th>條件判斷</th><th>執行頻率</th></tr></thead>
@@ -10395,12 +10424,12 @@
             </table>
           </div>
           <label class="row-flex" style="margin-top:14px;font-size:13px;cursor:pointer;">
-            <input type="checkbox" checked /> 解除後通知該 Bot 的管理員
+            <input type="checkbox" checked /> 解除後通知該 Bot 的管理員（規則已刪除，需重新建立）
           </label>
         </div>
         <div class="modal-foot">
           <button class="btn" onclick="closeModal('ih-modal-unbind')">取消</button>
-          <button class="btn danger" style="background:var(--danger);color:#fff;border-color:var(--danger);" onclick="closeModal('ih-modal-unbind')">確認解除串接</button>
+          <button class="btn danger" style="background:var(--danger);color:#fff;border-color:var(--danger);" onclick="ihDoUnbind()">確認解除串接</button>
         </div>
       </div>
     </div>
@@ -10460,7 +10489,7 @@
           <p style="margin:0 0 6px;font-size:14px;line-height:1.7;">刪除「<b id="ih-delact-name"></b>」後將聯同對應欄位一起刪除且無法復原，請確認是否刪除。</p>
           <p class="text-muted" style="margin:0;font-size:12.5px;line-height:1.7;">目前若有正在執行的流程將會等流程跑完後自動刪除。</p>
           <div id="ih-delact-affected" class="hidden">
-            <div class="text-sec" style="margin-top:18px;font-size:12.5px;">使用這支動作的 <b id="ih-delact-n">0</b> 條觸發規則將轉為「已停用」，設定內容會保留：</div>
+            <div class="text-sec" style="margin-top:18px;font-size:12.5px;">使用這支動作的 <b id="ih-delact-n">0</b> 條觸發規則會<b>一併刪除</b>，設定內容不會保留：</div>
             <div style="margin-top:8px;border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;">
               <table class="data-table">
                 <thead><tr><th>觸發規則</th><th>所屬 Bot</th><th>該 Bot 的管理員</th></tr></thead>
@@ -10468,13 +10497,13 @@
               </table>
             </div>
             <label class="row-flex" style="margin-top:14px;font-size:13px;cursor:pointer;">
-              <input type="checkbox" checked /> 刪除後通知受影響的 Bot 管理員
+              <input type="checkbox" checked /> 刪除後通知受影響的 Bot 管理員（規則已刪除，需重新建立）
             </label>
           </div>
         </div>
         <div class="modal-foot">
           <button class="btn" onclick="closeModal('ih-modal-delact')">取消</button>
-          <button class="btn danger" style="background:var(--danger);color:#fff;border-color:var(--danger);" onclick="closeModal('ih-modal-delact')">確認刪除</button>
+          <button class="btn danger" style="background:var(--danger);color:#fff;border-color:var(--danger);" onclick="ihDoDelAct()">確認刪除</button>
         </div>
       </div>
     </div>
@@ -10484,35 +10513,36 @@
         <div class="modal-head"><h3 class="modal-title" id="ih-delconn-title">刪除連接器</h3>
           <button class="icon-btn" onclick="closeModal('ih-modal-delconn')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button></div>
         <div class="modal-body">
-          <!-- 狀態 A：還有規則在用 → 擋下 -->
-          <div id="ih-delconn-blocked" class="hidden">
-            <div class="note danger">
-              <svg class="ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg>
-              <div><b>這個連接器底下還有 <span id="ih-delconn-nrule">0</span> 條觸發規則正在使用。</b><br>必須先由各 Bot 的管理者刪除這些規則，才能刪除連接器。</div>
-            </div>
+          <div class="note danger">
+            <svg class="ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg>
+            <div><b>這是硬刪除，不可復原。</b>底下所有查詢動作、欄位對應，以及各 Bot 用這些動作建立的觸發規則，會全部一併刪除。</div>
+          </div>
+          <p class="text-muted" style="margin:0 0 18px;font-size:12.5px;line-height:1.7;">目前若有正在執行的流程將會等流程跑完後自動刪除。</p>
+
+          <div class="text-sec" style="font-size:12.5px;margin-bottom:8px;">將一併刪除的查詢動作（<b id="ih-delconn-nact">0</b> 個）：</div>
+          <div style="border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;">
+            <table class="data-table">
+              <thead><tr><th>查詢動作</th><th>API 路徑</th><th>對應欄位</th><th>已授權的 Bot</th></tr></thead>
+              <tbody id="ih-delconn-acts"></tbody>
+            </table>
+          </div>
+
+          <div id="ih-delconn-rulewrap" class="hidden">
+            <div class="text-sec" style="font-size:12.5px;margin:18px 0 8px;">將一併刪除的觸發規則（<b id="ih-delconn-nrule">0</b> 條）：</div>
             <div style="border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;">
               <table class="data-table">
                 <thead><tr><th>觸發規則</th><th>使用的動作</th><th>所屬 Bot</th><th>該 Bot 的管理員</th></tr></thead>
                 <tbody id="ih-delconn-rules"></tbody>
               </table>
             </div>
-          </div>
-          <!-- 狀態 B：沒有規則在用 → 可刪除 -->
-          <div id="ih-delconn-ok" class="hidden">
-            <p style="margin:0 0 6px;font-size:14px;line-height:1.7;">刪除此連接器後，底下所有查詢動作與對應欄位將一併刪除且無法復原，請確認是否刪除。</p>
-            <p class="text-muted" style="margin:0;font-size:12.5px;line-height:1.7;">目前若有正在執行的流程將會等流程跑完後自動刪除。</p>
-            <div class="text-sec" style="margin-top:18px;font-size:12.5px;">將一併刪除的查詢動作（<b id="ih-delconn-nact">0</b> 個）：</div>
-            <div style="margin-top:8px;border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;">
-              <table class="data-table">
-                <thead><tr><th>查詢動作</th><th>API 路徑</th><th>對應欄位</th></tr></thead>
-                <tbody id="ih-delconn-acts"></tbody>
-              </table>
-            </div>
+            <label class="row-flex" style="margin-top:14px;font-size:13px;cursor:pointer;">
+              <input type="checkbox" checked /> 刪除後通知受影響的 Bot 管理員
+            </label>
           </div>
         </div>
         <div class="modal-foot">
-          <button class="btn" id="ih-delconn-cancel" onclick="closeModal('ih-modal-delconn')">取消</button>
-          <button class="btn danger hidden" id="ih-delconn-confirm" style="background:var(--danger);color:#fff;border-color:var(--danger);" onclick="closeModal('ih-modal-delconn')">確認刪除</button>
+          <button class="btn" onclick="closeModal('ih-modal-delconn')">取消</button>
+          <button class="btn danger" style="background:var(--danger);color:#fff;border-color:var(--danger);" onclick="ihDoDelConn()">確認刪除</button>
         </div>
       </div>
     </div>
@@ -14307,6 +14337,9 @@
                 <span class="push-var-chip" onclick="insertPushVar('push-add-text-0','{{部門}}')">{{部門}}</span>
                 <span class="push-var-chip" onclick="insertPushVar('push-add-text-0','{{日期}}')">{{日期}}</span>
                 <span class="push-var-chip" onclick="insertPushVar('push-add-text-0','{{時間}}')">{{時間}}</span>
+                <!-- ===== [修改開始] 整合中台欄位變數（依該 Bot 被授權的查詢動作自動帶出） ===== -->
+                <span id="push-add-ihvars" style="display:contents;"></span>
+                <!-- ===== [修改結束] ===== -->
               </div>
             </div>
 
@@ -14638,6 +14671,9 @@
                 <span class="push-var-chip" onclick="insertPushVar('push-edit-text-0','{{部門}}')">{{部門}}</span>
                 <span class="push-var-chip" onclick="insertPushVar('push-edit-text-0','{{日期}}')">{{日期}}</span>
                 <span class="push-var-chip" onclick="insertPushVar('push-edit-text-0','{{時間}}')">{{時間}}</span>
+                <!-- ===== [修改開始] 整合中台欄位變數（依該 Bot 被授權的查詢動作自動帶出） ===== -->
+                <span id="push-edit-ihvars" style="display:contents;"></span>
+                <!-- ===== [修改結束] ===== -->
               </div>
             </div>
 
@@ -23041,7 +23077,12 @@ function closeEditDrawer() {
     /* Add chip to blocks row */
     var row = document.getElementById('push-' + ctx + '-blocks-row');
     if (row) {
-      var addBtn = row.querySelector('button:last-child');
+      /* ===== [修改開始] 原本 querySelector('button:last-child') 會抓到 chip 內的刪除鈕，導致 insertBefore 失敗 ===== */
+      var addBtn = null;
+      for (var _i = row.children.length - 1; _i >= 0; _i--) {
+        if (row.children[_i].tagName === 'BUTTON') { addBtn = row.children[_i]; break; }
+      }
+      /* ===== [修改結束] ===== */
       var chips  = row.querySelectorAll('.push-block-chip');
       var idx    = chips.length;
       var chip   = document.createElement('div');
@@ -25072,6 +25113,9 @@ function abv2PickSeg(el){
       actions: [
         { id: 'inv', name: '查詢庫存數量', path: 'GET /inventory', struct: 'array', arrPath: 'data.list', rows: 250,
           bots: ['值班通知 Bot', '內部公告 Bot'],
+          params: [{ code: 'warehouse_id', zh: '倉庫代號', type: '文字', req: true, sample: 'TP01' },
+                   { code: 'item_code', zh: '商品編號', type: '文字', req: true, sample: 'A001' },
+                   { code: 'limit', zh: '每頁筆數', type: '數值', req: false, sample: '100' }],
           fields: [
             { cb: 'item_code', zh: '商品編號', ext: 'item_no', type: '文字／狀態' },
             { cb: 'item_name', zh: '商品名稱', ext: 'item_nm', type: '文字／狀態' },
@@ -25082,6 +25126,8 @@ function abv2PickSeg(el){
           ] },
         { id: 'inbound', name: '查詢待入庫訂單', path: 'GET /orders/inbound', struct: 'array', arrPath: 'results', rows: 40,
           bots: ['值班通知 Bot'],
+          params: [{ code: 'warehouse_id', zh: '倉庫代號', type: '文字', req: true, sample: 'TP01' },
+                   { code: 'vendor_code', zh: '供應商編號', type: '文字', req: false, sample: 'V-1042' }],
           fields: [
             { cb: 'order_code', zh: '訂單編號', ext: 'order_no', type: '文字／狀態' },
             { cb: 'eta_date', zh: '預計到貨日', ext: 'eta', type: '日期' },
@@ -25090,16 +25136,24 @@ function abv2PickSeg(el){
           ] },
         { id: 'vendor', name: '查詢供應商', path: 'GET /vendors/{vendor_id}', struct: 'single',
           bots: [],
+          params: [{ code: 'vendor_id', zh: '供應商編號', type: '文字', req: true, sample: 'V-1042' }],
           fields: [
             { cb: 'vendor_code', zh: '供應商編號', ext: 'vendor_id', type: '文字／狀態' },
             { cb: 'vendor_name', zh: '供應商名稱', ext: 'vendor_nm', type: '文字／狀態' },
             { cb: 'contact_phone', zh: '聯絡電話', ext: 'tel', type: '文字／狀態' }
           ] },
-        { id: 'orderstatus', name: '查詢訂單狀態', path: 'GET /orders/{order_id}/status', struct: 'single',
-          pending: true, bots: [],
+        { id: 'stockitems', name: '查詢倉庫庫存明細', path: 'GET /wms/v1/warehouses/{warehouse_id}/stock-items',
+          struct: 'array', arrPath: 'data.items', rows: 250, pending: true, bots: ['值班通知 Bot'],
+          params: [{ code: 'warehouse_id', zh: '倉庫代號', type: '文字', req: true, sample: 'TP01' },
+                   { code: 'item_code', zh: '商品編號', type: '文字', req: false, sample: 'A001' },
+                   { code: 'category', zh: '商品分類', type: '文字', req: false, sample: '耗材' }],
           fields: [
-            { cb: 'order_status', zh: '訂單狀態', ext: 'status', type: '文字／狀態' },
-            { cb: 'order_date', zh: '訂單日期', ext: 'created_at', type: '日期' }
+            { cb: 'item_code', zh: '商品編號', ext: 'item_no', type: '文字／狀態' },
+            { cb: 'item_name', zh: '商品名稱', ext: 'item_nm', type: '文字／狀態' },
+            { cb: 'stock_qty', zh: '庫存數量', ext: 'qty_on_hand', type: '數值' },
+            { cb: 'safety_stock_qty', zh: '安全庫存', ext: 'qty_safety', type: '數值' },
+            { cb: 'last_check_date', zh: '最後盤點日', ext: 'checked_at', type: '日期' },
+            { cb: 'vendor_name', zh: '供應商名稱', ext: 'vendor.name', type: '文字／狀態' }
           ] }
       ]
     },
@@ -25109,6 +25163,7 @@ function abv2PickSeg(el){
       actions: [
         { id: 'contract', name: '查詢員工合約', path: 'GET /contracts', struct: 'array', arrPath: 'data.items', rows: 180,
           bots: ['會議提醒 Bot'],
+          params: [{ code: 'dept_id', zh: '部門代號', type: '文字', req: false, sample: 'D-SALES' }],
           fields: [
             { cb: 'emp_code', zh: '員工編號', ext: 'employee_no', type: '文字／狀態' },
             { cb: 'emp_name', zh: '員工姓名', ext: 'employee_name', type: '文字／狀態' },
@@ -25117,6 +25172,7 @@ function abv2PickSeg(el){
           ] },
         { id: 'roster', name: '查詢部門名冊', path: 'GET /departments/{dept_id}/members', struct: 'array', arrPath: 'members', rows: 60,
           bots: [],
+          params: [{ code: 'dept_id', zh: '部門代號', type: '文字', req: true, sample: 'D-SALES' }],
           fields: [
             { cb: 'emp_code', zh: '員工編號', ext: 'employee_no', type: '文字／狀態' },
             { cb: 'dept_name', zh: '部門名稱', ext: 'department.name', type: '文字／狀態' },
@@ -25130,6 +25186,7 @@ function abv2PickSeg(el){
       actions: [
         { id: 'monthly', name: '查詢月報表', path: 'GET /reports/monthly', struct: 'array', arrPath: 'rows', rows: 12,
           bots: [],
+          params: [{ code: 'period', zh: '報表期間', type: '日期', req: true, sample: '2026-08' }],
           fields: [
             { cb: 'report_code', zh: '報表編號', ext: 'rpt_no', type: '文字／狀態' },
             { cb: 'report_name', zh: '報表名稱', ext: 'rpt_name', type: '文字／狀態' },
@@ -25144,6 +25201,7 @@ function abv2PickSeg(el){
       actions: [
         { id: 'applicants', name: '查詢應徵者名單', path: 'GET /applicants', struct: 'array', arrPath: 'data', rows: 85,
           bots: [],
+          params: [{ code: 'job_id', zh: '職缺編號', type: '文字', req: false, sample: 'J-0012' }],
           fields: [
             { cb: 'applicant_code', zh: '應徵者編號', ext: 'applicant_id', type: '文字／狀態' },
             { cb: 'applicant_name', zh: '應徵者姓名', ext: 'name', type: '文字／狀態' },
@@ -25153,6 +25211,7 @@ function abv2PickSeg(el){
           ] },
         { id: 'jobs', name: '查詢職缺狀態', path: 'GET /jobs/{job_id}', struct: 'single',
           bots: [],
+          params: [{ code: 'job_id', zh: '職缺編號', type: '文字', req: true, sample: 'J-0012' }],
           fields: [
             { cb: 'job_code', zh: '職缺編號', ext: 'job_id', type: '文字／狀態' },
             { cb: 'job_name', zh: '職缺名稱', ext: 'job_title', type: '文字／狀態' },
@@ -25176,14 +25235,53 @@ function abv2PickSeg(el){
 
   /* 觸發規則：連接器詳情「使用中的規則」與 Bot「觸發引擎」共用同一份 */
   var IH_RULES = [
-    { name: '低庫存提醒－耗材', act: 'inv',      bot: '值班通知 Bot', freq: '每 30 分鐘', cond: '當 <b>庫存數量</b> 小於 <b>安全庫存</b>', target: '採購部、王明宏', status: 'on' },
-    { name: '低庫存提醒－3C',   act: 'inv',      bot: '值班通知 Bot', freq: '每小時',     cond: '當 <b>庫存數量</b> 小於 <b>安全庫存</b>', target: '3C 採購群',     status: 'on' },
-    { name: '缺貨警示（採購群）', act: 'inv',    bot: '內部公告 Bot', freq: '每 5 分鐘',  cond: '當 <b>庫存數量</b> 小於 <b>安全庫存</b>', target: '採購群組',      status: 'on' },
+    { name: '低庫存提醒－耗材', act: 'inv',      bot: '值班通知 Bot', freq: '每 30 分鐘', cond: '當 <b>庫存數量</b> &lt; <b>安全庫存</b>', target: '採購部、王明宏', status: 'on' },
+    { name: '低庫存提醒－3C',   act: 'inv',      bot: '值班通知 Bot', freq: '每小時',     cond: '當 <b>庫存數量</b> &lt; <b>安全庫存</b>', target: '3C 採購群',     status: 'on' },
+    { name: '缺貨警示（採購群）', act: 'inv',    bot: '內部公告 Bot', freq: '每 5 分鐘',  cond: '當 <b>庫存數量</b> &lt; <b>安全庫存</b>', target: '採購群組',      status: 'on' },
     { name: '到貨提醒',         act: 'inbound',  bot: '值班通知 Bot', freq: '每小時',     cond: '當 <b>預計到貨日</b> 3 天內即將到',      target: '倉儲群組',      status: 'on' },
-    { name: '延遲到貨追蹤',     act: 'inbound',  bot: '值班通知 Bot', freq: '每天 09:00', cond: '當 <b>訂單狀態</b> 是 <b>延遲</b>',      target: '倉儲群組',      status: 'on' },
+    { name: '延遲到貨追蹤',     act: 'inbound',  bot: '值班通知 Bot', freq: '每天 09:00', cond: '當 <b>訂單狀態</b> = <b>延遲</b>',      target: '倉儲群組',      status: 'on' },
     { name: '合約到期提醒',     act: 'contract', bot: '會議提醒 Bot', freq: '每天 09:00', cond: '當 <b>合約到期日</b> 30 天內即將到',    target: 'HR 群組',       status: 'on' },
-    { name: '供應商異常追蹤',   act: null,       bot: '值班通知 Bot', freq: '每天 09:00', cond: '當 <b>供應商名稱</b> 沒有內容（空白）', target: '採購群組',      status: 'off', offReason: '資料來源已被刪除' }
+    { name: '到貨異常追蹤',     act: 'inbound',  bot: '值班通知 Bot', freq: '每天 09:00', cond: '當 <b>訂單狀態</b> = <b>異常</b>',      target: '倉儲群組',      status: 'off', offReason: '草稿' }
   ];
+
+  /* 觸發紀錄：掛在連接器底下，依連接器查所有動作的執行結果 */
+  var IH_LOGS = [
+    { conn: 'erp', time: '08/18 10:30', bot: '值班通知 Bot', act: '查詢庫存數量', rule: '低庫存提醒－耗材',
+      cond: '當 庫存數量 &lt; 安全庫存', st: 'ok', detail: '250 筆命中 12 筆・已送出', hits: true },
+    { conn: 'erp', time: '08/18 10:25', bot: '值班通知 Bot', act: '查詢庫存數量', rule: '低庫存提醒－耗材',
+      cond: '當 庫存數量 &lt; 安全庫存', st: 'skip', detail: '命中 12 筆皆已通知過，未重複發送', hits: true },
+    { conn: 'erp', time: '08/18 10:20', bot: '內部公告 Bot', act: '查詢庫存數量', rule: '缺貨警示（採購群）',
+      cond: '當 庫存數量 &lt; 安全庫存', st: 'none', detail: '250 筆命中 0 筆' },
+    { conn: 'erp', time: '08/18 10:15', bot: '值班通知 Bot', act: '查詢待入庫訂單', rule: '到貨提醒',
+      cond: '當 預計到貨日 3 天內即將到', st: 'err', detail: '連線逾時，已重試 3 次' },
+    { conn: 'erp', time: '08/18 10:00', bot: '值班通知 Bot', act: '查詢庫存數量', rule: '低庫存提醒－耗材',
+      cond: '當 庫存數量 &lt; 安全庫存', st: 'ok', warn: '略過 7 筆', detail: '條件欄位解析不到', hits: true, skips: true },
+    { conn: 'erp', time: '08/18 09:45', bot: '值班通知 Bot', act: '查詢庫存數量', rule: '低庫存提醒－3C',
+      cond: '當 庫存數量 &lt; 安全庫存', st: 'err', detail: '欄位路徑無法解析・198 / 250 筆失敗，超過 50% 門檻' },
+    { conn: 'erp', time: '08/18 09:00', bot: '值班通知 Bot', act: '查詢待入庫訂單', rule: '延遲到貨追蹤',
+      cond: '當 訂單狀態 = 延遲', st: 'ok', detail: '40 筆命中 3 筆・已送出', hits: true },
+    { conn: 'erp', time: '08/18 08:30', bot: '值班通知 Bot', act: '查詢庫存數量', rule: '低庫存提醒－耗材',
+      cond: '當 庫存數量 &lt; 安全庫存', st: 'ok', detail: '250 筆命中 9 筆・已送出', hits: true },
+    { conn: 'erp', time: '08/18 08:00', bot: '內部公告 Bot', act: '查詢庫存數量', rule: '缺貨警示（採購群）',
+      cond: '當 庫存數量 &lt; 安全庫存', st: 'none', detail: '250 筆命中 0 筆' },
+    { conn: 'erp', time: '08/17 18:00', bot: '值班通知 Bot', act: '查詢待入庫訂單', rule: '到貨提醒',
+      cond: '當 預計到貨日 3 天內即將到', st: 'ok', detail: '40 筆命中 5 筆・已送出', hits: true },
+    { conn: 'erp', time: '08/17 17:30', bot: '值班通知 Bot', act: '查詢庫存數量', rule: '低庫存提醒－3C',
+      cond: '當 庫存數量 &lt; 安全庫存', st: 'skip', detail: '命中 4 筆皆已通知過，未重複發送', hits: true },
+    { conn: 'erp', time: '08/17 17:00', bot: '值班通知 Bot', act: '查詢庫存數量', rule: '低庫存提醒－耗材',
+      cond: '當 庫存數量 &lt; 安全庫存', st: 'err', detail: 'API Key 驗證失敗（HTTP 401）' },
+    { conn: 'erp', time: '08/17 16:30', bot: '值班通知 Bot', act: '查詢待入庫訂單', rule: '延遲到貨追蹤',
+      cond: '當 訂單狀態 = 延遲', st: 'ok', warn: '略過 2 筆', detail: '條件欄位解析不到', hits: true, skips: true },
+    { conn: 'erp', time: '08/17 16:00', bot: '內部公告 Bot', act: '查詢庫存數量', rule: '缺貨警示（採購群）',
+      cond: '當 庫存數量 &lt; 安全庫存', st: 'ok', detail: '250 筆命中 2 筆・已送出', hits: true },
+    { conn: 'erp', time: '08/17 15:30', bot: '值班通知 Bot', act: '查詢庫存數量', rule: '低庫存提醒－耗材',
+      cond: '當 庫存數量 &lt; 安全庫存', st: 'none', detail: '250 筆命中 0 筆' },
+    { conn: 'hr', time: '08/18 09:30', bot: '會議提醒 Bot', act: '查詢員工合約', rule: '合約到期提醒',
+      cond: '當 合約到期日 30 天內即將到', st: 'err', detail: '推播失敗・Bot 已被移出群組' },
+    { conn: 'hr', time: '08/17 09:30', bot: '會議提醒 Bot', act: '查詢員工合約', rule: '合約到期提醒',
+      cond: '當 合約到期日 30 天內即將到', st: 'ok', detail: '180 筆命中 4 筆・已送出', hits: true }
+  ];
+  var IH_LOG_BADGE = { ok: ['success','成功'], err: ['danger','失敗'], none: ['neutral','未觸發'], skip: ['info','已抑制'] };
 
   /* ---- 查詢工具：所有計數的唯一來源 ---- */
   function ihAllConns() {
@@ -25229,32 +25327,22 @@ function abv2PickSeg(el){
     });
     return out;
   }
+  function ihConnLogs(c) { return IH_LOGS.filter(function(l){ return l.conn === c.id; }); }
   function ihEsc(t) { return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
-  /* ===== 5.4 整合中台設定：主分頁 ===== */
-  function ihHubTab(btn, panelId) {
-    var tabs = document.getElementById('ih-hub-tabs');
-    tabs.querySelectorAll('.tab').forEach(function(t){ t.classList.remove('active'); });
-    btn.classList.add('active');
-    ['ih-panel-conn','ih-panel-log'].forEach(function(id){
-      document.getElementById(id).classList.toggle('hidden', id !== panelId);
-    });
-    var isLog = panelId === 'ih-panel-log';
-    document.getElementById('ih-hub-act-conn').classList.toggle('hidden', isLog);
-    document.getElementById('ih-hub-act-log').classList.toggle('hidden', !isLog);
-    document.getElementById('ih-hub-desc').textContent = isLog
-      ? '全公司（含所有 Bot）的執行結果，僅整合中台權限者可見。紀錄保留 1 年。'
-      : '把客戶既有系統串進來。設定好的查詢動作需要串接給指定的 Bot，該 Bot 的管理者才能在觸發引擎建立規則。';
-    var bc = document.getElementById('bc-page');
-    if (bc) bc.textContent = isLog ? '整合中台設定 / 觸發紀錄' : '整合中台設定 / 連接器管理';
-  }
-  function ihGoHub(which) {
+  /* ===== 5.4 整合中台設定 ===== */
+  function ihGoHub() {
     goPage('ih-hub');
     ihRenderConnGrid();
-    var tabs = document.getElementById('ih-hub-tabs').querySelectorAll('.tab');
-    ihHubTab(which === 'log' ? tabs[1] : tabs[0], which === 'log' ? 'ih-panel-log' : 'ih-panel-conn');
+    var bc = document.getElementById('bc-page');
+    if (bc) bc.textContent = '整合中台設定 / 連接器管理';
   }
-  function ihGoLog() { ihGoHub('log'); }
+  /* 觸發紀錄已移到連接器底下：回到目前連接器的「觸發紀錄」頁籤 */
+  function ihGoLog() {
+    ihOpenConn(IH_CUR);
+    var tabs = document.getElementById('ih-detail-tabs').querySelectorAll('.tab');
+    ihTab(tabs[3], 'ih-tab-logs');
+  }
 
   /* ===== 連接器列表（卡片） ===== */
   var IH_PLUG_ICO = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 2v6"/><path d="M15 2v6"/><path d="M6 8h12v4a6 6 0 0 1-12 0z"/><path d="M12 18v4"/></svg>';
@@ -25291,6 +25379,7 @@ function abv2PickSeg(el){
   var IH_CUR = 'erp';
   function ihOpenConn(id) {
     IH_CUR = id;
+    IH_FM_PAGE = 1; IH_LOG_PAGE = 1;
     goPage('ih-detail');
     ihRenderDetail();
     var tabs = document.getElementById('ih-detail-tabs').querySelectorAll('.tab');
@@ -25301,7 +25390,7 @@ function abv2PickSeg(el){
     var tabs = document.getElementById('ih-detail-tabs');
     tabs.querySelectorAll('.tab').forEach(function(t){ t.classList.remove('active'); });
     btn.classList.add('active');
-    ['ih-tab-actions','ih-tab-fields','ih-tab-rules','ih-tab-basic'].forEach(function(id){
+    ['ih-tab-actions','ih-tab-fields','ih-tab-rules','ih-tab-logs','ih-tab-basic'].forEach(function(id){
       document.getElementById(id).classList.toggle('hidden', id !== panelId);
     });
   }
@@ -25317,6 +25406,7 @@ function abv2PickSeg(el){
     document.getElementById('ih-d-nact').textContent = acts.length;
     document.getElementById('ih-d-nfield').textContent = ihFieldCount(c);
     document.getElementById('ih-d-nrule').textContent = rules.length;
+    document.getElementById('ih-d-nlog').textContent = ihConnLogs(c).length;
 
     /* 動作設定 */
     document.getElementById('ih-act-empty').classList.toggle('hidden', acts.length > 0);
@@ -25358,6 +25448,17 @@ function abv2PickSeg(el){
         + '<td><button class="btn sm" onclick="ihGoBotEngine(\'' + r.bot + '\')">前往檢視</button></td></tr>';
     }).join('');
 
+    /* 觸發紀錄篩選器 */
+    var logs = ihConnLogs(c);
+    var actSel = document.getElementById('ih-log-act');
+    actSel.innerHTML = '<option value="">全部動作</option>' + acts.map(function(a){ return '<option>' + ihEsc(a.name) + '</option>'; }).join('');
+    var botSel = document.getElementById('ih-log-bot');
+    var bots = [];
+    logs.forEach(function(l){ if (bots.indexOf(l.bot) < 0) bots.push(l.bot); });
+    botSel.innerHTML = '<option value="">全部 Bot</option>' + bots.map(function(b){ return '<option>' + ihEsc(b) + '</option>'; }).join('');
+    document.getElementById('ih-log-st').value = '';
+    ihRenderLogs();
+
     /* 基本資訊 */
     document.getElementById('ih-basic-body').innerHTML =
         '<div class="field-row"><div class="field-label">連接器名稱</div><div class="field-value">' + ihEsc(c.name) + '</div></div>'
@@ -25369,9 +25470,68 @@ function abv2PickSeg(el){
       + '<div class="field-row"><div class="field-label">查詢動作 / 對應欄位</div><div class="field-value">' + acts.length + ' 個動作　·　' + ihFieldCount(c) + ' 個欄位</div></div>'
       + '<div style="margin-top:22px;padding-top:18px;border-top:1px solid var(--border);">'
       + '<button class="btn danger" onclick="ihOpenDelConn()">刪除連接器</button>'
-      + '<div class="help" style="margin-top:8px;">' + (rules.length
-          ? '這個連接器底下還有 ' + rules.length + ' 條觸發規則正在使用，必須先請各 Bot 的管理者刪除規則才能刪除。'
-          : '目前沒有任何觸發規則使用這個連接器，可以直接刪除。') + '</div></div>';
+      + '<div class="help" style="margin-top:8px;">硬刪除：底下 ' + acts.length + ' 支查詢動作、'
+      + ihFieldCount(c) + ' 個欄位對應'
+      + (rules.length ? '，以及各 Bot 的 ' + rules.length + ' 條觸發規則' : '')
+      + ' 會一併刪除且無法復原。</div></div>';
+  }
+
+  /* ---- 分頁（欄位對應 / 觸發紀錄共用） ---- */
+  var IH_PAGE_SIZE = 10;
+  var IH_FM_PAGE = 1, IH_LOG_PAGE = 1;
+  function ihPager(total, page, fn) {
+    if (total <= IH_PAGE_SIZE) return '';
+    var last = Math.ceil(total / IH_PAGE_SIZE);
+    var from = (page - 1) * IH_PAGE_SIZE + 1;
+    var to = Math.min(page * IH_PAGE_SIZE, total);
+    var nums = [];
+    nums.push('<button class="page-num"' + (page === 1 ? ' disabled' : '') + ' onclick="' + fn + '(' + (page - 1) + ')">‹</button>');
+    for (var p = 1; p <= last; p++) {
+      if (p === 1 || p === last || Math.abs(p - page) <= 1) {
+        nums.push('<button class="page-num' + (p === page ? ' active' : '') + '" onclick="' + fn + '(' + p + ')">' + p + '</button>');
+      } else if (nums[nums.length - 1].indexOf('…') < 0) {
+        nums.push('<button class="page-num" disabled>…</button>');
+      }
+    }
+    nums.push('<button class="page-num"' + (page === last ? ' disabled' : '') + ' onclick="' + fn + '(' + (page + 1) + ')">›</button>');
+    return '<div class="pagination"><span>第 ' + from + '–' + to + ' 筆，共 ' + total + ' 筆</span>'
+      + '<div class="page-nums">' + nums.join('') + '</div></div>';
+  }
+  function ihFmPage(p) { IH_FM_PAGE = p; ihRenderFields(); }
+  function ihLogPage(p) { IH_LOG_PAGE = p; ihRenderLogs(); }
+
+  function ihLogFilterChanged() { IH_LOG_PAGE = 1; ihRenderLogs(); }
+  function ihRenderLogs() {
+    var c = ihConn(IH_CUR);
+    var all = ihConnLogs(c);
+    var fa = document.getElementById('ih-log-act').value;
+    var fb = document.getElementById('ih-log-bot').value;
+    var fs = document.getElementById('ih-log-st').value;
+    var rows = all.filter(function(l){
+      return (!fa || l.act === fa) && (!fb || l.bot === fb) && (!fs || l.st === fs);
+    });
+    document.getElementById('ih-log-table-wrap').classList.toggle('hidden', all.length === 0);
+    document.getElementById('ih-log-empty').classList.toggle('hidden', all.length > 0);
+    document.getElementById('ih-log-count').textContent = all.length
+      ? ('符合 ' + rows.length + ' / ' + all.length + ' 筆') : '';
+    var lastLog = Math.max(1, Math.ceil(rows.length / IH_PAGE_SIZE));
+    if (IH_LOG_PAGE > lastLog) IH_LOG_PAGE = lastLog;
+    document.getElementById('ih-log-pager').innerHTML = ihPager(rows.length, IH_LOG_PAGE, 'ihLogPage');
+    rows = rows.slice((IH_LOG_PAGE - 1) * IH_PAGE_SIZE, IH_LOG_PAGE * IH_PAGE_SIZE);
+    document.getElementById('ih-log-tbody').innerHTML = rows.length
+      ? rows.map(function(l){
+          var b = IH_LOG_BADGE[l.st] || ['neutral','—'];
+          var badge = '<span class="badge ' + b[0] + '">' + b[1] + '</span>'
+            + (l.warn ? ' <span class="badge warning">' + l.warn + '</span>' : '');
+          var links = [];
+          if (l.hits) links.push('<span class="link" onclick="ihOpenHits(\'hit\')">查看命中清單</span>');
+          if (l.skips) links.push('<span class="link" onclick="ihOpenHits(\'skip\')">查看略過清單</span>');
+          var detail = ihEsc(l.detail) + (links.length ? '・' + links.join('・') : '');
+          return '<tr><td>' + l.time + '</td><td>' + ihEsc(l.bot) + '</td><td>' + ihEsc(l.act) + '</td>'
+            + '<td>' + ihEsc(l.rule) + '<div class="sub-line">' + l.cond + '</div></td>'
+            + '<td>' + badge + '<div class="sub-line">' + detail + '</div></td></tr>';
+        }).join('')
+      : '<tr><td colspan="5" class="text-muted" style="text-align:center;padding:28px;">沒有符合篩選條件的紀錄</td></tr>';
   }
 
   function ihRenderFields() {
@@ -25384,24 +25544,30 @@ function abv2PickSeg(el){
       a.fields.forEach(function(f){
         if (v && a.name !== v) return;
         shown++;
-        rows.push('<tr><td><span class="field-box ro">' + f.cb + '<span class="zh">' + f.zh + '</span></span></td>'
-          + '<td class="f-arrow">←</td>'
+        rows.push('<tr><td><span class="chip">' + ihEsc(a.name) + '</span></td>'
           + '<td><span class="field-box">' + f.ext + '</span></td>'
-          + '<td><span class="type-chip">' + f.type + '</span></td>'
-          + '<td><span class="chip">' + ihEsc(a.name) + '</span></td></tr>');
+          + '<td class="f-arrow">→</td>'
+          + '<td><span class="field-box ro">' + f.cb + '<span class="zh">' + f.zh + '</span></span></td>'
+          + '<td><span class="type-chip">' + f.type + '</span></td></tr>');
       });
     });
-    document.getElementById('ih-fm-tbody').innerHTML = rows.join('')
+    var lastFm = Math.max(1, Math.ceil(rows.length / IH_PAGE_SIZE));
+    if (IH_FM_PAGE > lastFm) IH_FM_PAGE = lastFm;
+    document.getElementById('ih-fm-pager').innerHTML = ihPager(rows.length, IH_FM_PAGE, 'ihFmPage');
+    var pageRows = rows.slice((IH_FM_PAGE - 1) * IH_PAGE_SIZE, IH_FM_PAGE * IH_PAGE_SIZE);
+    document.getElementById('ih-fm-tbody').innerHTML = pageRows.join('')
       || '<tr><td colspan="5" class="text-muted" style="text-align:center;padding:32px;">這個連接器還沒有任何欄位對應</td></tr>';
     document.getElementById('ih-fm-count').textContent = v ? ('「' + v + '」的 ' + shown + ' 個欄位') : ('顯示全部 ' + shown + ' 個欄位');
     document.getElementById('ih-fm-clear').classList.toggle('hidden', !v);
     document.getElementById('ih-d-nfield').textContent = total;
   }
-  function ihClearFieldMap() { document.getElementById('ih-fm-filter').value = ''; ihRenderFields(); }
+  function ihFmFilterChanged() { IH_FM_PAGE = 1; ihRenderFields(); }
+  function ihClearFieldMap() { document.getElementById('ih-fm-filter').value = ''; IH_FM_PAGE = 1; ihRenderFields(); }
   function ihGoFieldMap(actName) {
     var tabs = document.getElementById('ih-detail-tabs').querySelectorAll('.tab');
     ihTab(tabs[1], 'ih-tab-fields');
     document.getElementById('ih-fm-filter').value = actName;
+    IH_FM_PAGE = 1;
     ihRenderFields();
   }
 
@@ -25410,7 +25576,7 @@ function abv2PickSeg(el){
   function ihCreateConn() {
     IH_NEW_CONNECTOR._created = true;
     document.getElementById('ih-conn-created').classList.remove('hidden');
-    ihGoHub('conn');
+    ihGoHub();
     if (typeof showSyncToast === 'function') showSyncToast('連接器已建立');
   }
   function ihToggleAdvanced() {
@@ -25459,21 +25625,40 @@ function abv2PickSeg(el){
   function ihCreateAct() {
     var c = ihConn(IH_CUR);
     var pending = c.actions.filter(function(a){ return a.pending; })[0];
-    if (pending) { pending.pending = false; }
+    if (pending) { pending.pending = false; pending.fields = ihReadFieldMap(); }
     else {
-      c.actions.push({ id: c.id + '-new-' + c.actions.length, name: '查詢庫存數量（新）',
-        path: 'GET /inventory', struct: 'array', arrPath: 'data.list', rows: 250, bots: [],
-        fields: [
-          { cb: 'item_code', zh: '商品編號', ext: 'item_no', type: '文字／狀態' },
-          { cb: 'item_name', zh: '商品名稱', ext: 'item_nm', type: '文字／狀態' },
-          { cb: 'stock_qty', zh: '庫存數量', ext: 'qty_on_hand', type: '數值' },
-          { cb: 'safety_stock_qty', zh: '安全庫存', ext: 'qty_safety', type: '數值' },
-          { cb: 'vendor_name', zh: '供應商名稱', ext: 'vendor.name', type: '文字／狀態' },
-          { cb: 'last_check_date', zh: '最後盤點日', ext: 'checked_at', type: '日期' }
-        ] });
+      c.actions.push({ id: c.id + '-new-' + c.actions.length, name: '查詢倉庫庫存明細',
+        path: 'GET /wms/v1/warehouses/{warehouse_id}/stock-items', struct: 'array', arrPath: 'data.items', rows: 250,
+        bots: [], params: [{ code: 'warehouse_id', zh: '倉庫代號', type: '文字', req: true, sample: 'TP01' },
+                           { code: 'item_code', zh: '商品編號', type: '文字', req: false, sample: 'A001' },
+                           { code: 'category', zh: '商品分類', type: '文字', req: false, sample: '耗材' }],
+        fields: ihReadFieldMap() });
     }
     ihOpenConn(c.id);
     if (typeof showSyncToast === 'function') showSyncToast('查詢動作已建立');
+  }
+
+  /* 讀取步驟 3 畫面上實際填寫的欄位對應（中文名 / 代碼 / 外部欄位 / 型別） */
+  function ihReadFieldMap() {
+    var grid = document.querySelector('#ih-wiz-3 .map-grid');
+    if (!grid) return [];
+    var kids = [].slice.call(grid.children);
+    var out = [];
+    /* 每列 5 格：外部欄位 / 箭頭 / CB 標準欄位 / 資料型別 / 刪除 */
+    for (var i = 5; i < kids.length; i += 5) {
+      var box = kids[i + 2];
+      if (!box || !box.classList || !box.classList.contains('cb-field')) continue;
+      var cb = box.children[0].value.trim();
+      var zh = box.children[1].value.trim();
+      var ext = kids[i] ? kids[i].value.trim() : '';
+      var type = kids[i + 3] ? kids[i + 3].value : '文字／狀態';
+      if (zh || cb) out.push({ cb: cb || zh, zh: zh || cb, ext: ext, type: type });
+    }
+    return out;
+  }
+  /* 中文名稱改動時，即時同步 Bot 端的推播變數清單 */
+  function ihSyncCbName() {
+    if (typeof botSyncPushVars === 'function') botSyncPushVars();
   }
 
   /* ===== 串接 Bot / 已授權的 Bot ===== */
@@ -25492,6 +25677,7 @@ function abv2PickSeg(el){
     openModal('ih-modal-authbots');
   }
   function ihOpenUnbind(actId, bot) {
+    IH_UNBIND = { act: actId, bot: bot };
     var rs = IH_RULES.filter(function(r){ return r.act === actId && r.bot === bot; });
     document.getElementById('ih-unbind-bot').textContent = bot;
     document.getElementById('ih-unbind-n').textContent = rs.length;
@@ -25536,9 +25722,11 @@ function abv2PickSeg(el){
   }
 
   /* ===== 刪除動作 / 刪除連接器 ===== */
+  var IH_DEL_ACT = null;
   function ihOpenDelAct(actId) {
     var c = ihConn(IH_CUR), a = ihActionOf(c, actId);
-    var rs = ihActionRules(actId).filter(function(r){ return r.status === 'on'; });
+    IH_DEL_ACT = actId;
+    var rs = ihActionRules(actId);
     document.getElementById('ih-delact-name').textContent = a.name;
     document.getElementById('ih-delact-affected').classList.toggle('hidden', rs.length === 0);
     if (rs.length) {
@@ -25550,33 +25738,81 @@ function abv2PickSeg(el){
     }
     openModal('ih-modal-delact');
   }
+  /* 硬刪除：動作連同欄位對應與所有使用它的觸發規則一起消失 */
+  function ihDoDelAct() {
+    var c = ihConn(IH_CUR);
+    c.actions = c.actions.filter(function(a){ return a.id !== IH_DEL_ACT; });
+    for (var i = IH_RULES.length - 1; i >= 0; i--) {
+      if (IH_RULES[i].act === IH_DEL_ACT) IH_RULES.splice(i, 1);
+    }
+    closeModal('ih-modal-delact');
+    ihOpenConn(c.id);
+    ihAfterDelete('查詢動作已刪除');
+  }
+
+  /* 硬刪除：解除串接 → 該 Bot 用這支動作建的規則一併刪除 */
+  var IH_UNBIND = null;
+  function ihDoUnbind() {
+    if (IH_UNBIND) {
+      var c = ihConn(IH_CUR), a = ihActionOf(c, IH_UNBIND.act);
+      if (a) a.bots = a.bots.filter(function(b){ return b !== IH_UNBIND.bot; });
+      for (var i = IH_RULES.length - 1; i >= 0; i--) {
+        if (IH_RULES[i].act === IH_UNBIND.act && IH_RULES[i].bot === IH_UNBIND.bot) IH_RULES.splice(i, 1);
+      }
+    }
+    closeModal('ih-modal-unbind');
+    ihOpenConn(IH_CUR);
+    ihAfterDelete('已解除串接，相關規則已刪除');
+  }
+
   function ihOpenDelConn() {
     var c = ihConn(IH_CUR);
     var rules = ihConnRules(c);
     var acts = ihVisibleActions(c);
-    var blocked = rules.length > 0;
-    document.getElementById('ih-delconn-title').textContent = blocked ? ('無法刪除「' + c.name + '」') : '刪除連接器';
-    document.getElementById('ih-delconn-blocked').classList.toggle('hidden', !blocked);
-    document.getElementById('ih-delconn-ok').classList.toggle('hidden', blocked);
-    document.getElementById('ih-delconn-cancel').textContent = blocked ? '關閉' : '取消';
-    var btn = document.getElementById('ih-delconn-confirm');
-    btn.classList.toggle('hidden', blocked);
-    if (blocked) {
+    document.getElementById('ih-delconn-title').textContent = '刪除連接器「' + c.name + '」';
+    document.getElementById('ih-delconn-nact').textContent = acts.length;
+    document.getElementById('ih-delconn-acts').innerHTML = acts.length
+      ? acts.map(function(a){
+          return '<tr><td><span class="cell-name">' + ihEsc(a.name) + '</span></td><td><code>' + ihEsc(a.path)
+            + '</code></td><td>' + a.fields.length + ' 個</td><td>' + (a.bots.length ? ihEsc(a.bots.join('、')) : '—') + '</td></tr>';
+        }).join('')
+      : '<tr><td colspan="4" class="text-muted" style="text-align:center;">這個連接器還沒有任何查詢動作</td></tr>';
+    document.getElementById('ih-delconn-rulewrap').classList.toggle('hidden', rules.length === 0);
+    if (rules.length) {
       document.getElementById('ih-delconn-nrule').textContent = rules.length;
       document.getElementById('ih-delconn-rules').innerHTML = rules.map(function(r){
         var a = ihActionOf(c, r.act);
         return '<tr><td><span class="cell-name">' + ihEsc(r.name) + '</span></td><td>' + ihEsc(a ? a.name : '—')
           + '</td><td>' + ihEsc(r.bot) + '</td><td>' + (IH_BOTS[r.bot] ? IH_BOTS[r.bot].admins : '—') + '</td></tr>';
       }).join('');
-    } else {
-      document.getElementById('ih-delconn-nact').textContent = acts.length;
-      document.getElementById('ih-delconn-acts').innerHTML = acts.length
-        ? acts.map(function(a){
-            return '<tr><td><span class="cell-name">' + ihEsc(a.name) + '</span></td><td><code>' + ihEsc(a.path)
-              + '</code></td><td>' + a.fields.length + ' 個</td></tr>'; }).join('')
-        : '<tr><td colspan="3" class="text-muted" style="text-align:center;">這個連接器還沒有任何查詢動作</td></tr>';
     }
     openModal('ih-modal-delconn');
+  }
+  /* 硬刪除：連接器 → 動作、欄位對應、所有 Bot 的觸發規則、觸發紀錄全部一起消失 */
+  function ihDoDelConn() {
+    var c = ihConn(IH_CUR);
+    var actIds = c.actions.map(function(a){ return a.id; });
+    for (var i = IH_RULES.length - 1; i >= 0; i--) {
+      if (actIds.indexOf(IH_RULES[i].act) >= 0) IH_RULES.splice(i, 1);
+    }
+    for (var k = IH_LOGS.length - 1; k >= 0; k--) {
+      if (IH_LOGS[k].conn === c.id) IH_LOGS.splice(k, 1);
+    }
+    if (c.id === IH_NEW_CONNECTOR.id) IH_NEW_CONNECTOR._created = false;
+    var idx = IH_CONNECTORS.indexOf(c);
+    if (idx >= 0) IH_CONNECTORS.splice(idx, 1);
+    closeModal('ih-modal-delconn');
+    var left = ihAllConns();
+    IH_CUR = left.length ? left[0].id : null;
+    ihGoHub();
+    ihAfterDelete('連接器與底下所有設定已刪除');
+  }
+
+  /* 刪除後把受影響的畫面一起更新 */
+  function ihAfterDelete(msg) {
+    if (typeof botListRenderFlags === 'function') botListRenderFlags();
+    if (typeof trgSyncTab === 'function' && typeof TRG_BOT !== 'undefined') trgSyncTab(TRG_BOT, false);
+    if (typeof showSyncToast === 'function') showSyncToast(msg);
   }
 
   /* ===== 命中清單 ===== */
@@ -25613,6 +25849,7 @@ function abv2PickSeg(el){
       document.getElementById('bot-trigger-count').textContent = show ? ihBotRules(botName).length : '';
     }
     if (show) trgRenderRules();
+    botSyncPushVars();
   }
 
   function trgRenderRules() {
@@ -25627,9 +25864,13 @@ function abv2PickSeg(el){
       ihAllConns().forEach(function(c){ c.actions.forEach(function(a){ if (a.id === r.act) act = a; }); });
       var off = r.status !== 'on';
       var actCell = act ? ihEsc(act.name) : '<s>已刪除的查詢動作</s>';
-      var statusCell = off
-        ? '<span class="badge neutral">已停用</span><div class="sub-line">' + ihEsc(r.offReason || '') + '</div>'
-        : '<span class="badge success dot">啟用中</span>';
+      var i = IH_RULES.indexOf(r);
+      var statusCell = '<div class="row-flex" style="gap:8px;">'
+        + '<label class="switch" onclick="event.stopPropagation();">'
+        + '<input type="checkbox"' + (off ? '' : ' checked') + ' onchange="trgToggleRule(this,' + i + ')" />'
+        + '<span class="slider"></span></label>'
+        + '<span class="text-sec" style="font-size:12px;white-space:nowrap;">'
+        + (off ? ihEsc(r.offReason || '已關閉') : '啟用中') + '</span></div>';
       return '<tr' + (off ? ' style="color:var(--text-muted);"' : '') + '>'
         + '<td><span class="cell-name"' + (off ? ' style="color:var(--text-secondary);"' : '') + '>' + ihEsc(r.name) + '</span></td>'
         + '<td>' + actCell + '</td>'
@@ -25641,6 +25882,19 @@ function abv2PickSeg(el){
     }).join('');
   }
 
+  /* 規則啟用／關閉（草稿＝關閉） */
+  function trgToggleRule(el, idx) {
+    var r = IH_RULES[idx];
+    if (!r) return;
+    r.status = el.checked ? 'on' : 'off';
+    if (!el.checked && !r.offReason) r.offReason = '已關閉';
+    if (el.checked) r.offReason = '';
+    trgRenderRules();
+    trgSyncTab(TRG_BOT, false);
+    if (typeof botListRenderFlags === 'function') botListRenderFlags();
+    if (typeof showSyncToast === 'function') showSyncToast(el.checked ? '規則已啟用' : '規則已關閉');
+  }
+
   /* ---- 從整合中台「前往檢視」跳到某支 Bot 的觸發引擎 ---- */
   function ihGoBotEngine(botName) {
     goBotEdit(botName, false);
@@ -25648,21 +25902,65 @@ function abv2PickSeg(el){
     if (tab && tab.style.display !== 'none') switchBotMainTab(tab, 'bot-tab-trigger');
   }
 
+  /* ---- 推送對象（群組／成員可複選，樣式比照推播的推播對象） ---- */
+  var TRG_TARGET_OPTS = [
+    { v: 'g_purchase', name: '採購部',         kind: 'group',  n: 24 },
+    { v: 'g_wh',       name: '倉儲部',         kind: 'group',  n: 16 },
+    { v: 'g_3c',       name: '3C 採購群',      kind: 'group',  n: 8 },
+    { v: 'g_hr',       name: 'HR 群組',        kind: 'group',  n: 12 },
+    { v: 'g_notice',   name: '全公司公告群組', kind: 'group',  n: 321 },
+    { v: 'm_wang',     name: '王明宏',         kind: 'member', n: 1 },
+    { v: 'm_lin',      name: '林曉華',         kind: 'member', n: 1 },
+    { v: 'm_chen',     name: '陳美華',         kind: 'member', n: 1 },
+    { v: 'm_liu',      name: '劉建良',         kind: 'member', n: 1 }
+  ];
+  var TRG_TARGETS = ['g_purchase', 'm_wang'];
+  function trgTargetOpt(v) { return TRG_TARGET_OPTS.filter(function(o){ return o.v === v; })[0]; }
+  function trgTargetNames() {
+    return TRG_TARGETS.map(function(v){ var o = trgTargetOpt(v); return o ? o.name : ''; }).filter(Boolean).join('、');
+  }
+  function trgRenderTargets() {
+    var og = document.getElementById('trg-target-og-group');
+    var om = document.getElementById('trg-target-og-member');
+    if (!og) return;
+    function opts(kind) {
+      return TRG_TARGET_OPTS.filter(function(o){ return o.kind === kind; }).map(function(o){
+        var used = TRG_TARGETS.indexOf(o.v) >= 0;
+        return '<option value="' + o.v + '"' + (used ? ' disabled' : '') + '>' + ihEsc(o.name)
+          + (o.kind === 'group' ? '（' + o.n + ' 人）' : '') + (used ? '　· 已選' : '') + '</option>';
+      }).join('');
+    }
+    og.innerHTML = opts('group');
+    om.innerHTML = opts('member');
+    document.getElementById('trg-target-chips').innerHTML = TRG_TARGETS.length
+      ? TRG_TARGETS.map(function(v){
+          var o = trgTargetOpt(v); if (!o) return '';
+          return '<span class="chip">' + (o.kind === 'group' ? '👥 ' : '👤 ') + ihEsc(o.name)
+            + ' <span class="x" onclick="trgRemoveTarget(\'' + v + '\')">×</span></span>';
+        }).join('')
+      : '<span class="text-muted" style="font-size:12.5px;">尚未選擇任何對象</span>';
+    trgSyncSummary();
+  }
+  function trgAddTarget(sel) {
+    if (sel.value && TRG_TARGETS.indexOf(sel.value) < 0) TRG_TARGETS.push(sel.value);
+    sel.value = '';
+    trgRenderTargets();
+  }
+  function trgRemoveTarget(v) {
+    TRG_TARGETS = TRG_TARGETS.filter(function(x){ return x !== v; });
+    trgRenderTargets();
+  }
+
   /* ---- 新增觸發規則精靈 ---- */
   var TRG_OPS = {
-    '數值': ['小於','小於或等於','等於','大於','大於或等於','有填數值','沒有數值（空白）'],
-    '文字／狀態': ['是','不是','有填內容','沒有內容（空白）'],
-    '日期': ['已經超過 N 天（過去）','N 天內即將到','有填日期','沒有日期（空白）']
+    '數值': ['<','≤','=','>','≥','有填數值','沒有數值（空白）'],
+    '文字／狀態': ['=','≠','有填內容','沒有內容（空白）'],
+    '日期': ['N 天內即將到','已經超過 N 天（過去）','有填日期','沒有日期（空白）']
   };
   var TRG_HINTS = {
     '數值': '數值欄位・小數會四捨五入到小數點後 2 位再比較',
     '文字／狀態': '文字欄位・不分大小寫，會自動忽略前後空白',
     '日期': '日期欄位・以台灣時間（UTC+8）計算天數'
-  };
-  var TRG_SAMPLE = {
-    'item_no':'A001','item_nm':'無線滑鼠','qty_on_hand':'8','qty_safety':'10','checked_at':'2026-08-12',
-    'vendor.name':'羅technik','order_no':'PO-20260818','eta':'2026-08-21','supplier.name':'線材王','status':'延遲',
-    'employee_no':'E1042','employee_name':'王小明','contract.end_date':'2026-09-30','department.name':'業務部'
   };
 
   function trgStartRule() {
@@ -25674,8 +25972,22 @@ function abv2PickSeg(el){
     TRG_ACT = acts[0].id;
     goPage('bot-rule-new');
     trgRenderSrc();
-    trgWiz(1);
+    var ta = document.getElementById('push-trg-text-0');
+    if (ta && !ta.value) {
+      ta.value = '⚠️ 低庫存警示\n\n共 {{命中筆數}} 項商品低於安全庫存，請儘速安排補貨。';
+    }
+    TRG_CV_MODE = 'field';
+    trgRenderTargets();
+    trgUpdatePreview();
+    window.scrollTo(0, 0);
   }
+  function trgToggleSec(head, bodyId) {
+    var body = document.getElementById(bodyId);
+    if (!body) return;
+    var collapsed = body.classList.toggle('hidden');
+    head.classList.toggle('collapsed', collapsed);
+  }
+
   function trgBackToBot() {
     goBotEdit(TRG_BOT, false);
     var tab = document.getElementById('bot-main-tab-trigger');
@@ -25686,16 +25998,15 @@ function abv2PickSeg(el){
   }
   function trgRenderSrc() {
     var conn = ihBotConn(TRG_BOT);
-    document.getElementById('trg-src-grid').innerHTML = ihBotActions(TRG_BOT).map(function(a){
-      var used = ihActionRules(a.id).filter(function(r){ return r.bot === TRG_BOT; }).length;
-      return '<div class="src-card' + (a.id === TRG_ACT ? ' sel' : '') + '" onclick="trgPickAct(\'' + a.id + '\')">'
-        + '<div class="src-head"><span class="src-name">' + ihEsc(a.name) + '</span>'
-        + '<span class="badge ' + (a.struct === 'array' ? 'info">陣列' : 'neutral">單筆') + '</span></div>'
-        + '<div class="text-muted" style="font-size:12px;margin-bottom:8px;">來自　' + ihEsc(conn ? conn.name : '—') + '</div>'
-        + '<div class="src-fields">' + a.fields.map(function(f){ return '<span>' + f.zh + '</span>'; }).join('') + '</div>'
-        + '<div class="src-meta"><span>' + (a.struct === 'array' ? '一次約回傳 ' + a.rows + ' 筆' : '每次回傳 1 筆') + '</span>'
-        + '<span>' + used + ' 條規則使用中</span></div></div>';
+    var acts = ihBotActions(TRG_BOT);
+    var sel = document.getElementById('trg-act-select');
+    sel.innerHTML = acts.map(function(a){
+      return '<option value="' + a.id + '">' + ihEsc(a.name) + '</option>';
     }).join('');
+    sel.value = TRG_ACT;
+    var a = acts.filter(function(x){ return x.id === TRG_ACT; })[0] || acts[0];
+    document.getElementById('trg-act-hint').textContent = '來自 ' + (conn ? conn.name : '—') + '　·　'
+      + (a.struct === 'array' ? '物件陣列，一次約回傳 ' + a.rows + ' 筆' : '單筆物件，每次回傳 1 筆');
     trgRenderParams();
     trgRenderCondFields();
   }
@@ -25703,22 +26014,27 @@ function abv2PickSeg(el){
 
   function trgRenderParams() {
     var a = trgAct();
-    var params = (a.struct === 'array')
-      ? [{ n:'倉庫代號', v:'WH-01', t:'文字', req:true }, { n:'商品分類', v:'耗材', t:'文字', req:true }, { n:'每頁筆數', v:'', t:'數值・選填', req:false }]
-      : [{ n:'查詢代號', v:'', t:'文字', req:true }];
-    document.getElementById('trg-param-grid').innerHTML = params.map(function(p){
-      return '<div class="form-row" style="margin-bottom:0;"><label>' + p.n + (p.req ? ' <span class="req">*</span>' : '') + '</label>'
-        + '<input class="input full mono" ' + (p.v ? 'value="' + p.v + '"' : 'placeholder="預設 100"') + ' />'
-        + '<div class="help">' + p.t + '</div></div>';
-    }).join('');
+    var ps = a.params || [];
+    var box = document.getElementById('trg-param-grid');
+    box.innerHTML = ps.length
+      ? ps.map(function(p){
+          return '<div class="param-row">'
+            + '<div class="p-label">' + ihEsc(p.zh) + (p.req ? ' <span class="req">*</span>' : '')
+            + '<span class="p-code">(' + p.code + ')</span>'
+            + (p.req ? '' : '<span class="p-opt">選填</span>') + '</div>'
+            + '<input class="input full" placeholder="例如：' + ihEsc(p.sample) + '" />'
+            + '</div>';
+        }).join('')
+      : '<div class="param-empty">這支動作不需要任何參數，執行時直接呼叫。</div>';
+    var sum = document.getElementById('trg-sum-act');
+    if (sum) sum.textContent = a.name + '　·　' + (ps.length ? ps.length + ' 個參數' : '無參數');
   }
 
   function trgRenderCondFields() {
     var a = trgAct();
     var cf = document.getElementById('trg-cf');
     cf.innerHTML = a.fields.map(function(f){
-      var sample = TRG_SAMPLE[f.ext] ? ('，例如 ' + TRG_SAMPLE[f.ext]) : '';
-      return '<option value="' + f.zh + '|' + f.type + '">' + f.zh + '　⟨' + f.ext + sample + '⟩</option>';
+      return '<option value="' + f.zh + '|' + f.type + '">' + f.zh + '　⟨' + f.ext + '⟩</option>';
     }).join('');
     var pref = a.fields.filter(function(f){ return f.type === '數值'; })[0]
              || a.fields.filter(function(f){ return f.type === '日期'; })[0] || a.fields[0];
@@ -25726,9 +26042,7 @@ function abv2PickSeg(el){
     document.getElementById('trg-idfield').innerHTML = a.fields.map(function(f){
       return '<option>' + f.zh + '　⟨' + f.ext + '⟩</option>';
     }).join('');
-    document.getElementById('trg-varbtns').innerHTML = a.fields.map(function(f){
-      return '<button class="push-var-chip" onclick="trgInsertVar(\'' + f.zh + '\')">' + f.zh + '</button>';
-    }).join('') + '<button class="push-var-chip" onclick="trgInsertVar(\'命中筆數\')">命中筆數</button>';
+    if (typeof botSyncPushVars === 'function') botSyncPushVars();
     document.getElementById('trg-struct-note').textContent = (a.struct === 'array')
       ? ('這份資料一次回傳約 ' + a.rows + ' 筆，系統會逐筆檢查，把符合的整理成一份「命中清單」。')
       : '這份資料每次只回傳一筆，條件直接判斷這一筆。';
@@ -25736,9 +26050,31 @@ function abv2PickSeg(el){
     trgSyncSentence();
   }
   function trgInsertVar(name) {
-    var ta = document.getElementById('trg-msg');
-    ta.value += '{{' + name + '}}';
-    ta.focus();
+    if (typeof insertPushVar === 'function') insertPushVar('push-trg-text-0', '{{' + name + '}}');
+  }
+  /* 觸發規則訊息編輯器的即時預覽 */
+  function trgUpdatePreview() {
+    var ta = document.getElementById('push-trg-text-0');
+    var bub = document.getElementById('trg-bubble');
+    if (!ta || !bub) return;
+    var txt = (ta.value || '').replace(/\{\{命中筆數\}\}/g, '12');
+    bub.textContent = txt || '填寫左側內容即時更新…';
+    var who = document.getElementById('trg-phone-bot');
+    if (who) who.textContent = TRG_BOT;
+  }
+
+  var TRG_CV_MODE = 'field';
+  var TRG_CV_VALUE = { '數值': '', '文字／狀態': '', '日期': '' };
+  var TRG_CV_PH = { '數值': '例如 10', '文字／狀態': '例如 業務部', '日期': '例如 2026-12-31' };
+  function trgCvMode(m) {
+    TRG_CV_MODE = m;
+    var w = document.getElementById('trg-cv-wrap');
+    if (w) w.dataset.mode = '';
+    trgSyncSentence();
+  }
+  function trgCvInput(el) {
+    TRG_CV_VALUE[el.dataset.vtype] = el.value;
+    trgSyncSentence();
   }
 
   function trgSyncSentence() {
@@ -25769,21 +26105,33 @@ function abv2PickSeg(el){
     } else {
       wrap.style.display = 'flex'; lab.style.visibility = 'visible'; lab.textContent = '比較對象';
       var a = trgAct();
-      var opts = a.fields.filter(function(f){ return f.zh !== name && f.type === (type === '數值' ? '數值' : f.type); })
-                          .filter(function(f){ return f.type === type; }).map(function(f){ return f.zh; });
-      if (wrap.dataset.mode !== 'field:' + type + ':' + name) {
-        wrap.innerHTML = '<select class="input" style="width:96px;"><option>欄位</option><option>固定值</option></select>'
-          + '<select class="input" id="trg-cv" onchange="trgSyncSentence()" style="flex:1;">'
-          + (opts.length ? opts.map(function(f){ return '<option>' + f + '</option>'; }).join('') : '<option>（請改用固定值）</option>')
-          + '</select>';
-        wrap.dataset.mode = 'field:' + type + ':' + name;
+      /* 只能跟同型別的其他欄位比 */
+      var peers = a.fields.filter(function(f){ return f.zh !== name && f.type === type; }).map(function(f){ return f.zh; });
+      var mode = peers.length ? TRG_CV_MODE : 'value';   /* 沒有同型別欄位可比時只能用固定值 */
+      var key = 'cmp:' + mode + ':' + type + ':' + name + ':' + peers.join(',');
+      if (wrap.dataset.mode !== key) {
+        var ph = TRG_CV_PH[type] || '';
+        var itype = (type === '數值') ? 'number' : ((type === '日期') ? 'date' : 'text');
+        wrap.innerHTML =
+          '<select class="input" id="trg-cv-mode" onchange="trgCvMode(this.value)" style="width:96px;">'
+          + '<option value="field"' + (mode === 'field' ? ' selected' : '') + (peers.length ? '' : ' disabled') + '>欄位</option>'
+          + '<option value="value"' + (mode === 'value' ? ' selected' : '') + '>固定值</option>'
+          + '</select>'
+          + (mode === 'field'
+            ? '<select class="input" id="trg-cv" onchange="trgSyncSentence()" style="flex:1;">'
+              + peers.map(function(f){ return '<option>' + ihEsc(f) + '</option>'; }).join('') + '</select>'
+            : '<input class="input" id="trg-cv" data-vtype="' + type + '" type="' + itype + '" placeholder="' + ph
+              + '" value="' + ihEsc(TRG_CV_VALUE[type] || '') + '" oninput="trgCvInput(this)" style="flex:1;" />');
+        wrap.dataset.mode = key;
       }
       var cv = document.getElementById('trg-cv');
-      tail = '　<b>' + (cv ? cv.value : '') + '</b>';
+      var val = cv ? cv.value : '';
+      /* 固定值加上引號，才不會跟欄位名混在一起 */
+      tail = (mode === 'field') ? ('　<b>' + ihEsc(val) + '</b>') : ('　<b>「' + ihEsc(val || '—') + '」</b>');
     }
     var opText = opv;
     if (needsDays) { var d = document.getElementById('trg-cv'); opText = opv.replace('N', d ? d.value : '30'); }
-    document.getElementById('trg-sentence').innerHTML = '當　<b>' + name + '</b>　<b>' + opText + '</b>' + tail + '　時，通知指定對象。';
+    document.getElementById('trg-sentence').innerHTML = '當　<b>' + ihEsc(name) + '</b>　<b>' + ihEsc(opText) + '</b>' + tail + '　時，通知指定對象。';
     document.getElementById('trg-trial').classList.add('hidden');
     trgSyncSummary();
   }
@@ -25810,70 +26158,54 @@ function abv2PickSeg(el){
     });
     trgSyncSummary();
   }
-  function trgFmt() {
-    var v = document.querySelector('input[name="trg-fmt"]:checked').value;
-    document.getElementById('trg-fmt-lbl-list').classList.toggle('active', v === 'list');
-    document.getElementById('trg-fmt-lbl-sum').classList.toggle('active', v === 'sum');
-    document.getElementById('trg-msg-note').innerHTML = (v === 'list')
-      ? '<code>{{#每一筆}}</code> 與 <code>{{/每一筆}}</code> 之間的內容會依命中筆數重複。目前命中 12 筆、超過 5 筆上限，這則訊息會自動改用「摘要＋連結」送出（見右側預覽）。'
-      : '「摘要＋連結」不使用重複區塊，訊息只顯示命中筆數與一個連結。';
-    document.getElementById('trg-bubble').innerHTML = '⚠️ 低庫存警示\n\n共 <b>12 筆</b>商品低於安全庫存，\n<span class="link" onclick="ihOpenHits(\'hit\')">點擊查看完整清單 →</span>';
-    trgSyncSummary();
-  }
-
   function trgSyncSummary() {
-    var box = document.getElementById('trg-summary');
-    if (!box) return;
-    var a = trgAct(), conn = ihBotConn(TRG_BOT);
+    var note = document.getElementById('trg-final-note');
+    if (!note) return;
     var freq = document.getElementById('trg-freq').value;
     var nmEl = document.querySelector('input[name="trg-nm"]:checked');
     var nm = nmEl ? nmEl.value : '2';
-    var idf = document.getElementById('trg-idfield');
-    var nmText = nm === '1' ? '每次符合條件都通知'
-               : nm === '2' ? ('只通知新出現的項目（依 ' + (idf && idf.value ? idf.value.split('　')[0] : '—') + ' 判斷）')
-               : '持續符合時每 24 小時再提醒一次';
-    var fmtEl = document.querySelector('input[name="trg-fmt"]:checked');
-    var fmt = (fmtEl && fmtEl.value === 'sum') ? '摘要＋連結' : '單筆逐項列出（上限 5 筆，超過改為摘要＋連結）';
-    var sentence = document.getElementById('trg-sentence').textContent.replace('　時，通知指定對象。', '').trim();
-    box.innerHTML =
-        '<div class="field-row"><div class="field-label">Bot</div><div class="field-value">' + ihEsc(TRG_BOT) + '</div></div>'
-      + '<div class="field-row"><div class="field-label">查詢動作</div><div class="field-value">' + ihEsc(a.name)
-        + '　<span class="text-muted" style="font-size:12.5px;">' + ihEsc(conn ? conn.name : '—') + '・'
-        + (a.struct === 'array' ? '物件陣列，約 ' + a.rows + ' 筆' : '單筆物件') + '</span></div></div>'
-      + '<div class="field-row"><div class="field-label">檢查頻率</div><div class="field-value">' + freq + '</div></div>'
-      + '<div class="field-row"><div class="field-label">觸發條件</div><div class="field-value">' + ihEsc(sentence)
-        + '　<span class="text-muted" style="font-size:12.5px;">試算命中 12 筆</span></div></div>'
-      + '<div class="field-row"><div class="field-label">通知方式</div><div class="field-value">' + nmText + '</div></div>'
-      + '<div class="field-row"><div class="field-label">推播格式</div><div class="field-value">' + fmt + '</div></div>'
-      + '<div class="field-row"><div class="field-label">推送對象</div><div class="field-value">採購部（群組）、王明宏</div></div>';
-    document.getElementById('trg-final-note').innerHTML =
-      '啟用後，系統會' + freq + '檢查一次。符合條件時「' + ihEsc(TRG_BOT) + '」會通知採購部與王明宏'
-      + (nm === '2' ? '；已經通知過的項目在狀況解除之前不會再通知。' : '。');
+    note.innerHTML = '啟用後，系統會' + freq + '檢查一次；符合條件時「' + ihEsc(TRG_BOT) + '」會通知 '
+      + ihEsc(trgTargetNames() || '（尚未選擇對象）')
+      + (nm === '2' ? '，已經通知過的項目在狀況解除之前不會再通知。' : '。');
   }
 
-  function trgWiz(n) {
-    document.querySelectorAll('#trg-step-bar .bulk-step').forEach(function(s, i){
-      s.classList.remove('active', 'done');
-      if (i < n - 1) s.classList.add('done');
-      if (i === n - 1) s.classList.add('active');
-    });
-    [1,2,3,4,5].forEach(function(i){ document.getElementById('trg-wiz-' + i).classList.toggle('hidden', i !== n); });
-    if (n === 4) trgFmt();
-    if (n === 5) trgSyncSummary();
-    window.scrollTo(0, 0);
-  }
   function trgSave(enable) {
     var name = document.getElementById('trg-rule-name').value || '未命名規則';
     var a = trgAct();
     var sentence = document.getElementById('trg-sentence').textContent.replace('　時，通知指定對象。', '').trim();
     IH_RULES.push({ name: name, act: a.id, bot: TRG_BOT,
       freq: document.getElementById('trg-freq').value, cond: ihEsc(sentence),
-      target: '採購部、王明宏', status: enable ? 'on' : 'off',
-      offReason: enable ? '' : '尚未啟用' });
+      target: trgTargetNames() || '—', status: enable ? 'on' : 'off',
+      offReason: enable ? '' : '草稿' });
     if (a.bots.indexOf(TRG_BOT) < 0) a.bots.push(TRG_BOT);
     trgBackToBot();
     trgSyncTab(TRG_BOT, false);
     if (typeof showSyncToast === 'function') showSyncToast(enable ? '觸發規則已啟用' : '觸發規則已儲存（未啟用）');
+  }
+
+  /* ---- 推播訊息的變數清單：系統變數 + 整合中台欄位（依該 Bot 被授權的動作） ---- */
+  function botSyncPushVars() {
+    var targets = [{ box: 'push-add-ihvars', ta: 'push-add-text-0' },
+                   { box: 'push-edit-ihvars', ta: 'push-edit-text-0' },
+                   { box: 'push-trg-ihvars', ta: 'push-trg-text-0' }];
+    var fields = [], seen = {};
+    (typeof ihBotActions === 'function' ? ihBotActions(TRG_BOT) : []).forEach(function(a){
+      a.fields.forEach(function(f){ if (!seen[f.zh]) { seen[f.zh] = 1; fields.push(f); } });
+    });
+    var conn = (typeof ihBotConn === 'function') ? ihBotConn(TRG_BOT) : null;
+    targets.forEach(function(t){
+      var box = document.getElementById(t.box);
+      if (!box) return;
+      if (!fields.length) { box.innerHTML = ''; return; }
+      var extra = (t.box === 'push-trg-ihvars')
+        ? '<span class="push-var-chip ih-var" title="這次執行命中的筆數" onclick="insertPushVar(\'' + t.ta + '\',\'{{命中筆數}}\')">{{命中筆數}}</span>'
+        : '';
+      box.innerHTML = '<span class="push-var-src">來自 ' + ihEsc(conn ? conn.name : '整合中台') + '：</span>'
+        + fields.map(function(f){
+            return '<span class="push-var-chip ih-var" title="代碼 ' + f.cb + '・對應外部欄位 ' + f.ext
+              + '" onclick="insertPushVar(\'' + t.ta + '\',\'{{' + f.zh + '}}\')">{{' + f.zh + '}}</span>';
+          }).join('') + extra;
+    });
   }
 
   /* ---- Bot 列表：替已設定觸發引擎的 Bot 加上標記 ---- */
@@ -25889,10 +26221,11 @@ function abv2PickSeg(el){
       var conn = ihBotConn(name);
       var flag = document.createElement('span');
       flag.className = 'bot-trigger-flag';
-      flag.title = '已設定觸發引擎 · ' + n + ' 條規則' + (conn ? '（資料來自 ' + conn.name + '）' : '');
+      flag.title = '已串接整合中台 · ' + n + ' 條觸發規則' + (conn ? '（資料來自 ' + conn.name + '）' : '');
       flag.innerHTML = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">'
         + '<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>'
-        + '<path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>' + n;
+        + '<path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>'
+        + '串接中台 ' + (conn ? ihEsc(conn.name) : '');
       flag.onclick = function(e){ e.stopPropagation(); ihGoBotEngine(name); };
       nameEl.parentNode.insertBefore(flag, nameEl.nextSibling);
     });
