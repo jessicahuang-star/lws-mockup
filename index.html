@@ -10054,7 +10054,10 @@
               <option value="">全部狀態</option><option value="ok">成功</option><option value="err">失敗</option><option value="none">未觸發</option><option value="skip">已抑制</option>
             </select>
             <span class="text-muted" style="font-size:12.5px;" id="ih-log-count"></span>
-            <button class="btn sm" style="margin-left:auto;">匯出 CSV</button>
+            <button class="btn sm" style="margin-left:auto;display:inline-flex;align-items:center;gap:5px;" onclick="ihOpenExport()">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              匯出
+            </button>
           </div>
           <div class="table-scroll" id="ih-log-table-wrap">
             <table class="data-table">
@@ -10069,7 +10072,7 @@
           <div style="padding:16px 20px;">
             <div class="note info" style="margin-bottom:0;">
               <svg class="ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
-              <div>這裡是這個連接器底下<b>所有查詢動作、所有 Bot</b> 的執行結果，僅整合中台權限者可見。紀錄保留 1 年。</div>
+              <div>這裡是這個連接器底下<b>所有查詢動作、所有 Bot</b> 的執行結果，僅整合中台權限者可見。<b>紀錄保留 1 年</b>；超過 1 年的紀錄已歸檔，後台不再顯示，需要時請聯絡技術人員協助查詢。</div>
             </div>
           </div>
         </div>
@@ -10239,7 +10242,7 @@
               <input class="input mono" value="item_no" />
               <div class="f-arrow">→</div>
               <div class="cb-field">
-                <input class="input mono" value="item_code" placeholder="code_name" />
+                <input class="input mono" value="item_code" placeholder="code_name" oninput="ihSyncCbName(this)" />
                 <input class="input cb-sub" value="商品編號" placeholder="中文名稱" oninput="ihSyncCbName(this)" />
               </div>
               <select class="input"><option selected>文字／狀態</option><option>數值</option><option>日期</option></select>
@@ -10248,7 +10251,7 @@
               <input class="input mono" value="item_nm" />
               <div class="f-arrow">→</div>
               <div class="cb-field">
-                <input class="input mono" value="item_name" placeholder="code_name" />
+                <input class="input mono" value="item_name" placeholder="code_name" oninput="ihSyncCbName(this)" />
                 <input class="input cb-sub" value="商品名稱" placeholder="中文名稱" oninput="ihSyncCbName(this)" />
               </div>
               <select class="input"><option selected>文字／狀態</option><option>數值</option><option>日期</option></select>
@@ -10257,7 +10260,7 @@
               <input class="input mono" value="qty_on_hand" />
               <div class="f-arrow">→</div>
               <div class="cb-field">
-                <input class="input mono" value="stock_qty" placeholder="code_name" />
+                <input class="input mono" value="stock_qty" placeholder="code_name" oninput="ihSyncCbName(this)" />
                 <input class="input cb-sub" value="庫存數量" placeholder="中文名稱" oninput="ihSyncCbName(this)" />
               </div>
               <select class="input"><option>文字／狀態</option><option selected>數值</option><option>日期</option></select>
@@ -10266,7 +10269,7 @@
               <input class="input mono" value="qty_safety" />
               <div class="f-arrow">→</div>
               <div class="cb-field">
-                <input class="input mono" value="safety_stock_qty" placeholder="code_name" />
+                <input class="input mono" value="safety_stock_qty" placeholder="code_name" oninput="ihSyncCbName(this)" />
                 <input class="input cb-sub" value="安全庫存" placeholder="中文名稱" oninput="ihSyncCbName(this)" />
               </div>
               <select class="input"><option>文字／狀態</option><option selected>數值</option><option>日期</option></select>
@@ -10275,7 +10278,7 @@
               <input class="input mono" value="checked_at" />
               <div class="f-arrow">→</div>
               <div class="cb-field">
-                <input class="input mono" value="last_check_date" placeholder="code_name" />
+                <input class="input mono" value="last_check_date" placeholder="code_name" oninput="ihSyncCbName(this)" />
                 <input class="input cb-sub" value="最後盤點日" placeholder="中文名稱" oninput="ihSyncCbName(this)" />
               </div>
               <select class="input"><option>文字／狀態</option><option>數值</option><option selected>日期</option></select>
@@ -10284,7 +10287,7 @@
               <input class="input mono" value="vendor.name" />
               <div class="f-arrow">→</div>
               <div class="cb-field">
-                <input class="input mono" value="vendor_name" placeholder="code_name" />
+                <input class="input mono" value="vendor_name" placeholder="code_name" oninput="ihSyncCbName(this)" />
                 <input class="input cb-sub" value="供應商名稱" placeholder="中文名稱" oninput="ihSyncCbName(this)" />
               </div>
               <select class="input"><option selected>文字／狀態</option><option>數值</option><option>日期</option></select>
@@ -10297,7 +10300,8 @@
           </div>
           <div class="foot-actions">
             <button class="btn spacer" onclick="ihWiz(2)">上一步</button>
-            <button class="btn primary" onclick="ihCreateAct()">確認並建立動作</button>
+            <span class="field-error hidden" id="ih-fm-dup-note" style="margin:0 8px 0 0;">CB 標準欄位有重複，請先修正才能建立</span>
+            <button class="btn primary" id="ih-act-create-btn" onclick="ihCreateAct()">確認並建立動作</button>
           </div>
         </div></div>
       </div>
@@ -10543,6 +10547,107 @@
         <div class="modal-foot">
           <button class="btn" onclick="closeModal('ih-modal-delconn')">取消</button>
           <button class="btn danger" style="background:var(--danger);color:#fff;border-color:var(--danger);" onclick="ihDoDelConn()">確認刪除</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 匯出觸發紀錄（比照成員管理 4.1 的匯出規則） ===== -->
+    <div class="modal-overlay ihub" id="ih-modal-export" onclick="closeModalIfBackdrop(event,'ih-modal-export')">
+      <div class="modal" style="width:540px;max-height:90vh;display:flex;flex-direction:column;">
+        <div class="modal-head" style="flex-shrink:0;">
+          <h3 class="modal-title">匯出觸發紀錄</h3>
+          <button class="icon-btn" onclick="closeModal('ih-modal-export')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+        </div>
+        <div class="modal-body" style="overflow-y:auto;padding:20px 24px;display:flex;flex-direction:column;gap:20px;">
+
+          <div>
+            <div style="font-size:12px;font-weight:600;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:10px;">匯出格式</div>
+            <div style="display:flex;gap:10px;">
+              <label style="flex:1;border:1px solid var(--primary);border-radius:var(--radius);padding:12px 14px;cursor:pointer;display:flex;align-items:center;gap:10px;transition:border-color 0.15s;" id="ih-exp-fmt-csv-label">
+                <input type="radio" name="ih-exp-format" value="csv" checked onchange="ihExpFmtChange(this)" style="accent-color:var(--primary);" />
+                <div>
+                  <div style="font-weight:600;font-size:13px;">CSV (.csv)</div>
+                  <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">輕量格式，適合其他系統匯入</div>
+                </div>
+              </label>
+              <label style="flex:1;border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;cursor:pointer;display:flex;align-items:center;gap:10px;transition:border-color 0.15s;" id="ih-exp-fmt-xlsx-label">
+                <input type="radio" name="ih-exp-format" value="xlsx" onchange="ihExpFmtChange(this)" style="accent-color:var(--primary);" />
+                <div>
+                  <div style="font-weight:600;font-size:13px;">Excel (.xlsx)</div>
+                  <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">包含格式，適合人工閱讀與分析</div>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <div>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+              <div style="font-size:12px;font-weight:600;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.04em;">匯出欄位</div>
+              <div style="display:flex;gap:8px;">
+                <button class="btn ghost sm" onclick="ihExpSelectAll(true)" style="font-size:12px;">全選</button>
+                <button class="btn ghost sm" onclick="ihExpSelectAll(false)" style="font-size:12px;">清除</button>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+          <label style="display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;font-size:13px;">
+            <input type="checkbox" checked class="ih-exp-field-cb" onchange="ihExpValidate()" style="accent-color:var(--primary);" />觸發時間
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;font-size:13px;">
+            <input type="checkbox" checked class="ih-exp-field-cb" onchange="ihExpValidate()" style="accent-color:var(--primary);" />Bot 名稱
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;font-size:13px;">
+            <input type="checkbox" checked class="ih-exp-field-cb" onchange="ihExpValidate()" style="accent-color:var(--primary);" />查詢動作
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;font-size:13px;">
+            <input type="checkbox" checked class="ih-exp-field-cb" onchange="ihExpValidate()" style="accent-color:var(--primary);" />規則名稱
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;font-size:13px;">
+            <input type="checkbox" checked class="ih-exp-field-cb" onchange="ihExpValidate()" style="accent-color:var(--primary);" />條件判斷
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;font-size:13px;">
+            <input type="checkbox" checked class="ih-exp-field-cb" onchange="ihExpValidate()" style="accent-color:var(--primary);" />執行結果
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;font-size:13px;">
+            <input type="checkbox" checked class="ih-exp-field-cb" onchange="ihExpValidate()" style="accent-color:var(--primary);" />結果說明
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;font-size:13px;">
+            <input type="checkbox" checked class="ih-exp-field-cb" onchange="ihExpValidate()" style="accent-color:var(--primary);" />命中筆數
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;font-size:13px;">
+            <input type="checkbox" checked class="ih-exp-field-cb" onchange="ihExpValidate()" style="accent-color:var(--primary);" />略過筆數
+          </label>
+            </div>
+            <div class="field-error hidden" id="ih-exp-nofield">請至少選擇一個欄位</div>
+          </div>
+
+          <div>
+            <div style="font-size:12px;font-weight:600;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:10px;">匯出範圍</div>
+            <div class="admin-option-box">
+              <div class="admin-opt-item">
+                <label class="admin-radio-lbl active" id="ih-exp-scope-lbl-all">
+                  <input type="radio" name="ih-exp-scope" value="all" checked onchange="ihExpScopeChange()" /> 全部紀錄
+                </label>
+                <div class="admin-opt-sub text-sec" style="font-size:12px;">這個連接器底下所有動作、所有 Bot 的紀錄，共 <b id="ih-exp-n-all">0</b> 筆</div>
+              </div>
+              <div class="admin-opt-item">
+                <label class="admin-radio-lbl" id="ih-exp-scope-lbl-filtered">
+                  <input type="radio" name="ih-exp-scope" value="filtered" onchange="ihExpScopeChange()" /> 僅目前篩選結果
+                </label>
+                <div class="admin-opt-sub text-sec" style="font-size:12px;">套用畫面上的動作／Bot／狀態篩選，共 <b id="ih-exp-n-filtered">0</b> 筆</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="text-muted" style="font-size:12px;line-height:1.7;padding-top:14px;border-top:1px solid var(--border);">
+            匯出範圍僅含熱儲存的紀錄（近 1 年）。超過 1 年的紀錄已歸檔，請聯絡技術人員協助查詢。
+          </div>
+        </div>
+        <div class="modal-foot" style="flex-shrink:0;justify-content:flex-end;gap:10px;">
+          <button class="btn" onclick="closeModal('ih-modal-export')">取消</button>
+          <button class="btn primary" id="ih-exp-confirm" onclick="ihDoExport()" style="display:inline-flex;align-items:center;gap:6px;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            確認匯出
+          </button>
         </div>
       </div>
     </div>
@@ -25597,6 +25702,7 @@ function abv2PickSeg(el){
     document.getElementById('ih-test-result').classList.add('hidden');
     document.getElementById('ih-wiz2-foot').classList.add('hidden');
     document.getElementById('ih-wiz2-foot-idle').classList.remove('hidden');
+    ihValidateFieldMap();
   }
   function ihWiz(n) {
     document.querySelectorAll('#ih-step-bar .bulk-step').forEach(function(s, i){
@@ -25623,6 +25729,7 @@ function abv2PickSeg(el){
       : '「單筆物件」時整份回應就是一筆資料，條件直接判斷這一筆，不需要陣列路徑';
   }
   function ihCreateAct() {
+    if (!ihValidateFieldMap()) return;
     var c = ihConn(IH_CUR);
     var pending = c.actions.filter(function(a){ return a.pending; })[0];
     if (pending) { pending.pending = false; pending.fields = ihReadFieldMap(); }
@@ -25658,7 +25765,49 @@ function abv2PickSeg(el){
   }
   /* 中文名稱改動時，即時同步 Bot 端的推播變數清單 */
   function ihSyncCbName() {
+    ihValidateFieldMap();
     if (typeof botSyncPushVars === 'function') botSyncPushVars();
+  }
+
+  /* 同一支動作內，CB 標準欄位的代碼與中文名都不可重複（2026-08-19 定案）
+     重複時：該格紅框 + 底下 .field-error 訊息，並阻擋「確認並建立動作」 */
+  function ihFieldBoxes() {
+    var grid = document.querySelector('#ih-wiz-3 .map-grid');
+    if (!grid) return [];
+    var kids = [].slice.call(grid.children), out = [];
+    for (var i = 5; i < kids.length; i += 5) {
+      var b = kids[i + 2];
+      if (b && b.classList && b.classList.contains('cb-field')) out.push(b);
+    }
+    return out;
+  }
+  function ihValidateFieldMap() {
+    var boxes = ihFieldBoxes();
+    var codes = {}, zhs = {};
+    boxes.forEach(function(b){
+      var c = b.children[0].value.trim(), z = b.children[1].value.trim();
+      if (c) codes[c] = (codes[c] || 0) + 1;
+      if (z) zhs[z] = (zhs[z] || 0) + 1;
+    });
+    var bad = 0;
+    boxes.forEach(function(b){
+      var ci = b.children[0], zi = b.children[1];
+      var c = ci.value.trim(), z = zi.value.trim(), msgs = [];
+      ci.classList.remove('error'); zi.classList.remove('error');
+      if (c && codes[c] > 1) { ci.classList.add('error'); msgs.push('代碼「' + c + '」'); }
+      if (z && zhs[z] > 1) { zi.classList.add('error'); msgs.push('中文名「' + z + '」'); }
+      var err = b.querySelector('.field-error');
+      if (msgs.length) {
+        bad++;
+        if (!err) { err = document.createElement('div'); err.className = 'field-error'; b.appendChild(err); }
+        err.textContent = '這支動作裡已經有' + msgs.join('、') + '了';
+      } else if (err) { err.remove(); }
+    });
+    var btn = document.getElementById('ih-act-create-btn');
+    if (btn) { btn.disabled = bad > 0; btn.title = bad > 0 ? '請先解決重複的 CB 標準欄位' : ''; }
+    var note = document.getElementById('ih-fm-dup-note');
+    if (note) note.classList.toggle('hidden', bad === 0);
+    return bad === 0;
   }
 
   /* ===== 串接 Bot / 已授權的 Bot ===== */
@@ -25813,6 +25962,59 @@ function abv2PickSeg(el){
     if (typeof botListRenderFlags === 'function') botListRenderFlags();
     if (typeof trgSyncTab === 'function' && typeof TRG_BOT !== 'undefined') trgSyncTab(TRG_BOT, false);
     if (typeof showSyncToast === 'function') showSyncToast(msg);
+  }
+
+  /* ===== 匯出觸發紀錄（比照成員管理 4.1） ===== */
+  function ihOpenExport() {
+    var c = ihConn(IH_CUR);
+    var all = ihConnLogs(c);
+    var fa = document.getElementById('ih-log-act').value;
+    var fb = document.getElementById('ih-log-bot').value;
+    var fs = document.getElementById('ih-log-st').value;
+    var filtered = all.filter(function(l){
+      return (!fa || l.act === fa) && (!fb || l.bot === fb) && (!fs || l.st === fs);
+    });
+    document.getElementById('ih-exp-n-all').textContent = all.length;
+    document.getElementById('ih-exp-n-filtered').textContent = filtered.length;
+    /* 沒套任何篩選時，「僅目前篩選結果」沒有意義 → 停用 */
+    var hasFilter = !!(fa || fb || fs);
+    var fRadio = document.querySelector('input[name="ih-exp-scope"][value="filtered"]');
+    fRadio.disabled = !hasFilter;
+    if (!hasFilter) document.querySelector('input[name="ih-exp-scope"][value="all"]').checked = true;
+    else fRadio.checked = true;
+    ihExpScopeChange();
+    ihExpSelectAll(true);
+    openModal('ih-modal-export');
+  }
+  function ihExpFmtChange(radio) {
+    document.getElementById('ih-exp-fmt-csv-label').style.borderColor = 'var(--border)';
+    document.getElementById('ih-exp-fmt-xlsx-label').style.borderColor = 'var(--border)';
+    document.getElementById('ih-exp-fmt-' + radio.value + '-label').style.borderColor = 'var(--primary)';
+  }
+  function ihExpSelectAll(checked) {
+    document.querySelectorAll('.ih-exp-field-cb').forEach(function(cb){ cb.checked = checked; });
+    ihExpValidate();
+  }
+  function ihExpScopeChange() {
+    var v = document.querySelector('input[name="ih-exp-scope"]:checked').value;
+    document.getElementById('ih-exp-scope-lbl-all').classList.toggle('active', v === 'all');
+    document.getElementById('ih-exp-scope-lbl-filtered').classList.toggle('active', v === 'filtered');
+  }
+  function ihExpValidate() {
+    var n = [].slice.call(document.querySelectorAll('.ih-exp-field-cb')).filter(function(cb){ return cb.checked; }).length;
+    document.getElementById('ih-exp-nofield').classList.toggle('hidden', n > 0);
+    document.getElementById('ih-exp-confirm').disabled = n === 0;
+    return n > 0;
+  }
+  function ihDoExport() {
+    if (!ihExpValidate()) return;
+    var fmt = document.querySelector('input[name="ih-exp-format"]:checked').value;
+    var scope = document.querySelector('input[name="ih-exp-scope"]:checked').value;
+    var n = document.getElementById(scope === 'all' ? 'ih-exp-n-all' : 'ih-exp-n-filtered').textContent;
+    closeModal('ih-modal-export');
+    if (typeof showSyncToast === 'function') {
+      showSyncToast((fmt === 'csv' ? 'CSV' : 'Excel') + ' 匯出中… 共 ' + n + ' 筆');
+    }
   }
 
   /* ===== 命中清單 ===== */
